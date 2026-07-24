@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Policy Persistency Curve — Pacific Life Sigma Plugin</title>
+<script src="https://unpkg.com/@sigmacomputing/plugin"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,Roboto,Arial,sans-serif;background:transparent;color:#0A1F33;overflow:hidden}
+  #wrap{height:100%;width:100%;display:flex;flex-direction:column;padding:12px 16px;gap:6px}
+  #top{display:flex;justify-content:space-between;align-items:baseline;flex:0 0 auto}
+  #ttl{font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#0077C8}
+  #meta{font-size:11px;color:#5A6B7B}
+  #meta b{color:#0A1F33}
+  #chart{flex:1;min-height:0;position:relative}
+  svg{width:100%;height:100%;display:block}
+  #legend{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-size:11px;color:#5A6B7B}
+  .lg{display:flex;align-items:center;gap:5px}
+  .sw{width:12px;height:3px;border-radius:2px}
+  #tip{position:fixed;pointer-events:none;background:#0A1F33;border:1px solid #1E4D74;border-radius:8px;padding:8px 10px;font-size:11px;color:#EAF3FA;opacity:0;transition:opacity .1s;z-index:10;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  #tip b{color:#57C7E3}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="top"><div id="ttl">Policy persistency</div><div id="meta">best <b id="best">—</b> · weakest <b id="worst">—</b></div></div>
+  <div id="chart"><svg id="svg"></svg></div>
+  <div id="legend"></div>
+</div>
+<div id="tip"></div>
+<script>
+(function(){
+  var client=(window.sigmaComputing&&window.sigmaComputing.plugin&&window.sigmaComputing.plugin.client)||null;
+  // Pacific Life palette — navy/blue/teal family + warm accents for contrast between product lines
+  var PAL=['#0077C8','#00A9CE','#003057','#5BC2E7','#8E44AD','#F0872E','#00857C','#B21E5B'];
+  var defs=[
+    {name:'source',type:'element'},
+    {name:'series',type:'column',source:'source',label:'Product line'},
+    {name:'year',type:'column',source:'source',allowedTypes:['number','integer'],label:'Policy year'},
+    {name:'value',type:'column',source:'source',allowedTypes:['number','integer'],label:'% in force'}
+  ];
+  if(client) client.config.configureEditorPanel(defs);
+
+  var tip=document.getElementById('tip');
+  function pct(v){ return (v>=1?v:v*100).toFixed(1)+'%'; }
+  function norm(v){ return v>1.5 ? v/100 : v; } // accept 0-1 or 0-100
+
+  // series -> [{x, y(0..1)}], sorted by x
+  function draw(series){
+    var svg=document.getElementById('svg');
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    var W=svg.clientWidth||600, H=svg.clientHeight||300;
+    if(W<10||H<10) return;
+    var mL=38, mR=12, mT=10, mB=22;
+    var pw=W-mL-mR, ph=H-mT-mB;
+    var names=Object.keys(series);
+    var maxX=0;
+    names.forEach(function(n){ series[n].forEach(function(p){ if(p.x>maxX)maxX=p.x; }); });
+    maxX=maxX||10;
+    function X(x){ return mL + (x/maxX)*pw; }
+    function Y(y){ return mT + (1-y)*ph; } // y in 0..1
+    var NS='http://www.w3.org/2000/svg';
+    function el(t,a){ var e=document.createElementNS(NS,t); for(var k in a)e.setAttribute(k,a[k]); return e; }
+
+    // gridlines + y labels (0,25,50,75,100)
+    [0,.25,.5,.75,1].forEach(function(g){
+      svg.appendChild(el('line',{x1:mL,y1:Y(g),x2:W-mR,y2:Y(g),stroke:'#E3EAF0','stroke-width':1}));
+      var tl=el('text',{x:mL-6,y:Y(g)+3,'text-anchor':'end','font-size':9,fill:'#8A99A8'}); tl.textContent=Math.round(g*100)+'%'; svg.appendChild(tl);
+    });
+    // x axis labels
+    var step=maxX<=10?2:(maxX<=20?5:10);
+    for(var xt=0;xt<=maxX;xt+=step){
+      var xl=el('text',{x:X(xt),y:H-6,'text-anchor':'middle','font-size':9,fill:'#8A99A8'}); xl.textContent='Yr '+xt; svg.appendChild(xl);
+    }
+
+    var best={n:'—',v:-1}, worst={n:'—',v:2};
+    names.forEach(function(n,idx){
+      var pts=series[n].slice().sort(function(a,b){return a.x-b.x;});
+      if(!pts.length) return;
+      var d=pts.map(function(p,i){ return (i?'L':'M')+X(p.x).toFixed(1)+' '+Y(p.y).toFixed(1); }).join(' ');
+      var col=PAL[idx%PAL.length];
+      svg.appendChild(el('path',{d:d,fill:'none',stroke:col,'stroke-width':2.4,'stroke-linejoin':'round','stroke-linecap':'round'}));
+      // end value badge = persistency at last observed year
+      var last=pts[pts.length-1];
+      if(last.y>best.v){best={n:n,v:last.y};}
+      if(last.y<worst.v){worst={n:n,v:last.y};}
+      // hover dots
+      pts.forEach(function(p){
+        var c=el('circle',{cx:X(p.x),cy:Y(p.y),r:3,fill:col,'fill-opacity':0.9});
+        c.style.cursor='default';
+        c.addEventListener('mousemove',function(e){ tip.style.opacity=1; tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+14)+'px';
+          tip.innerHTML='<b>'+n+'</b><br>Year '+p.x+' · '+pct(p.y); });
+        c.addEventListener('mouseleave',function(){ tip.style.opacity=0; });
+        svg.appendChild(c);
+      });
+    });
+    document.getElementById('best').textContent=best.n+' '+pct(best.v);
+    document.getElementById('worst').textContent=worst.n+' '+pct(worst.v);
+    // legend
+    var lg=document.getElementById('legend'); lg.innerHTML='';
+    names.forEach(function(n,idx){
+      var d=document.createElement('div'); d.className='lg';
+      d.innerHTML='<div class="sw" style="background:'+PAL[idx%PAL.length]+'"></div>'+n;
+      lg.appendChild(d);
+    });
+  }
+
+  function synth(){
+    // realistic lapse curves: term lapses fastest, whole life stickiest
+    var lines={
+      'Term Life':0.11,'Universal Life':0.07,'Whole Life':0.035,
+      'Variable Annuity':0.06,'Fixed Annuity':0.05,'Indexed Annuity':0.045
+    };
+    var s={};
+    for(var n in lines){ s[n]=[]; var lapse=lines[n];
+      for(var y=0;y<=15;y++){ var v=Math.pow(1-lapse,y); // survival
+        if(y<=1) v=1-lapse*0.6*y; // gentler first-year
+        s[n].push({x:y,y:Math.max(0.2,v)}); }
+    }
+    return s;
+  }
+
+  var st={cfg:{},data:null,unsub:null};
+  function recompute(){
+    var c=st.cfg||{}, d=st.data;
+    if(d && c.value && d[c.value] && c.year && c.series){
+      var yr=d[c.year]||[], se=d[c.series]||[], va=d[c.value]||[];
+      var s={}, any=false;
+      for(var i=0;i<va.length;i++){
+        var n=String(se[i]==null?'Series':se[i]); var x=Math.round(Number(yr[i])); var y=norm(Number(va[i]));
+        if(isNaN(x)||isNaN(y)) continue;
+        (s[n]=s[n]||[]).push({x:x,y:y}); any=true;
+      }
+      if(any){ draw(s); return; }
+    }
+    draw(synth());
+  }
+
+  // ResizeObserver — Sigma sizes the panel AFTER first paint; redraw on every resize
+  var ro=new ResizeObserver(function(){ recompute(); });
+  ro.observe(document.getElementById('chart'));
+
+  if(client){
+    client.config.subscribe(function(cfg){ st.cfg=cfg||{};
+      if(st.unsub){st.unsub();st.unsub=null;}
+      if(cfg&&cfg.source){ st.unsub=client.elements.subscribeToElementData(cfg.source,function(dd){ st.data=dd; recompute(); }); }
+      recompute();
+    });
+  } else { recompute(); }
+})();
+</script>
+</body>
+</html>
