@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sponsorship Value Quadrant — Pacific Life Sigma Plugin</title>
+<script src="https://unpkg.com/@sigmacomputing/plugin"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,Roboto,Arial,sans-serif;background:transparent;color:#0B2447;overflow:hidden}
+  #wrap{height:100%;width:100%;display:flex;flex-direction:column;padding:12px 14px 8px;gap:6px}
+  #top{display:flex;justify-content:space-between;align-items:baseline;flex:0 0 auto}
+  #ttl{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#1d58a4}
+  #meta{font-size:11px;color:#5B6B82}
+  #meta b{color:#0B2447}
+  #plot{flex:1;min-height:0;position:relative}
+  svg{width:100%;height:100%;display:block}
+  .qlbl{font-size:10px;font-weight:700;fill:#8092AB;text-transform:uppercase;letter-spacing:.04em}
+  .axt{font-size:10px;fill:#5B6B82}
+  .axttl{font-size:10px;font-weight:700;fill:#0B2447}
+  .med{stroke:#B9C6DB;stroke-width:1;stroke-dasharray:4 4}
+  .bub{cursor:default;transition:opacity .1s;fill-opacity:.82;stroke:#fff;stroke-width:1.5}
+  .bub:hover{fill-opacity:1;stroke:#0B2447}
+  #legend{flex:0 0 auto;display:flex;align-items:center;gap:14px;font-size:10px;color:#5B6B82;flex-wrap:wrap}
+  .lg{display:flex;align-items:center;gap:5px}
+  .dot{width:9px;height:9px;border-radius:50%}
+  #tip{position:fixed;pointer-events:none;background:#0B2447;border:1px solid #1d58a4;border-radius:8px;padding:8px 10px;font-size:11px;color:#EAF1FB;opacity:0;transition:opacity .1s;z-index:10;white-space:nowrap;box-shadow:0 8px 24px rgba(6,20,45,.45)}
+  #tip b{color:#8FB6EC}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="top">
+    <div id="ttl">Sponsorship value quadrant</div>
+    <div id="meta"><b id="cnt">—</b> events · bubble = annuities sold</div>
+  </div>
+  <div id="plot"><svg id="svg"></svg></div>
+  <div id="legend"></div>
+</div>
+<div id="tip"></div>
+<script>
+(function(){
+  var client=(window.sigmaComputing&&window.sigmaComputing.plugin&&window.sigmaComputing.plugin.client)||null;
+  // finance segments -> brand colors
+  var SEG=[
+    {k:'Scale',       c:'#1d58a4'},
+    {k:'Sustain',     c:'#C9A24B'},
+    {k:'Optimize',    c:'#E0A458'},
+    {k:'Review / Cut',c:'#E1523D'}
+  ];
+  function segColor(s){ for(var i=0;i<SEG.length;i++) if(SEG[i].k===s) return SEG[i].c; return '#7A8CA6'; }
+  var defs=[
+    {name:'source',type:'element'},
+    {name:'event',type:'column',source:'source',label:'Event'},
+    {name:'spend',type:'column',source:'source',allowedTypes:['number','integer'],label:'Spend (x-axis)'},
+    {name:'roi',type:'column',source:'source',allowedTypes:['number','integer'],label:'ROI (y-axis)'},
+    {name:'annuities',type:'column',source:'source',allowedTypes:['number','integer'],label:'Annuities (bubble size)'},
+    {name:'segment',type:'column',source:'source',label:'Segment (color)'}
+  ];
+  if(client) client.config.configureEditorPanel(defs);
+
+  var NS='http://www.w3.org/2000/svg';
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function money(v){var s=v<0?'-':'';v=Math.abs(v);if(v>=1e9)return s+'$'+(v/1e9).toFixed(2)+'B';if(v>=1e6)return s+'$'+(v/1e6).toFixed(1)+'M';if(v>=1e3)return s+'$'+(v/1e3).toFixed(0)+'k';return s+'$'+Math.round(v);}
+  function pct(v){return (v*100).toFixed(1)+'%';}
+  function median(a){if(!a.length)return 0;var b=a.slice().sort(function(x,y){return x-y;});var m=Math.floor(b.length/2);return b.length%2?b[m]:(b[m-1]+b[m])/2;}
+  var tip=document.getElementById('tip');
+
+  function draw(rows){
+    var svg=document.getElementById('svg'); svg.innerHTML='';
+    var plot=document.getElementById('plot');
+    var W=plot.clientWidth||600, Hh=plot.clientHeight||360;
+    svg.setAttribute('viewBox','0 0 '+W+' '+Hh);
+    document.getElementById('cnt').textContent=rows.length;
+    if(!rows.length) return;
+    var mL=54,mR=16,mT=14,mB=34;
+    var pw=Math.max(10,W-mL-mR), ph=Math.max(10,Hh-mT-mB);
+    var xs=rows.map(function(r){return r.spend;}), ys=rows.map(function(r){return r.roi;});
+    var xmin=Math.min.apply(null,xs), xmax=Math.max.apply(null,xs);
+    var ymin=Math.min.apply(null,ys), ymax=Math.max.apply(null,ys);
+    var xpad=(xmax-xmin)*0.12||1, ypad=(ymax-ymin)*0.14||0.05;
+    xmin-=xpad; xmax+=xpad; ymin-=ypad; ymax+=ypad;
+    if(ymin>0)ymin=Math.min(0,ymin); // keep the 0% ROI line visible
+    var amax=Math.max.apply(null,rows.map(function(r){return r.ann;}))||1;
+    function X(v){return mL+(v-xmin)/(xmax-xmin)*pw;}
+    function Y(v){return mT+ph-(v-ymin)/(ymax-ymin)*ph;}
+    function R(a){return 6+Math.sqrt(Math.max(0,a)/amax)*Math.min(30, Math.max(14, ph*0.10));}
+
+    // zero-ROI reference band (below = losing money)
+    if(ymin<0){ svg.appendChild(el('rect',{x:mL,y:Y(0),width:pw,height:mT+ph-Y(0),fill:'#F7DAD3',opacity:.35})); }
+    // median crosshairs (split the field into value quadrants)
+    var mx=median(rows.map(function(r){return r.spend;})), my=median(rows.map(function(r){return r.roi;}));
+    svg.appendChild(el('line',{x1:X(mx),y1:mT,x2:X(mx),y2:mT+ph,'class':'med'}));
+    svg.appendChild(el('line',{x1:mL,y1:Y(my),x2:mL+pw,y2:Y(my),'class':'med'}));
+    // quadrant labels
+    function ql(x,y,t,anchor){var e=el('text',{x:x,y:y,'class':'qlbl','text-anchor':anchor||'start'});e.textContent=t;svg.appendChild(e);}
+    ql(mL+4,mT+12,'Efficient wins');
+    ql(mL+pw-4,mT+12,'Marquee bets','end');
+    ql(mL+4,mT+ph-6,'Low priority');
+    ql(mL+pw-4,mT+ph-6,'Review / cut','end');
+
+    // axes
+    svg.appendChild(el('line',{x1:mL,y1:mT+ph,x2:mL+pw,y2:mT+ph,stroke:'#C9D4E6','stroke-width':1}));
+    svg.appendChild(el('line',{x1:mL,y1:mT,x2:mL,y2:mT+ph,stroke:'#C9D4E6','stroke-width':1}));
+    // y ticks (ROI)
+    for(var t=0;t<=4;t++){ var yv=ymin+(ymax-ymin)*t/4; var yy=Y(yv);
+      var tk=el('text',{x:mL-6,y:yy+3,'class':'axt','text-anchor':'end'}); tk.textContent=pct(yv); svg.appendChild(tk); }
+    // x ticks (Spend)
+    for(var t=0;t<=4;t++){ var xv=xmin+(xmax-xmin)*t/4; var xx=X(xv);
+      var tx=el('text',{x:xx,y:mT+ph+16,'class':'axt','text-anchor':'middle'}); tx.textContent=money(xv); svg.appendChild(tx); }
+    var axx=el('text',{x:mL+pw/2,y:Hh-2,'class':'axttl','text-anchor':'middle'}); axx.textContent='Brand spend →'; svg.appendChild(axx);
+    var axy=el('text',{x:0,y:0,'class':'axttl','text-anchor':'middle','transform':'translate(12,'+(mT+ph/2)+') rotate(-90)'}); axy.textContent='ROI →'; svg.appendChild(axy);
+
+    // bubbles (largest first so small ones stay clickable on top)
+    rows.slice().sort(function(a,b){return b.ann-a.ann;}).forEach(function(r){
+      var cx=X(r.spend),cy=Y(r.roi),rad=R(r.ann);
+      var b=el('circle',{cx:cx,cy:cy,r:rad,'class':'bub',fill:segColor(r.seg)});
+      b.addEventListener('mousemove',function(e){ tip.style.opacity=1; tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+14)+'px';
+        tip.innerHTML='<b>'+r.event+'</b><br>Spend '+money(r.spend)+' · ROI '+pct(r.roi)+'<br>Annuities '+money(r.ann)+(r.seg?'<br>'+r.seg:''); });
+      b.addEventListener('mouseleave',function(){ tip.style.opacity=0; });
+      svg.appendChild(b);
+      if(rad>13){ var lb=el('text',{x:cx,y:cy+3,'text-anchor':'middle','font-size':'9','font-weight':'700',fill:'#fff','pointer-events':'none'});
+        lb.textContent=r.event.length>14?r.event.slice(0,13)+'…':r.event; svg.appendChild(lb); }
+    });
+
+    // legend
+    var lg=document.getElementById('legend'); lg.innerHTML='';
+    SEG.forEach(function(s){ var d=document.createElement('div'); d.className='lg';
+      d.innerHTML='<span class="dot" style="background:'+s.c+'"></span>'+s.k; lg.appendChild(d); });
+  }
+
+  function synth(){
+    // Pacific Life golf portfolio (matches the workbook's synthetic data)
+    var E=[
+      ['Ryder Cup',6.2,0.277,360,'Scale'],['The Masters',5.1,0.294,300,'Scale'],
+      ['U.S. Open',4.4,0.25,250,'Scale'],['PGA Championship',4.1,0.10,205,'Sustain'],
+      ['WM Phoenix Open',3.2,0.169,170,'Sustain'],['Pebble Beach Pro-Am',2.9,0.138,150,'Sustain'],
+      ['Genesis Invitational',2.4,0.10,120,'Sustain'],['Arnold Palmer Inv.',2.3,0.004,105,'Optimize'],
+      ['Sentry T. of Champions',1.6,-0.175,60,'Review / Cut'],['Wells Fargo Champ.',1.5,-0.193,55,'Review / Cut'],
+      ['Charles Schwab Ch.',1.3,-0.323,40,'Review / Cut'],['Rocket Mortgage Cl.',1.1,-0.40,30,'Review / Cut']
+    ];
+    return E.map(function(r){return {event:r[0],spend:r[1]*1e6,roi:r[2],ann:r[3]*1e6,seg:r[4]};});
+  }
+
+  var st={cfg:{},data:null,unsub:null};
+  function recompute(){ var c=st.cfg||{},d=st.data,rows=null;
+    if(d&&c.spend&&c.roi&&d[c.spend]){
+      var ev=d[c.event]||[],sp=d[c.spend]||[],ro=d[c.roi]||[],an=(c.annuities&&d[c.annuities])||[],sg=(c.segment&&d[c.segment])||[];
+      rows=[]; for(var i=0;i<sp.length;i++){ rows.push({
+        event:String(ev[i]!=null?ev[i]:('Event '+(i+1))), spend:Number(sp[i])||0, roi:Number(ro[i])||0,
+        ann:Number(an[i])||0, seg:sg[i]!=null?String(sg[i]):'' }); }
+      if(!rows.length) rows=null;
+    }
+    draw(rows||synth());
+  }
+  // ResizeObserver: Sigma sizes the panel AFTER first paint — redraw on resize.
+  var ro=new ResizeObserver(function(){ recompute(); });
+  ro.observe(document.getElementById('plot'));
+  if(client){ client.config.subscribe(function(cfg){ st.cfg=cfg||{};
+    if(st.unsub){st.unsub();st.unsub=null;}
+    if(cfg&&cfg.source){ st.unsub=client.elements.subscribeToElementData(cfg.source,function(dd){ st.data=dd; recompute(); }); }
+    recompute(); });
+  } else { recompute(); }
+})();
+</script>
+</body>
+</html>
