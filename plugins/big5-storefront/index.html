@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Big 5 Storefront — Merchandising Grid</title>
+<script src="https://unpkg.com/@sigmacomputing/plugin"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,Inter,"Segoe UI",Roboto,Arial,sans-serif;background:transparent;color:#1A1F36;overflow:hidden}
+  /* Big 5 palette */
+  :root{ --blue:#343A94; --blue2:#1F2570; --blueInk:#20265E; --red:#E4002B; --amber:#C77700; --ink:#1A1F36; --sub:#8A8F9C; }
+  #app{height:100%;width:100%;display:flex;gap:14px;padding:2px}
+  #store{flex:1 1 auto;min-width:0;overflow-y:auto;overflow-x:hidden;padding:2px 4px 6px 2px}
+  #grid{display:grid;gap:14px}
+  #notif{flex:0 0 300px;max-width:300px;display:flex;flex-direction:column;min-height:0}
+  @media(max-width:640px){ #app{flex-direction:column} #notif{flex:0 0 auto;max-width:none} }
+
+  /* product card */
+  .card{background:#fff;border:1px solid #E6E8F0;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;
+        box-shadow:0 1px 2px rgba(20,25,54,.04);transition:transform .1s,box-shadow .1s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(32,38,94,.12)}
+  .tile{position:relative;aspect-ratio:16/11;background:linear-gradient(135deg,#EEF1FB 0%,#DCE3F7 100%);
+        display:flex;align-items:center;justify-content:center;border-bottom:1px solid #EDEFF6}
+  .tile svg{width:56%;height:56%}
+  .rate{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.94);border:1px solid #E6E8F0;border-radius:999px;
+        padding:3px 8px;font-size:11px;font-weight:700;color:var(--blueInk);display:flex;align-items:center;gap:3px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .rate svg{width:11px;height:11px}
+  .oosband{position:absolute;left:0;bottom:0;width:100%;background:var(--red);color:#fff;font-size:10px;font-weight:800;
+        letter-spacing:.08em;text-transform:uppercase;text-align:center;padding:3px 0}
+  .lowband{position:absolute;left:0;bottom:0;width:100%;background:#FFF3D6;color:var(--amber);font-size:10px;font-weight:800;
+        letter-spacing:.08em;text-transform:uppercase;text-align:center;padding:3px 0;border-top:1px solid #F3E2AE}
+  .body{padding:11px 13px 13px}
+  .cat{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--sub)}
+  .name{font-size:14px;font-weight:700;color:var(--ink);margin:3px 0 2px;line-height:1.25;min-height:34px}
+  .price{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:8px}
+  .row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:5px 0;border-top:1px solid #F1F2F7}
+  .row .k{color:var(--sub);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .row .v{font-weight:700;color:var(--ink);font-size:15px}
+  .v.oos{color:var(--red)} .v.low{color:var(--amber)}
+
+  /* notifications */
+  .ntitle{display:flex;justify-content:space-between;align-items:center;padding:2px 2px 10px}
+  .ntitle b{font-size:15px;color:var(--ink)}
+  .ntitle .tog{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--sub)}
+  .pill{width:30px;height:17px;border-radius:999px;background:#D8DBE6;position:relative;transition:background .15s}
+  .pill::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:left .15s}
+  .pill.on{background:var(--blue)} .pill.on::after{left:15px}
+  #nlist{overflow-y:auto;display:flex;flex-direction:column;gap:9px;padding-right:2px}
+  .note{position:relative;border:1px solid #EDEFF4;border-radius:11px;padding:11px 12px 11px 15px;background:#fff;overflow:hidden}
+  .note::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+  .note.urgent::before{background:var(--red)} .note.urgent{background:#FEF3F2}
+  .note.warn::before{background:var(--amber)} .note.warn{background:#FFFaf0}
+  .note.info::before{background:var(--blue)} .note.info{background:#F2F5FE}
+  .nhead{display:flex;align-items:flex-start;gap:8px}
+  .nicon{flex:0 0 auto;margin-top:1px}
+  .nicon svg{width:16px;height:16px;display:block}
+  .nmeta{flex:1;min-width:0}
+  .nkind{font-size:13px;font-weight:800;color:var(--ink)}
+  .nbody{font-size:12px;color:#4A4F63;margin-top:2px;line-height:1.3}
+  .nx{flex:0 0 auto;color:#B9BDC9;font-size:15px;line-height:1;cursor:pointer;padding:0 2px}
+  .nx:hover{color:var(--ink)}
+  .nfoot{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+  .nago{font-size:11px;color:var(--sub)}
+  .ndet{font-size:11px;font-weight:600;color:#5A5F72;background:#fff;border:1px solid #E1E3EC;border-radius:7px;padding:3px 10px;cursor:pointer}
+  .ndet:hover{border-color:var(--blue);color:var(--blue)}
+  .empty{color:var(--sub);font-size:12px;text-align:center;padding:30px 10px}
+  ::-webkit-scrollbar{width:8px} ::-webkit-scrollbar-thumb{background:#D8DBE6;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="store"><div id="grid"></div></div>
+  <div id="notif">
+    <div class="ntitle"><b>Notifications</b><div class="tog"><span>Urgent only</span><div class="pill" id="tog"></div></div></div>
+    <div id="nlist"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var client=(window.sigmaComputing&&window.sigmaComputing.plugin&&window.sigmaComputing.plugin.client)||null;
+
+  // ---- SVG glyph library (Big 5 blue line icons), viewBox 0 0 64 64 ----
+  var C='#343A94';
+  var G=(function(){
+    function w(inner){return '<svg viewBox="0 0 64 64" fill="none" stroke="'+C+'" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">'+inner+'</svg>';}
+    return {
+      shoe:w('<path d="M6 40h30l14 4c6 2 8 4 8 8H10a4 4 0 0 1-4-4z"/><path d="M12 40V26c0-3 4-4 6-2l8 8"/><path d="M22 36l6-5M30 40l6-5"/><path d="M8 52h50"/>'),
+      boot:w('<path d="M18 8h10l2 26 18 8c5 2 8 5 8 10H16a6 6 0 0 1-6-6V16a8 8 0 0 1 8-8z"/><path d="M18 20h10M18 28h11"/><path d="M12 56h50"/>'),
+      sandal:w('<path d="M16 22c14-4 22-4 32 0 6 2 4 12-2 12-8 0-8 6-14 6s-6-6-14-6c-6 0-8-10-2-12z"/><path d="M24 22l8 10M40 22l-6 12"/>'),
+      basketball:w('<circle cx="32" cy="32" r="24"/><path d="M32 8v48M8 32h48"/><path d="M15 15c10 8 10 26 0 34M49 15c-10 8-10 26 0 34"/>'),
+      football:w('<ellipse cx="32" cy="32" rx="26" ry="15"/><path d="M14 32h36M42 26v12M46 28v8M38 27v10"/><path d="M12 20c-4 6-4 18 0 24M52 20c4 6 4 18 0 24"/>'),
+      soccer:w('<circle cx="32" cy="32" r="24"/><path d="M32 20l9 7-3 11H26l-3-11z"/><path d="M32 8v12M12 26l11 1M52 26l-11 1M20 50l6-9M44 50l-6-9"/>'),
+      baseball:w('<circle cx="32" cy="32" r="24"/><path d="M18 14c8 8 8 28 0 36M46 14c-8 8-8 28 0 36"/><path d="M14 24l5-3M14 30l6-2M14 40l6 2M14 46l5 3M50 24l-5-3M50 30l-6-2M50 40l-6 2M50 46l-5 3"/>'),
+      bat:w('<path d="M10 54l8-8"/><path d="M20 44l24-24c6-6 12-8 14-6s0 8-6 14L28 52c-3 3-6 3-8 1s-3-6 0-9z" fill="#EEF1FB"/><path d="M14 50l6 6"/>'),
+      glove:w('<path d="M18 54V34c0-14 6-24 18-24 8 0 12 6 12 12 0 5-3 8-3 12 3 0 6 2 6 7v13z"/><path d="M30 12v14M40 16v12"/><path d="M18 46h33"/>'),
+      dumbbell:w('<path d="M6 24v16M14 20v24M50 20v24M58 24v16"/><path d="M14 32h36"/>'),
+      kettlebell:w('<path d="M24 20a8 8 0 0 1 16 0c0 4 4 4 4 10 6 4 8 12 8 18H12c0-6 2-14 8-18 0-6 4-6 4-10z"/><path d="M26 20a6 6 0 0 1 12 0"/>'),
+      yogamat:w('<rect x="8" y="20" width="48" height="24" rx="6"/><circle cx="16" cy="32" r="6"/><path d="M50 20v24"/>'),
+      treadmill:w('<path d="M6 50h44l6-30M12 50v-8h34"/><path d="M46 20h8"/><circle cx="12" cy="54" r="3"/><circle cx="46" cy="54" r="3"/><path d="M40 22v10"/>'),
+      tent:w('<path d="M32 12L8 50h48z"/><path d="M32 12v38M32 50l-8-16M32 50l8-16"/><path d="M4 50h56"/>'),
+      sleepingbag:w('<path d="M20 10c-8 4-10 14-10 24v20h36V34c0-12-4-20-14-24z"/><path d="M20 10h6c8 4 12 12 12 24v20"/><path d="M40 20l8-4M40 28l10-3"/>'),
+      cooler:w('<rect x="10" y="24" width="44" height="26" rx="4"/><path d="M10 32h44"/><path d="M16 24l3-8h26l3 8"/><path d="M26 38h12"/>'),
+      campchair:w('<path d="M14 12l10 24M50 12L40 36M24 36h16v18M24 54h16"/><path d="M14 12h36M20 26h24"/>'),
+      backpack:w('<path d="M16 22c0-8 6-12 16-12s16 4 16 12v30a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4z"/><path d="M24 22c0-6 3-8 8-8s8 2 8 8"/><rect x="24" y="32" width="16" height="14" rx="3"/>'),
+      lantern:w('<path d="M24 10h16M28 10v6M36 10v6"/><rect x="20" y="16" width="24" height="30" rx="6"/><path d="M20 24h24M20 38h24"/><path d="M28 46v6h8v-6"/>'),
+      kayak:w('<path d="M6 40c10 8 42 8 52 0-2-8-14-12-26-12S8 32 6 40z"/><path d="M20 30v-8M44 30v-8"/><path d="M2 20l14 10M62 20L48 30"/>'),
+      lifevest:w('<path d="M20 12h24v10c6 2 8 8 8 16v14H12V38c0-8 2-14 8-16z"/><path d="M32 12v40M24 22h-4M40 22h4"/><path d="M26 34h12"/>'),
+      bike:w('<circle cx="16" cy="42" r="11"/><circle cx="48" cy="42" r="11"/><path d="M16 42l10-20h14M22 42l14-18M40 22l8 20M32 22h10"/><path d="M26 22h-6"/>'),
+      helmet:w('<path d="M8 40c0-16 10-26 26-26 12 0 22 6 22 16 0 6-4 8-10 8H30c-6 0-8 2-8 6z"/><path d="M8 40h20M18 24l4 8M30 20l2 10M42 22l-1 8"/>'),
+      jersey:w('<path d="M22 10l-14 8 5 12 5-2v26h28V26l5 2 5-12-14-8c-2 5-14 5-16 0z"/><path d="M32 18v10M26 40h12"/>'),
+      cap:w('<path d="M8 42c0-16 11-26 24-26s24 8 24 20H30z"/><path d="M8 42h24M30 42h26c0 4-2 6-6 6H14c-4 0-6-2-6-6z"/><path d="M32 16v10"/>'),
+      fishingrod:w('<path d="M10 54L52 14"/><path d="M52 14c3-3 8-3 8 2M46 20l6 2M40 26l5 2M34 32l5 2"/><path d="M52 20v10M48 30h8"/>')
+    };
+  })();
+  function glyph(key){ return G[key] || G.basketball; }
+
+  var defs=[
+    {name:'source',type:'element'},
+    {name:'product',type:'column',source:'source',allowedTypes:['text'],label:'Product name'},
+    {name:'category',type:'column',source:'source',allowedTypes:['text'],label:'Category'},
+    {name:'glyph',type:'column',source:'source',allowedTypes:['text'],label:'Icon key'},
+    {name:'price',type:'column',source:'source',allowedTypes:['number','integer'],label:'Price'},
+    {name:'sold',type:'column',source:'source',allowedTypes:['number','integer'],label:'Units sold'},
+    {name:'available',type:'column',source:'source',allowedTypes:['number','integer'],label:'Units available'},
+    {name:'rating',type:'column',source:'source',allowedTypes:['number','integer'],label:'Rating (0-5)'},
+    {name:'reorder',type:'column',source:'source',allowedTypes:['number','integer'],label:'Reorder point (optional)'}
+  ];
+  if(client) client.config.configureEditorPanel(defs);
+
+  var STAR='<svg viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="1"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/></svg>';
+  var IC_ALERT='<svg viewBox="0 0 24 24" fill="none" stroke="#E4002B" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7v6M12 17h.01"/></svg>';
+  var IC_WARN='<svg viewBox="0 0 24 24" fill="none" stroke="#C77700" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
+  var IC_INFO='<svg viewBox="0 0 24 24" fill="none" stroke="#343A94" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>';
+
+  function money(v){ v=Number(v)||0; return '$'+v.toFixed(2); }
+  function num(v){ v=Math.round(Number(v)||0); return v.toLocaleString(); }
+
+  var urgentOnly=false;
+  document.getElementById('tog').addEventListener('click',function(){
+    urgentOnly=!urgentOnly; this.classList.toggle('on',urgentOnly); renderNotes(LAST);
+  });
+
+  var LAST=[];
+  function renderCards(rows){
+    var grid=document.getElementById('grid');
+    // responsive columns based on available width
+    var w=document.getElementById('store').clientWidth||900;
+    var min=210, cols=Math.max(1,Math.min(4,Math.floor((w+14)/(min+14))));
+    grid.style.gridTemplateColumns='repeat('+cols+',minmax(0,1fr))';
+    grid.innerHTML='';
+    if(!rows.length){ grid.innerHTML='<div class="empty">No products match the current filters.</div>'; return; }
+    rows.forEach(function(r){
+      var avail=r.available, reorder=(r.reorder!=null?r.reorder:8);
+      var oos=avail<=0, low=!oos&&avail<=reorder;
+      var card=document.createElement('div'); card.className='card';
+      var band = oos?'<div class="oosband">Out of stock</div>' : (low?'<div class="lowband">Low stock</div>':'');
+      card.innerHTML=
+        '<div class="tile">'+glyph(r.glyph)+
+          '<div class="rate">'+STAR+(Number(r.rating)||0).toFixed(1)+'</div>'+band+
+        '</div>'+
+        '<div class="body">'+
+          '<div class="cat">'+esc(r.category)+'</div>'+
+          '<div class="name">'+esc(r.product)+'</div>'+
+          '<div class="price">'+money(r.price)+'</div>'+
+          '<div class="row"><span class="k">Sold</span><span class="v">'+num(r.sold)+'</span></div>'+
+          '<div class="row"><span class="k">Available</span><span class="v'+(oos?' oos':(low?' low':''))+'">'+num(avail)+'</span></div>'+
+        '</div>';
+      grid.appendChild(card);
+    });
+  }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function buildNotes(rows){
+    var notes=[];
+    rows.forEach(function(r){
+      var avail=r.available, reorder=(r.reorder!=null?r.reorder:8);
+      if(avail<=0) notes.push({sev:0,cls:'urgent',ic:IC_ALERT,kind:'Stockout Alert',body:'Out of stock: '+r.product,ago:'10h ago'});
+      else if(avail<=reorder) notes.push({sev:1,cls:'warn',ic:IC_WARN,kind:'Low Stock Alert',body:'Stock below reorder point: '+r.product,ago:'8h ago'});
+    });
+    // a friendly info note like the reference dashboard
+    notes.push({sev:2,cls:'info',ic:IC_INFO,kind:'Delivery Arrived',body:'Restock delivery DEL-047238 has arrived',ago:'10h ago'});
+    notes.sort(function(a,b){return a.sev-b.sev;});
+    return notes;
+  }
+  function renderNotes(rows){
+    LAST=rows;
+    var notes=buildNotes(rows);
+    if(urgentOnly) notes=notes.filter(function(n){return n.sev===0;});
+    var list=document.getElementById('nlist');
+    list.innerHTML='';
+    if(!notes.length){ list.innerHTML='<div class="empty">All clear — no alerts.</div>'; return; }
+    notes.forEach(function(n){
+      var el=document.createElement('div'); el.className='note '+n.cls;
+      el.innerHTML=
+        '<div class="nhead"><span class="nicon">'+n.ic+'</span>'+
+          '<div class="nmeta"><div class="nkind">'+esc(n.kind)+'</div><div class="nbody">'+esc(n.body)+'</div></div>'+
+          '<span class="nx">&times;</span></div>'+
+        '<div class="nfoot"><span class="nago">'+n.ago+'</span><span class="ndet">Details</span></div>';
+      el.querySelector('.nx').addEventListener('click',function(){ el.style.display='none'; });
+      list.appendChild(el);
+    });
+  }
+
+  function render(rows){ renderCards(rows); renderNotes(rows); }
+
+  // ---- synthetic fallback so the plugin previews standalone ----
+  function synth(){
+    var C=[
+      ['Trail Runner GTX Shoe','Footwear','shoe',89.99,4.5,142,27],
+      ['Summit Hiking Boot','Footwear','boot',119.99,4.7,98,14],
+      ['Court Hi Basketball Shoe','Footwear','shoe',74.99,4.4,120,0],
+      ['Wave Sport Sandal','Footwear','sandal',34.99,4.2,210,52],
+      ['Turf Baseball Cleat','Footwear','boot',59.99,4.3,64,6],
+      ['Pro Grip Basketball','Team Sports','basketball',29.99,4.6,180,33],
+      ['All-Weather Football','Team Sports','football',24.99,4.4,150,0],
+      ['Match Soccer Ball','Team Sports','soccer',22.99,4.5,175,41],
+      ['Hardball Baseball 12-pk','Team Sports','baseball',19.99,4.1,96,58],
+      ['Alloy Baseball Bat','Team Sports','bat',79.99,4.6,58,12],
+      ["Fielder's Baseball Glove",'Team Sports','glove',49.99,4.5,72,5],
+      ['Adjustable Dumbbell 52lb','Fitness','dumbbell',149.99,4.8,88,19],
+      ['Cast Iron Kettlebell 35lb','Fitness','kettlebell',44.99,4.5,110,7],
+      ['Premium Yoga Mat','Fitness','yogamat',27.99,4.4,240,66],
+      ['FlexStride Treadmill','Fitness','treadmill',599.99,4.3,22,4],
+      ['4-Person Dome Tent','Camping & Outdoors','tent',129.99,4.5,54,23],
+      ['Mummy Sleeping Bag','Camping & Outdoors','sleepingbag',59.99,4.4,77,31],
+      ['54qt Wheeled Cooler','Camping & Outdoors','cooler',79.99,4.6,63,0],
+      ['Folding Camp Chair','Camping & Outdoors','campchair',24.99,4.3,190,48],
+      ['TrailPro 45L Backpack','Camping & Outdoors','backpack',89.99,4.7,84,16],
+      ['LED Camp Lantern','Camping & Outdoors','lantern',19.99,4.2,133,8],
+      ['Angler Sit-On Kayak','Water Sports','kayak',349.99,4.6,31,9],
+      ['Adult Life Vest','Water Sports','lifevest',39.99,4.4,120,37],
+      ['TrailX Mountain Bike','Cycling','bike',429.99,4.5,26,5],
+      ['Vent Pro Bike Helmet','Cycling','helmet',49.99,4.4,98,29],
+      ['Home Team Jersey','Fan Gear','jersey',89.99,4.5,140,0],
+      ['Fitted Team Cap','Fan Gear','cap',27.99,4.3,205,44],
+      ['Spinning Fishing Rod Combo','Hunting & Fishing','fishingrod',69.99,4.4,59,18]
+    ];
+    return C.map(function(a){return {product:a[0],category:a[1],glyph:a[2],price:a[3],rating:a[4],sold:a[5],available:a[6],reorder:8};});
+  }
+
+  var st={cfg:{},data:null,unsub:null};
+  function recompute(){
+    var c=st.cfg||{}, d=st.data;
+    if(d && c.product && d[c.product]){
+      var P=d[c.product]||[], CAT=d[c.category]||[], GL=d[c.glyph]||[], PR=d[c.price]||[],
+          SO=d[c.sold]||[], AV=d[c.available]||[], RA=d[c.rating]||[], RE=d[c.reorder]||[];
+      var rows=[];
+      for(var i=0;i<P.length;i++){
+        rows.push({product:P[i],category:CAT[i],glyph:GL[i],price:Number(PR[i]),
+          sold:Number(SO[i]),available:Number(AV[i]),rating:Number(RA[i]),
+          reorder:(RE.length?Number(RE[i]):8)});
+      }
+      if(rows.length){ render(rows); return; }
+    }
+    render(synth());
+  }
+
+  // redraw on resize (Sigma sizes the panel after first paint)
+  var ro=new ResizeObserver(function(){ renderCards(LAST.length?LAST:synth()); });
+  ro.observe(document.getElementById('store'));
+
+  if(client){
+    client.config.subscribe(function(cfg){
+      st.cfg=cfg||{};
+      if(st.unsub){st.unsub();st.unsub=null;}
+      if(cfg&&cfg.source){ st.unsub=client.elements.subscribeToElementData(cfg.source,function(dd){ st.data=dd; recompute(); }); }
+      recompute();
+    });
+  } else { recompute(); }
+})();
+</script>
+</body>
+</html>
