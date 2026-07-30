@@ -146,9 +146,9 @@ tbl={"id":"tbl","kind":"table","source":{"connectionId":CONN,"statement":SQL,"ki
 CATALOG=[
  ("Trail Runner GTX Shoe","Footwear","shoe",89.99,142,27,4.5,10),
  ("Summit Hiking Boot","Footwear","boot",119.99,98,14,4.7,10),
- ("Court Hi Basketball Shoe","Footwear","shoe",74.99,120,0,4.4,10),
+ ("Court Hi Basketball Shoe","Footwear","bball_shoe",74.99,120,0,4.4,10),
  ("Wave Sport Sandal","Footwear","sandal",34.99,210,52,4.2,12),
- ("Turf Baseball Cleat","Footwear","boot",59.99,64,6,4.3,10),
+ ("Turf Baseball Cleat","Footwear","cleat",59.99,64,6,4.3,10),
  ("Pro Grip Basketball","Team Sports","basketball",29.99,180,33,4.6,12),
  ("All-Weather Football","Team Sports","football",24.99,150,0,4.4,12),
  ("Match Soccer Ball","Team Sports","soccer",22.99,175,41,4.5,12),
@@ -162,7 +162,7 @@ CATALOG=[
  ("4-Person Dome Tent","Camping & Outdoors","tent",129.99,54,23,4.5,8),
  ("Mummy Sleeping Bag","Camping & Outdoors","sleepingbag",59.99,77,31,4.4,10),
  ("54qt Wheeled Cooler","Camping & Outdoors","cooler",79.99,63,0,4.6,10),
- ("Folding Camp Chair","Camping & Outdoors","campchair",24.99,190,48,4.3,12),
+ ("Folding Camp Chair","Camping & Outdoors","chair",24.99,190,48,4.3,12),
  ("TrailPro 45L Backpack","Camping & Outdoors","backpack",89.99,84,16,4.7,10),
  ("LED Camp Lantern","Camping & Outdoors","lantern",19.99,133,8,4.2,10),
  ("Angler Sit-On Kayak","Water Sports","kayak",349.99,31,9,4.6,6),
@@ -171,13 +171,24 @@ CATALOG=[
  ("Vent Pro Bike Helmet","Cycling","helmet",49.99,98,29,4.4,10),
  ("Home Team Jersey","Fan Gear","jersey",89.99,140,0,4.5,10),
  ("Fitted Team Cap","Fan Gear","cap",27.99,205,44,4.3,12),
- ("Spinning Fishing Rod Combo","Hunting & Fishing","fishingrod",69.99,59,18,4.4,10),
+ ("Spinning Fishing Rod Combo","Hunting & Fishing","rod",69.99,59,18,4.4,10),
 ]
 def sq(v):
     return "'"+str(v).replace("'","''")+"'" if isinstance(v,str) else str(v)
 CAT_VALUES=",".join("("+",".join(sq(x) for x in row)+")" for row in CATALOG)
 CAT_SQL=(f"SELECT column1 AS PRODUCT, column2 AS CATEGORY, column3 AS GLYPH, column4 AS PRICE, "
          f"column5 AS SOLD, column6 AS AVAILABLE, column7 AS RATING, column8 AS REORDER FROM (VALUES {CAT_VALUES})")
+# live per-product AI insight (Snowflake Cortex via CallText) — 4 labeled sections the
+# plugin modal parses into Overview / Who it's best for / Key features / How it's selling.
+AI_FORMULA=('Replace(CallText("SNOWFLAKE.CORTEX.COMPLETE","CLAUDE-4-SONNET",'
+ '"You are a Big 5 Sporting Goods merchandising expert. Respond in EXACTLY four labeled sections '
+ 'separated by three pipe characters |||, with no preamble and no markdown. '
+ 'Format: OVERVIEW: two short sentences on the product. ||| '
+ 'BESTFOR: one sentence on which shopper it suits. ||| '
+ 'FEATURES: one sentence on likely key features or materials. ||| '
+ 'SELLING: one sentence noting it has sold " & Text([Sold]) & " units with " & Text([Available]) '
+ '& " currently in stock. Product: " & [Product] & ", Category: " & [Category] & ", Price $" '
+ '& Text([Price]) & ", Rating " & Text([Rating]) & " out of 5."), \'"\', \'\')')
 cat_tbl={"id":"cat_tbl","kind":"table","name":"Product Catalog","visibleAsSource":True,
  "source":{"connectionId":CONN,"kind":"sql","statement":CAT_SQL},
  "columns":[{"id":"p-prod","formula":"[Custom SQL/PRODUCT]","name":"Product"},
@@ -187,8 +198,9 @@ cat_tbl={"id":"cat_tbl","kind":"table","name":"Product Catalog","visibleAsSource
             {"id":"p-sold","formula":"[Custom SQL/SOLD]","name":"Sold","format":NUM},
             {"id":"p-avail","formula":"[Custom SQL/AVAILABLE]","name":"Available","format":NUM},
             {"id":"p-rating","formula":"[Custom SQL/RATING]","name":"Rating"},
-            {"id":"p-reorder","formula":"[Custom SQL/REORDER]","name":"Reorder point","format":NUM}],
- "order":["p-prod","p-cat","p-glyph","p-price","p-sold","p-avail","p-rating","p-reorder"]}
+            {"id":"p-reorder","formula":"[Custom SQL/REORDER]","name":"Reorder point","format":NUM},
+            {"id":"p-ai","formula":AI_FORMULA,"name":"AI Insight"}],
+ "order":["p-prod","p-cat","p-glyph","p-price","p-sold","p-avail","p-rating","p-reorder","p-ai"]}
 
 # ============================================================
 #  PAGE 1 — STOREFRONT
@@ -222,7 +234,7 @@ trend={"id":"trend","kind":"bar-chart","source":{"elementId":"tbl","kind":"table
 store={"id":"storeviz","kind":"plugin","pluginId":PLUGIN,
  "config":{"source":{"kind":"element","elementId":"cat_tbl"},
    "product":"p-prod","category":"p-cat","glyph":"p-glyph","price":"p-price",
-   "sold":"p-sold","available":"p-avail","rating":"p-rating","reorder":"p-reorder"}}
+   "sold":"p-sold","available":"p-avail","rating":"p-rating","reorder":"p-reorder","ai":"p-ai"}}
 store_c={"id":"c-store","kind":"container","style":dict(CARD)}
 
 def page1():

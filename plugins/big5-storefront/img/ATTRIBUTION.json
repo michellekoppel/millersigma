@@ -1,0 +1,142 @@
+{
+ "shoe": {
+  "name": "Trail Runner GTX Shoe",
+  "title": "File:Mizuno Wave Ibuki 2.jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Mizuno_Wave_Ibuki_2.jpg"
+ },
+ "boot": {
+  "name": "Summit Hiking Boot",
+  "title": "File:Jack Wolfskin, OutDoor 2018, Friedrichshafen (1X7A0425).jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/8/81/Jack_Wolfskin%2C_OutDoor_2018%2C_Friedrichshafen_%281X7A0425%29.jpg"
+ },
+ "bball_shoe": {
+  "name": "Court Hi Basketball Shoe",
+  "title": "File:Hops Basketball Shoe.jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/2/27/Hops_Basketball_Shoe.jpg"
+ },
+ "sandal": {
+  "name": "Wave Sport Sandal",
+  "title": "File:Original Tevas.jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/5/59/Original_Tevas.jpg"
+ },
+ "cleat": {
+  "name": "Turf Baseball Cleat",
+  "title": "Adidas +Predator Absolute FG, champions league colorway",
+  "source": "https://live.staticflickr.com/78/186030421_9ff2bf2960.jpg"
+ },
+ "basketball": {
+  "name": "Pro Grip Basketball",
+  "title": "BasketBall - score",
+  "source": "https://live.staticflickr.com/2658/4128778346_ebbb6738d7_b.jpg"
+ },
+ "football": {
+  "name": "All-Weather Football",
+  "title": "American Football",
+  "source": "https://live.staticflickr.com/2164/2293918256_4fec815eeb_b.jpg"
+ },
+ "soccer": {
+  "name": "Match Soccer Ball",
+  "title": "File:Soccer ball design to be vectorized.png",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Soccer_ball_design_to_be_vectorized.png"
+ },
+ "baseball": {
+  "name": "Hardball Baseball 12-pk",
+  "title": "Baseball",
+  "source": "https://live.staticflickr.com/5476/13983714094_b6e3f44ef7_b.jpg"
+ },
+ "bat": {
+  "name": "Alloy Baseball Bat",
+  "title": "baseball bat",
+  "source": "https://live.staticflickr.com/27/60492161_f02bebe613.jpg"
+ },
+ "glove": {
+  "name": "Fielder's Baseball Glove",
+  "title": "File:Vintage Leather Baseball Glove.jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/1/13/Vintage_Leather_Baseball_Glove.jpg"
+ },
+ "dumbbell": {
+  "name": "Adjustable Dumbbell 52lb",
+  "title": "Woman doing weight training indoors in fitness outfit while seated on a yoga mat",
+  "source": "https://live.staticflickr.com/65535/54579571144_ec28893a76_b.jpg"
+ },
+ "kettlebell": {
+  "name": "Cast Iron Kettlebell 35lb",
+  "title": "File:Kettlebell truebalance romeike.jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/8/87/Kettlebell_truebalance_romeike.jpg"
+ },
+ "yogamat": {
+  "name": "Premium Yoga Mat",
+  "title": "Workout session on a red mat with dumbbells and a smartphone for music",
+  "source": "https://live.staticflickr.com/65535/54568472221_daa094df86_b.jpg"
+ },
+ "treadmill": {
+  "name": "FlexStride Treadmill",
+  "title": "Rbk i-run Running Treadmill Machine",
+  "source": "https://live.staticflickr.com/528/32595328546_93100625d7_b.jpg"
+ },
+ "tent": {
+  "name": "4-Person Dome Tent",
+  "title": "File:White dome tent.png",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/c/c9/White_dome_tent.png"
+ },
+ "sleepingbag": {
+  "name": "Mummy Sleeping Bag",
+  "title": "File:Nomad, OutDoor 2018, Friedrichshafen (1X7A0320).jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/2/28/Nomad%2C_OutDoor_2018%2C_Friedrichshafen_%281X7A0320%29.jpg"
+ },
+ "cooler": {
+  "name": "54qt Wheeled Cooler",
+  "title": "Rubbermaid DuraChill Cooler / Ice Chest",
+  "source": "https://live.staticflickr.com/3080/2612420359_7a275b820e.jpg"
+ },
+ "chair": {
+  "name": "Folding Camp Chair",
+  "title": "File:Camping-Chair-Background.gif",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/9/98/Camping-Chair-Background.gif"
+ },
+ "backpack": {
+  "name": "TrailPro 45L Backpack",
+  "title": "File:A backpack with trekking poles and shoes.jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/a/a3/A_backpack_with_trekking_poles_and_shoes.jpg"
+ },
+ "lantern": {
+  "name": "LED Camp Lantern",
+  "title": "File:Enbrighten LED Camping Lantern.jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Enbrighten_LED_Camping_Lantern.jpg"
+ },
+ "kayak": {
+  "name": "Angler Sit-On Kayak",
+  "title": "Cape Fear River NC Ft Fisher Kayaks",
+  "source": "https://live.staticflickr.com/65535/51555722030_3e0874435e_b.jpg"
+ },
+ "lifevest": {
+  "name": "Adult Life Vest",
+  "title": "Cell Phone Life Vest",
+  "source": "https://live.staticflickr.com/51/143669025_394e1b6649.jpg"
+ },
+ "bike": {
+  "name": "TrailX Mountain Bike",
+  "title": "File:Cube, Cyclingworld Europe 2024, Meerbusch (P1180003).jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/1/19/Cube%2C_Cyclingworld_Europe_2024%2C_Meerbusch_%28P1180003%29.jpg"
+ },
+ "helmet": {
+  "name": "Vent Pro Bike Helmet",
+  "title": "File:Bicycle Helmet 0085 Transparent.png",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/8/81/Bicycle_Helmet_0085_Transparent.png"
+ },
+ "jersey": {
+  "name": "Home Team Jersey",
+  "title": "#28 PETERSON NFL jersey",
+  "source": "https://live.staticflickr.com/3004/3037107861_bac7121f7c_m.jpg"
+ },
+ "cap": {
+  "name": "Fitted Team Cap",
+  "title": "File:Baseball cap.png",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/6/64/Baseball_cap.png"
+ },
+ "rod": {
+  "name": "Spinning Fishing Rod Combo",
+  "title": "File:Fishing rod & reel, Mahamaya Lake (01).jpg",
+  "source": "https://upload.wikimedia.org/wikipedia/commons/0/05/Fishing_rod_%26_reel%2C_Mahamaya_Lake_%2801%29.jpg"
+ }
+}
