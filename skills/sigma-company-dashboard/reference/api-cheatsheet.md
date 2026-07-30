@@ -18,7 +18,7 @@ Bisect by element index; compare the offending element to a GET-back exemplar.
 - **region-map:** `{kind:"region-map", source:{elementId,kind:"table"}, columns:[{id,formula},...], region:{id:<stateColId>, regionType:"us-state"}, color:{by:"scale", column:<metricColId>}}`.
 - **pivot-table:** `rowsBy:[{id}]`, `columnsBy:[{id}]`, `values:["<colId>"]` (exact — objects-as-values rejected).
 - **container:** `{kind:"container", style?, backgroundImage?}`. Its children are placed INSIDE its `<GridContainer>` in the layout XML.
-- **image:** `{kind:"image", url:"<https or data-URI>", style:{fit:"cover"|"scale-down"}}`.
+- **image:** `{kind:"image", source:{kind:"url", url:"<https or data-URI>"}, style:{fit:"cover"|"scale-down"}}`. ⚠ **Schema drift (2026):** the old top-level `url:"..."` is now REJECTED (masked as `Invalid kind:"image"`) — the url must be nested under `source:{kind:"url", url}`.
 - **text:** `{kind:"text", body:"<markdown, supports {{formula}} incl CallText>", verticalAlign:"middle"}`.
 - **control:** `{kind:"control", controlId (workbook-unique), controlType:"list"|"date-range"|"text-area"|..., filters:[{source:{kind:"table",elementId},columnId}], source:{kind:"source",source:{...},columnId}}`.
 - **plugin (needs a registered pluginId):** `{kind:"plugin", pluginId, displayName, config:{source:{kind:"element",elementId}, <binding>:{kind:"column",columnId,source}}}`.
@@ -26,7 +26,7 @@ Bisect by element index; compare the offending element to a GET-back exemplar.
 ## style vocabulary (rounds-trips on containers/kpi/chart/image)
 `backgroundColor` (hex or `{kind:"theme",ref:"colors-..."}`), `borderColor`,
 `borderWidth` (0/1/3), `borderRadius` (`"pill"|"round"|"square"`), `padding` (only
-`"none"`), `backgroundImage` (top-level, `{url, style:{fit}}`), `fit`, `color`,
+`"none"`), `backgroundImage` (top-level, `{source:{kind:"url", url}, style:{fit}}` — same 2026 drift as `image`: a bare `{url}` is rejected as `backgroundImage.source: Invalid value: undefined`), `fit`, `color`,
 `strokeStyle`, `textWrap`, `align`, `bold`, `fontSize`/`fontWeight` (on kpi/chart `name`).
 
 ## Column format (POSTS FINE — the "format is rejected" doc is stale)

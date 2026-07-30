@@ -25,9 +25,10 @@ import json,sys,os,base64,urllib.request,urllib.error,xml.dom.minidom as _MD
 BASE,TOKEN,CONN,FOLDER=sys.argv[1:5]
 BASE_ROWS_JSON=sys.argv[5] if len(sys.argv)>5 else None
 AICONN="SNOWFLAKE.CORTEX.COMPLETE"; MATRIX=os.environ.get("PLUGIN_ID","REPLACE_WITH_YOUR_PLUGIN_ID")
-MULT=float(os.environ.get("MULT","1.0"))
+MULT=float(os.environ.get("MULT","0.4"))  # scales POS to a believable ~$1B western chain
 H={"Authorization":"Bearer "+TOKEN,"Content-Type":"application/json"}
 def b64(s): return base64.b64encode(s.encode()).decode()
+def bgimg(uri,fit="cover"): return {"source":{"kind":"url","url":uri},"style":{"fit":fit}}  # current backgroundImage shape
 CUR={"kind":"number","formatString":"$.3~s","currencySymbol":"$","decimalSymbol":".","digitGroupingSymbol":",","digitGroupingSize":[3]}
 NUM={"kind":"number","formatString":",.3~s"}; AURFMT={"kind":"number","formatString":"$,.2f"}
 PCT2={"kind":"number","formatString":"+,.1%"}; PCT1={"kind":"number","formatString":".1%"}
@@ -65,10 +66,10 @@ HDRBG=('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 210" preserveA
   '</svg>')
 HDRBG_URI="data:image/svg+xml;base64,"+b64(HDRBG)
 def header(sfx,title,subtitle):
-    c={"id":f"c-hdr{sfx}","kind":"container","style":{"borderRadius":"round"},"backgroundImage":{"url":HDRBG_URI,"style":{"fit":"cover"}}}
-    lg={"id":f"logo{sfx}","kind":"image","url":logo_uri,"style":{"fit":"scale-down"}}
-    tt={"id":f"ttl{sfx}","kind":"image","url":timg(title,34,"#FFFFFF",800,"middle"),"style":{"fit":"scale-down"}}
-    sb={"id":f"sub{sfx}","kind":"image","url":timg(subtitle,17,"#FFE1D8",500,"middle"),"style":{"fit":"scale-down"}}
+    c={"id":f"c-hdr{sfx}","kind":"container","style":{"borderRadius":"round"},"backgroundImage":bgimg(HDRBG_URI)}
+    lg={"id":f"logo{sfx}","kind":"image","source":{"kind":"url","url":logo_uri},"style":{"fit":"scale-down"}}
+    tt={"id":f"ttl{sfx}","kind":"image","source":{"kind":"url","url":timg(title,34,"#FFFFFF",800,"middle")},"style":{"fit":"scale-down"}}
+    sb={"id":f"sub{sfx}","kind":"image","source":{"kind":"url","url":timg(subtitle,17,"#FFE1D8",500,"middle")},"style":{"fit":"scale-down"}}
     lay=(f'  <GridContainer elementId="c-hdr{sfx}" type="grid" gridColumn="1 / 25" gridRow="1 / 5" gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="repeat(6,1fr)">\n'
          f'    <LayoutElement elementId="logo{sfx}" gridColumn="1 / 8" gridRow="2 / 6"/>\n'
          f'    <LayoutElement elementId="ttl{sfx}" gridColumn="8 / 21" gridRow="2 / 4"/>\n'
@@ -82,7 +83,7 @@ def _spark(elid,src,trend):
         "name":{"visibility":"hidden"},"legend":{"visibility":"hidden"},"lineAreaStyle":{"interpolation":"monotone"},"style":{"backgroundColor":"transparent","padding":"none"}}
 def card(elid,src,title,v1f,v2f,v2lab,fmt,g,trend=None,rowband="5 / 13"):
     cid=f"c-{elid}"
-    cont={"id":cid,"kind":"container","style":{"borderRadius":"round"},"backgroundImage":{"url":g,"style":{"fit":"cover"}}}
+    cont={"id":cid,"kind":"container","style":{"borderRadius":"round"},"backgroundImage":bgimg(g)}
     els=[cont]; inner=""
     if v2f:
         left={"id":f"k-{elid}c","kind":"kpi-chart","source":{"elementId":src,"kind":"table"},
@@ -119,20 +120,40 @@ TIERS=['Good','Better','Best']
 REGIONS=['Pacific','Southwest','Mountain','Northwest']
 def arr(xs): return "ARRAY_CONSTRUCT("+",".join("'"+str(x).replace("'","''")+"'" for x in xs)+")"
 CATARR=arr(CATS); DEPTARR=arr(DEPTS); BRANDARR=arr(BRANDS); TIERARR=arr(TIERS); REGARR=arr(REGIONS)
+# Weighted category mix (row share, sums to 100) -> a realistic descending sporting-goods assortment.
+# Assigned off high-cardinality PRODUCT_KEY so every category fills (low-card PRODUCT_FAMILY left buckets empty).
+CATWTS=[22,18,14,11,10,9,6,4,3,3]
+def cat_case(col="PRODUCT_KEY"):
+    r=f"MOD(ABS(HASH({col})),100)"; cum=0; expr="CASE "
+    for i,(c,w) in enumerate(zip(CATS,CATWTS)):
+        cum+=w
+        if i<len(CATS)-1: expr+=f"WHEN {r}<{cum} THEN '{c}' "
+    expr+=f"ELSE '{CATS[-1]}' END"; return expr
+CATCASE=cat_case()
+# Characteristic gross-margin rate per category (realistic sporting-goods spread; softlines rich, hardlines thin).
+# Keyed to the SAME PRODUCT_KEY buckets as the category, so category<->margin stay perfectly aligned.
+CATMARGINS=[0.34,0.47,0.40,0.30,0.38,0.27,0.33,0.44,0.36,0.49]
+def marg_case(col="PRODUCT_KEY"):
+    r=f"MOD(ABS(HASH({col})),100)"; cum=0; expr="CASE "
+    for i,(w,mg) in enumerate(zip(CATWTS,CATMARGINS)):
+        cum+=w
+        if i<len(CATS)-1: expr+=f"WHEN {r}<{cum} THEN {mg} "
+    expr+=f"ELSE {CATMARGINS[-1]} END"; return expr
+MARGCASE=marg_case()
 SQL=f"""WITH b0 AS (
   SELECT *, ABS(HASH(PRODUCT_FAMILY)) AS HF, DATE_TRUNC('month',DATE) AS USE_MONTH FROM SE_DEMO_DB.BIG_BUYS.BIG_BUYS_POS
   WHERE PRODUCT_FAMILY IS NOT NULL AND PRODUCT_LINE IS NOT NULL AND STORE_STATE IS NOT NULL
     AND ORDER_NUMBER IS NOT NULL AND QUANTITY IS NOT NULL AND PRICE IS NOT NULL AND COST IS NOT NULL
 ), base AS (
   SELECT ORDER_NUMBER, DATE, USE_MONTH,
-    GET({CATARR}, MOD(HF,10))::string AS CATEGORY,
+    {CATCASE} AS CATEGORY,
     GET({DEPTARR}, MOD(ABS(HASH(PRODUCT_LINE)),8))::string AS DEPARTMENT,
     GET({BRANDARR}, MOD(ABS(HASH(BRAND)),10))::string AS BRAND_NAME,
     GET({TIERARR}, LEAST(2, MOD(ABS(HASH(SKU_NUMBER)),5)))::string AS PRICE_TIER,
     GET({REGARR}, MOD(ABS(HASH(STORE_STATE)),4))::string AS REGION,
     QUANTITY AS UNITS,
     QUANTITY*PRICE*{MULT} AS NET_SALES,
-    QUANTITY*(PRICE-COST)*{MULT} AS MARGIN
+    QUANTITY*PRICE*{MULT}*({MARGCASE}) AS MARGIN
   FROM b0
 ), m AS (SELECT MAX(USE_MONTH) MAXM FROM base)
 SELECT base.*, CASE WHEN USE_MONTH>DATEADD('month',-12,(SELECT MAXM FROM m)) THEN 'Current Period'
@@ -149,8 +170,8 @@ CATSQL=f"""WITH b0 AS (
   SELECT *, ABS(HASH(PRODUCT_FAMILY)) AS HF, DATE_TRUNC('month',DATE) AS USE_MONTH FROM SE_DEMO_DB.BIG_BUYS.BIG_BUYS_POS
   WHERE PRODUCT_FAMILY IS NOT NULL AND QUANTITY IS NOT NULL AND PRICE IS NOT NULL AND COST IS NOT NULL
 ), base AS (
-  SELECT GET({CATARR}, MOD(HF,10))::string AS CATEGORY, USE_MONTH,
-    QUANTITY AS UNITS, QUANTITY*PRICE*{MULT} AS NET_SALES, QUANTITY*(PRICE-COST)*{MULT} AS MARGIN FROM b0
+  SELECT {CATCASE} AS CATEGORY, USE_MONTH,
+    QUANTITY AS UNITS, QUANTITY*PRICE*{MULT} AS NET_SALES, QUANTITY*PRICE*{MULT}*({MARGCASE}) AS MARGIN FROM b0
 ), m AS (SELECT MAX(USE_MONTH) MAXM FROM base)
 SELECT CATEGORY, SUM(NET_SALES) AS NET_SALES, SUM(UNITS) AS UNITS,
   DIV0(SUM(MARGIN),SUM(NET_SALES)) AS MARGIN_PCT
@@ -182,7 +203,7 @@ ai_body=('{{ Replace(CallText("'+AICONN+'", "CLAUDE-4-SONNET", '
  '& Text(Round(SumIf(['+MF+'/Margin],['+MF+'/Period Name]="Current Period")/SumIf(['+MF+'/Net Sales],['+MF+'/Period Name]="Current Period")*100,1)) '
  '& "%. Call out the highest-productivity category and any thin-margin category that needs a markdown or assortment review."), \'"\', \'\') }}')
 ai_box={"id":"c-ai","kind":"container","style":dict(TINT)}
-ai_ic={"id":"ai-ic","kind":"image","url":"data:image/svg+xml;base64,"+b64('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="'+RED+'" stroke="'+RED+'" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'),"style":{"fit":"contain"}}
+ai_ic={"id":"ai-ic","kind":"image","source":{"kind":"url","url":"data:image/svg+xml;base64,"+b64('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="'+RED+'" stroke="'+RED+'" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>')},"style":{"fit":"contain"}}
 ai_hd={"id":"ai-hd","kind":"text","body":"**AI insight**","verticalAlign":"middle","style":{"color":INK}}
 ai_sum={"id":"txt-ai","kind":"text","body":ai_body,"verticalAlign":"middle","style":{"color":"#22364C"}}
 grain={"kind":"control","controlId":"DateGrain","id":"ctrl-grain","name":"Date Grain","controlType":"segmented","value":"Month","source":{"kind":"manual","valueType":"text","values":["Quarter","Month","Week","Day"]}}
@@ -228,7 +249,7 @@ def ag_scenario(with_tool):
     return a
 def rail(n,with_agent,rows,agent_id):
     c={"id":f"c-chat{n}","kind":"container","style":dict(CARD)}
-    ric={"id":f"chat-ic{n}","kind":"image","url":"data:image/svg+xml;base64,"+b64('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="'+RED+'" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>'),"style":{"fit":"contain"}}
+    ric={"id":f"chat-ic{n}","kind":"image","source":{"kind":"url","url":"data:image/svg+xml;base64,"+b64('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="'+RED+'" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>')},"style":{"fit":"contain"}}
     hdr={"id":f"chat-hdr{n}","kind":"text","body":"**Ask Big 5 AI**","verticalAlign":"middle","style":{"color":INK}}
     if with_agent: inner={"id":f"chat{n}","kind":"chat","agentId":agent_id}
     else: inner={"id":f"chat{n}","kind":"text","verticalAlign":"middle","style":{"color":"#22364C","backgroundColor":"#EAF1F8"},"body":"**Ask AI for Insights**\n\n- Which category is most productive (sales x margin)?\n- Where is margin thinnest and why?\n- What sales + markdown mix hits a margin target?"}
@@ -257,9 +278,10 @@ def page1(with_agent):
     return elems,lay
 
 # ============ PAGE 2 — ASSORTMENT & MARGIN PLANNER ============
-DEFAULT_ROWS=[('Athletic Footwear',268000000,0.31),('Apparel',181000000,0.38),('Team Sports',142000000,0.34),
- ('Fitness & Exercise',121000000,0.29),('Camping & Outdoors',98000000,0.36),('Hunting & Fishing',86000000,0.27),
- ('Cycling & Skate',54000000,0.24),('Winter Sports',41000000,0.41),('Water Sports',33000000,0.33),('Game Room & Rec',22000000,0.45)]
+# Fallback planning base (used only when BASE_ROWS_JSON absent). Sales ~ trailing-12mo actuals; margins = CATMARGINS.
+DEFAULT_ROWS=[('Athletic Footwear',244000000,0.34),('Team Sports',166000000,0.40),('Apparel',149000000,0.47),
+ ('Camping & Outdoors',111000000,0.38),('Fitness & Exercise',111000000,0.30),('Hunting & Fishing',98000000,0.27),
+ ('Cycling & Skate',74000000,0.33),('Winter Sports',41000000,0.44),('Game Room & Rec',35000000,0.49),('Water Sports',34000000,0.36)]
 if BASE_ROWS_JSON and os.path.exists(BASE_ROWS_JSON):
     _r=json.load(open(BASE_ROWS_JSON))
     ROWS=[(x["category"],int(round(x["sales"])),round(float(x["margin"]),4)) for x in _r]
@@ -332,7 +354,7 @@ cbar={"id":"cbar","kind":"bar-chart","source":{"elementId":"book2","kind":"table
  "color":{"by":"category","column":"cb-cat2","scheme":["#E4002B"]},
  "legend":{"visibility":"hidden"},"name":{"text":"Projected net sales by category — active scenario","fontWeight":"bold","fontSize":15,"color":INK},"style":dict(CARD)}
 instr_c={"id":"c-instr","kind":"container","style":dict(TINT)}
-instr_ic={"id":"instr-ic","kind":"image","url":"data:image/svg+xml;base64,"+b64('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="'+RED+'" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>'),"style":{"fit":"contain"}}
+instr_ic={"id":"instr-ic","kind":"image","source":{"kind":"url","url":"data:image/svg+xml;base64,"+b64('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="'+RED+'" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>')},"style":{"fit":"contain"}}
 instr_hd={"id":"instr-hd","kind":"text","body":"**How the assortment planner works**","verticalAlign":"middle","style":{"color":INK}}
 instr={"id":"instr","kind":"text","body":("**1** — **Create** a named scenario (clones the current book); pick it with **Active scenario**.  **2** — In the grid, type **Sales Growth %**, **Margin Rate Change (pts)**, **Markdown %** per category.  **3** — Cards, chart & Copilot re-project instantly. **Submit → Approve** to lock a plan. Leave a cell blank to hold a driver flat."),
  "verticalAlign":"middle","style":{"color":"#22364C"}}
