@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Category Productivity Matrix — Big 5 Sigma Plugin</title>
+<script src="https://unpkg.com/@sigmacomputing/plugin"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,Inter,"Segoe UI",Roboto,Arial,sans-serif;background:transparent;color:#0A2240;overflow:hidden}
+  #wrap{height:100%;width:100%;display:flex;flex-direction:column;padding:12px 14px 10px;gap:8px}
+  #top{display:flex;justify-content:space-between;align-items:baseline;flex:0 0 auto}
+  #ttl{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#E4002B}
+  #meta{font-size:11px;color:#5B6B7B}
+  #meta b{color:#0A2240;font-weight:700}
+  #plot{flex:1;position:relative;min-height:0}
+  .tile{position:absolute;border-radius:5px;overflow:hidden;cursor:default;transition:filter .1s,transform .1s;padding:7px 8px;display:flex;flex-direction:column;justify-content:space-between}
+  .tile:hover{filter:brightness(1.06);z-index:5;box-shadow:0 6px 18px rgba(10,34,64,.28)}
+  .t-name{font-size:12px;font-weight:800;line-height:1.15;letter-spacing:.01em}
+  .t-sub{font-size:10.5px;font-weight:600;opacity:.92;line-height:1.2}
+  #legend{flex:0 0 auto;display:flex;align-items:center;gap:8px;font-size:10px;color:#5B6B7B}
+  #bar{height:9px;width:180px;border-radius:5px;background:linear-gradient(90deg,#C1121F,#E9B949,#94A3B8,#5F9E6B,#15803D)}
+  #legend .sp{flex:1}
+  #tip{position:fixed;pointer-events:none;background:#0A2240;border:1px solid #22456E;border-radius:9px;padding:9px 11px;font-size:11px;color:#EAF1F8;opacity:0;transition:opacity .1s;z-index:20;white-space:nowrap;box-shadow:0 10px 28px rgba(0,0,0,.4)}
+  #tip b{color:#7FB2E6}
+  #tip .g{color:#8FD3A0}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="top">
+    <div id="ttl">Category productivity matrix</div>
+    <div id="meta">net sales <b id="tot">—</b> · blended margin <b id="bm">—</b></div>
+  </div>
+  <div id="plot"></div>
+  <div id="legend"><span>thin&nbsp;margin</span><div id="bar"></div><span>rich&nbsp;margin</span><span class="sp"></span><span>tile size = net sales</span></div>
+</div>
+<div id="tip"></div>
+<script>
+(function(){
+  var client=(window.sigmaComputing&&window.sigmaComputing.plugin&&window.sigmaComputing.plugin.client)||null;
+
+  // ---- editor panel bindings (keys map to bare columnId strings in the spec) ----
+  var defs=[
+    {name:'source',type:'element'},
+    {name:'category',type:'column',source:'source',label:'Category'},
+    {name:'sales',type:'column',source:'source',allowedTypes:['number','integer'],label:'Net sales (tile size)'},
+    {name:'margin',type:'column',source:'source',allowedTypes:['number','integer'],label:'Gross margin % (tile color)'},
+    {name:'units',type:'column',source:'source',allowedTypes:['number','integer'],label:'Units (optional)'}
+  ];
+  if(client) client.config.configureEditorPanel(defs);
+
+  // ---- color helpers ----
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function hx(c){return ('0'+Math.round(c).toString(16)).slice(-2);}
+  // diverging crimson -> amber -> slate -> emerald, keyed on margin% within observed range
+  function marginColor(t){
+    t=Math.max(0,Math.min(1,t));
+    var s=[[193,18,31],[233,185,73],[148,163,184],[95,158,107],[21,128,61]];
+    var seg=t*(s.length-1),i=Math.min(s.length-2,Math.floor(seg)),f=seg-i;
+    return '#'+hx(lerp(s[i][0],s[i+1][0],f))+hx(lerp(s[i][1],s[i+1][1],f))+hx(lerp(s[i][2],s[i+1][2],f));
+  }
+  function textOn(bg){ // pick readable ink for a fill
+    var r=parseInt(bg.substr(1,2),16),g=parseInt(bg.substr(3,2),16),b=parseInt(bg.substr(5,2),16);
+    return (0.299*r+0.587*g+0.114*b)>150 ? '#0A2240' : '#FFFFFF';
+  }
+  function money(v){ v=Math.abs(v); if(v>=1e9)return '$'+(v/1e9).toFixed(2)+'B'; if(v>=1e6)return '$'+(v/1e6).toFixed(1)+'M'; if(v>=1e3)return '$'+(v/1e3).toFixed(0)+'K'; return '$'+Math.round(v); }
+  function pct(v){ return (v*100).toFixed(1)+'%'; }
+  function units(v){ v=Math.abs(v); if(v>=1e6)return (v/1e6).toFixed(1)+'M'; if(v>=1e3)return (v/1e3).toFixed(0)+'K'; return String(Math.round(v)); }
+
+  // ---- squarified treemap (Bruls, Huizing, van Wijk) ----
+  function worst(row,w,total,area){
+    var s=0; for(var i=0;i<row.length;i++)s+=row[i].a;
+    var mx=-Infinity,mn=Infinity; for(var j=0;j<row.length;j++){var a=row[j].a; if(a>mx)mx=a; if(a<mn)mn=a;}
+    var s2=s*s,w2=w*w;
+    return Math.max((w2*mx)/s2,(s2)/(w2*mn));
+  }
+  function layoutRow(row,rect,horizontal){
+    var s=0; for(var i=0;i<row.length;i++)s+=row[i].a;
+    var out=[];
+    if(horizontal){
+      var rh=s/rect.w, y=rect.y, x=rect.x;
+      for(var k=0;k<row.length;k++){ var rw=row[k].a/rh; out.push({d:row[k].d,x:x,y:y,w:rw,h:rh}); x+=rw; }
+    } else {
+      var rw2=s/rect.h, x2=rect.x, y2=rect.y;
+      for(var m=0;m<row.length;m++){ var rh2=row[m].a/rw2; out.push({d:row[m].d,x:x2,y:y2,w:rw2,h:rh2}); y2+=rh2; }
+    }
+    return out;
+  }
+  function squarify(items,rect){
+    // items: [{d, a(area px)}] already scaled to rect area, sorted desc
+    var placed=[], row=[], remaining=items.slice();
+    var r={x:rect.x,y:rect.y,w:rect.w,h:rect.h};
+    while(remaining.length){
+      var horizontal = r.w >= r.h;
+      var side = horizontal ? r.h : r.w;
+      var cand = row.concat([remaining[0]]);
+      if(row.length===0 || worst(cand,side,0,0) <= worst(row,side,0,0)){
+        row.push(remaining.shift());
+      } else {
+        var laid=layoutRow(row,r,!horizontal);
+        for(var i=0;i<laid.length;i++)placed.push(laid[i]);
+        var s=0; for(var j=0;j<row.length;j++)s+=row[j].a;
+        if(horizontal){ var dw=s/r.h; r.x+=dw; r.w-=dw; } else { var dh=s/r.w; r.y+=dh; r.h-=dh; }
+        row=[];
+      }
+    }
+    if(row.length){
+      var horiz2 = r.w >= r.h;
+      var laid2=layoutRow(row,r,!horiz2);
+      for(var k=0;k<laid2.length;k++)placed.push(laid2[k]);
+    }
+    return placed;
+  }
+
+  var tip=document.getElementById('tip');
+  function draw(rows){
+    var plot=document.getElementById('plot'); plot.innerHTML='';
+    var W=plot.clientWidth||600, H=plot.clientHeight||360;
+    if(!rows.length||W<10||H<10){ return; }
+    rows=rows.slice().sort(function(a,b){return b.sales-a.sales;});
+    var totSales=0,totMargin=0; for(var i=0;i<rows.length;i++){totSales+=rows[i].sales; totMargin+=rows[i].sales*rows[i].margin;}
+    var blended=totSales?totMargin/totSales:0;
+    // margin color range across categories (min..max), padded a touch
+    var mm=rows.map(function(r){return r.margin;}); var lo=Math.min.apply(null,mm),hi=Math.max.apply(null,mm);
+    if(hi-lo<1e-6){lo-=0.02;hi+=0.02;}
+    var area=W*H, scale=area/totSales;
+    var items=rows.map(function(r){return {d:r,a:Math.max(r.sales*scale,1)};});
+    var placed=squarify(items,{x:0,y:0,w:W,h:H});
+    for(var p=0;p<placed.length;p++){ (function(t){
+      var d=t.d, fill=marginColor((d.margin-lo)/(hi-lo)), ink=textOn(fill);
+      var el=document.createElement('div'); el.className='tile';
+      el.style.left=t.x+'px'; el.style.top=t.y+'px'; el.style.width=Math.max(t.w-3,0)+'px'; el.style.height=Math.max(t.h-3,0)+'px';
+      el.style.background=fill; el.style.color=ink;
+      var big = t.w>78 && t.h>44;
+      var nm='<div class="t-name">'+d.name+'</div>';
+      var sub= big ? '<div class="t-sub">'+money(d.sales)+' · '+pct(d.margin)+' GM</div>' : '';
+      if(t.w<52||t.h<26){ nm=''; sub=''; }
+      el.innerHTML=nm+sub;
+      el.addEventListener('mousemove',function(e){
+        tip.style.opacity=1; tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+14)+'px';
+        tip.innerHTML='<b>'+d.name+'</b><br>Net sales '+money(d.sales)+'<br><span class="g">Gross margin '+pct(d.margin)+'</span>'+
+          (d.units?('<br>Units '+units(d.units)+' · AUR '+money(d.sales/d.units)):'')+
+          '<br>Share '+pct(d.sales/totSales);
+      });
+      el.addEventListener('mouseleave',function(){tip.style.opacity=0;});
+      plot.appendChild(el);
+    })(placed[p]); }
+    document.getElementById('tot').textContent=money(totSales);
+    document.getElementById('bm').textContent=pct(blended);
+  }
+
+  // ---- synthetic fallback: believable sporting-goods assortment ----
+  function synth(){
+    return [
+      {name:'Athletic Footwear', sales:268000000, margin:0.31, units:3050000},
+      {name:'Apparel',           sales:181000000, margin:0.38, units:4020000},
+      {name:'Team Sports',       sales:142000000, margin:0.34, units:2210000},
+      {name:'Fitness & Exercise',sales:121000000, margin:0.29, units:640000},
+      {name:'Camping & Outdoors',sales:98000000,  margin:0.36, units:1180000},
+      {name:'Hunting & Fishing', sales:86000000,  margin:0.27, units:520000},
+      {name:'Cycling & Skate',   sales:54000000,  margin:0.24, units:210000},
+      {name:'Winter Sports',     sales:41000000,  margin:0.41, units:180000},
+      {name:'Water Sports',      sales:33000000,  margin:0.33, units:290000},
+      {name:'Game Room & Rec',   sales:22000000,  margin:0.45, units:95000}
+    ];
+  }
+
+  var st={cfg:{},data:null,unsub:null};
+  function recompute(){
+    var c=st.cfg||{}, d=st.data, rows=null;
+    if(d && c.category && c.sales && d[c.category] && d[c.sales]){
+      var cat=d[c.category]||[], sal=d[c.sales]||[], mar=(c.margin&&d[c.margin])||[], un=(c.units&&d[c.units])||[];
+      var agg={};
+      for(var i=0;i<cat.length;i++){
+        var k=String(cat[i]==null?'—':cat[i]);
+        if(!agg[k])agg[k]={name:k,sales:0,mw:0,units:0};
+        var s=Number(sal[i])||0; agg[k].sales+=s;
+        agg[k].mw += s*(Number(mar[i])||0); // sales-weighted margin
+        agg[k].units += Number(un[i])||0;
+      }
+      rows=Object.keys(agg).map(function(k){var a=agg[k]; return {name:a.name,sales:a.sales,margin:a.sales?a.mw/a.sales:0,units:a.units};})
+                 .filter(function(r){return r.sales>0;});
+      if(!rows.length) rows=null;
+    }
+    draw(rows||synth());
+  }
+
+  // ResizeObserver — Sigma sizes the panel after first paint; redraw on every resize.
+  var ro=new ResizeObserver(function(){recompute();});
+  ro.observe(document.getElementById('plot'));
+
+  if(client){
+    client.config.subscribe(function(cfg){
+      st.cfg=cfg||{};
+      if(st.unsub){st.unsub();st.unsub=null;}
+      if(cfg&&cfg.source){ st.unsub=client.elements.subscribeToElementData(cfg.source,function(dd){st.data=dd;recompute();}); }
+      recompute();
+    });
+  } else {
+    recompute();
+  }
+})();
+</script>
+</body>
+</html>
