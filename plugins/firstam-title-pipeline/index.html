@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Title Order Pipeline — First American Sigma Plugin</title>
+<script src="https://unpkg.com/@sigmacomputing/plugin"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,Roboto,Arial,sans-serif;background:transparent;color:#12294A;overflow:hidden}
+  #wrap{height:100%;width:100%;display:flex;flex-direction:column;padding:14px 16px;gap:8px}
+  #top{display:flex;justify-content:space-between;align-items:baseline;flex:0 0 auto}
+  #ttl{font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#2E6BB8}
+  #sub{font-size:12px;color:#5B6B7F}
+  #sub b{color:#12294A;font-size:15px}
+  #stage{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-between;gap:4px;padding-top:2px}
+  .row{display:flex;align-items:center;gap:10px;flex:1;min-height:0}
+  .lab{width:150px;flex:0 0 150px;font-size:11px;font-weight:700;color:#12294A;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .track{position:relative;flex:1;height:100%;display:flex;align-items:center}
+  .bar{height:64%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-size:11px;font-weight:800;min-width:44px;transition:width .25s ease;box-shadow:0 1px 3px rgba(18,41,74,.18)}
+  .drop{position:absolute;right:-4px;top:50%;transform:translateY(-50%);font-size:9.5px;font-weight:700;color:#C0392B;white-space:nowrap}
+  .drop.ok{color:#0EA5A0}
+  #legend{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#5B6B7F;flex:0 0 auto;padding-top:2px}
+  #tip{position:fixed;pointer-events:none;background:#0A1B34;border:1px solid #2E6BB8;border-radius:8px;padding:8px 10px;font-size:11px;color:#eaf2fb;opacity:0;transition:opacity .1s;z-index:10;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.45)}
+  #tip b{color:#5B8FD0}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="top">
+    <div id="ttl">Title Order Pipeline</div>
+    <div id="sub">Pull-through <b id="pt">—</b> · <span id="op">0</span> orders opened</div>
+  </div>
+  <div id="stage"></div>
+  <div id="legend"><span>Monthly order flow · Opened → Policy Issued</span><span id="fallout">—</span></div>
+</div>
+<div id="tip"></div>
+<script>
+(function(){
+  var client=(window.sigmaComputing&&window.sigmaComputing.plugin&&window.sigmaComputing.plugin.client)||null;
+  var defs=[
+    {name:'source',type:'element'},
+    {name:'stage',type:'column',source:'source',label:'Stage'},
+    {name:'stageOrder',type:'column',source:'source',allowedTypes:['number','integer'],label:'Stage Order'},
+    {name:'orders',type:'column',source:'source',allowedTypes:['number','integer'],label:'Orders'}
+  ];
+  if(client) client.config.configureEditorPanel(defs);
+
+  function fmt(n){
+    if(n>=1e6) return (n/1e6).toFixed(1)+'M';
+    if(n>=1e3) return Math.round(n/1e3)+'K';
+    return String(Math.round(n));
+  }
+  // navy -> blue -> mint ramp across the funnel stages
+  function stageColor(t){
+    var s=[[18,41,74],[46,107,184],[91,143,208],[0,180,200]];
+    var seg=t*3, i=Math.min(2,Math.floor(seg)), f=seg-i;
+    function lerp(a,b){return Math.round(a+(b-a)*f);}
+    var r=lerp(s[i][0],s[i+1][0]),g=lerp(s[i][1],s[i+1][1]),b=lerp(s[i][2],s[i+1][2]);
+    return 'rgb('+r+','+g+','+b+')';
+  }
+  var tip=document.getElementById('tip');
+
+  function draw(rows){
+    rows.sort(function(a,b){return a.order-b.order;});
+    var stage=document.getElementById('stage');
+    stage.innerHTML='';
+    if(!rows.length) return;
+    var opened=rows[0].orders, maxV=rows[0].orders, last=rows[rows.length-1].orders;
+    document.getElementById('pt').textContent=(100*last/opened).toFixed(1)+'%';
+    document.getElementById('op').textContent=fmt(opened);
+    document.getElementById('fallout').textContent='Total fallout '+fmt(opened-last)+' ('+(100*(opened-last)/opened).toFixed(1)+'%)';
+    rows.forEach(function(r,i){
+      var row=document.createElement('div'); row.className='row';
+      var lab=document.createElement('div'); lab.className='lab'; lab.textContent=r.stage;
+      var track=document.createElement('div'); track.className='track';
+      var bar=document.createElement('div'); bar.className='bar';
+      bar.style.width=Math.max(6,100*r.orders/maxV)+'%';
+      bar.style.background=stageColor(rows.length>1?i/(rows.length-1):0);
+      bar.textContent=fmt(r.orders);
+      if(i>0){
+        var prev=rows[i-1].orders, d=prev-r.orders;
+        var dd=document.createElement('div'); dd.className='drop'+(d<=0?' ok':'');
+        dd.textContent=(d>0?'▼ ':'▲ ')+(100*d/prev).toFixed(1)+'%';
+        track.appendChild(dd);
+      }
+      bar.addEventListener('mousemove',function(e){
+        tip.innerHTML='<b>'+r.stage+'</b><br>'+fmt(r.orders)+' orders · '+(100*r.orders/opened).toFixed(1)+'% of opened';
+        tip.style.opacity=1; tip.style.left=(e.clientX+12)+'px'; tip.style.top=(e.clientY+12)+'px';
+      });
+      bar.addEventListener('mouseleave',function(){tip.style.opacity=0;});
+      track.appendChild(bar);
+      row.appendChild(lab); row.appendChild(track);
+      stage.appendChild(row);
+    });
+  }
+
+  function synth(){
+    return [
+      {stage:'Opened',order:1,orders:100000},
+      {stage:'Title Search',order:2,orders:95600},
+      {stage:'Examination',order:3,orders:91200},
+      {stage:'Commitment Issued',order:4,orders:85800},
+      {stage:'Clear to Close',order:5,orders:78400},
+      {stage:'Closing / Settlement',order:6,orders:72300},
+      {stage:'Policy Issued',order:7,orders:69100}
+    ];
+  }
+
+  var st={cfg:{},data:null,unsub:null};
+  function recompute(){
+    var c=st.cfg||{};
+    if(st.data && c.stage && c.stageOrder && c.orders &&
+       st.data[c.stage] && st.data[c.stageOrder] && st.data[c.orders]){
+      var s=st.data[c.stage], o=st.data[c.stageOrder], v=st.data[c.orders];
+      var rows=s.map(function(name,i){
+        return {stage:String(name), order:Number(o[i])||0, orders:Number(v[i])||0};
+      });
+      if(rows.length){draw(rows); return;}
+    }
+    draw(synth());
+  }
+  if(client){
+    client.config.subscribe(function(cfg){
+      st.cfg=cfg||{};
+      if(st.unsub){st.unsub(); st.unsub=null;}
+      if(cfg&&cfg.source){st.unsub=client.elements.subscribeToElementData(cfg.source,function(d){st.data=d; recompute();});}
+      recompute();
+    });
+  } else { recompute(); }
+
+  var wrap=document.getElementById('wrap');
+  if(window.ResizeObserver){ new ResizeObserver(function(){ /* flexbox reflows automatically */ }).observe(wrap); }
+})();
+</script>
+</body>
+</html>
