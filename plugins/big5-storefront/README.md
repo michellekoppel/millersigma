@@ -22,9 +22,20 @@ rebranded for **Big 5 Sporting Goods**.
 Ships a synthetic Big 5 catalog so it previews standalone (no data binding
 required). Redraws on resize via `ResizeObserver`.
 
+## Hosting note
+The plugin must be served as real `text/html` from a public URL. **Avoid
+`raw.githack.com`** — it rate-limits (returns `429 "something is wrong"` in the
+panel). **Avoid `cdn.jsdelivr.net/gh/...`** — it serves `.html` as `text/plain`,
+which won't render in the plugin iframe. Use a host that serves `text/html`:
+`cdn.statically.io/gh/<owner>/<repo>@<commit-sha>/plugins/big5-storefront/index.html`
+(pin to a commit SHA so it's immutable), or GitHub Pages.
+
 ## Register + embed
 ```
+SHA=$(git rev-parse HEAD)
 python3 scripts/register_plugin.py "$SIGMA_BASE_URL" "$TOKEN" \
-  "Big 5 Storefront" "https://raw.githack.com/michellekoppel/millersigma/claude/big5-merchandising-dashboard-7klo2m/plugins/big5-storefront/index.html"
+  "Big 5 Storefront" "https://cdn.statically.io/gh/michellekoppel/millersigma@$SHA/plugins/big5-storefront/index.html"
 ```
 Then embed `{kind:"plugin", pluginId, config:{source:{kind:"element",elementId}, name:"<colId>", ...}}`.
+The plugin `url` is set once at registration — to change hosts, register a new
+plugin and swap the `pluginId` in the workbook (PUT `/v2/workbooks/{id}/spec`).
