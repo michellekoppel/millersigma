@@ -62,3 +62,20 @@ element sourcing works** (a chart on page A can source a table on page B).
 Token via `scripts/get-token-staging.sh` (client_credentials → bearer); clear
 `/tmp/.sigma_token` when switching creds. Netlify CLI authed; create a UNIQUE
 site then deploy with an explicit `--site`.
+
+## CURRENT create envelope (verified live 2026-08 — the old top-level `pages[].elements` form is REJECTED)
+`POST /v2/workbooks/spec` now wants the spec wrapped in **`document`** (clone a fresh
+`GET /v2/workbooks/{id}/spec` with `Accept: application/json`):
+```
+{ name, folderId, document:{ schemaVersion:1, kind:"workbook",
+    pages:[{id,name,pageWidth?}],            # pages carry NO elements
+    elements:[ ...FLAT list of every element... ],
+    layout:"<?xml ...><Page id=...>...</Page>...",
+    settings:{ theme:{overrides:{categoricalScheme:[...],pageWidth:"full"}}, navigation:{pageHeader:"disabled"} } } }
+```
+- **Layout XML tags renamed:** `<Container>` / `<Element>` (NOT `<GridContainer>` / `<LayoutElement>`). Same attrs.
+- **Every element must be placed in the layout** — including backing custom-SQL tables. Put them on a dedicated `<Page id="data">` (add a matching `{id:"data",name:"Data"}` page).
+- **image:** `{kind:"image", source:{kind:"url", url:<https or data-URI>}, style:{fit}}` (url moved under `source`). **backgroundImage:** `{source:{kind:"url",url}, style:{fit}}`.
+- **kpi-chart is comparative via `timeline`+`periodComparison`, not paired columns:** `{source, columns:[{id:mCol,formula:'DateTrunc("month",[T/Date])'},{id:vCol,formula,name,format}], value:{columnId:vCol}, timeline:{columnId:mCol}, periodComparison:"month", comparison:{colorGood,colorBad}, layout:{verticalAnchor:"middle"}}`. No `style`/`value.color` (masked "Invalid kind: kpi-chart"). Put the card on a LIGHT container (dark theme text reads); the old white-on-gradient KPI title trick is gone.
+- **custom-SQL table source unchanged:** `source:{connectionId, statement, kind:"sql"}`, columns `formula:"[Custom SQL/<OUT>]"`.
+- **bar/line color:** `color:{by:"category"|"scale", column:<separate colId>, scheme:[...]}`. `stacking` was absent from the sampled GET-back — grouped + category color is the safe default.
