@@ -1500,6 +1500,14 @@ def statement_activity_sql(cfg):
                  "'%s'" % c, "%.2f" % amt, str(pts))
                 for t, pd, d, c, amt, pts in _VR_ACTIVITY]
         return _union(rows, cols)
+    if cfg["key"] == "firstam":
+        cols = ["Transaction Date", "Post Date",
+                "Merchant Name or Transaction Description", "Category", "Amount",
+                "Points Earned"]
+        rows = [("'%s/2026'" % t, "'%s/2026'" % pd, "'%s'" % d.replace("'", "''"),
+                 "'%s'" % c, "%.2f" % amt, str(pts))
+                for t, pd, d, c, amt, pts in _FA_ACTIVITY]
+        return _union(rows, cols)
     if cfg["key"] != "delta":
         return None
     cols = ["Transaction Date", "Post Date",
@@ -1515,6 +1523,9 @@ def rewards_summary_sql(cfg):
     if cfg["key"] == "veraset":
         rows = [(str(o), "'%s'" % d, str(p)) for o, d, p in _VR_USAGE]
         return _union(rows, ["Line Order", "Description", "Points"])
+    if cfg["key"] == "firstam":
+        rows = [(str(o), "'%s'" % d, str(p)) for o, d, p in _FA_USAGE]
+        return _union(rows, ["Line Order", "Description", "Points"])
     if cfg["key"] != "delta":
         return None
     rows = [(str(o), "'%s'" % d, str(p)) for o, d, p in _DL_MILES]
@@ -1524,6 +1535,9 @@ def rewards_summary_sql(cfg):
 def account_summary_sql(cfg):
     if cfg["key"] == "veraset":
         rows = [(str(o), "'%s'" % m, "'%s'" % v) for o, m, v in _VR_CONTRACT]
+        return _union(rows, ["Line Order", "Metric", "Value"])
+    if cfg["key"] == "firstam":
+        rows = [(str(o), "'%s'" % m, "'%s'" % v) for o, m, v in _FA_ACCOUNT]
         return _union(rows, ["Line Order", "Metric", "Value"])
     if cfg["key"] != "delta":
         return None
@@ -3093,8 +3107,99 @@ VOCAB["firstam"] = {
 POP["firstam"] = {"bases": (900, 1600, 3200, 12000), "rev_rate": 1.0,
                   "fee_per_product": 120}
 
-# No bespoke plugin this build -- native fallback (order-mix contribution)
-# renders instead. A bespoke Title Order Pipeline plugin can be added later.
-PLUGINS["firstam"] = {"hero": None, "hero_label": None, "ticker": None}
+# Bespoke hero: a title order lifecycle funnel (Opened -> Policy Issued) bound
+# to a generated pipeline table. Registered in the papercrane prod org against
+# the githack-hosted plugin file (real text/html, PNG-export safe). No ticker --
+# title has no live commodity/rate feed, so the native marker strip stands in.
+PLUGINS["firstam"] = {
+    "hero": "b6140e87-eece-434e-952c-6fc20c7f3715",
+    "hero_label": "TITLE ORDER PIPELINE",
+    "ticker": None,
+    "hero_table": {"name": "Title Order Pipeline", "file": "title_pipeline.sql",
+                   "prefix": "h",
+                   "cols": ["Stage", "Stage Order", "Orders"]},
+    "hero_config": {"stage": "h0", "stageOrder": "h1", "orders": "h2"},
+}
 
 COMPANIES["firstam"] = FIRSTAM
+
+
+# ---------------------------------------------------------------------------
+# First American — a Title & Escrow Closing Statement, the B2B document a title
+# insurer sends a large lender/agency partner each month. Same fixed-column
+# report template as SoFi/Delta/Veraset, reframed as a settlement statement:
+# "Points Earned" holds the count of policies/endorsements on each file, and
+# "Merchant Name or Transaction Description" holds the property/file. One
+# partner account's month, not First American's whole book (same convention as
+# Delta's one-flyer SkyMiles statement).
+# ---------------------------------------------------------------------------
+_FA_ACTIVITY = [
+    ("07/02", "07/09", "123 Maple Ave, Phoenix AZ — Purchase", "Residential Purchase", 2480.00, 1),
+    ("07/03", "07/10", "880 Harbor Blvd, San Diego CA — Refinance", "Residential Refinance", 1350.00, 1),
+    ("07/07", "07/15", "Northgate Logistics Center, Dallas TX — Commercial", "Commercial Title", 18600.00, 2),
+    ("07/08", "07/12", "4471 Elm St, Austin TX — Purchase", "Residential Purchase", 2210.00, 1),
+    ("07/10", "07/18", "Escrow settlement — 55 Bayview, Seattle WA", "Escrow & Settlement", 1180.00, 0),
+    ("07/14", "07/21", "Parkline Multifamily, Denver CO — Commercial", "Commercial Title", 24200.00, 3),
+    ("07/16", "07/22", "210 Oak Dr, Charlotte NC — Purchase", "Residential Purchase", 1980.00, 1),
+    ("07/18", "07/26", "1031 Exchange — Riverside Plaza, Tampa FL", "Escrow & Settlement", 3400.00, 1),
+    ("07/22", "07/29", "77 Sunset Ct, Sacramento CA — Refinance", "Residential Refinance", 1290.00, 1),
+    ("07/24", "07/31", "Cedar Ridge Estates, Raleigh NC — Purchase", "Residential Purchase", 2350.00, 1),
+    ("07/28", "08/04", "Downtown Office Tower, Atlanta GA — Commercial", "Commercial Title", 31200.00, 4),
+]
+
+_FA_USAGE = [
+    (1, "Residential purchase policies issued", 620),
+    (2, "Residential refinance policies issued", 210),
+    (3, "Commercial title policies issued", 40),
+    (4, "Escrow & settlement files closed", 380),
+    (5, "Endorsements issued", 540),
+    (6, "Reissue / prior-policy credits", -85),
+]
+
+_FA_ACCOUNT = [
+    (1, "Account / Partner ID", "FA-2026-88213"),
+    (2, "Statement to", "Summit Lending Partners"),
+    (3, "Statement period", "07/01 – 07/31/2026"),
+    (4, "Avg open-to-close cycle", "28 days"),
+    (5, "Pull-through rate", "69.1%"),
+    (6, "Title claims rate", "0.9%"),
+    (7, "Account manager", "D. Whitfield"),
+]
+
+STATEMENTS["firstam"] = {
+    "spec_name": "First American — Title & Escrow Closing Statement (July 2026)",
+    "page_name": "Closing Statement",
+    "manage_url": "www.firstam.com/title",
+    "service_label": "Title & Escrow Support",
+    "service_phone": "1-800-854-3643",
+    "period": "07/01 – 07/31/2026",
+    "sect_rewards": "ORDER & ENDORSEMENT SUMMARY",
+    "sect_summary": "ACCOUNT SUMMARY",
+    "sect_category": "PREMIUM BY TRANSACTION TYPE",
+    "sect_activity": "CLOSED FILE ACTIVITY",
+    "sect_messages": "YOUR ACCOUNT MESSAGES",
+    "headline": [("Premium & Fees Billed", None), ("Policies Issued", None),
+                 ("Statement Date", "07/31/2026")],
+    "button_label": "Title & escrow statement ↗",
+    "rewards_total": "Total title items this statement",
+    "h_formulas": [("src", 'Sum([Statement Activity/Amount])', "MONEY0"),
+                   ("src", 'Sum([Statement Activity/Points Earned])', "NUM0")],
+    "msg_body": ("Beginning 09/01/2026, reissue and prior-policy rate credits on "
+                 "eligible refinance and resale files increase where a qualifying "
+                 "prior policy is presented at opening. Submitting the prior "
+                 "policy with the order automatically applies the credit at "
+                 "closing. No action is required."),
+    "warn1": ("**Recording & disbursement:** Escrow funds are disbursed only "
+              "after the deed and mortgage are confirmed recorded in the county "
+              "of record. Wire instructions are never changed by email — verify "
+              "any change by phone with your escrow officer before sending "
+              "funds."),
+    "warn2": ("**Policy issuance:** The title commitment is an offer to insure "
+              "subject to its requirements and exceptions; coverage takes effect "
+              "only when the policy is issued after closing and the premium is "
+              "paid. Endorsements modify coverage only as expressly stated."),
+    "footer": ("Title insurance and escrow services are provided by First "
+               "American Title Insurance Company and its affiliates. Illustrative "
+               "statement generated from a Sigma report specification — synthetic "
+               "data, not a real account."),
+}
