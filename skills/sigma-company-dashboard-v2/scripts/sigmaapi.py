@@ -21,17 +21,26 @@ ENV_FILE = pathlib.Path.home() / ".sigma-portals" / "staging.env"
 TOKEN_CACHE = pathlib.Path("/tmp/.tok_staging")
 TOKEN_TTL = 55 * 60
 
-BASE = "https://api.staging.sigmacomputing.io"
-ORG_ID = "8c99818a-90b3-4cae-bdb7-cf69a741171a"
+# Environment overrides let the same builder target a different org/instance
+# (e.g. production papercrane) without editing this file. When SIGMA_BASE_URL /
+# SIGMA_ORG_ID / SIGMA_FOLDER_ID / SIGMA_CONN_ID and SIGMA_CLIENT_ID/SECRET are
+# present in the environment, they win; otherwise fall back to the staging
+# papercranestaging defaults below.
+BASE = os.environ.get("SIGMA_BASE_URL", "https://api.staging.sigmacomputing.io").rstrip("/")
+ORG_ID = os.environ.get("SIGMA_ORG_ID", "8c99818a-90b3-4cae-bdb7-cf69a741171a")
 
-# Discovered 2026-08-07 on papercranestaging.
-FOLDER_CLAUDE_BUILDER = "a758d7ee-8c23-423d-9d60-5b635d9e9b58"
+# Discovered 2026-08-07 on papercranestaging. Override with SIGMA_FOLDER_ID to
+# drop the workbook in a different folder (e.g. a user's My Documents).
+FOLDER_CLAUDE_BUILDER = os.environ.get(
+    "SIGMA_FOLDER_ID", "a758d7ee-8c23-423d-9d60-5b635d9e9b58")
 
 # Most staging connections have disabled warehouse credentials. This one resolves
 # SQL at create time (checked 2026-08-07); it is also what the reference
 # "Microsoft — Executive App" workbook uses. `verify` does NOT resolve SQL, so a
-# bad connection only surfaces on create.
-CONN_SNOWFLAKE = "a9d45cfe-ff65-4515-8193-a7072602a1ee"
+# bad connection only surfaces on create. Override with SIGMA_CONN_ID for another
+# org's Snowflake connection.
+CONN_SNOWFLAKE = os.environ.get(
+    "SIGMA_CONN_ID", "a9d45cfe-ff65-4515-8193-a7072602a1ee")
 
 
 class SigmaError(RuntimeError):
@@ -58,9 +67,14 @@ def _read_env():
 
 
 def _fetch_token():
-    env = _read_env()
-    cid = env["SIGMA_STAGING_CLIENT_ID"]
-    csec = env["SIGMA_STAGING_CLIENT_SECRET"]
+    # Prefer credentials already in the environment (production papercrane is
+    # provisioned this way); fall back to the ~/.sigma-portals/staging.env file.
+    cid = os.environ.get("SIGMA_CLIENT_ID")
+    csec = os.environ.get("SIGMA_CLIENT_SECRET")
+    if not (cid and csec):
+        env = _read_env()
+        cid = env["SIGMA_STAGING_CLIENT_ID"]
+        csec = env["SIGMA_STAGING_CLIENT_SECRET"]
     cred = base64.b64encode(("%s:%s" % (cid, csec)).encode()).decode()
     req = urllib.request.Request(
         BASE + "/v2/auth/token",

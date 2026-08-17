@@ -2912,3 +2912,189 @@ POP["pura"] = {"bases": (80, 180, 350, 750), "rev_rate": 0.65, "fee_per_product"
 PLUGINS["pura"] = {"hero": None, "hero_label": None, "ticker": None}
 
 COMPANIES["pura"] = PURA
+
+
+# ---------------------------------------------------------------------------
+# First American Financial (firstam.com) — the nation's #2 title insurer.
+# Command-center build. Title-insurance economics differ from P&C: the loss
+# ratio is TINY (title defends against past defects, ~4-5% losses) while the
+# expense ratio is HUGE (agent commissions + search/exam), so the combined
+# ratio still lands ~90-95%. The mapping mirrors Mutual of Enumclaw:
+#
+#   products      -> revenue lines (Agent/Direct/Commercial title, Escrow &
+#                    Settlement, Data & Analytics, Home Warranty)
+#   bal_base      -> annual revenue for the line ($MM). yield_rate pinned to
+#                    1.00 (revenue at par) so "Avg Balances" is gross revenue.
+#   funding_rate  -> the line's cost/expense ratio; spread (income - cost +
+#                    fees) is the operating margin ("spread, not income" rule).
+#   provision     -> title loss/claims reserve rate (~4-5%, very low)
+#   delinq/"risk" -> claims rate
+#   fee_base      -> endorsement / recording / ancillary fees (MONTHLY $MM)
+#
+# Real anchors (2023 10-K, web-verified): ~$6.0B total revenue, Title
+# Insurance & Services ~$5.5B, Home Warranty ~$0.44B, ~1M policies/yr, ~130
+# yrs. bal_base sums to 6200 to land near the real ~$6B revenue directly.
+# Palette sampled from the real logo mark (#1b3d6e) fetched off firstam.com.
+# ---------------------------------------------------------------------------
+FIRSTAM = {
+    "key": "firstam",
+    "name": "First American",
+    "title": "Title & Settlement Command Center",
+    "domain": "title insurance & settlement services",
+    "unit_noun": "order",
+    "volume_noun": "revenue",
+    "logo_domain": "firstam.com",
+    "base_table": "Title & Settlement Book",
+    # sampled from firstam.com's real logo mark (#1b3d6e), brightened for a
+    # navy->blue header gradient
+    "palette": {
+        "navy": "#12294A", "navy_deep": "#0A1B34",
+        "primary": "#2E6BB8", "secondary": "#1B3D6E",
+        "accent": "#5B8FD0", "mint": "#00B4C8",
+    },
+    "products": [
+        # name, order, balance_type, bal_base($MM revenue), yield(=1.00, rev at
+        # par), funding(cost/expense ratio -> spread == operating margin),
+        # fee_base(MONTHLY $MM), provision(title loss/reserve rate), delinq
+        # (claims rate), opex_ratio(0 -- folded into funding), growth,
+        # units_base(closed orders/policies, K), phase, tagline, rate_label,
+        # goal_pct, status
+        ("Agent Title", 1, "Title", 2350, 1.00, .93, 6.0, .045, .05,
+         0.0, .030, 540, 0.0, "Agent-remitted residential title premiums",
+         "Avg Premium/File", .98, "On plan"),
+        ("Direct Title", 2, "Title", 1450, 1.00, .84, 5.0, .040, .04,
+         0.0, .035, 320, 0.3, "Company-issued residential title & closing",
+         "Avg Premium/File", .95, "Behind"),
+        ("Commercial Title", 3, "Commercial", 780, 1.00, .78, 3.0, .055, .03,
+         0.0, .050, 55, 0.8, "Commercial real estate title & escrow",
+         "Avg Premium/File", 1.06, "Ahead"),
+        ("Escrow & Settlement", 4, "Services", 720, 1.00, .82, 2.0, .010, .04,
+         0.0, .030, 300, 0.2, "Closing, escrow & settlement services",
+         "Avg Fee/File", 1.02, "Ahead"),
+        ("Data & Analytics", 5, "Data", 460, 1.00, .68, 1.0, .005, .02,
+         0.0, .100, 40, 1.5, "Property data, valuation & risk solutions",
+         "Rev/Order", 1.09, "Ahead"),
+        ("Home Warranty", 6, "Warranty", 440, 1.00, .86, 1.5, .060, .06,
+         0.0, .040, 260, 0.6, "Home systems & appliance protection",
+         "Avg Contract Value", .93, "Behind"),
+    ],
+    "alerts": [
+        ("critical", "Open order backlog spike",
+         "Residential purchase open orders up 18% week-over-week across CA and "
+         "TX; closing capacity is running tight",
+         "2h ago", "Operations", 18, "% WoW"),
+        ("critical", "Large-loss claim reserve",
+         "Commercial title claim reserves strengthened $12M on a single "
+         "high-value New York commercial file",
+         "6h ago", "Claims", 12, "$M reserve"),
+        ("warning", "Cycle time drift",
+         "Average open-to-close cycle time rose to 41 days in the West region, "
+         "above the 35-day target",
+         "4h ago", "Operations", 41, "days to close"),
+        ("warning", "Agent remittance lag",
+         "Top-20 title agencies are remitting premiums 9 days behind schedule",
+         "1d ago", "Agency", 9, "days behind"),
+        ("info", "Rate schedule approved",
+         "Updated Florida title rate schedule filed and approved, effective "
+         "next month",
+         "2d ago", "Product", 1, "filing approved"),
+    ],
+    "agent": ("You are a title & settlement operations analyst covering First "
+              "American's Agent Title, Direct Title, Commercial Title, Escrow & "
+              "Settlement, Data & Analytics and Home Warranty lines across the "
+              "U.S. Answer with numbers from the workbook — orders, revenue, "
+              "operating margin, loss and expense ratios, and cycle time."),
+}
+
+FIRSTAM["subs"] = {
+    "Agent Title": [("Residential Purchase", .52, 20, 3.4, "On plan"),
+                    ("Residential Refinance", .26, -25, -2.1, "Behind"),
+                    ("Endorsements", .14, 15, 4.6, "Ahead"),
+                    ("Reissue / Prior Policy", .08, 5, 1.2, "On plan")],
+    "Direct Title": [("Purchase", .58, 18, 2.8, "On plan"),
+                     ("Refinance", .24, -30, -3.4, "Behind"),
+                     ("Home Equity / HELOC", .10, 22, 5.1, "Ahead"),
+                     ("Construction", .08, 10, 1.6, "On plan")],
+    "Commercial Title": [("Office & Retail", .34, -10, -1.8, "Behind"),
+                         ("Industrial & Logistics", .30, 25, 6.2, "Ahead"),
+                         ("Multifamily", .22, 15, 3.4, "On plan"),
+                         ("Land & Development", .14, -15, 1.0, "On plan")],
+    "Escrow & Settlement": [("Purchase Closings", .56, 16, 3.0, "On plan"),
+                            ("Refinance Closings", .22, -28, -2.6, "Behind"),
+                            ("1031 Exchange", .12, 20, 5.4, "Ahead"),
+                            ("Recording Services", .10, 8, 2.2, "On plan")],
+    "Data & Analytics": [("Property Data", .40, 18, 6.8, "Ahead"),
+                         ("Valuation (AVM)", .28, 24, 8.2, "Ahead"),
+                         ("Flood & Risk", .18, 10, 3.2, "On plan"),
+                         ("Fraud & Compliance", .14, -12, -1.4, "Behind")],
+    "Home Warranty": [("Real Estate Plans", .48, -8, -1.2, "Behind"),
+                      ("Direct-to-Consumer", .30, 20, 4.6, "Ahead"),
+                      ("Renewals", .16, 6, 2.0, "On plan"),
+                      ("Add-on Coverage", .06, 12, 3.4, "Ahead")],
+}
+
+FOOTPRINTS["firstam"] = [("CA", .22), ("TX", .15), ("FL", .12), ("NY", .075),
+                         ("AZ", .055), ("WA", .05), ("CO", .045), ("IL", .04),
+                         ("GA", .038), ("NC", .035), ("VA", .032), ("NJ", .03),
+                         ("PA", .028), ("MN", .02), ("MA", .012)]
+
+LABELS["firstam"] = {
+    "personas": ["Executive", "Operations"],
+    "modeler_page": "Rate Modeler",
+    "cohort_page": "Order Segments",
+    "modeler_title": "Title Rate & Margin Scenario Modeler",
+    "shock_label": "Rate / cost shock (%)",
+    # yield_rate=1.00 => "Avg Balances" is genuine gross revenue, and
+    # "Net Revenue" (income - cost + fees) is the operating margin plus
+    # ancillary fees -- labelled honestly, not relabelled "Total Revenue".
+    "kpi_revenue": "Net Operating Revenue ($M)",
+    "kpi_margin": "Operating Margin ($M)",
+    "kpi_volume": "Total Revenue ($M)",
+    "kpi_units": "Closed Orders (K)",
+    "driver_nim": "Operating Margin %",
+    "driver_risk": "Claims Rate",
+    "driver_cost": "Expense Ratio",
+    "driver_eff": "Retention Rate",
+    "seg_product": "Line of Business",
+    "seg_credit": "File Risk Tier",
+    "seg_type": "Transaction Type",
+    "seg_dd": "Title Agency",
+    "seg_engage": "Customer Tenure",
+    "seg_held": "Orders per Customer",
+    "seg_age": "Order Age Band",
+    "cohort_name": "Order segment name",
+    "kpi_cohort_size": "Orders in segment",
+    "kpi_cohort_vol": "Revenue volume",
+    "kpi_cohort_rev": "Revenue per order",
+    "kpi_cohort_risk": "Avg claims rate",
+    "col_volume": "Revenue",
+    "col_growth": "Revenue Growth %",
+    "col_yield": "Rate Δ bps",
+    "col_cost": "Expense Ratio Δ bps",
+}
+
+SEGMENTS["firstam"] = {"Near Prime": "Standard", "Prime": "Preferred",
+                       "Super Prime": "Select", "Exceptional": "Elite",
+                       "Daily": "High Claims", "Weekly": "Moderate Claims",
+                       "Monthly": "Low Claims", "Dormant": "Claim-Free"}
+
+VOCAB["firstam"] = {
+    "econ": ("Each line earns revenue against a cost/expense ratio -- the "
+             "spread between revenue and cost plus expenses is the operating "
+             "margin, and losses (title claims) plus expenses over revenue is "
+             "the combined ratio, which for title insurance runs high on "
+             "expense and low on losses."),
+    "metrics": "total revenue, operating margin, loss ratio and combined ratio",
+    "bands": ("File risk tiers: Standard, Preferred, Select, Elite. Claims "
+              "rate: High Claims, Moderate Claims, Low Claims, Claim-Free."),
+    "cohort_report": "order segment size, revenue and average claims rate",
+}
+
+POP["firstam"] = {"bases": (900, 1600, 3200, 12000), "rev_rate": 1.0,
+                  "fee_per_product": 120}
+
+# No bespoke plugin this build -- native fallback (order-mix contribution)
+# renders instead. A bespoke Title Order Pipeline plugin can be added later.
+PLUGINS["firstam"] = {"hero": None, "hero_label": None, "ticker": None}
+
+COMPANIES["firstam"] = FIRSTAM
