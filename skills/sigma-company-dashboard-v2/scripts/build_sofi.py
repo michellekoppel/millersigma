@@ -965,7 +965,16 @@ add({"id": "book", "kind": "table", "name": "Book", "visibleAsSource": True,
          {"id": "bb-prod", "formula": "[Assumptions/Product]", "name": "Product"},
          {"id": "bb-brev", "formula": "[Assumptions/Baseline Revenue]",
           "name": "Baseline Revenue", "format": MONEY_M},
-         {"id": "bb-prev", "formula": "[Assumptions/Projected Revenue]",
+         {"id": "bb-prev",
+          # Apply the page-level rate/cost shock control HERE so moving it flows
+          # into every modeler KPI and the projected-vs-baseline bar in one place
+          # (the write-back grid keeps its per-row Growth/Yield/Cost edits). The
+          # segmented control prints "+50"/"-100"; strip the "+", default to 0
+          # when nothing is selected, and pass it through at a ~10% elasticity
+          # (a +50 shock -> +5% of baseline). Previously the shock control set a
+          # value nothing consumed, so the slider appeared to do nothing.
+          "formula": '[Assumptions/Projected Revenue] + [Assumptions/Baseline Revenue] '
+                     '* Number(Replace(Coalesce([RateShock], "0"), "+", "")) / 1000',
           "name": "Projected Revenue", "format": MONEY_M}],
      "style": panel()})
 
