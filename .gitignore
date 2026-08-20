@@ -19,3 +19,8 @@ __pycache__/
 
 # Local Netlify folder
 .netlify
+
+# Per-build QA renders and local push-state tracking (sigma-company-dashboard-v2) —
+# machine-local by design, see HANDOFF.md's wb_state_<key>.json note.
+skills/sigma-company-dashboard-v2/shots/
+skills/sigma-company-dashboard-v2/specs/
