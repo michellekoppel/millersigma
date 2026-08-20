@@ -1,14 +1,16 @@
-"""Sigma staging API helper for the JPMC code-rep build.
+"""Sigma production API helper, adapted 2026-08-20 to run against the real
+papercrane org (not Connor's papercranestaging) for Michelle Koppel's build.
 
-Reads credentials from ~/.sigma-portals/staging.env and caches the bearer token
-in /tmp/.tok_staging (55-minute TTL, same convention as the other toolkits).
+Reads credentials from /home/user/millersigma/.env (SIGMA_BASE_URL,
+SIGMA_CLIENT_ID, SIGMA_CLIENT_SECRET) and caches the bearer token in
+/tmp/.tok_papercrane (55-minute TTL, same convention as the other toolkits).
 
-Verified 2026-08-07 against papercranestaging (org 8c99818a-90b3-4cae-bdb7-cf69a741171a):
+Verified 2026-08-20 against papercrane (org 4ec48fda-3be1-4de8-99a3-84c4b2cf3f4a,
+base https://api.sigmacomputing.com):
   * Workbook spec bodies wrap everything except `name`/`folderId` in `document`.
   * Report spec bodies do the same, with `document.kind: report`.
 """
 
-import base64
 import json
 import os
 import pathlib
@@ -17,21 +19,24 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-ENV_FILE = pathlib.Path.home() / ".sigma-portals" / "staging.env"
-TOKEN_CACHE = pathlib.Path("/tmp/.tok_staging")
+ENV_FILE = pathlib.Path("/home/user/millersigma/.env")
+TOKEN_CACHE = pathlib.Path("/tmp/.tok_papercrane")
 TOKEN_TTL = 55 * 60
 
-BASE = "https://api.staging.sigmacomputing.io"
-ORG_ID = "8c99818a-90b3-4cae-bdb7-cf69a741171a"
+BASE = os.environ.get("SIGMA_BASE_URL") or "https://api.sigmacomputing.com"
+ORG_ID = "4ec48fda-3be1-4de8-99a3-84c4b2cf3f4a"
 
-# Discovered 2026-08-07 on papercranestaging.
-FOLDER_CLAUDE_BUILDER = "a758d7ee-8c23-423d-9d60-5b635d9e9b58"
+# Michelle Koppel's own "My Documents" home folder in papercrane (her
+# homeFolderId per GET /v2/members; the API credentials' whoami.userId
+# matches her memberId, and GET /v2/files/{id} confirms ownerId + edit
+# permission). Confirmed 2026-08-20.
+FOLDER_CLAUDE_BUILDER = "004d8497-18ea-4cf6-a8c5-deca403c22d9"
 
-# Most staging connections have disabled warehouse credentials. This one resolves
-# SQL at create time (checked 2026-08-07); it is also what the reference
-# "Microsoft — Executive App" workbook uses. `verify` does NOT resolve SQL, so a
-# bad connection only surfaces on create.
-CONN_SNOWFLAKE = "a9d45cfe-ff65-4515-8193-a7072602a1ee"
+# The generic "Snowflake" connection in papercrane -- resolves SQL at create
+# time (confirmed 2026-08-20 via a real `create`, not just `verify`, which
+# does not resolve SQL). Supports the Snowflake-dialect generator functions
+# (SEQ4, GENERATOR, HASH) every company's SQL relies on.
+CONN_SNOWFLAKE = "9e79f38b-a310-405c-aad9-72f762ac6ff1"
 
 
 class SigmaError(RuntimeError):
@@ -59,16 +64,19 @@ def _read_env():
 
 def _fetch_token():
     env = _read_env()
-    cid = env["SIGMA_STAGING_CLIENT_ID"]
-    csec = env["SIGMA_STAGING_CLIENT_SECRET"]
-    cred = base64.b64encode(("%s:%s" % (cid, csec)).encode()).decode()
+    cid = env["SIGMA_CLIENT_ID"]
+    csec = env["SIGMA_CLIENT_SECRET"]
+    # Documented flow (help.sigmacomputing.com/reference/generate-client-credentials):
+    # grant_type/client_id/client_secret as form fields, no Basic auth header.
+    # Verified working directly against papercrane 2026-08-20.
     req = urllib.request.Request(
         BASE + "/v2/auth/token",
-        data=urllib.parse.urlencode({"grant_type": "client_credentials"}).encode(),
-        headers={
-            "Authorization": "Basic " + cred,
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
+        data=urllib.parse.urlencode({
+            "grant_type": "client_credentials",
+            "client_id": cid,
+            "client_secret": csec,
+        }).encode(),
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
         method="POST",
     )
     with urllib.request.urlopen(req, timeout=40) as resp:
