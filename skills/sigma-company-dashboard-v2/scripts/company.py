@@ -3130,10 +3130,11 @@ VOCAB["alliant"] = {
 POP["alliant"] = {"bases": (7200, 14500, 13000, 21000), "rev_rate": 0.035,
                   "fee_per_product": 18}
 
-# hero filled in below once plugins/alliant-pos-heatmap/index.html is pushed,
-# hosted on rawcdn.githack.com and registered via POST /v2/plugins -- see the
-# build report for the verified content-type / render check.
-PLUGINS["alliant"] = {"hero": None, "hero_label": "PMPM BY PLACE OF SERVICE", "ticker": None,
+# Registered on papercrane via POST /v2/plugins, hosted on rawcdn.githack.com
+# off this repo's plugins/alliant-pos-heatmap/ (verified `content-type:
+# text/html; charset=utf-8` before registering -- see build report).
+PLUGINS["alliant"] = {"hero": "5c375685-32a7-4f3a-8c9d-a79562acedf5",
+                      "hero_label": "PMPM BY PLACE OF SERVICE", "ticker": None,
                       "hero_table": {"name": "Place of Service Utilization",
                                      "file": "pos_utilization.sql", "prefix": "h",
                                      "cols": ["Month", "Place of Service", "PMPM Cost"]},
