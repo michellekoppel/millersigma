@@ -2912,3 +2912,231 @@ POP["pura"] = {"bases": (80, 180, 350, 750), "rev_rate": 0.65, "fee_per_product"
 PLUGINS["pura"] = {"hero": None, "hero_label": None, "ticker": None}
 
 COMPANIES["pura"] = PURA
+
+
+# ---------------------------------------------------------------------------
+# Alliant Insurance Services -- a BROKER, not a payer. It doesn't underwrite;
+# it aggregates and analyzes the employee-benefits book across its large-
+# employer client roster (echoing the real "ALLIANT Interactive Analytics"
+# product's own client-group filter -- FIS Global, GEICO, etc.). Modeled on
+# ELEVANCE because the economics slot still fits:
+#
+#   products      -> benefit plan lines (Medical, Dental, Vision, Life & AD&D,
+#                    Disability, Voluntary Benefits)
+#   bal_base      -> the plan line's annualized premium+claims book, in $MM,
+#                    across the whole client roster
+#   yield_rate    -> premium PMPM yield (rate)
+#   funding_rate  -> medical/claims cost PMPM (rate) -- the plan's COGS
+#   fee_base      -> Alliant's own broker/advisory fee revenue on that line,
+#                    MONTHLY $MM (gets x12 -- see HANDOFF Sec.8)
+#   provision     -> IBNR/claims-reserve build
+#   delinq/"risk" -> the line's own quality/risk signal (high-cost claimant
+#                    rate for Medical, claim incidence for Disability, etc.)
+#   opex_ratio    -> admin expense ratio
+#
+# HONEST LABELING (the Delta/NVIDIA/Enumclaw trap, again): the shared engine's
+# "Net Revenue" is income-cost+fees, a SPREAD -- not Alliant's own corporate
+# revenue (a broker's real revenue is just commission+fee, full stop). Here
+# that spread is genuinely useful as "the aggregate client book's net plan
+# economics" -- exactly what a benefits broker's analytics platform reports
+# to a client's CFO. Labelled "Net Plan Revenue ($M)", not "Alliant Revenue".
+# ---------------------------------------------------------------------------
+
+ALLIANT = {
+    "key": "alliant",
+    "name": "Alliant Insurance Services",
+    "title": "Employee Benefits & Client Book Command Center",
+    "domain": "insurance brokerage / employee benefits analytics",
+    "unit_noun": "member",
+    "volume_noun": "enrolled member months",
+    "logo_domain": "alliant.com",
+    "base_table": "Enrollment & Claims Book",
+    # sampled directly from alliant.com's own site SVG (alliant-website-logo.svg):
+    # navy #002E41 wordmark, teal #1FBDC9 + light teal #85D1DC triangular mark.
+    "palette": {
+        "navy": "#002E41", "navy_deep": "#00151E",
+        "primary": "#1FBDC9", "secondary": "#0E7A85",
+        "accent": "#85D1DC", "mint": "#00A9A5",
+    },
+    "products": [
+        # name, order, balance_type, bal_base($MM book), yield(premium PMPM
+        # rate), funding(medical/claims cost PMPM rate), fee_base(MONTHLY
+        # $MM broker fee/commission), provision(reserve build rate),
+        # delinq(line's own risk signal), opex_ratio, growth, units_base
+        # (covered lives, K), phase, tagline, rate_label, goal_pct, status
+        ("Medical", 1, "Health Plan", 3250, .0548, .0481, 8.1, .0140, .0165,
+         .092, .048, 2900, 0.0,
+         "Employer-sponsored medical across large-group and self-funded "
+         "client plans", "Premium PMPM", .978, "On plan"),
+        ("Dental", 2, "Dental Plan", 230, .0620, .0512, 0.8, .0060, .0080,
+         .058, .032, 2200, 1.1,
+         "PPO and DHMO dental coverage with orthodontic riders",
+         "Premium PMPM", 1.045, "Ahead"),
+        ("Vision", 3, "Vision Plan", 60, .0710, .0540, 0.2, .0030, .0025,
+         .041, .028, 1750, 2.2,
+         "Exam and materials coverage with contact lens and LASIK riders",
+         "Premium PMPM", 1.082, "Ahead"),
+        ("Life & AD&D", 4, "Life & AD&D", 145, .0390, .0295, 0.6, .0045, .0012,
+         .072, .022, 2650, 0.6,
+         "Basic and voluntary supplemental life with accidental death & "
+         "dismemberment", "Premium PMPM", .918, "Behind"),
+        ("Disability", 5, "Disability", 180, .0455, .0368, 0.75, .0075, .0210,
+         .085, .035, 2100, 1.7,
+         "Short- and long-term disability income replacement",
+         "Premium PMPM", .965, "On plan"),
+        ("Voluntary Benefits", 6, "Voluntary", 95, .0500, .0350, 0.5, .0050, .0090,
+         .064, .065, 1400, 2.8,
+         "Critical illness, accident and hospital indemnity employee-paid "
+         "coverage", "Premium PMPM", 1.028, "Ahead"),
+    ],
+    "alerts": [
+        ("critical", "Renewal rate spike flagged",
+         "FIS Global's 2027 medical renewal is trending +14.2%, above the 9% "
+         "underwriting guardrail",
+         "34m ago", "Client Analytics", 14, "% renewal trend"),
+        ("critical", "High-cost claimant cluster",
+         "6 new claimants above $250K attached to the GEICO account this quarter",
+         "1h ago", "Care Management", 6, "claimants over $250K"),
+        ("warning", "Open enrollment deadline at risk",
+         "3 client groups have elections due within 5 business days with "
+         "participation still under 90%",
+         "3h ago", "Account Management", 3, "groups at risk"),
+        ("warning", "Stop-loss attachment breach",
+         "Aggregate claims on a self-funded mid-market client crossed the "
+         "$1.2M specific stop-loss attachment point",
+         "5h ago", "Underwriting Liaison", 1, "attachment breach"),
+        ("info", "Plan design change priced",
+         "A $500 deductible buy-up was modeled for FY27 open enrollment "
+         "across 8 client groups",
+         "1d ago", "Benefits Consulting", 8, "groups modeled"),
+    ],
+    "agent": ("You are a benefits analyst covering Alliant's Employee Benefits "
+              "client book across Medical, Dental, Vision, Life & AD&D, "
+              "Disability and Voluntary Benefits plan lines spanning the "
+              "national large-employer client roster. Answer with numbers "
+              "from the workbook."),
+}
+
+ALLIANT["subs"] = {
+    "Medical": [("PPO", .48, -15, 3.2, "On plan"),
+               ("HDHP/HSA", .27, 25, 6.4, "Ahead"),
+               ("HMO/EPO", .17, -10, 1.1, "On plan"),
+               ("Retiree/Medicare Carve-out", .08, 40, -2.6, "Behind")],
+    "Dental": [("Dental PPO", .58, -10, 2.4, "On plan"),
+              ("Dental HMO", .22, 15, 4.1, "Ahead"),
+              ("Orthodontic Rider", .12, 20, 5.8, "Ahead"),
+              ("Preventive-Only", .08, -25, -1.2, "Behind")],
+    "Vision": [("Exam + Materials", .62, -5, 1.8, "On plan"),
+              ("Exam-Only", .20, 10, -0.6, "Behind"),
+              ("Contact Lens Rider", .12, 15, 4.2, "Ahead"),
+              ("LASIK Discount", .06, -15, 6.9, "Ahead")],
+    "Life & AD&D": [("Basic Life (Employer-Paid)", .46, 0, 0.8, "On plan"),
+                    ("Voluntary Supplemental Life", .28, 20, 5.4, "Ahead"),
+                    ("Dependent Life", .14, -10, 1.2, "On plan"),
+                    ("AD&D Rider", .12, 15, -1.9, "Behind")],
+    "Disability": [("Short-Term Disability", .44, -10, 2.1, "On plan"),
+                   ("Long-Term Disability", .34, 15, 3.6, "Ahead"),
+                   ("Buy-up LTD", .13, 25, 6.2, "Ahead"),
+                   ("Paid Family Leave Wrap", .09, -20, 8.4, "Ahead")],
+    "Voluntary Benefits": [("Critical Illness", .34, -15, 7.1, "Ahead"),
+                           ("Accident Insurance", .29, 10, 4.4, "On plan"),
+                           ("Hospital Indemnity", .21, -10, 5.8, "Ahead"),
+                           ("Legal & ID Theft", .16, 20, -2.1, "Behind")],
+}
+
+# Fortune-500-heavy national large-employer client roster, not Alliant's own
+# HQ state (Newport Beach, CA) -- the book is the client groups' geography.
+FOOTPRINTS["alliant"] = [("CA", .162), ("TX", .118), ("FL", .092), ("NY", .086),
+                         ("IL", .071), ("PA", .058), ("OH", .052), ("GA", .048),
+                         ("NC", .041), ("MI", .038), ("AZ", .034), ("WA", .031),
+                         ("VA", .028), ("NJ", .026), ("CO", .022)]
+
+LABELS["alliant"] = {
+    "personas": ["Executive", "Client Analytics"],
+    "modeler_page": "Renewal Modeling",
+    "cohort_page": "Population Builder",
+    "modeler_title": "Renewal & Medical Trend Scenario Modeler",
+    "shock_label": "Renewal rate shock (%)",
+    "kpi_revenue": "Net Plan Revenue ($M)",
+    "kpi_margin": "Plan Contribution Margin ($M)",
+    "kpi_volume": "Enrolled Member Months (K)",
+    "kpi_units": "Covered Lives (K)",
+    "driver_nim": "Plan Margin %",
+    "driver_risk": "High-Cost Claimant Rate",
+    "driver_cost": "Medical Cost PMPM",
+    "driver_eff": "Admin & Broker Fee Ratio",
+    "seg_product": "Benefit Plan",
+    "seg_credit": "Coverage Tier",
+    # bound to the products' own balance_type field (Health/Dental/Vision/...
+    # Plan) -- honest per-line category, the ENUMCLAW precedent, NOT
+    # "Relationship" (Employee/Spouse/Dependent has no column to back it;
+    # see the SEGMENTS note below for where that concept actually lives).
+    "seg_type": "Coverage Type",
+    "seg_dd": "Coverage Waived",
+    "seg_engage": "Enrollment Tenure",
+    "seg_held": "Dependents per Contract",
+    # the cohort page's genuinely age-driven axis (see SEGMENTS note below).
+    "seg_age": "Age Band",
+    "cohort_name": "Client segment name",
+    "kpi_cohort_size": "Members in segment",
+    "kpi_cohort_vol": "Annual plan cost",
+    "kpi_cohort_rev": "Revenue per member",
+    "kpi_cohort_risk": "Avg churn risk",
+    "col_volume": "Baseline Premium ($M)",
+    "col_growth": "Enrollment Growth %",
+    "col_yield": "Premium Δ bps",
+    "col_cost": "Medical Cost Δ bps",
+}
+
+# Two things resolved here by reading member_population.sql rather than
+# guessing from label names (per the HANDOFF §4 warning):
+#  1. The Near Prime/Prime/Super Prime/Exceptional literal drives seg_credit
+#     (credit_band, with its own 1-4 credit_order) -- that's the coverage-
+#     tier axis, and its ordinal 1-4 already matches EE(1)/ES(2)/EC(3)/
+#     Family(4) exactly, so no reordering needed.
+#  2. The Daily/Weekly/Monthly/Dormant literal drives seg_engage
+#     (engagement, its own 1-4 order) -- NOT an age axis. The real age axis
+#     is a separate hardcoded column (age_band: 18-27/28-37/38-47/48-57/58+)
+#     that every prior company (sofi/enumclaw/pura/veraset) has only ever
+#     RELABELLED via seg_age, never rewritten -- these ranges already read as
+#     plausible employee age brackets, so Alliant follows that same
+#     precedent rather than hand-rolling a new literal-rewrite path in
+#     population_sql for a cosmetic bucket-width difference from the
+#     reference screenshots.
+SEGMENTS["alliant"] = {"Near Prime": "Employee Only", "Prime": "Employee + Spouse",
+                       "Super Prime": "Employee + Child(ren)", "Exceptional": "Family",
+                       "Daily": "New Enrollee", "Weekly": "Established",
+                       "Monthly": "Long-Tenured", "Dormant": "Legacy Member"}
+
+VOCAB["alliant"] = {
+    "econ": ("Each benefit plan line earns a premium PMPM yield against a "
+             "medical/claims cost PMPM -- the spread between them is the "
+             "plan's net margin, before Alliant's own advisory/broker fee "
+             "revenue is added on top. Voluntary and ancillary lines carry a "
+             "richer margin at much lower claims volume than Medical."),
+    "metrics": ("net plan revenue, plan contribution margin, high-cost "
+               "claimant rate and admin & broker fee ratio"),
+    "bands": ("Coverage tiers: Employee Only, Employee + Spouse, Employee + "
+             "Child(ren), Family. Enrollment tenure: New Enrollee, "
+             "Established, Long-Tenured, Legacy Member."),
+    "cohort_report": "population size, annual plan cost and average churn risk",
+}
+
+# Per-member annual economics, in DOLLARS, by coverage tier (Employee Only /
+# +Spouse / +Child(ren) / Family) -- benefits-book premium+claims dollars, not
+# retail-banking balances or DTC subscription dollars (the Nuvia "$1,825
+# value per patient" trap). Spouse coverage costs more than adding just
+# children (higher average age/utilization), which is realistic.
+POP["alliant"] = {"bases": (7200, 14500, 13000, 21000), "rev_rate": 0.035,
+                  "fee_per_product": 18}
+
+# hero filled in below once plugins/alliant-pos-heatmap/index.html is pushed,
+# hosted on rawcdn.githack.com and registered via POST /v2/plugins -- see the
+# build report for the verified content-type / render check.
+PLUGINS["alliant"] = {"hero": None, "hero_label": "PMPM BY PLACE OF SERVICE", "ticker": None,
+                      "hero_table": {"name": "Place of Service Utilization",
+                                     "file": "pos_utilization.sql", "prefix": "h",
+                                     "cols": ["Month", "Place of Service", "PMPM Cost"]},
+                      "hero_config": {"month": "h0", "pos": "h1", "pmpm": "h2"}}
+
+COMPANIES["alliant"] = ALLIANT

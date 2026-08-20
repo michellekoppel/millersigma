@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>PMPM by Place of Service — Alliant Insurance Services Sigma Plugin</title>
+<script src="https://unpkg.com/@sigmacomputing/plugin"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,Roboto,Arial,sans-serif;background:transparent;color:#eaf6f7;overflow:hidden}
+  #wrap{height:100%;width:100%;display:flex;flex-direction:column;padding:14px 16px;gap:10px}
+  #top{display:flex;justify-content:space-between;align-items:baseline;flex:0 0 auto}
+  #ttl{font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#1FBDC9}
+  #sub{font-size:12px;color:#9fc3c8}
+  #sub b{color:#fff;font-size:15px}
+  #stage{flex:1;min-height:0;position:relative}
+  #grid{position:absolute;inset:0;display:grid}
+  .hcell{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#9fc3c8;letter-spacing:.02em}
+  .rcell{display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;font-weight:700;color:#cfeaec;text-align:right;line-height:1.15}
+  .cell{border-radius:4px;position:relative;transition:transform .08s;cursor:default;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin:1.5px}
+  .cell:hover{transform:scale(1.12);z-index:5;outline:1px solid #fff}
+  #legend{display:flex;align-items:center;gap:8px;font-size:10px;color:#9fc3c8;flex:0 0 auto}
+  #bar{height:8px;flex:1;max-width:160px;border-radius:4px;background:linear-gradient(90deg,#0d3b40,#1FBDC9,#002E41)}
+  #tip{position:fixed;pointer-events:none;background:#001820;border:1px solid #1FBDC9;border-radius:8px;padding:8px 10px;font-size:11px;color:#eaf6f7;opacity:0;transition:opacity .1s;z-index:10;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+  #tip b{color:#1FBDC9}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="top">
+    <div id="ttl">PMPM by Place of Service</div>
+    <div id="sub">Blended medical PMPM <b id="totV">—</b> · <span id="cnt">0</span> places of service</div>
+  </div>
+  <div id="stage"><div id="grid"></div></div>
+  <div id="legend"><span>low</span><div id="bar"></div><span>high</span><span style="margin-left:8px">trailing 12 months</span></div>
+</div>
+<div id="tip"></div>
+<script>
+(function(){
+  var client=(window.sigmaComputing&&window.sigmaComputing.plugin&&window.sigmaComputing.plugin.client)||null;
+  var defs=[
+    {name:'source',type:'element'},
+    {name:'month',type:'column',source:'source',label:'Month'},
+    {name:'pos',type:'column',source:'source',label:'Place of Service'},
+    {name:'pmpm',type:'column',source:'source',allowedTypes:['number','integer'],label:'PMPM Cost'}
+  ];
+  if(client) client.config.configureEditorPanel(defs);
+
+  var MONTH_ORDER=['Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'];
+  var POS_ORDER=['Outpatient','Inpatient','Office','Emergency Room','Urgent Care'];
+
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function hex(c){return ('0'+Math.round(Math.max(0,Math.min(255,c))).toString(16)).slice(-2);}
+  function pmpmColor(v,lo,hi){
+    var t=Math.max(0,Math.min(1,(v-lo)/Math.max(1e-6,(hi-lo))));
+    var s=[[13,59,64],[31,189,201],[0,46,65]];
+    var seg=t*2, i=Math.min(1,Math.floor(seg)), f=seg-i;
+    var r=lerp(s[i][0],s[i+1][0],f),g=lerp(s[i][1],s[i+1][1],f),b=lerp(s[i][2],s[i+1][2],f);
+    return '#'+hex(r)+hex(g)+hex(b);
+  }
+  var tip=document.getElementById('tip');
+
+  function draw(rows){
+    // rows: [{pos, month, monthOrder, pmpm}]
+    var poss=[], months=[];
+    rows.forEach(function(r){
+      if(poss.indexOf(r.pos)===-1) poss.push(r.pos);
+      if(months.indexOf(r.month)===-1) months.push(r.month);
+    });
+    poss.sort(function(a,b){
+      var ia=POS_ORDER.indexOf(a), ib=POS_ORDER.indexOf(b);
+      if(ia===-1) ia=99; if(ib===-1) ib=99;
+      return ia-ib;
+    });
+    months.sort(function(a,b){
+      var ia=MONTH_ORDER.indexOf(a), ib=MONTH_ORDER.indexOf(b);
+      if(ia!==-1 && ib!==-1) return ia-ib;
+      return (rows.filter(function(r){return r.month===a;})[0]||{}).monthOrder -
+             (rows.filter(function(r){return r.month===b;})[0]||{}).monthOrder;
+    });
+    var byKey={};
+    rows.forEach(function(r){byKey[r.pos+'|'+r.month]=r.pmpm;});
+
+    var vals=rows.map(function(r){return r.pmpm;});
+    var lo=Math.min.apply(null,vals), hi=Math.max.apply(null,vals);
+
+    var grid=document.getElementById('grid');
+    grid.innerHTML='';
+    grid.style.gridTemplateColumns='118px repeat('+months.length+',1fr)';
+    grid.style.gridTemplateRows='22px repeat('+poss.length+',1fr)';
+
+    var corner=document.createElement('div'); corner.className='hcell'; corner.textContent='POS \\ Mo';
+    grid.appendChild(corner);
+    months.forEach(function(m){
+      var h=document.createElement('div'); h.className='hcell'; h.textContent=m;
+      grid.appendChild(h);
+    });
+    poss.forEach(function(p){
+      var rh=document.createElement('div'); rh.className='rcell'; rh.textContent=p;
+      grid.appendChild(rh);
+      months.forEach(function(m){
+        var v=byKey[p+'|'+m];
+        var c=document.createElement('div');
+        if(v==null){ grid.appendChild(c); return; }
+        c.className='cell';
+        c.style.background=pmpmColor(v,lo,hi);
+        c.style.color=(v-lo)/(hi-lo||1) > 0.62 ? '#eaf6f7' : '#00232b';
+        c.textContent='$'+v.toFixed(0);
+        c.addEventListener('mousemove',function(e){
+          tip.innerHTML='<b>'+p+'</b> · '+m+'<br>PMPM $'+v.toFixed(1);
+          tip.style.opacity=1; tip.style.left=(e.clientX+12)+'px'; tip.style.top=(e.clientY+12)+'px';
+        });
+        c.addEventListener('mouseleave',function(){tip.style.opacity=0;});
+        grid.appendChild(c);
+      });
+    });
+
+    // blended total PMPM for the latest month in the series
+    var lastMonth=months[months.length-1];
+    var total=0;
+    poss.forEach(function(p){ var v=byKey[p+'|'+lastMonth]; if(v!=null) total+=v; });
+    document.getElementById('totV').textContent='$'+total.toFixed(0);
+    document.getElementById('cnt').textContent=poss.length;
+  }
+
+  function synth(){
+    var data={
+      'Office':      [98.0,100.0,92.1,86.2,90.2,102.9,105.8,103.9,100.9,99.0,98.0,97.0],
+      'Outpatient':  [153.3,154.8,156.4,153.3,158.0,161.2,162.7,164.3,165.9,167.5,169.1,170.6],
+      'Inpatient':   [142.1,145.0,155.4,174.6,170.2,151.0,139.1,133.2,131.7,134.7,137.6,140.6],
+      'Emergency Room':[38.6,41.2,48.3,56.7,53.8,44.1,37.0,34.4,35.7,37.8,39.5,41.2],
+      'Urgent Care': [19.8,20.7,23.1,25.3,24.6,22.0,20.9,21.6,22.4,23.1,23.8,24.2]
+    };
+    var out=[];
+    Object.keys(data).forEach(function(pos){
+      data[pos].forEach(function(v,i){ out.push({pos:pos, month:MONTH_ORDER[i], monthOrder:i+1, pmpm:v}); });
+    });
+    return out;
+  }
+
+  var st={cfg:{},data:null,unsub:null};
+  function recompute(){
+    var c=st.cfg||{};
+    if(st.data && c.month && c.pos && c.pmpm &&
+       st.data[c.month] && st.data[c.pos] && st.data[c.pmpm]){
+      var mo=st.data[c.month], po=st.data[c.pos], pm=st.data[c.pmpm];
+      var rows=mo.map(function(m,i){
+        var idx=MONTH_ORDER.indexOf(String(m))+1;
+        return {month:String(m), monthOrder: idx>0?idx:i+1, pos:String(po[i]), pmpm:Number(pm[i])||0};
+      });
+      if(rows.length){draw(rows); return;}
+    }
+    draw(synth());
+  }
+  if(client){
+    client.config.subscribe(function(cfg){
+      st.cfg=cfg||{};
+      if(st.unsub){st.unsub(); st.unsub=null;}
+      if(cfg&&cfg.source){st.unsub=client.elements.subscribeToElementData(cfg.source,function(d){st.data=d; recompute();});}
+      recompute();
+    });
+  } else { recompute(); }
+
+  var stage=document.getElementById('stage');
+  if(window.ResizeObserver){ new ResizeObserver(function(){ /* CSS grid reflows automatically */ }).observe(stage); }
+})();
+</script>
+</body>
+</html>
