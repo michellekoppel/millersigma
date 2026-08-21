@@ -31,6 +31,33 @@ FILTER_CONTROL_IDS = [
     "ctrl-cohort-plan", "ctrl-cohort-tenure", "ctrl-cohort-group",
 ]
 
+NEW_CONTAINER_ELEMENT = {"id": "ctr-cohort-filters", "kind": "container"}
+
+# Six more orphaned elements turned up once the schedule block cleared: the
+# "Live vs Baseline" cohort-size/total-PMPM/avg-PMPM KPI cards. Their formulas
+# reference [CohortPick] and [Saved Cohorts/...] -- they belong right next to
+# ctrl-cohort-pick on the Visualize tab (Tab 3), inside the currently-empty
+# w_zlvlsZ5i container, not the Cohort Builder tab. Same root cause (elements
+# orphaned from the layout during manual restructuring), same tab family the
+# user is asking to fix.
+KPI_IDS = [
+    "kpi-cohsize-c", "kpi-cohtot-c", "kpi-cohavg-c",
+    "kpi-cohsize-b", "kpi-cohtot-b", "kpi-cohavg-b",
+]
+
+OLD_TAB3_STACK = '<Element elementId="w_zlvlsZ5i" type="stack" gridColumn="3 / 13" gridRow="1 / 6"/>'
+NEW_TAB3_STACK = (
+    '<Container elementId="w_zlvlsZ5i" type="grid" gridColumn="3 / 13" gridRow="1 / 6"'
+    ' gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto">\n'
+    '        <Element elementId="kpi-cohsize-c" gridColumn="1 / 9" gridRow="1 / 3"/>\n'
+    '        <Element elementId="kpi-cohtot-c" gridColumn="9 / 17" gridRow="1 / 3"/>\n'
+    '        <Element elementId="kpi-cohavg-c" gridColumn="17 / 25" gridRow="1 / 3"/>\n'
+    '        <Element elementId="kpi-cohsize-b" gridColumn="1 / 9" gridRow="3 / 5"/>\n'
+    '        <Element elementId="kpi-cohtot-b" gridColumn="9 / 17" gridRow="3 / 5"/>\n'
+    '        <Element elementId="kpi-cohavg-b" gridColumn="17 / 25" gridRow="3 / 5"/>\n'
+    '      </Container>'
+)
+
 OLD_BLOCK = (
     '<Element elementId="9KjlDnkXs4" gridColumn="11 / 13" gridRow="2 / 3"/>\n'
     '      <Element elementId="gyOKl3sneq" type="stack" gridColumn="1 / 13" gridRow="3 / 5"/>\n'
@@ -79,20 +106,28 @@ def main():
         print(f"REFUSING: anchor block not found exactly once "
               f"(found {layout.count(OLD_BLOCK)} times).")
         sys.exit(1)
-    for cid in FILTER_CONTROL_IDS:
+    if layout.count(OLD_TAB3_STACK) != 1:
+        print(f"REFUSING: Tab-3 stack anchor not found exactly once "
+              f"(found {layout.count(OLD_TAB3_STACK)} times).")
+        sys.exit(1)
+    for cid in FILTER_CONTROL_IDS + KPI_IDS:
         if f'elementId="{cid}"' in layout:
             print(f"REFUSING: {cid!r} is already placed somewhere in the layout.")
             sys.exit(1)
 
     new_doc = copy.deepcopy(doc)
-    new_doc["layout"] = layout.replace(OLD_BLOCK, NEW_BLOCK, 1)
-    # elements/agents/pages are untouched -- confirm byte-identical
-    assert new_doc["elements"] == doc["elements"]
+    new_doc["layout"] = (
+        layout.replace(OLD_BLOCK, NEW_BLOCK, 1)
+              .replace(OLD_TAB3_STACK, NEW_TAB3_STACK, 1)
+    )
+    new_doc["elements"] = doc["elements"] + [NEW_CONTAINER_ELEMENT]
+    # agents/pages are untouched -- confirm byte-identical
     assert new_doc.get("agents") == doc.get("agents")
     assert new_doc.get("pages") == doc.get("pages")
 
-    print("Inserting 7 filter controls into the Cohort Builder tab; "
-          "shifting 3 elements below them down by 4 rows.")
+    print("Inserting 7 filter controls into the Cohort Builder tab (+1 new "
+          "wrapping container element), and 6 Live/Baseline KPI cards into "
+          "the Visualize tab's empty stack next to the saved-cohort picker.")
 
     if mode == "verify":
         S.call("POST", "/v2/workbooks/spec/verify",
@@ -104,12 +139,14 @@ def main():
     print("PUT: OK")
 
     back = S.call("GET", f"/v2/workbooks/{WORKBOOK_ID}/spec")["document"]
-    if back["elements"] == doc["elements"]:
-        print(f"Confirmed: all {len(doc['elements'])} elements byte-identical "
-              "after the PUT (this was a layout-only change).")
+    back_by_id = {e["id"]: e for e in back["elements"]}
+    mismatches = [e["id"] for e in doc["elements"] if back_by_id.get(e["id"]) != e]
+    if not mismatches and back_by_id.get("ctr-cohort-filters") == NEW_CONTAINER_ELEMENT:
+        print(f"Confirmed: all {len(doc['elements'])} pre-existing elements "
+              "byte-identical, plus the one new container element, as expected.")
     else:
-        print("WARNING: document.elements changed on GET-back.")
-    for cid in FILTER_CONTROL_IDS:
+        print("WARNING: unexpected element diff.", mismatches)
+    for cid in FILTER_CONTROL_IDS + KPI_IDS:
         if f'elementId="{cid}"' in back["layout"]:
             print(f"Confirmed placed: {cid}")
         else:
