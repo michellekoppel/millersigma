@@ -1383,11 +1383,67 @@ STATEMENTS = {
                    "Illustrative invoice generated from a Sigma report "
                    "specification — synthetic data, not a real account."),
     },
+    "alliant": {
+        # Alliant's own copy is short (see warn1/warn2 below), but page 1's
+        # fixed layout budget in build_statement.py is tuned to within ~1px
+        # of SoFi's exact copy lengths -- these two optional overrides claw
+        # back the ~40px needed so warn1/warn2/the "continued" note land on
+        # physical page 1 instead of silently spilling onto their own extra
+        # PDF page (no error; only visible by actually rendering, see
+        # HANDOFF-report.md). Every other company keeps the hardcoded
+        # defaults untouched.
+        "as_cat_gap": 276,       # default 284 (gap before the page-1 rule2)
+        "warn_box_h": 80,        # default 100 (warn1/warn2 box height)
+        "warn_step_after": 70,   # default warn_box_h + 8 (step to the note)
+        "spec_name": "Alliant Insurance Services — FIS Global Benefits Statement (July 2026)",
+        "page_name": "Benefits Statement Summary",
+        "manage_url": "www.alliant.com/clientportal",
+        "service_label": "Benefits Service",
+        "service_phone": "1-800-877-8600",
+        "period": "07/01 – 07/31/2026",
+        "sect_rewards": "ENROLLMENT SUMMARY",
+        "sect_summary": "PLAN YEAR SUMMARY",
+        "sect_category": "PREMIUM BILLED BY PLAN LINE",
+        "sect_activity": "BENEFITS BILLING DETAIL",
+        "sect_messages": "YOUR PLAN MESSAGES",
+        "headline": [("Total Premium & Fees Billed", None),
+                     ("Broker Fees & Commissions", None),
+                     ("Next Renewal Date", "01/01/2027")],
+        "button_label": "Client benefits statement ↗",
+        "rewards_total": "Total covered lives, all plan lines",
+        "h_formulas": [("src", 'Sum([Statement Activity/Amount])', "MONEY"),
+                       ("src", 'SumIf([Statement Activity/Amount], '
+                        '[Statement Activity/Category] = "Broker Fees")', "MONEY")],
+        "msg_body": ("Effective for the 01/01/2027 plan year, Alliant priced a "
+                     "$500 deductible buy-up for the Medical plan alongside the "
+                     "current design, giving FIS Global two tiers at open "
+                     "enrollment. No member election is required; plan "
+                     "administrators will receive final rate sheets "
+                     "separately."),
+        "warn1": ("**Funding Notice:** Self-funded liabilities are billed "
+                  "ASO. Premium and claims funding is due within 15 days "
+                  "of billing."),
+        "warn2": ("**Stop-Loss Notice:** Claims against the attachment "
+                  "point are reimbursed on a lagged basis. Contact your "
+                  "account team before renewal."),
+        "footer": ("Alliant Insurance Services acts as broker of record and "
+                   "does not underwrite the plans shown above. Illustrative "
+                   "client statement generated from a Sigma report "
+                   "specification — synthetic data, not a real client account."),
+    },
 }
 
 
 def statement(cfg, key):
     return STATEMENTS.get(cfg["key"], STATEMENTS["sofi"])[key]
+
+
+def statement_or(cfg, key, default):
+    """Like statement(), but for optional per-company layout-tuning keys
+    (e.g. warn_box_h) that most companies never set -- returns `default`
+    (the original hardcoded constant) rather than raising, so adding a
+    tuning knob for one company can never change another's layout."""
+    return STATEMENTS.get(cfg["key"], STATEMENTS["sofi"]).get(key, default)
 
 
 def has_statement(cfg):
@@ -1490,44 +1546,84 @@ _VR_CONTRACT = [
     (7, "Overage rate", "$0.0035 / record"),
 ]
 
+# --- Alliant: one client group's (FIS Global) monthly benefits billing ------
+# Report template is shaped like a credit-card statement (fixed columns:
+# Merchant Name or Transaction Description, Points Earned). Reframed as a
+# broker's client benefits statement -- "Points Earned" here holds covered
+# lives billed on that line item, not loyalty points; "Merchant Name" holds a
+# billing line-item description. Represents ONE client group's monthly
+# activity (FIS Global, echoing the "high-cost claimant" alert on the
+# workbook's own alerts feed), not Alliant's whole-book revenue.
+_AL_ACTIVITY = [
+    ("07/01", "07/02", "Medical — Self-Funded Premium", "Medical", 268500.00, 2900),
+    ("07/01", "07/02", "Dental Plan — Fully-Insured Premium", "Dental", 19200.00, 2200),
+    ("07/01", "07/02", "Vision Plan — Fully-Insured Premium", "Vision", 5100.00, 1750),
+    ("07/01", "07/02", "Life & AD&D — Basic & Voluntary Premium", "Life & AD&D", 12300.00, 2650),
+    ("07/01", "07/02", "Disability — STD/LTD Premium", "Disability", 15400.00, 2100),
+    ("07/08", "07/09", "Voluntary — Critical Illness & Accident", "Voluntary", 8100.00, 1400),
+    ("07/15", "07/16", "Medical — High-Cost Claimant Reserve", "Medical", 24600.00, 6),
+    ("07/15", "07/16", "Stop-Loss — Attachment Reimbursement", "Medical", -18400.00, 1),
+    ("07/22", "07/23", "Broker Fees — Client Servicing & Analytics", "Broker Fees", 6750.00, 1),
+    ("07/22", "07/23", "Broker Fees — Open Enrollment Support", "Broker Fees", 1350.00, 8),
+    ("07/29", "07/30", "Dental Plan — Orthodontic Rider True-Up", "Dental", 1450.00, 340),
+]
+
+_AL_ENROLLMENT = [
+    (1, "Covered lives — Medical", 2900),
+    (2, "Covered lives — Dental", 2200),
+    (3, "Covered lives — Vision", 1750),
+    (4, "Covered lives — Life & AD&D", 2650),
+    (5, "Covered lives — Disability", 2100),
+    (6, "Covered lives — Voluntary Benefits", 1400),
+    (7, "New hire additions pending enrollment", 0),
+]
+
+_AL_PLAN_SUMMARY = [
+    (1, "Client group", "FIS Global"),
+    (2, "Plan year", "01/01/2026 – 12/31/2026"),
+    (3, "Funding arrangement", "Self-funded, ASO"),
+    (4, "Stop-loss attachment", "$1.2M"),
+    (5, "Plan lines active", "6 of 6"),
+    (6, "Renewal effective date", "01/01/2027"),
+    (7, "Account manager", "J. Alvarez"),
+    (8, "Client since", "2014"),
+]
+
+
+_STATEMENT_ACTIVITY_SOURCES = {"delta": _DL_FLIGHTS, "veraset": _VR_ACTIVITY,
+                                "alliant": _AL_ACTIVITY}
+_STATEMENT_REWARDS_SOURCES = {"delta": _DL_MILES, "veraset": _VR_USAGE,
+                               "alliant": _AL_ENROLLMENT}
+_STATEMENT_ACCOUNT_SOURCES = {"delta": _DL_MEDALLION, "veraset": _VR_CONTRACT,
+                               "alliant": _AL_PLAN_SUMMARY}
+
 
 def statement_activity_sql(cfg):
-    if cfg["key"] == "veraset":
-        cols = ["Transaction Date", "Post Date",
-                "Merchant Name or Transaction Description", "Category", "Amount",
-                "Points Earned"]
-        rows = [("'%s/2026'" % t, "'%s/2026'" % pd, "'%s'" % d.replace("'", "''"),
-                 "'%s'" % c, "%.2f" % amt, str(pts))
-                for t, pd, d, c, amt, pts in _VR_ACTIVITY]
-        return _union(rows, cols)
-    if cfg["key"] != "delta":
+    src = _STATEMENT_ACTIVITY_SOURCES.get(cfg["key"])
+    if src is None:
         return None
     cols = ["Transaction Date", "Post Date",
             "Merchant Name or Transaction Description", "Category", "Amount",
             "Points Earned"]
     rows = [("'%s/2026'" % t, "'%s/2026'" % pd, "'%s'" % d.replace("'", "''"),
              "'%s'" % c, "%.2f" % amt, str(pts))
-            for t, pd, d, c, amt, pts in _DL_FLIGHTS]
+            for t, pd, d, c, amt, pts in src]
     return _union(rows, cols)
 
 
 def rewards_summary_sql(cfg):
-    if cfg["key"] == "veraset":
-        rows = [(str(o), "'%s'" % d, str(p)) for o, d, p in _VR_USAGE]
-        return _union(rows, ["Line Order", "Description", "Points"])
-    if cfg["key"] != "delta":
+    src = _STATEMENT_REWARDS_SOURCES.get(cfg["key"])
+    if src is None:
         return None
-    rows = [(str(o), "'%s'" % d, str(p)) for o, d, p in _DL_MILES]
+    rows = [(str(o), "'%s'" % d, str(p)) for o, d, p in src]
     return _union(rows, ["Line Order", "Description", "Points"])
 
 
 def account_summary_sql(cfg):
-    if cfg["key"] == "veraset":
-        rows = [(str(o), "'%s'" % m, "'%s'" % v) for o, m, v in _VR_CONTRACT]
-        return _union(rows, ["Line Order", "Metric", "Value"])
-    if cfg["key"] != "delta":
+    src = _STATEMENT_ACCOUNT_SOURCES.get(cfg["key"])
+    if src is None:
         return None
-    rows = [(str(o), "'%s'" % m, "'%s'" % v) for o, m, v in _DL_MEDALLION]
+    rows = [(str(o), "'%s'" % m, "'%s'" % v) for o, m, v in src]
     return _union(rows, ["Line Order", "Metric", "Value"])
 
 

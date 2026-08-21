@@ -266,7 +266,13 @@ add({"id": "p1-cat", "kind": "bar-chart",
      "style": {"backgroundColor": "#FFFFFF", "borderColor": B.BORDER,
                "borderWidth": 1, "borderRadius": "round"}},
     "p1", COL2_X, y + 22, COL_W, 246)
-y += 284
+# Page 1's trailing block (messages/warnings/note) is tuned to within ~1px
+# of SoFi's own copy length -- a company with shorter warn1/warn2 copy can
+# still overflow it if left at the stock 284/100 (the renderer decides
+# page-1-vs-overflow-page purely off these declared box positions, not off
+# how much of the box the actual text fills). as_cat_gap/warn_box_h are
+# optional per-company overrides for exactly that; default is unchanged.
+y += CO.statement_or(CFG, "as_cat_gap", 284)
 
 add({"id": "p1-rule2", "kind": "divider", "style": {"color": B.BORDER}},
     "p1", MARGIN, y, CW, 1)
@@ -279,11 +285,16 @@ add(txt("p1-msg", ST_("msg_body"), B.TEXT_DARK),
     "p1", MARGIN, y, CW, 68)
 y += 76
 
+WARN_H = CO.statement_or(CFG, "warn_box_h", 100)
 add(txt("p1-warn1", ST_("warn1"), B.TEXT_DARK),
-    "p1", MARGIN, y, LEFT_W, 100)
+    "p1", MARGIN, y, LEFT_W, WARN_H)
 add(txt("p1-warn2", ST_("warn2"), B.TEXT_DARK),
-    "p1", COL2_X, y, COL_W, 100)
-y += 108
+    "p1", COL2_X, y, COL_W, WARN_H)
+# Step to the next element is its own override, not just WARN_H + a fixed
+# gap: a shorter warn_box_h still declares that much height for pagination
+# purposes, but the *next* element only needs to clear the couple of lines
+# the (short) actual copy renders, not the full declared box.
+y += CO.statement_or(CFG, "warn_step_after", WARN_H + 8)
 
 add(txt("p1-note",
         '<span style="color: %s">Continued on the next page — full transaction '
@@ -314,8 +325,12 @@ add({"id": "p2-tbl", "kind": "table",
          # row-level columns in `calculations` renders "multiple values"
          {"id": "t-pts-sum", "formula": "Sum([%s/Points Earned])" % ST,
           "name": "Points", "format": NUM0},
+         # MONEY0 (no cents), not MONEY: a category subtotal north of ~$100K
+         # (e.g. Alliant's Medical premium line) silently clips inside this
+         # narrow grouped-table subtotal slot at 2 decimals -- one more of
+         # the "renders as truncated with no error" layout gotchas.
          {"id": "t-amt-sum", "formula": "Sum([%s/Amount])" % ST,
-          "name": "Total", "format": MONEY}],
+          "name": "Total", "format": MONEY0}],
      # Reads as a grouped LIST rather than a grid: transactions collapse under
      # their spend category with a per-category subtotal, which is how a real
      # card statement organises activity.

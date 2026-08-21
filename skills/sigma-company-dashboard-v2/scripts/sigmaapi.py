@@ -9,6 +9,16 @@ Verified 2026-08-20 against papercrane (org 4ec48fda-3be1-4de8-99a3-84c4b2cf3f4a
 base https://api.sigmacomputing.com):
   * Workbook spec bodies wrap everything except `name`/`folderId` in `document`.
   * Report spec bodies do the same, with `document.kind: report`.
+
+2026-08-21: added opt-in env-var overrides (SIGMA_ENV_FILE, SIGMA_TOKEN_CACHE,
+SIGMA_ORG_ID, SIGMA_FOLDER_ID, SIGMA_CONN_SNOWFLAKE) so a *different* Sigma
+tenant (e.g. papercrane STAGING) can be targeted for a one-off build without
+touching this file's production defaults or /home/user/millersigma/.env.
+Every override defaults to the original hardcoded production value when
+unset, so nothing changes for existing callers. `BASE` still needs its own
+env var override (SIGMA_BASE_URL) exported alongside these -- pair it with
+a fully separate SIGMA_TOKEN_CACHE path, since production and staging tokens
+must never share a cache file.
 """
 
 import json
@@ -19,24 +29,31 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-ENV_FILE = pathlib.Path("/home/user/millersigma/.env")
-TOKEN_CACHE = pathlib.Path("/tmp/.tok_papercrane")
+ENV_FILE = pathlib.Path(os.environ.get("SIGMA_ENV_FILE")
+                         or "/home/user/millersigma/.env")
+TOKEN_CACHE = pathlib.Path(os.environ.get("SIGMA_TOKEN_CACHE")
+                            or "/tmp/.tok_papercrane")
 TOKEN_TTL = 55 * 60
 
 BASE = os.environ.get("SIGMA_BASE_URL") or "https://api.sigmacomputing.com"
-ORG_ID = "4ec48fda-3be1-4de8-99a3-84c4b2cf3f4a"
+ORG_ID = os.environ.get("SIGMA_ORG_ID") or "4ec48fda-3be1-4de8-99a3-84c4b2cf3f4a"
 
 # Michelle Koppel's own "My Documents" home folder in papercrane (her
 # homeFolderId per GET /v2/members; the API credentials' whoami.userId
 # matches her memberId, and GET /v2/files/{id} confirms ownerId + edit
-# permission). Confirmed 2026-08-20.
-FOLDER_CLAUDE_BUILDER = "004d8497-18ea-4cf6-a8c5-deca403c22d9"
+# permission). Confirmed 2026-08-20. Override via SIGMA_FOLDER_ID for other
+# tenants -- folder ids never carry across orgs.
+FOLDER_CLAUDE_BUILDER = (os.environ.get("SIGMA_FOLDER_ID")
+                          or "004d8497-18ea-4cf6-a8c5-deca403c22d9")
 
 # The generic "Snowflake" connection in papercrane -- resolves SQL at create
 # time (confirmed 2026-08-20 via a real `create`, not just `verify`, which
 # does not resolve SQL). Supports the Snowflake-dialect generator functions
-# (SEQ4, GENERATOR, HASH) every company's SQL relies on.
-CONN_SNOWFLAKE = "9e79f38b-a310-405c-aad9-72f762ac6ff1"
+# (SEQ4, GENERATOR, HASH) every company's SQL relies on. Override via
+# SIGMA_CONN_SNOWFLAKE for other tenants -- connection ids never carry across
+# orgs.
+CONN_SNOWFLAKE = (os.environ.get("SIGMA_CONN_SNOWFLAKE")
+                   or "9e79f38b-a310-405c-aad9-72f762ac6ff1")
 
 
 class SigmaError(RuntimeError):
