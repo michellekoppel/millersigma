@@ -591,7 +591,7 @@
           "kind": "empty",
           "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4"
         },
-        "inputMode": "edit",
+        "inputMode": "view",
         "columns": [
           {
             "id": "ev-name",
@@ -775,7 +775,7 @@
           "kind": "empty",
           "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4"
         },
-        "inputMode": "edit",
+        "inputMode": "view",
         "columns": [
           {
             "id": "tg-event",
@@ -1042,7 +1042,7 @@
           "kind": "empty",
           "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4"
         },
-        "inputMode": "edit",
+        "inputMode": "view",
         "columns": [
           {
             "id": "ap-event",
@@ -1562,7 +1562,7 @@
           "kind": "empty",
           "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4"
         },
-        "inputMode": "edit",
+        "inputMode": "view",
         "columns": [
           {
             "id": "ac-event",

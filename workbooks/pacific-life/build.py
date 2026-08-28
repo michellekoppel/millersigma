@@ -28,7 +28,7 @@ def c(id_, **kw):
 # ==================================================================
 tbl_events = {
     "id": "tbl-events", "kind": "input-table", "name": "Events",
-    "source": {"kind": "empty", "connectionId": CONN}, "inputMode": "edit",
+    "source": {"kind": "empty", "connectionId": CONN}, "inputMode": "view",
     "columns": [
         c("ev-name", type="text", name="Event Name"),
         c("ev-type", type="text", name="Event Type", values=EVENT_TYPES, pills="color-by-option"),
@@ -42,7 +42,7 @@ tbl_events = {
 }
 tbl_targets = {
     "id": "tbl-targets", "kind": "input-table", "name": "Targets",
-    "source": {"kind": "empty", "connectionId": CONN}, "inputMode": "edit",
+    "source": {"kind": "empty", "connectionId": CONN}, "inputMode": "view",
     "columns": [
         c("tg-event", type="text", name="Event Name"),
         c("tg-impr", type="number", name="Target Impressions"),
@@ -57,7 +57,7 @@ tbl_targets = {
 }
 tbl_approvals = {
     "id": "tbl-approvals", "kind": "input-table", "name": "Approvals",
-    "source": {"kind": "empty", "connectionId": CONN}, "inputMode": "edit",
+    "source": {"kind": "empty", "connectionId": CONN}, "inputMode": "view",
     "columns": [
         c("ap-event", type="text", name="Event Name"),
         c("ap-decision", type="text", name="Decision", values=["Approved", "Denied"], pills="color-by-option"),
@@ -69,7 +69,7 @@ tbl_approvals = {
 }
 tbl_actuals = {
     "id": "tbl-actuals", "kind": "input-table", "name": "Actuals",
-    "source": {"kind": "empty", "connectionId": CONN}, "inputMode": "edit",
+    "source": {"kind": "empty", "connectionId": CONN}, "inputMode": "view",
     "columns": [
         c("ac-event", type="text", name="Event Name"),
         c("ac-impr", type="number", name="Actual Impressions"),
