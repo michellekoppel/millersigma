@@ -83,30 +83,119 @@ tbl_actuals = {
     "order": ["ac-event", "ac-impr", "ac-eng", "ac-leads", "ac-emv", "ac-lift", "ac-spend", "CREATED_AT"],
 }
 
-# Wide scorecard: one row per event, Lookup()-joined to Targets/Approvals/Actuals.
+# ------------------------------------------------------------------
+# SEED DATA -- there is no code-representable way to insert rows into an
+# input table on this org (insert-rows/update-rows/delete-rows and the CSV
+# input-table source are all rejected at POST; an "initialValues" column
+# field is silently dropped). So the demo dataset is baked in as read-only
+# SQL "VALUES" tables -- the same mechanism already used for spend-bar's
+# chart data -- and the wide Scorecard table below reads the SEED tables
+# for its row grain, then Coalesces in a live value from the matching real
+# input table when one exists. That means: the four sample events always
+# show data, and typing a real target/decision/actual for one of THOSE same
+# event names in the live Targets/Approvals/Actuals tables overrides the
+# seed value immediately. (A brand-new event name typed into the live
+# Events table won't get its own scorecard row -- there's no UNION-style
+# source kind to merge it into this grain -- but its Target/Approval/Actual
+# entries are still captured in the raw tables on each page.)
+def _sqlval(rows):
+    def lit(v):
+        if v is None: return "NULL"
+        if isinstance(v, str): return "'" + v.replace("'", "''") + "'"
+        return str(v)
+    n = len(rows[0])
+    first = "SELECT " + ",".join(f"{lit(v)} AS C{i+1}" for i, v in enumerate(rows[0]))
+    rest = [" UNION ALL SELECT " + ",".join(lit(v) for v in row) for row in rows[1:]]
+    return first + "".join(rest)
+
+SEED_EVENTS_ROWS = [
+    ("AT&T Pebble Beach Pro-Am", "PGA Tour Sponsorship", "2026-02-05", "Sarah Chen", 450000,
+     "Marquee PGA Tour pairing event; strong overlap with our target affluent demographic."),
+    ("Pacific Life Open Golf Classic", "Golf Pro-Am", "2026-06-12", "James Whitfield", 275000,
+     "Regional client-appreciation pro-am; strengthens advisor relationships in key markets."),
+    ("Newport Beach Jazz & Wine Festival", "Concert Series", "2026-09-20", "Maria Lopez", 120000,
+     "Community brand visibility in our Newport Beach HQ market."),
+    ("Financial Advisors Forum West", "Industry Conference", "2026-11-03", "David Kim", 90000,
+     "Advisor recruitment and thought-leadership positioning."),
+]
+SEED_TARGETS_ROWS = [
+    ("AT&T Pebble Beach Pro-Am", 8000000, 45000, 150, 1200000, 4, 430000),
+    ("Pacific Life Open Golf Classic", 1500000, 12000, 60, 300000, 2.5, 260000),
+    ("Financial Advisors Forum West", 600000, 5000, 40, 150000, 1.5, 85000),
+]
+SEED_APPROVALS_ROWS = [
+    ("AT&T Pebble Beach Pro-Am", "Approved", "Karen Ito", "Strong ROI history with this event; approve at requested budget."),
+    ("Pacific Life Open Golf Classic", "Approved", "Karen Ito", "Approved with a slight budget trim."),
+    ("Newport Beach Jazz & Wine Festival", "Denied", "Karen Ito", "Low strategic fit this cycle; revisit next year."),
+]
+SEED_ACTUALS_ROWS = [
+    ("AT&T Pebble Beach Pro-Am", 8400000, 51000, 162, 1350000, 4.6, 421000),
+]
+
+seed_events = {"id": "events-seed", "kind": "table", "name": "Events Seed", "visibleAsSource": True,
+    "source": {"connectionId": CONN, "kind": "sql", "statement": _sqlval(SEED_EVENTS_ROWS)},
+    "columns": [
+        c("se-name", formula="[Custom SQL/C1]", name="Event Name"), c("se-type", formula="[Custom SQL/C2]", name="Event Type"),
+        c("se-date", formula="[Custom SQL/C3]", name="Event Date"), c("se-owner", formula="[Custom SQL/C4]", name="Requested By"),
+        c("se-budget", formula="[Custom SQL/C5]", name="Requested Budget"), c("se-just", formula="[Custom SQL/C6]", name="Summary and Justification"),
+    ], "order": ["se-name", "se-type", "se-date", "se-owner", "se-budget", "se-just"]}
+seed_targets = {"id": "targets-seed", "kind": "table", "name": "Targets Seed", "visibleAsSource": True,
+    "source": {"connectionId": CONN, "kind": "sql", "statement": _sqlval(SEED_TARGETS_ROWS)},
+    "columns": [
+        c("st-name", formula="[Custom SQL/C1]", name="Event Name"), c("st-impr", formula="[Custom SQL/C2]", name="Target Impressions"),
+        c("st-eng", formula="[Custom SQL/C3]", name="Target Engagements"), c("st-leads", formula="[Custom SQL/C4]", name="Target Leads and Meetings"),
+        c("st-emv", formula="[Custom SQL/C5]", name="Target Earned Media Value"), c("st-lift", formula="[Custom SQL/C6]", name="Target Brand Lift %"),
+        c("st-budget", formula="[Custom SQL/C7]", name="Approved Budget"),
+    ], "order": ["st-name", "st-impr", "st-eng", "st-leads", "st-emv", "st-lift", "st-budget"]}
+seed_approvals = {"id": "approvals-seed", "kind": "table", "name": "Approvals Seed", "visibleAsSource": True,
+    "source": {"connectionId": CONN, "kind": "sql", "statement": _sqlval(SEED_APPROVALS_ROWS)},
+    "columns": [
+        c("sa-name", formula="[Custom SQL/C1]", name="Event Name"), c("sa-decision", formula="[Custom SQL/C2]", name="Decision"),
+        c("sa-reviewer", formula="[Custom SQL/C3]", name="Reviewer"), c("sa-comments", formula="[Custom SQL/C4]", name="Comments"),
+    ], "order": ["sa-name", "sa-decision", "sa-reviewer", "sa-comments"]}
+seed_actuals = {"id": "actuals-seed", "kind": "table", "name": "Actuals Seed", "visibleAsSource": True,
+    "source": {"connectionId": CONN, "kind": "sql", "statement": _sqlval(SEED_ACTUALS_ROWS)},
+    "columns": [
+        c("sc2-name", formula="[Custom SQL/C1]", name="Event Name"), c("sc2-impr", formula="[Custom SQL/C2]", name="Actual Impressions"),
+        c("sc2-eng", formula="[Custom SQL/C3]", name="Actual Engagements"), c("sc2-leads", formula="[Custom SQL/C4]", name="Actual Leads and Meetings"),
+        c("sc2-emv", formula="[Custom SQL/C5]", name="Actual Earned Media Value"), c("sc2-lift", formula="[Custom SQL/C6]", name="Actual Brand Lift %"),
+        c("sc2-spend", formula="[Custom SQL/C7]", name="Actual Spend"),
+    ], "order": ["sc2-name", "sc2-impr", "sc2-eng", "sc2-leads", "sc2-emv", "sc2-lift", "sc2-spend"]}
+
+SEED_ELEMENTS = [seed_events, seed_targets, seed_approvals, seed_actuals]
+
+# Wide scorecard: one row per (seed) event. Base dimensions come straight
+# from the seed; every Targets/Approvals/Actuals field prefers a live entry
+# in the real input table (matched by event name) and falls back to seed.
+def _override(real_table, real_col, seed_table, seed_col):
+    # Lookup(<foreign value>, <THIS element's own key, bare>, <foreign key, prefixed>)
+    real = f'Lookup([{real_table}/{real_col}],[Event Name],[{real_table}/Event Name])'
+    seed = f'Lookup([{seed_table}/{seed_col}],[Event Name],[{seed_table}/Event Name])'
+    return f'Coalesce({real},{seed})'
+
 SC_DEFS = [
-    ("sc-name", "Event Name", "[Events/Event Name]"),
-    ("sc-type", "Event Type", "[Events/Event Type]"),
-    ("sc-date", "Event Date", "[Events/Event Date]"),
-    ("sc-owner", "Requested By", "[Events/Requested By]"),
-    ("sc-reqbudget", "Requested Budget", "[Events/Requested Budget]"),
-    ("sc-just", "Justification", "[Events/Summary and Justification]"),
-    ("sc-decision", "Decision", 'Lookup([Approvals/Decision],[Approvals/Event Name],[Events/Event Name])'),
-    ("sc-reviewer", "Reviewer", 'Lookup([Approvals/Reviewer],[Approvals/Event Name],[Events/Event Name])'),
-    ("sc-comments", "Review Comments", 'Lookup([Approvals/Comments],[Approvals/Event Name],[Events/Event Name])'),
+    ("sc-name", "Event Name", "[Events Seed/Event Name]"),
+    ("sc-type", "Event Type", "[Events Seed/Event Type]"),
+    ("sc-date", "Event Date", "[Events Seed/Event Date]"),
+    ("sc-owner", "Requested By", "[Events Seed/Requested By]"),
+    ("sc-reqbudget", "Requested Budget", "[Events Seed/Requested Budget]"),
+    ("sc-just", "Justification", "[Events Seed/Summary and Justification]"),
+    ("sc-decision", "Decision", _override("Approvals", "Decision", "Approvals Seed", "Decision")),
+    ("sc-reviewer", "Reviewer", _override("Approvals", "Reviewer", "Approvals Seed", "Reviewer")),
+    ("sc-comments", "Review Comments", _override("Approvals", "Comments", "Approvals Seed", "Comments")),
     ("sc-status", "Status", 'Coalesce([Decision],"Pending Brand Council Review")'),
-    ("sc-tgimpr", "Target Impressions", 'Lookup([Targets/Target Impressions],[Targets/Event Name],[Events/Event Name])'),
-    ("sc-tgeng", "Target Engagements", 'Lookup([Targets/Target Engagements],[Targets/Event Name],[Events/Event Name])'),
-    ("sc-tgleads", "Target Leads and Meetings", 'Lookup([Targets/Target Leads and Meetings],[Targets/Event Name],[Events/Event Name])'),
-    ("sc-tgemv", "Target Earned Media Value", 'Lookup([Targets/Target Earned Media Value],[Targets/Event Name],[Events/Event Name])'),
-    ("sc-tglift", "Target Brand Lift %", 'Lookup([Targets/Target Brand Lift %],[Targets/Event Name],[Events/Event Name])'),
-    ("sc-apprbudget", "Approved Budget", 'Lookup([Targets/Approved Budget],[Targets/Event Name],[Events/Event Name])'),
-    ("sc-acimpr", "Actual Impressions", 'Lookup([Actuals/Actual Impressions],[Actuals/Event Name],[Events/Event Name])'),
-    ("sc-aceng", "Actual Engagements", 'Lookup([Actuals/Actual Engagements],[Actuals/Event Name],[Events/Event Name])'),
-    ("sc-acleads", "Actual Leads and Meetings", 'Lookup([Actuals/Actual Leads and Meetings],[Actuals/Event Name],[Events/Event Name])'),
-    ("sc-acemv", "Actual Earned Media Value", 'Lookup([Actuals/Actual Earned Media Value],[Actuals/Event Name],[Events/Event Name])'),
-    ("sc-aclift", "Actual Brand Lift %", 'Lookup([Actuals/Actual Brand Lift %],[Actuals/Event Name],[Events/Event Name])'),
-    ("sc-acspend", "Actual Spend", 'Lookup([Actuals/Actual Spend],[Actuals/Event Name],[Events/Event Name])'),
+    ("sc-tgimpr", "Target Impressions", _override("Targets", "Target Impressions", "Targets Seed", "Target Impressions")),
+    ("sc-tgeng", "Target Engagements", _override("Targets", "Target Engagements", "Targets Seed", "Target Engagements")),
+    ("sc-tgleads", "Target Leads and Meetings", _override("Targets", "Target Leads and Meetings", "Targets Seed", "Target Leads and Meetings")),
+    ("sc-tgemv", "Target Earned Media Value", _override("Targets", "Target Earned Media Value", "Targets Seed", "Target Earned Media Value")),
+    ("sc-tglift", "Target Brand Lift %", _override("Targets", "Target Brand Lift %", "Targets Seed", "Target Brand Lift %")),
+    ("sc-apprbudget", "Approved Budget", _override("Targets", "Approved Budget", "Targets Seed", "Approved Budget")),
+    ("sc-acimpr", "Actual Impressions", _override("Actuals", "Actual Impressions", "Actuals Seed", "Actual Impressions")),
+    ("sc-aceng", "Actual Engagements", _override("Actuals", "Actual Engagements", "Actuals Seed", "Actual Engagements")),
+    ("sc-acleads", "Actual Leads and Meetings", _override("Actuals", "Actual Leads and Meetings", "Actuals Seed", "Actual Leads and Meetings")),
+    ("sc-acemv", "Actual Earned Media Value", _override("Actuals", "Actual Earned Media Value", "Actuals Seed", "Actual Earned Media Value")),
+    ("sc-aclift", "Actual Brand Lift %", _override("Actuals", "Actual Brand Lift %", "Actuals Seed", "Actual Brand Lift %")),
+    ("sc-acspend", "Actual Spend", _override("Actuals", "Actual Spend", "Actuals Seed", "Actual Spend")),
     ("sc-hastargets", "Has Targets", 'IsNotNull([Target Impressions])'),
     ("sc-hasactuals", "Has Actuals", 'IsNotNull([Actual Impressions])'),
 ]
@@ -114,7 +203,7 @@ SC_DEFS = [
 def make_wide_table(elid, name):
     return {
         "id": elid, "kind": "table", "name": name, "visibleAsSource": True,
-        "source": {"elementId": "tbl-events", "kind": "table"},
+        "source": {"elementId": "events-seed", "kind": "table"},
         "columns": [c(cid, formula=f, name=n) for cid, n, f in SC_DEFS],
         "order": [cid for cid, _, _ in SC_DEFS],
     }
@@ -412,7 +501,7 @@ THEME = {"colors": {"text": TEXT, "highlight": BLUE, "success": GREEN, "warning"
 
 # Only the derived Lookup tables live on the hidden Data page; the four raw
 # input tables are placed directly on their own pages (see page1..page4).
-HIDDEN_DATA_ELEMENTS = [scorecard, scorecard_view]
+HIDDEN_DATA_ELEMENTS = SEED_ELEMENTS + [scorecard, scorecard_view]
 DATA_PAGE_LAYOUT = ('<Page type="grid" gridTemplateColumns="repeat(24,1fr)" gridTemplateRows="auto" id="pgData">'
                      + "".join(f'<Element elementId="{e["id"]}" gridColumn="1 / 25" gridRow="{1+i*4} / {5+i*4}"/>'
                                for i, e in enumerate(HIDDEN_DATA_ELEMENTS))

@@ -6,58 +6,262 @@
     "kind": "workbook",
     "elements": [
       {
+        "id": "events-seed",
+        "kind": "table",
+        "name": "Events Seed",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4",
+          "kind": "sql",
+          "statement": "SELECT 'AT&T Pebble Beach Pro-Am' AS C1,'PGA Tour Sponsorship' AS C2,'2026-02-05' AS C3,'Sarah Chen' AS C4,450000 AS C5,'Marquee PGA Tour pairing event; strong overlap with our target affluent demographic.' AS C6 UNION ALL SELECT 'Pacific Life Open Golf Classic','Golf Pro-Am','2026-06-12','James Whitfield',275000,'Regional client-appreciation pro-am; strengthens advisor relationships in key markets.' UNION ALL SELECT 'Newport Beach Jazz & Wine Festival','Concert Series','2026-09-20','Maria Lopez',120000,'Community brand visibility in our Newport Beach HQ market.' UNION ALL SELECT 'Financial Advisors Forum West','Industry Conference','2026-11-03','David Kim',90000,'Advisor recruitment and thought-leadership positioning.'"
+        },
+        "columns": [
+          {
+            "id": "se-name",
+            "formula": "[Custom SQL/C1]",
+            "name": "Event Name"
+          },
+          {
+            "id": "se-type",
+            "formula": "[Custom SQL/C2]",
+            "name": "Event Type"
+          },
+          {
+            "id": "se-date",
+            "formula": "[Custom SQL/C3]",
+            "name": "Event Date"
+          },
+          {
+            "id": "se-owner",
+            "formula": "[Custom SQL/C4]",
+            "name": "Requested By"
+          },
+          {
+            "id": "se-budget",
+            "formula": "[Custom SQL/C5]",
+            "name": "Requested Budget"
+          },
+          {
+            "id": "se-just",
+            "formula": "[Custom SQL/C6]",
+            "name": "Summary and Justification"
+          }
+        ],
+        "order": [
+          "se-name",
+          "se-type",
+          "se-date",
+          "se-owner",
+          "se-budget",
+          "se-just"
+        ]
+      },
+      {
+        "id": "targets-seed",
+        "kind": "table",
+        "name": "Targets Seed",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4",
+          "kind": "sql",
+          "statement": "SELECT 'AT&T Pebble Beach Pro-Am' AS C1,8000000 AS C2,45000 AS C3,150 AS C4,1200000 AS C5,4 AS C6,430000 AS C7 UNION ALL SELECT 'Pacific Life Open Golf Classic',1500000,12000,60,300000,2.5,260000 UNION ALL SELECT 'Financial Advisors Forum West',600000,5000,40,150000,1.5,85000"
+        },
+        "columns": [
+          {
+            "id": "st-name",
+            "formula": "[Custom SQL/C1]",
+            "name": "Event Name"
+          },
+          {
+            "id": "st-impr",
+            "formula": "[Custom SQL/C2]",
+            "name": "Target Impressions"
+          },
+          {
+            "id": "st-eng",
+            "formula": "[Custom SQL/C3]",
+            "name": "Target Engagements"
+          },
+          {
+            "id": "st-leads",
+            "formula": "[Custom SQL/C4]",
+            "name": "Target Leads and Meetings"
+          },
+          {
+            "id": "st-emv",
+            "formula": "[Custom SQL/C5]",
+            "name": "Target Earned Media Value"
+          },
+          {
+            "id": "st-lift",
+            "formula": "[Custom SQL/C6]",
+            "name": "Target Brand Lift %"
+          },
+          {
+            "id": "st-budget",
+            "formula": "[Custom SQL/C7]",
+            "name": "Approved Budget"
+          }
+        ],
+        "order": [
+          "st-name",
+          "st-impr",
+          "st-eng",
+          "st-leads",
+          "st-emv",
+          "st-lift",
+          "st-budget"
+        ]
+      },
+      {
+        "id": "approvals-seed",
+        "kind": "table",
+        "name": "Approvals Seed",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4",
+          "kind": "sql",
+          "statement": "SELECT 'AT&T Pebble Beach Pro-Am' AS C1,'Approved' AS C2,'Karen Ito' AS C3,'Strong ROI history with this event; approve at requested budget.' AS C4 UNION ALL SELECT 'Pacific Life Open Golf Classic','Approved','Karen Ito','Approved with a slight budget trim.' UNION ALL SELECT 'Newport Beach Jazz & Wine Festival','Denied','Karen Ito','Low strategic fit this cycle; revisit next year.'"
+        },
+        "columns": [
+          {
+            "id": "sa-name",
+            "formula": "[Custom SQL/C1]",
+            "name": "Event Name"
+          },
+          {
+            "id": "sa-decision",
+            "formula": "[Custom SQL/C2]",
+            "name": "Decision"
+          },
+          {
+            "id": "sa-reviewer",
+            "formula": "[Custom SQL/C3]",
+            "name": "Reviewer"
+          },
+          {
+            "id": "sa-comments",
+            "formula": "[Custom SQL/C4]",
+            "name": "Comments"
+          }
+        ],
+        "order": [
+          "sa-name",
+          "sa-decision",
+          "sa-reviewer",
+          "sa-comments"
+        ]
+      },
+      {
+        "id": "actuals-seed",
+        "kind": "table",
+        "name": "Actuals Seed",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4",
+          "kind": "sql",
+          "statement": "SELECT 'AT&T Pebble Beach Pro-Am' AS C1,8400000 AS C2,51000 AS C3,162 AS C4,1350000 AS C5,4.6 AS C6,421000 AS C7"
+        },
+        "columns": [
+          {
+            "id": "sc2-name",
+            "formula": "[Custom SQL/C1]",
+            "name": "Event Name"
+          },
+          {
+            "id": "sc2-impr",
+            "formula": "[Custom SQL/C2]",
+            "name": "Actual Impressions"
+          },
+          {
+            "id": "sc2-eng",
+            "formula": "[Custom SQL/C3]",
+            "name": "Actual Engagements"
+          },
+          {
+            "id": "sc2-leads",
+            "formula": "[Custom SQL/C4]",
+            "name": "Actual Leads and Meetings"
+          },
+          {
+            "id": "sc2-emv",
+            "formula": "[Custom SQL/C5]",
+            "name": "Actual Earned Media Value"
+          },
+          {
+            "id": "sc2-lift",
+            "formula": "[Custom SQL/C6]",
+            "name": "Actual Brand Lift %"
+          },
+          {
+            "id": "sc2-spend",
+            "formula": "[Custom SQL/C7]",
+            "name": "Actual Spend"
+          }
+        ],
+        "order": [
+          "sc2-name",
+          "sc2-impr",
+          "sc2-eng",
+          "sc2-leads",
+          "sc2-emv",
+          "sc2-lift",
+          "sc2-spend"
+        ]
+      },
+      {
         "id": "scorecard",
         "kind": "table",
         "name": "Scorecard",
         "visibleAsSource": true,
         "source": {
-          "elementId": "tbl-events",
+          "elementId": "events-seed",
           "kind": "table"
         },
         "columns": [
           {
             "id": "sc-name",
-            "formula": "[Events/Event Name]",
+            "formula": "[Events Seed/Event Name]",
             "name": "Event Name"
           },
           {
             "id": "sc-type",
-            "formula": "[Events/Event Type]",
+            "formula": "[Events Seed/Event Type]",
             "name": "Event Type"
           },
           {
             "id": "sc-date",
-            "formula": "[Events/Event Date]",
+            "formula": "[Events Seed/Event Date]",
             "name": "Event Date"
           },
           {
             "id": "sc-owner",
-            "formula": "[Events/Requested By]",
+            "formula": "[Events Seed/Requested By]",
             "name": "Requested By"
           },
           {
             "id": "sc-reqbudget",
-            "formula": "[Events/Requested Budget]",
+            "formula": "[Events Seed/Requested Budget]",
             "name": "Requested Budget"
           },
           {
             "id": "sc-just",
-            "formula": "[Events/Summary and Justification]",
+            "formula": "[Events Seed/Summary and Justification]",
             "name": "Justification"
           },
           {
             "id": "sc-decision",
-            "formula": "Lookup([Approvals/Decision],[Approvals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Approvals/Decision],[Event Name],[Approvals/Event Name]),Lookup([Approvals Seed/Decision],[Event Name],[Approvals Seed/Event Name]))",
             "name": "Decision"
           },
           {
             "id": "sc-reviewer",
-            "formula": "Lookup([Approvals/Reviewer],[Approvals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Approvals/Reviewer],[Event Name],[Approvals/Event Name]),Lookup([Approvals Seed/Reviewer],[Event Name],[Approvals Seed/Event Name]))",
             "name": "Reviewer"
           },
           {
             "id": "sc-comments",
-            "formula": "Lookup([Approvals/Comments],[Approvals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Approvals/Comments],[Event Name],[Approvals/Event Name]),Lookup([Approvals Seed/Comments],[Event Name],[Approvals Seed/Event Name]))",
             "name": "Review Comments"
           },
           {
@@ -67,62 +271,62 @@
           },
           {
             "id": "sc-tgimpr",
-            "formula": "Lookup([Targets/Target Impressions],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Target Impressions],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Target Impressions],[Event Name],[Targets Seed/Event Name]))",
             "name": "Target Impressions"
           },
           {
             "id": "sc-tgeng",
-            "formula": "Lookup([Targets/Target Engagements],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Target Engagements],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Target Engagements],[Event Name],[Targets Seed/Event Name]))",
             "name": "Target Engagements"
           },
           {
             "id": "sc-tgleads",
-            "formula": "Lookup([Targets/Target Leads and Meetings],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Target Leads and Meetings],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Target Leads and Meetings],[Event Name],[Targets Seed/Event Name]))",
             "name": "Target Leads and Meetings"
           },
           {
             "id": "sc-tgemv",
-            "formula": "Lookup([Targets/Target Earned Media Value],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Target Earned Media Value],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Target Earned Media Value],[Event Name],[Targets Seed/Event Name]))",
             "name": "Target Earned Media Value"
           },
           {
             "id": "sc-tglift",
-            "formula": "Lookup([Targets/Target Brand Lift %],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Target Brand Lift %],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Target Brand Lift %],[Event Name],[Targets Seed/Event Name]))",
             "name": "Target Brand Lift %"
           },
           {
             "id": "sc-apprbudget",
-            "formula": "Lookup([Targets/Approved Budget],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Approved Budget],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Approved Budget],[Event Name],[Targets Seed/Event Name]))",
             "name": "Approved Budget"
           },
           {
             "id": "sc-acimpr",
-            "formula": "Lookup([Actuals/Actual Impressions],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Impressions],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Impressions],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Impressions"
           },
           {
             "id": "sc-aceng",
-            "formula": "Lookup([Actuals/Actual Engagements],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Engagements],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Engagements],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Engagements"
           },
           {
             "id": "sc-acleads",
-            "formula": "Lookup([Actuals/Actual Leads and Meetings],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Leads and Meetings],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Leads and Meetings],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Leads and Meetings"
           },
           {
             "id": "sc-acemv",
-            "formula": "Lookup([Actuals/Actual Earned Media Value],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Earned Media Value],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Earned Media Value],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Earned Media Value"
           },
           {
             "id": "sc-aclift",
-            "formula": "Lookup([Actuals/Actual Brand Lift %],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Brand Lift %],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Brand Lift %],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Brand Lift %"
           },
           {
             "id": "sc-acspend",
-            "formula": "Lookup([Actuals/Actual Spend],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Spend],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Spend],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Spend"
           },
           {
@@ -169,53 +373,53 @@
         "name": "Scorecard View",
         "visibleAsSource": true,
         "source": {
-          "elementId": "tbl-events",
+          "elementId": "events-seed",
           "kind": "table"
         },
         "columns": [
           {
             "id": "sc-name",
-            "formula": "[Events/Event Name]",
+            "formula": "[Events Seed/Event Name]",
             "name": "Event Name"
           },
           {
             "id": "sc-type",
-            "formula": "[Events/Event Type]",
+            "formula": "[Events Seed/Event Type]",
             "name": "Event Type"
           },
           {
             "id": "sc-date",
-            "formula": "[Events/Event Date]",
+            "formula": "[Events Seed/Event Date]",
             "name": "Event Date"
           },
           {
             "id": "sc-owner",
-            "formula": "[Events/Requested By]",
+            "formula": "[Events Seed/Requested By]",
             "name": "Requested By"
           },
           {
             "id": "sc-reqbudget",
-            "formula": "[Events/Requested Budget]",
+            "formula": "[Events Seed/Requested Budget]",
             "name": "Requested Budget"
           },
           {
             "id": "sc-just",
-            "formula": "[Events/Summary and Justification]",
+            "formula": "[Events Seed/Summary and Justification]",
             "name": "Justification"
           },
           {
             "id": "sc-decision",
-            "formula": "Lookup([Approvals/Decision],[Approvals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Approvals/Decision],[Event Name],[Approvals/Event Name]),Lookup([Approvals Seed/Decision],[Event Name],[Approvals Seed/Event Name]))",
             "name": "Decision"
           },
           {
             "id": "sc-reviewer",
-            "formula": "Lookup([Approvals/Reviewer],[Approvals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Approvals/Reviewer],[Event Name],[Approvals/Event Name]),Lookup([Approvals Seed/Reviewer],[Event Name],[Approvals Seed/Event Name]))",
             "name": "Reviewer"
           },
           {
             "id": "sc-comments",
-            "formula": "Lookup([Approvals/Comments],[Approvals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Approvals/Comments],[Event Name],[Approvals/Event Name]),Lookup([Approvals Seed/Comments],[Event Name],[Approvals Seed/Event Name]))",
             "name": "Review Comments"
           },
           {
@@ -225,62 +429,62 @@
           },
           {
             "id": "sc-tgimpr",
-            "formula": "Lookup([Targets/Target Impressions],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Target Impressions],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Target Impressions],[Event Name],[Targets Seed/Event Name]))",
             "name": "Target Impressions"
           },
           {
             "id": "sc-tgeng",
-            "formula": "Lookup([Targets/Target Engagements],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Target Engagements],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Target Engagements],[Event Name],[Targets Seed/Event Name]))",
             "name": "Target Engagements"
           },
           {
             "id": "sc-tgleads",
-            "formula": "Lookup([Targets/Target Leads and Meetings],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Target Leads and Meetings],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Target Leads and Meetings],[Event Name],[Targets Seed/Event Name]))",
             "name": "Target Leads and Meetings"
           },
           {
             "id": "sc-tgemv",
-            "formula": "Lookup([Targets/Target Earned Media Value],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Target Earned Media Value],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Target Earned Media Value],[Event Name],[Targets Seed/Event Name]))",
             "name": "Target Earned Media Value"
           },
           {
             "id": "sc-tglift",
-            "formula": "Lookup([Targets/Target Brand Lift %],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Target Brand Lift %],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Target Brand Lift %],[Event Name],[Targets Seed/Event Name]))",
             "name": "Target Brand Lift %"
           },
           {
             "id": "sc-apprbudget",
-            "formula": "Lookup([Targets/Approved Budget],[Targets/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Targets/Approved Budget],[Event Name],[Targets/Event Name]),Lookup([Targets Seed/Approved Budget],[Event Name],[Targets Seed/Event Name]))",
             "name": "Approved Budget"
           },
           {
             "id": "sc-acimpr",
-            "formula": "Lookup([Actuals/Actual Impressions],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Impressions],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Impressions],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Impressions"
           },
           {
             "id": "sc-aceng",
-            "formula": "Lookup([Actuals/Actual Engagements],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Engagements],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Engagements],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Engagements"
           },
           {
             "id": "sc-acleads",
-            "formula": "Lookup([Actuals/Actual Leads and Meetings],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Leads and Meetings],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Leads and Meetings],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Leads and Meetings"
           },
           {
             "id": "sc-acemv",
-            "formula": "Lookup([Actuals/Actual Earned Media Value],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Earned Media Value],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Earned Media Value],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Earned Media Value"
           },
           {
             "id": "sc-aclift",
-            "formula": "Lookup([Actuals/Actual Brand Lift %],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Brand Lift %],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Brand Lift %],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Brand Lift %"
           },
           {
             "id": "sc-acspend",
-            "formula": "Lookup([Actuals/Actual Spend],[Actuals/Event Name],[Events/Event Name])",
+            "formula": "Coalesce(Lookup([Actuals/Actual Spend],[Event Name],[Actuals/Event Name]),Lookup([Actuals Seed/Actual Spend],[Event Name],[Actuals Seed/Event Name]))",
             "name": "Actual Spend"
           },
           {
@@ -2070,6 +2274,6 @@
         }
       }
     },
-    "layout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24,1fr)\" gridTemplateRows=\"auto\" id=\"pgData\"><Element elementId=\"scorecard\" gridColumn=\"1 / 25\" gridRow=\"1 / 5\"/><Element elementId=\"scorecard-view\" gridColumn=\"1 / 25\" gridRow=\"5 / 9\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgEvents\"><Container elementId=\"c-hdr1\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo1\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl1\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub1\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k1a\" gridColumn=\"1 / 7\" gridRow=\"7 / 15\"/><Element elementId=\"k1b\" gridColumn=\"7 / 13\" gridRow=\"7 / 15\"/><Element elementId=\"k1c\" gridColumn=\"13 / 19\" gridRow=\"7 / 15\"/><Element elementId=\"k1d\" gridColumn=\"19 / 25\" gridRow=\"7 / 15\"/><Element elementId=\"events-list\" gridColumn=\"1 / 25\" gridRow=\"16 / 32\"/><Element elementId=\"p1-note\" gridColumn=\"1 / 25\" gridRow=\"33 / 35\"/><Element elementId=\"tbl-events\" gridColumn=\"1 / 25\" gridRow=\"35 / 48\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgFinance\"><Container elementId=\"c-hdr2\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo2\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl2\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub2\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k2a\" gridColumn=\"1 / 7\" gridRow=\"7 / 14\"/><Element elementId=\"awaiting-targets\" gridColumn=\"1 / 25\" gridRow=\"15 / 27\"/><Element elementId=\"p2-note\" gridColumn=\"1 / 25\" gridRow=\"28 / 30\"/><Element elementId=\"tbl-targets\" gridColumn=\"1 / 25\" gridRow=\"30 / 40\"/><Element elementId=\"targets-table\" gridColumn=\"1 / 25\" gridRow=\"41 / 55\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgApprovals\"><Container elementId=\"c-hdr3\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo3\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl3\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub3\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k3a\" gridColumn=\"1 / 7\" gridRow=\"7 / 14\"/><Element elementId=\"pending-approval\" gridColumn=\"1 / 25\" gridRow=\"15 / 27\"/><Element elementId=\"p3-note\" gridColumn=\"1 / 25\" gridRow=\"28 / 30\"/><Element elementId=\"tbl-approvals\" gridColumn=\"1 / 25\" gridRow=\"30 / 38\"/><Element elementId=\"decisions-log\" gridColumn=\"1 / 25\" gridRow=\"39 / 51\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgScorecard\"><Container elementId=\"c-hdr4\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo4\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl4\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub4\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"ctrl-sc-event\" gridColumn=\"1 / 9\" gridRow=\"7 / 10\"/><Element elementId=\"k4a\" gridColumn=\"1 / 5\" gridRow=\"11 / 20\"/><Element elementId=\"k4b\" gridColumn=\"5 / 9\" gridRow=\"11 / 20\"/><Element elementId=\"k4c\" gridColumn=\"9 / 13\" gridRow=\"11 / 20\"/><Element elementId=\"k4d\" gridColumn=\"13 / 17\" gridRow=\"11 / 20\"/><Element elementId=\"k4e\" gridColumn=\"17 / 21\" gridRow=\"11 / 20\"/><Element elementId=\"k4f\" gridColumn=\"21 / 25\" gridRow=\"11 / 20\"/><Element elementId=\"sc-detail\" gridColumn=\"1 / 25\" gridRow=\"21 / 30\"/><Element elementId=\"p4-note\" gridColumn=\"1 / 25\" gridRow=\"31 / 33\"/><Element elementId=\"tbl-actuals\" gridColumn=\"1 / 25\" gridRow=\"33 / 43\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgAnnual\"><Container elementId=\"c-hdr5\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo5\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl5\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub5\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k5a\" gridColumn=\"1 / 5\" gridRow=\"7 / 15\"/><Element elementId=\"k5b\" gridColumn=\"5 / 9\" gridRow=\"7 / 15\"/><Element elementId=\"k5c\" gridColumn=\"9 / 13\" gridRow=\"7 / 15\"/><Element elementId=\"k5d\" gridColumn=\"13 / 17\" gridRow=\"7 / 15\"/><Element elementId=\"k5e\" gridColumn=\"17 / 21\" gridRow=\"7 / 15\"/><Element elementId=\"k5f\" gridColumn=\"21 / 25\" gridRow=\"7 / 15\"/><Element elementId=\"spend-bar\" gridColumn=\"1 / 17\" gridRow=\"16 / 34\"/><Element elementId=\"status-donut\" gridColumn=\"17 / 25\" gridRow=\"16 / 34\"/><Element elementId=\"rollup\" gridColumn=\"1 / 25\" gridRow=\"35 / 55\"/></Page>"
+    "layout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24,1fr)\" gridTemplateRows=\"auto\" id=\"pgData\"><Element elementId=\"events-seed\" gridColumn=\"1 / 25\" gridRow=\"1 / 5\"/><Element elementId=\"targets-seed\" gridColumn=\"1 / 25\" gridRow=\"5 / 9\"/><Element elementId=\"approvals-seed\" gridColumn=\"1 / 25\" gridRow=\"9 / 13\"/><Element elementId=\"actuals-seed\" gridColumn=\"1 / 25\" gridRow=\"13 / 17\"/><Element elementId=\"scorecard\" gridColumn=\"1 / 25\" gridRow=\"17 / 21\"/><Element elementId=\"scorecard-view\" gridColumn=\"1 / 25\" gridRow=\"21 / 25\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgEvents\"><Container elementId=\"c-hdr1\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo1\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl1\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub1\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k1a\" gridColumn=\"1 / 7\" gridRow=\"7 / 15\"/><Element elementId=\"k1b\" gridColumn=\"7 / 13\" gridRow=\"7 / 15\"/><Element elementId=\"k1c\" gridColumn=\"13 / 19\" gridRow=\"7 / 15\"/><Element elementId=\"k1d\" gridColumn=\"19 / 25\" gridRow=\"7 / 15\"/><Element elementId=\"events-list\" gridColumn=\"1 / 25\" gridRow=\"16 / 32\"/><Element elementId=\"p1-note\" gridColumn=\"1 / 25\" gridRow=\"33 / 35\"/><Element elementId=\"tbl-events\" gridColumn=\"1 / 25\" gridRow=\"35 / 48\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgFinance\"><Container elementId=\"c-hdr2\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo2\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl2\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub2\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k2a\" gridColumn=\"1 / 7\" gridRow=\"7 / 14\"/><Element elementId=\"awaiting-targets\" gridColumn=\"1 / 25\" gridRow=\"15 / 27\"/><Element elementId=\"p2-note\" gridColumn=\"1 / 25\" gridRow=\"28 / 30\"/><Element elementId=\"tbl-targets\" gridColumn=\"1 / 25\" gridRow=\"30 / 40\"/><Element elementId=\"targets-table\" gridColumn=\"1 / 25\" gridRow=\"41 / 55\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgApprovals\"><Container elementId=\"c-hdr3\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo3\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl3\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub3\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k3a\" gridColumn=\"1 / 7\" gridRow=\"7 / 14\"/><Element elementId=\"pending-approval\" gridColumn=\"1 / 25\" gridRow=\"15 / 27\"/><Element elementId=\"p3-note\" gridColumn=\"1 / 25\" gridRow=\"28 / 30\"/><Element elementId=\"tbl-approvals\" gridColumn=\"1 / 25\" gridRow=\"30 / 38\"/><Element elementId=\"decisions-log\" gridColumn=\"1 / 25\" gridRow=\"39 / 51\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgScorecard\"><Container elementId=\"c-hdr4\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo4\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl4\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub4\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"ctrl-sc-event\" gridColumn=\"1 / 9\" gridRow=\"7 / 10\"/><Element elementId=\"k4a\" gridColumn=\"1 / 5\" gridRow=\"11 / 20\"/><Element elementId=\"k4b\" gridColumn=\"5 / 9\" gridRow=\"11 / 20\"/><Element elementId=\"k4c\" gridColumn=\"9 / 13\" gridRow=\"11 / 20\"/><Element elementId=\"k4d\" gridColumn=\"13 / 17\" gridRow=\"11 / 20\"/><Element elementId=\"k4e\" gridColumn=\"17 / 21\" gridRow=\"11 / 20\"/><Element elementId=\"k4f\" gridColumn=\"21 / 25\" gridRow=\"11 / 20\"/><Element elementId=\"sc-detail\" gridColumn=\"1 / 25\" gridRow=\"21 / 30\"/><Element elementId=\"p4-note\" gridColumn=\"1 / 25\" gridRow=\"31 / 33\"/><Element elementId=\"tbl-actuals\" gridColumn=\"1 / 25\" gridRow=\"33 / 43\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgAnnual\"><Container elementId=\"c-hdr5\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo5\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl5\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub5\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k5a\" gridColumn=\"1 / 5\" gridRow=\"7 / 15\"/><Element elementId=\"k5b\" gridColumn=\"5 / 9\" gridRow=\"7 / 15\"/><Element elementId=\"k5c\" gridColumn=\"9 / 13\" gridRow=\"7 / 15\"/><Element elementId=\"k5d\" gridColumn=\"13 / 17\" gridRow=\"7 / 15\"/><Element elementId=\"k5e\" gridColumn=\"17 / 21\" gridRow=\"7 / 15\"/><Element elementId=\"k5f\" gridColumn=\"21 / 25\" gridRow=\"7 / 15\"/><Element elementId=\"spend-bar\" gridColumn=\"1 / 17\" gridRow=\"16 / 34\"/><Element elementId=\"status-donut\" gridColumn=\"17 / 25\" gridRow=\"16 / 34\"/><Element elementId=\"rollup\" gridColumn=\"1 / 25\" gridRow=\"35 / 55\"/></Page>"
   }
 }
