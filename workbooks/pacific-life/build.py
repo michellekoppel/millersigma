@@ -230,6 +230,13 @@ def header(page_sfx, title, subtitle):
            f'</Container>')
     return elems, lay
 
+def tab_title(sfx, title, subtitle):
+    ttl = {"id": f"ttl{sfx}", "kind": "text", "body": f"### {title}", "verticalAlign": "middle", "style": {"color": NAVY}}
+    sub = {"id": f"sub{sfx}", "kind": "text", "body": subtitle, "verticalAlign": "middle", "style": {"color": SLATE}}
+    lay = (f'<Element elementId="ttl{sfx}" gridColumn="1 / 21" gridRow="1 / 4"/>'
+           f'<Element elementId="sub{sfx}" gridColumn="1 / 21" gridRow="4 / 6"/>')
+    return [ttl, sub], lay
+
 def kpi_plain(elid, title, formula, source_id="scorecard"):
     el = {"id": elid, "kind": "kpi-chart", "source": {"elementId": source_id, "kind": "table"},
           "columns": [c(f"{elid}v", formula=formula, name=title)],
@@ -283,9 +290,44 @@ def val_const_text(v): return {"type": "constant", "value": {"type": "text", "va
 # ==================================================================
 
 # ==================================================================
-# PAGE 1 -- Events (list + add via the input table)
+# ADD EVENT -- button + modal form on the Events tab
 # ==================================================================
-h1e, h1l = header("1", "Pacific Life -- Brand Scorecard", "Marketing event & sponsorship tracking")
+# The Save button below cannot insert-rows (see the note above -- that
+# effect is rejected outright on this org), so it closes the modal and
+# points the user at the real, directly-editable Events table beneath.
+# It still gives the "click a button, fill out a form" flow asked for;
+# only the final write step is a manual copy into the table below
+# rather than an automatic one.
+addbtn = btn("addbtn", "+ Add Event", [{"effect": "open-overlay", "overlayId": "addEventModal"}])
+m_title = {"id": "m-title", "kind": "text", "verticalAlign": "middle", "style": {"color": NAVY},
+           "body": "### Request a new event\nFill this out, then click **Done** and copy the same values into the Events table below -- this org's Sigma API doesn't support writing a form straight into a table yet, so this step is manual for now."}
+m_name = field_control("m-name", "NewName", "Event Name")
+m_type = {"kind": "control", "id": "m-type", "controlId": "NewType", "name": "Event Type", "controlType": "segmented",
+          "value": EVENT_TYPES[0], "source": {"kind": "manual", "valueType": "text", "values": EVENT_TYPES}}
+m_date = field_control("m-date", "NewDate", "Event Date (e.g. 2026-09-15)")
+m_owner = field_control("m-owner", "NewOwner", "Requested By")
+m_budget = field_control("m-budget", "NewBudget", "Requested Budget ($)")
+m_just = field_control("m-just", "NewJust", "Summary and Justification", area=True)
+m_done = btn("m-done", "Done", [{"effect": "close-overlay"}])
+MODAL_ELEMENTS = [m_title, m_name, m_type, m_date, m_owner, m_budget, m_just, m_done]
+MODAL_LAYOUT = ('<Page type="grid" gridTemplateColumns="repeat(24,1fr)" gridTemplateRows="auto" id="addEventModal">'
+                '<Element elementId="m-title" gridColumn="1 / 25" gridRow="1 / 4"/>'
+                '<Element elementId="m-name" gridColumn="1 / 25" gridRow="4 / 6"/>'
+                '<Element elementId="m-type" gridColumn="1 / 25" gridRow="6 / 8"/>'
+                '<Element elementId="m-date" gridColumn="1 / 25" gridRow="8 / 10"/>'
+                '<Element elementId="m-owner" gridColumn="1 / 25" gridRow="10 / 12"/>'
+                '<Element elementId="m-budget" gridColumn="1 / 25" gridRow="12 / 14"/>'
+                '<Element elementId="m-just" gridColumn="1 / 25" gridRow="14 / 17"/>'
+                '<Element elementId="m-done" gridColumn="19 / 25" gridRow="17 / 19"/>'
+                '</Page>')
+OVERLAYS = [{"id": "addEventModal", "type": "modal", "name": "Add Event",
+             "modal": {"width": "medium", "header": {"title": "Add Event", "showCloseIcon": "shown"},
+                       "footer": {"primaryCta": {"visible": "hidden"}, "secondaryCta": {"visible": "hidden"}}}}]
+
+# ==================================================================
+# TAB 1 -- Events (list + add)
+# ==================================================================
+t1e, t1l = tab_title("1", "Events", "Marketing event & sponsorship tracking")
 p1_kpis = [
     kpi_plain("k1a", "Total Events", "Count([Scorecard/Event Name])"),
     kpi_plain("k1b", "Pending Brand Council Review", 'CountIf([Scorecard/Status]="Pending Brand Council Review")'),
@@ -293,7 +335,7 @@ p1_kpis = [
     kpi_plain("k1d", "Total Requested Budget", "Sum([Scorecard/Requested Budget])"),
 ]
 p1_note = {"id": "p1-note", "kind": "text", "verticalAlign": "middle", "style": {"color": SLATE},
-           "body": "**+ Add Event:** click the **+** at the bottom of the table below to submit a new event / sponsorship request (name, type, date, requester, budget, justification). Finance and Brand Council pick it up from there."}
+           "body": "Click **+ Add Event** above for a guided form, or just click the **+** at the bottom of the table below to submit a new event / sponsorship request directly (name, type, date, requester, budget, justification). Finance and Brand Council pick it up from there."}
 events_tbl = {
     "id": "events-list", "kind": "table", "name": "Events List", "source": {"elementId": "scorecard", "kind": "table"},
     "columns": [
@@ -313,21 +355,20 @@ events_tbl = {
     "style": dict(STY_CARD),
 }
 
-def page1():
-    elems = h1e + p1_kpis + [events_tbl, p1_note, tbl_events]
-    lay = (f'<Page type="grid" gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto" id="pgEvents">'
-           f'{h1l}'
+def tab1():
+    elems = t1e + [addbtn] + p1_kpis + [events_tbl, p1_note, tbl_events]
+    lay = (f'{t1l}'
+           f'<Element elementId="addbtn" gridColumn="21 / 25" gridRow="1 / 4"/>'
            f'{kpi_row_layout(["k1a","k1b","k1c","k1d"], None, None, "7 / 15")}'
            f'<Element elementId="events-list" gridColumn="1 / 25" gridRow="16 / 32"/>'
            f'<Element elementId="p1-note" gridColumn="1 / 25" gridRow="33 / 35"/>'
-           f'<Element elementId="tbl-events" gridColumn="1 / 25" gridRow="35 / 48"/>'
-           f'</Page>')
+           f'<Element elementId="tbl-events" gridColumn="1 / 25" gridRow="35 / 48"/>')
     return elems, lay
 
 # ==================================================================
 # PAGE 2 -- Finance: enter targets
 # ==================================================================
-h2e, h2l = header("2", "Finance -- Enter Targets & Approved Budget", "Set performance targets before Brand Council review")
+t2e, t2l = tab_title("2", "Finance -- Targets", "Set performance targets before Brand Council review")
 k2 = kpi_plain("k2a", "Awaiting Targets", 'CountIf([Scorecard/Has Targets]=False)')
 p2_note = {"id": "p2-note", "kind": "text", "verticalAlign": "middle", "style": {"color": SLATE},
            "body": "**Alert:** the events below have no targets yet. Add a row in the table underneath -- type the **Event Name** exactly as it appears above, then the target metrics and the Finance-approved budget."}
@@ -348,22 +389,20 @@ targets_tbl = {
     "style": dict(STY_CARD),
 }
 
-def page2():
-    elems = h2e + [k2, awaiting_tbl, p2_note, tbl_targets, targets_tbl]
-    lay = (f'<Page type="grid" gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto" id="pgFinance">'
-           f'{h2l}'
+def tab2():
+    elems = t2e + [k2, awaiting_tbl, p2_note, tbl_targets, targets_tbl]
+    lay = (f'{t2l}'
            f'<Element elementId="k2a" gridColumn="1 / 7" gridRow="7 / 14"/>'
            f'<Element elementId="awaiting-targets" gridColumn="1 / 25" gridRow="15 / 27"/>'
            f'<Element elementId="p2-note" gridColumn="1 / 25" gridRow="28 / 30"/>'
            f'<Element elementId="tbl-targets" gridColumn="1 / 25" gridRow="30 / 40"/>'
-           f'<Element elementId="targets-table" gridColumn="1 / 25" gridRow="41 / 55"/>'
-           f'</Page>')
+           f'<Element elementId="targets-table" gridColumn="1 / 25" gridRow="41 / 55"/>')
     return elems, lay
 
 # ==================================================================
-# PAGE 3 -- Brand Council approvals
+# TAB 3 -- Brand Council approvals
 # ==================================================================
-h3e, h3l = header("3", "Brand Council -- Approve or Deny", "Review targets & budget, then record a decision")
+t3e, t3l = tab_title("3", "Brand Council", "Review targets & budget, then record a decision")
 k3 = kpi_plain("k3a", "Awaiting Decision", 'CountIf([Scorecard/Has Targets]=True And IsNull([Scorecard/Decision]))')
 p3_note = {"id": "p3-note", "kind": "text", "verticalAlign": "middle", "style": {"color": SLATE},
            "body": "Add a row below -- type the **Event Name** exactly as it appears above, then set **Decision** (Approved/Denied), **Reviewer**, and **Comments**."}
@@ -387,22 +426,20 @@ decisions_tbl = {
     "style": dict(STY_CARD),
 }
 
-def page3():
-    elems = h3e + [k3, pending_tbl, p3_note, tbl_approvals, decisions_tbl]
-    lay = (f'<Page type="grid" gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto" id="pgApprovals">'
-           f'{h3l}'
+def tab3():
+    elems = t3e + [k3, pending_tbl, p3_note, tbl_approvals, decisions_tbl]
+    lay = (f'{t3l}'
            f'<Element elementId="k3a" gridColumn="1 / 7" gridRow="7 / 14"/>'
            f'<Element elementId="pending-approval" gridColumn="1 / 25" gridRow="15 / 27"/>'
            f'<Element elementId="p3-note" gridColumn="1 / 25" gridRow="28 / 30"/>'
            f'<Element elementId="tbl-approvals" gridColumn="1 / 25" gridRow="30 / 38"/>'
-           f'<Element elementId="decisions-log" gridColumn="1 / 25" gridRow="39 / 51"/>'
-           f'</Page>')
+           f'<Element elementId="decisions-log" gridColumn="1 / 25" gridRow="39 / 51"/>')
     return elems, lay
 
 # ==================================================================
-# PAGE 4 -- Individual Event Scorecard
+# TAB 4 -- Individual Event Scorecard
 # ==================================================================
-h4e, h4l = header("4", "Event Scorecard", "Targets vs. actuals for a single event")
+t4e, t4l = tab_title("4", "Event Scorecard", "Targets vs. actuals for a single event")
 ctrl_sc_event = {"kind": "control", "id": "ctrl-sc-event", "controlId": "ScEvent", "name": "Select Event", "controlType": "list",
                   "selectionMode": "single", "mode": "include", "values": [],
                   "filters": [{"source": {"kind": "table", "elementId": "scorecard-view"}, "columnId": "sc-name"}],
@@ -427,22 +464,20 @@ detail_tbl = {
 p4_note = {"id": "p4-note", "kind": "text", "verticalAlign": "middle", "style": {"color": SLATE},
            "body": "**Enter Actuals** (after the event runs): add a row below -- type the **Event Name** exactly as it appears in the picker above, then the actual results and spend."}
 
-def page4():
-    elems = h4e + [ctrl_sc_event] + sc_kpis + [detail_tbl, p4_note, tbl_actuals]
-    lay = (f'<Page type="grid" gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto" id="pgScorecard">'
-           f'{h4l}'
+def tab4():
+    elems = t4e + [ctrl_sc_event] + sc_kpis + [detail_tbl, p4_note, tbl_actuals]
+    lay = (f'{t4l}'
            f'<Element elementId="ctrl-sc-event" gridColumn="1 / 9" gridRow="7 / 10"/>'
            f'{kpi_row_layout(["k4a","k4b","k4c","k4d","k4e","k4f"], None, None, "11 / 20")}'
            f'<Element elementId="sc-detail" gridColumn="1 / 25" gridRow="21 / 30"/>'
            f'<Element elementId="p4-note" gridColumn="1 / 25" gridRow="31 / 33"/>'
-           f'<Element elementId="tbl-actuals" gridColumn="1 / 25" gridRow="33 / 43"/>'
-           f'</Page>')
+           f'<Element elementId="tbl-actuals" gridColumn="1 / 25" gridRow="33 / 43"/>')
     return elems, lay
 
 # ==================================================================
-# PAGE 5 -- Annual Scorecard (aggregate)
+# TAB 5 -- Annual Scorecard (aggregate)
 # ==================================================================
-h5e, h5l = header("5", "Annual Brand Scorecard", "Aggregate performance across all events this year")
+t5e, t5l = tab_title("5", "Annual Scorecard", "Aggregate performance across all events this year")
 p5_kpis = [
     kpi_plain("k5a", "Total Events", "Count([Scorecard/Event Name])"),
     kpi_plain("k5b", "Total Requested Budget", "Sum([Scorecard/Requested Budget])"),
@@ -479,15 +514,13 @@ rollup_tbl = {
     "style": dict(STY_CARD),
 }
 
-def page5():
-    elems = h5e + p5_kpis + [spend_bar, status_donut, rollup_tbl]
-    lay = (f'<Page type="grid" gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto" id="pgAnnual">'
-           f'{h5l}'
+def tab5():
+    elems = t5e + p5_kpis + [spend_bar, status_donut, rollup_tbl]
+    lay = (f'{t5l}'
            f'{kpi_row_layout(["k5a","k5b","k5c","k5d","k5e","k5f"], None, None, "7 / 15")}'
            f'<Element elementId="spend-bar" gridColumn="1 / 17" gridRow="16 / 34"/>'
            f'<Element elementId="status-donut" gridColumn="17 / 25" gridRow="16 / 34"/>'
-           f'<Element elementId="rollup" gridColumn="1 / 25" gridRow="35 / 55"/>'
-           f'</Page>')
+           f'<Element elementId="rollup" gridColumn="1 / 25" gridRow="35 / 55"/>')
     return elems, lay
 
 # ==================================================================
@@ -500,28 +533,45 @@ THEME = {"colors": {"text": TEXT, "highlight": BLUE, "success": GREEN, "warning"
           "tableStyles": {"preset": "presentation", "cellSpacing": "small"}}
 
 # Only the derived Lookup tables live on the hidden Data page; the four raw
-# input tables are placed directly on their own pages (see page1..page4).
+# input tables are placed directly on their own tabs (see tab1..tab4).
 HIDDEN_DATA_ELEMENTS = SEED_ELEMENTS + [scorecard, scorecard_view]
 DATA_PAGE_LAYOUT = ('<Page type="grid" gridTemplateColumns="repeat(24,1fr)" gridTemplateRows="auto" id="pgData">'
                      + "".join(f'<Element elementId="{e["id"]}" gridColumn="1 / 25" gridRow="{1+i*4} / {5+i*4}"/>'
                                for i, e in enumerate(HIDDEN_DATA_ELEMENTS))
                      + '</Page>')
 
+# Shared page-level header (logo + title), same for every tab.
+main_header_e, main_header_l = header("Main", "Pacific Life -- Brand Scorecard", "Marketing event & sponsorship tracking")
+
+TABBED_CONTAINER = {"id": "tc-main", "kind": "tabbed-container",
+    "tabs": [{"name": "Events"}, {"name": "Finance"}, {"name": "Brand Council"},
+             {"name": "Event Scorecard"}, {"name": "Annual Scorecard"}],
+    "tabBar": {"alignment": "start"}}
+
 def build():
-    p1e, p1l = page1(); p2e, p2l = page2(); p3e, p3l = page3(); p4e, p4l = page4(); p5e, p5l = page5()
-    all_elements = HIDDEN_DATA_ELEMENTS + p1e + p2e + p3e + p4e + p5e
-    layout = ('<?xml version="1.0" encoding="utf-8"?>\n' + DATA_PAGE_LAYOUT + p1l + p2l + p3l + p4l + p5l)
+    t1e, t1l = tab1(); t2e, t2l = tab2(); t3e, t3l = tab3(); t4e, t4l = tab4(); t5e, t5l = tab5()
+    tab_elems = t1e + t2e + t3e + t4e + t5e
+    all_elements = HIDDEN_DATA_ELEMENTS + main_header_e + [TABBED_CONTAINER] + tab_elems + MODAL_ELEMENTS
+    main_page_layout = (
+        '<Page type="grid" gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto" id="pg">'
+        + main_header_l
+        + '<TabbedContainer elementId="tc-main" type="tabbed-container" gridColumn="1 / 25" gridRow="7 / 90">'
+        + f'<Tab gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto">{t1l}</Tab>'
+        + f'<Tab gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto">{t2l}</Tab>'
+        + f'<Tab gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto">{t3l}</Tab>'
+        + f'<Tab gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto">{t4l}</Tab>'
+        + f'<Tab gridTemplateColumns="repeat(24, 1fr)" gridTemplateRows="auto">{t5l}</Tab>'
+        + '</TabbedContainer>'
+        + '</Page>')
+    layout = ('<?xml version="1.0" encoding="utf-8"?>\n' + DATA_PAGE_LAYOUT + main_page_layout + MODAL_LAYOUT)
     doc = {
         "schemaVersion": 1, "kind": "workbook",
         "elements": all_elements,
         "pages": [
             {"id": "pgData", "name": "Data", "visibility": "hidden"},
-            {"id": "pgEvents", "name": "Events"},
-            {"id": "pgFinance", "name": "Finance - Targets"},
-            {"id": "pgApprovals", "name": "Brand Council"},
-            {"id": "pgScorecard", "name": "Event Scorecard"},
-            {"id": "pgAnnual", "name": "Annual Scorecard"},
+            {"id": "pg", "name": "Pacific Life -- Brand Scorecard"},
         ],
+        "overlays": OVERLAYS,
         "settings": {"theme": {"overrides": THEME}},
         "layout": layout,
     }
