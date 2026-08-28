@@ -30,9 +30,9 @@ fi
 if [ -z "${SIGMA_API_TOKEN:-}" ]; then
   _fresh=false
   if [ -f "$_sigma_token_cache" ]; then
-    # macOS: stat -f %m   |   Linux: stat -c %Y
-    _mtime=$(stat -f %m "$_sigma_token_cache" 2>/dev/null \
-          || stat -c %Y "$_sigma_token_cache" 2>/dev/null \
+    # Linux: stat -c %Y   |   macOS: stat -f %m
+    _mtime=$(stat -c %Y "$_sigma_token_cache" 2>/dev/null \
+          || stat -f %m "$_sigma_token_cache" 2>/dev/null \
           || echo 0)
     _age=$(( $(date +%s) - _mtime ))
     if [ "$_age" -lt "$_sigma_token_ttl" ]; then

@@ -1,0 +1,2075 @@
+{
+  "name": "Pacific Life -- Brand Scorecard",
+  "folderId": "004d8497-18ea-4cf6-a8c5-deca403c22d9",
+  "document": {
+    "schemaVersion": 1,
+    "kind": "workbook",
+    "elements": [
+      {
+        "id": "scorecard",
+        "kind": "table",
+        "name": "Scorecard",
+        "visibleAsSource": true,
+        "source": {
+          "elementId": "tbl-events",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "sc-name",
+            "formula": "[Events/Event Name]",
+            "name": "Event Name"
+          },
+          {
+            "id": "sc-type",
+            "formula": "[Events/Event Type]",
+            "name": "Event Type"
+          },
+          {
+            "id": "sc-date",
+            "formula": "[Events/Event Date]",
+            "name": "Event Date"
+          },
+          {
+            "id": "sc-owner",
+            "formula": "[Events/Requested By]",
+            "name": "Requested By"
+          },
+          {
+            "id": "sc-reqbudget",
+            "formula": "[Events/Requested Budget]",
+            "name": "Requested Budget"
+          },
+          {
+            "id": "sc-just",
+            "formula": "[Events/Summary and Justification]",
+            "name": "Justification"
+          },
+          {
+            "id": "sc-decision",
+            "formula": "Lookup([Approvals/Decision],[Approvals/Event Name],[Events/Event Name])",
+            "name": "Decision"
+          },
+          {
+            "id": "sc-reviewer",
+            "formula": "Lookup([Approvals/Reviewer],[Approvals/Event Name],[Events/Event Name])",
+            "name": "Reviewer"
+          },
+          {
+            "id": "sc-comments",
+            "formula": "Lookup([Approvals/Comments],[Approvals/Event Name],[Events/Event Name])",
+            "name": "Review Comments"
+          },
+          {
+            "id": "sc-status",
+            "formula": "Coalesce([Decision],\"Pending Brand Council Review\")",
+            "name": "Status"
+          },
+          {
+            "id": "sc-tgimpr",
+            "formula": "Lookup([Targets/Target Impressions],[Targets/Event Name],[Events/Event Name])",
+            "name": "Target Impressions"
+          },
+          {
+            "id": "sc-tgeng",
+            "formula": "Lookup([Targets/Target Engagements],[Targets/Event Name],[Events/Event Name])",
+            "name": "Target Engagements"
+          },
+          {
+            "id": "sc-tgleads",
+            "formula": "Lookup([Targets/Target Leads and Meetings],[Targets/Event Name],[Events/Event Name])",
+            "name": "Target Leads and Meetings"
+          },
+          {
+            "id": "sc-tgemv",
+            "formula": "Lookup([Targets/Target Earned Media Value],[Targets/Event Name],[Events/Event Name])",
+            "name": "Target Earned Media Value"
+          },
+          {
+            "id": "sc-tglift",
+            "formula": "Lookup([Targets/Target Brand Lift %],[Targets/Event Name],[Events/Event Name])",
+            "name": "Target Brand Lift %"
+          },
+          {
+            "id": "sc-apprbudget",
+            "formula": "Lookup([Targets/Approved Budget],[Targets/Event Name],[Events/Event Name])",
+            "name": "Approved Budget"
+          },
+          {
+            "id": "sc-acimpr",
+            "formula": "Lookup([Actuals/Actual Impressions],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Impressions"
+          },
+          {
+            "id": "sc-aceng",
+            "formula": "Lookup([Actuals/Actual Engagements],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Engagements"
+          },
+          {
+            "id": "sc-acleads",
+            "formula": "Lookup([Actuals/Actual Leads and Meetings],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Leads and Meetings"
+          },
+          {
+            "id": "sc-acemv",
+            "formula": "Lookup([Actuals/Actual Earned Media Value],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Earned Media Value"
+          },
+          {
+            "id": "sc-aclift",
+            "formula": "Lookup([Actuals/Actual Brand Lift %],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Brand Lift %"
+          },
+          {
+            "id": "sc-acspend",
+            "formula": "Lookup([Actuals/Actual Spend],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Spend"
+          },
+          {
+            "id": "sc-hastargets",
+            "formula": "IsNotNull([Target Impressions])",
+            "name": "Has Targets"
+          },
+          {
+            "id": "sc-hasactuals",
+            "formula": "IsNotNull([Actual Impressions])",
+            "name": "Has Actuals"
+          }
+        ],
+        "order": [
+          "sc-name",
+          "sc-type",
+          "sc-date",
+          "sc-owner",
+          "sc-reqbudget",
+          "sc-just",
+          "sc-decision",
+          "sc-reviewer",
+          "sc-comments",
+          "sc-status",
+          "sc-tgimpr",
+          "sc-tgeng",
+          "sc-tgleads",
+          "sc-tgemv",
+          "sc-tglift",
+          "sc-apprbudget",
+          "sc-acimpr",
+          "sc-aceng",
+          "sc-acleads",
+          "sc-acemv",
+          "sc-aclift",
+          "sc-acspend",
+          "sc-hastargets",
+          "sc-hasactuals"
+        ]
+      },
+      {
+        "id": "scorecard-view",
+        "kind": "table",
+        "name": "Scorecard View",
+        "visibleAsSource": true,
+        "source": {
+          "elementId": "tbl-events",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "sc-name",
+            "formula": "[Events/Event Name]",
+            "name": "Event Name"
+          },
+          {
+            "id": "sc-type",
+            "formula": "[Events/Event Type]",
+            "name": "Event Type"
+          },
+          {
+            "id": "sc-date",
+            "formula": "[Events/Event Date]",
+            "name": "Event Date"
+          },
+          {
+            "id": "sc-owner",
+            "formula": "[Events/Requested By]",
+            "name": "Requested By"
+          },
+          {
+            "id": "sc-reqbudget",
+            "formula": "[Events/Requested Budget]",
+            "name": "Requested Budget"
+          },
+          {
+            "id": "sc-just",
+            "formula": "[Events/Summary and Justification]",
+            "name": "Justification"
+          },
+          {
+            "id": "sc-decision",
+            "formula": "Lookup([Approvals/Decision],[Approvals/Event Name],[Events/Event Name])",
+            "name": "Decision"
+          },
+          {
+            "id": "sc-reviewer",
+            "formula": "Lookup([Approvals/Reviewer],[Approvals/Event Name],[Events/Event Name])",
+            "name": "Reviewer"
+          },
+          {
+            "id": "sc-comments",
+            "formula": "Lookup([Approvals/Comments],[Approvals/Event Name],[Events/Event Name])",
+            "name": "Review Comments"
+          },
+          {
+            "id": "sc-status",
+            "formula": "Coalesce([Decision],\"Pending Brand Council Review\")",
+            "name": "Status"
+          },
+          {
+            "id": "sc-tgimpr",
+            "formula": "Lookup([Targets/Target Impressions],[Targets/Event Name],[Events/Event Name])",
+            "name": "Target Impressions"
+          },
+          {
+            "id": "sc-tgeng",
+            "formula": "Lookup([Targets/Target Engagements],[Targets/Event Name],[Events/Event Name])",
+            "name": "Target Engagements"
+          },
+          {
+            "id": "sc-tgleads",
+            "formula": "Lookup([Targets/Target Leads and Meetings],[Targets/Event Name],[Events/Event Name])",
+            "name": "Target Leads and Meetings"
+          },
+          {
+            "id": "sc-tgemv",
+            "formula": "Lookup([Targets/Target Earned Media Value],[Targets/Event Name],[Events/Event Name])",
+            "name": "Target Earned Media Value"
+          },
+          {
+            "id": "sc-tglift",
+            "formula": "Lookup([Targets/Target Brand Lift %],[Targets/Event Name],[Events/Event Name])",
+            "name": "Target Brand Lift %"
+          },
+          {
+            "id": "sc-apprbudget",
+            "formula": "Lookup([Targets/Approved Budget],[Targets/Event Name],[Events/Event Name])",
+            "name": "Approved Budget"
+          },
+          {
+            "id": "sc-acimpr",
+            "formula": "Lookup([Actuals/Actual Impressions],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Impressions"
+          },
+          {
+            "id": "sc-aceng",
+            "formula": "Lookup([Actuals/Actual Engagements],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Engagements"
+          },
+          {
+            "id": "sc-acleads",
+            "formula": "Lookup([Actuals/Actual Leads and Meetings],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Leads and Meetings"
+          },
+          {
+            "id": "sc-acemv",
+            "formula": "Lookup([Actuals/Actual Earned Media Value],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Earned Media Value"
+          },
+          {
+            "id": "sc-aclift",
+            "formula": "Lookup([Actuals/Actual Brand Lift %],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Brand Lift %"
+          },
+          {
+            "id": "sc-acspend",
+            "formula": "Lookup([Actuals/Actual Spend],[Actuals/Event Name],[Events/Event Name])",
+            "name": "Actual Spend"
+          },
+          {
+            "id": "sc-hastargets",
+            "formula": "IsNotNull([Target Impressions])",
+            "name": "Has Targets"
+          },
+          {
+            "id": "sc-hasactuals",
+            "formula": "IsNotNull([Actual Impressions])",
+            "name": "Has Actuals"
+          }
+        ],
+        "order": [
+          "sc-name",
+          "sc-type",
+          "sc-date",
+          "sc-owner",
+          "sc-reqbudget",
+          "sc-just",
+          "sc-decision",
+          "sc-reviewer",
+          "sc-comments",
+          "sc-status",
+          "sc-tgimpr",
+          "sc-tgeng",
+          "sc-tgleads",
+          "sc-tgemv",
+          "sc-tglift",
+          "sc-apprbudget",
+          "sc-acimpr",
+          "sc-aceng",
+          "sc-acleads",
+          "sc-acemv",
+          "sc-aclift",
+          "sc-acspend",
+          "sc-hastargets",
+          "sc-hasactuals"
+        ]
+      },
+      {
+        "id": "c-hdr1",
+        "kind": "container",
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "logo1",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyMjkuNDY1MiAxMTIuOTI1OCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDMwLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDEzNikgIC0tPgogIDxnPgogICAgPHBhdGggZD0iTTE4MC45MzMzLDYzLjYwNTRjLTMzLjM5NDEsMS44MDc5LTkzLjM4OTUuMDMwMy0xMjYuNDI5My0uMDIxMi4wMjEyLS41NTEyLjA1MTUtMS4xMTE0LjA5MzktMS42NTk2LDM0LjM2OTItLjIzMDIsOTIuMDk2NC0uMDkzOSwxMjYuMjUwNiwwLS4wNTc1LS44NzUyLS4xMzAyLTEuNzM4My0uMjIxMS0yLjYwNDQtNDIuMzczMywxLjY2NTYtODQuNzE2Mi0uMzcyNS0xMjUuNzYzMS0uMjU3NC4xMjExLTEuMDUzOS4yNjY1LTIuMTEwOC40NDUyLTMuMTQ5NSw3Ljg4MjksMi41MDQ1LDE3LjAyNTYuMzE1LDE3LjAyNTYuMzE1LDAsMCw4LjkzNjgsMy4xMTYyLDE2LjI2NTUsMCwwLDAsNC4zNjM5LDIuNDgzMyw4LjQxMjktMS4wOTAyLDAsMCwyMi4zMjUzLDkuMDg4MiwzMS40OTgzLTUuNTg0NC4xNTc1LS4yNDUzLjUzLS4xMzAyLjUyMzkuMTYzNS0uMDkzOSwyLjEzMi4xMzAyLDYuMjk2LDMuMjU4Niw2LjgxOTkuMjM2Mi4wMzYzLjQwODgtLjIxNS4yODc3LS40MjQtLjY2MDItMS4xMjA1LTEuODAxOS00LjQyMTUuODAyNS0xMS44NzQzLjEwOS0uMjk5OC41NjAyLS4yMjExLjU0NTEuMDk5OS0uMTc4Nyw0LjQyNzUuNDAyOCwxNC41NzI2LDkuODEyLDEyLjIwMTQsMCwwLDkuNTY5NywzLjgxODgsMjMuOTAzMS0uMTkzOCwwLDAsMi43NzcsMi4xMTA4LDEwLjkxMTMsMS4zMjA0aC4wMDYxYy42MDU3LS4wNjk3LDEuMjExNC0uMTM5MywxLjgxNy0uMjA5LS4wNzI3LS41NDUxLS4xNTc1LTEuMDkwMi0uMjM2Mi0xLjYzNTMtLjAwNi0uMDUxNS0uMDE1MS0uMDk5OS0uMDIxMi0uMTU3NS0uMDMwMy0uMTU3NS0uMDUxNS0uMzE1LS4wNzI3LS40NzU1LTIuOTI4NC0xNy40MTMzLTEyLjYzNDQtMzIuNTI1LTI2LjMyODgtNDIuNTA5Ni0uMzQ1Mi44NzUyLS43MTE3LDEuNzE3MS0xLjA5MDIsMi41MjU3LDEzLjMyMTksOS4zNzU5LDIyLjgwMzgsMjMuODMwNSwyNS42NDE0LDQwLjU1MDMtNC44NjA2LDEuMTYyOS04LjgwNjYtLjkzMjctOS40Mzk1LTEuMjkzMS0uMDU3NS0uMDMwMy0uMTIxMS0uMDMwMy0uMTc4NywwLTQuNzgxOCwyLjY4MzItOC4zMzQxLS4wODQ4LTkuMDE1NS0uNjc1My0uMDcyNy0uMDU3NS0uMTcyNi0uMDU3NS0uMjQ1MywwLTQuOTYwNSw0LjE1NS0xNC45NjAzLDMuMDU4Ny0xNy4xNTU4LTQuMzI3Ni0uMDg0OC0uMjg3Ny0uNTAyNy0uMjU3NC0uNTQ1MS4wNDI0LS4yMDksMS4yNDE2LS4zNDUyLDMuMjQzNC40MjQsNS4wMzkyLjA5MzkuMjMwMi0uMTA5LjQ2MDMtLjM0NTIuMzg3Ni0xMC4xMDU3LTMuMzAwOS0yLjU2Mi0xOC45OTQxLTEuNzU5NS0yMC4zMDg0LjgwMjUtMS4zMTQzLDMuMTQzNS04LjEyNTMsNS4wMDktMTEuNjA3OS44Mzg5LTEuNTY1Nyw3LjcxNjMtMTAuNDM1OCw4LjIwMzktMTkuNTc1NS4wNTE1LS45NjMuMDYzNi0yLjQxOTctLjg1NC0zLjA0OTYtLjc5NjUtLjU0NTEtMS45MzgyLS4zMzYyLTIuMjg5NS0uMjcyNi0xLjIwNTMuMjQ1My0xLjM3NzkuODQ4LTIuNTI1NywxLjIwNTMtMS4xODQxLjM2NjQtMS43NjU2LS4wMzYzLTIuODkyMS0uMDE1MS0xLjExNDQuMDIxMi0yLjE4MzUuNzkwNC00LjMzNjcsMi4wODk2LS43MTE3LjQzLTEuMjkwMS44MDI1LTEuNjgwOCwxLjA2My0xLjYxMTEtLjYyMzgtMy44OTQ1LTEuNDM4NS02LjY4NjctMi4xODk1LDAsMC04LjQxODktMi4yNjgzLTE3LjIyODUtMi4yNjgzQzc4LjEzNDUsMCw0OC40NzQ0LDI5LjY2MDEsNDguNDc0NCw2Ni4yNTUzaDEzMi41MTY0YzAtLjg4NDMtLjAyMTItMS43NjU2LS4wNTc1LTIuNjQwOHYtLjAxNTEuMDA2MVpNMTA4LjA5NzQsNDYuMDg5MmMtLjcxMTcsMi43NzctMS4xMTE0LDUuMzg0NS0xLjMzNTUsNy43Mzc1LS45NjkxLS4wOTk5LTEuODgwNi0uMjI0MS0yLjcxOTUtLjM3MjUuMjMwMi0xLjUyMDMuNTYwMy0zLjI2NDYsMS4wMTE1LTUuMTYwNC4xODc4LS43NjAxLjcyMzgtMi45Mzc1LDEuNTg2OS01LjQ2MzIsMCwwLDMuMTQzNS05LjE5NDIsOC44NzkyLTE2LjY2MjMuMDYzNi0uMDg0OC4xMzYzLS4xNzg3LjIwOS0uMjY2NS41ODE0LjM0NTIsMS4xMjY2LjY4MTQsMS42NTk2LDEuMDExNS0uMDcyNy4wOTM5LS4xMzYzLjE4NzgtLjIwOS4yNzg2LS4zMDI4LjQwODgtLjYwODcuODU0LS45MTE1LDEuMzE0My0yLjc3MSwzLjg5NzYtNi4xOTYxLDkuOC04LjE2MTUsMTcuNTcwOGwtLjAwNjEuMDA2MXYuMDA2MWgtLjAwM1pNMTEzLjU2NjcsMjQuOTY2MWMtMS43MjMyLDIuMDgwNS01LjIyNyw2LjY1MzUtOC4zNzY1LDEzLjIwNjktMS43MDIsMy41NDYyLTMuNjQ2Miw4LjM4NTYtNS4wMTIsMTQuMzg0OS0xLjQ0MTUtLjQyNC0yLjI2ODMtLjc3NTMtMi4yNjgzLS43NzUzLDAsMCwyLjgxMzQtMTMuOTQ4OCwxNC4wMDMzLTI3Ljg5NDYuNjIzOC4yOTM4LDEuMjIwNC41OTY2LDEuNzg2Ny44OTY0LS4wNTE1LjA1NzUtLjA5MzkuMTE1MS0uMTUxNC4xNzg3aC4wMTgydi4wMDNaTTExMC43NTk0LDU0LjAwODRjLjA5OTktMS42ODA4LjMxNS0zLjcxODkuNzM4OS01Ljk5MzIsMS41MzU0LTguMjkxNyw0LjgwMy0xNC4wMjc1LDYuNDMyMy0xNi44MzE4LjUzOTEtLjkyNjcsMS4wNjktMS43NzQ3LDEuNTcxNy0yLjUyNTguMDUxNS0uMDcyNy4wOTk5LS4xNDIzLjE0MjMtLjIxNS40ODc2LjMzNjIuOTYzLjY2NjIsMS40MTQzLjk4NDItLjAzMDMuMDQyNC0uMDU3NS4wODQ4LS4wODQ4LjEzNjMtMS45MzgyLDMuMDM3Ni01LjEzOTIsOS4xNDU4LTYuNDAyLDE3LjgxNjEtLjIzNjIsMS42MjkzLS40NjY0LDMuODU1MS0uNTAyNyw2LjQ1OTYtMS4xNDE3LjExNTEtMi4yNDEuMTc4Ny0zLjMwMDkuMTg3OGwtLjAwNjEtLjAxNTFoLS4wMDN2LS4wMDNaTTEyNC4zMDU0LDMyLjg1MjFjLTQuMDE4Nyw5LjAzNjctMi41MTk2LDE5LjI1MTUtMi41MTk2LDE5LjI1MTUtLjkzMjcuMzI0LTEuODUwNC42MDI3LTIuNzY0OS44MzI4LS4zODc2LTUuMjYwMy4xNTE0LTkuNTE4Mi43MTE3LTEyLjM4OTEsMS4xMjA1LTUuNzIwNiwyLjg4NjEtOC44NjQxLDMuMzUyNC05LjY3NTcsMCwwLC4wMjEyLS4wMzYzLjAzMDMtLjA1NzUsMi4xNjgzLDEuMzk5MSwzLjk3MDIsMi4yMTA3LDYuMDE0NCwxLjgwOC0xLjk0NDIsMS43NjU2LTQuODMwMy4yMzAyLTQuODMwMy4yMzAyaC4wMDYxWk0xMzkuMDYyNywyNC40MzMxYy0uMTUxNC4yMDktLjYxMTcuODYwMS0xLjQ4NywxLjA5MDItMS4xODQxLjMzNjItMi4zNDA5LS4yODc3LTIuMzI1OC0uMzcyNSwwLS4wMzYzLjE5MzgsMCwuNTE3OS0uMDIxMi4yNjY1LS4wMDYxLjc4MTMtLjA1NzUsMS4zNzE5LS4yODc3LS4wNzI3LS4wMjczLS4xNDIzLS4wNTc1LS4yMDktLjEwOS0uNDcyNC0uMzI0LS41ODc1LS45NzUxLS4yNjY1LTEuNDUwNi4zMjQtLjQ3MjQuOTc1Mi0uNTk2NiwxLjQ1MDYtLjI3MjYuMzA4OS4yMTUuNDY2NC41NjAzLjQ1MTIuOTExNS4xMjExLS4xMjExLjI0NTMtLjI2NjUuMzUxMy0uNDI0LjQ1MTItLjY0NS41MjM5LTEuMTYyOS41ODc1LTEuMTQ3OC4xMDYuMDIxMi4xOTk5LDEuMTQxNy0uNDM5MSwyLjA4MDVoLS4wMDZsLjAwMy4wMDNaTTE0NS4yMDczLDIuMzM3OWMuMTgxNy4wMjczLjE1NzUuMDMzMy4zMzYxLjA2MDYuMjc1Ni4wMzk0LjY5MDUuMDc4NywxLjE4NDEuMDMzMy4yODc3LS4wMjczLjU5NjYtLjA4NDguOTUzOS0uMjA5LDEuMjI2NS0uMzg3NiwxLjgyOTItMS4xOTAyLDIuOTU4Ny0xLjAzMjcuMjIxMS4wMjczLjU4MTQuMDc4Ny44NTQuMzM2Mi43NjkyLjcxNzcuMjM2MiwyLjQyNTctLjA4NzgsMy40OTQ4LTEuMjA1MywzLjk2MTEtMi40NzcyLDcuNTAxMy02LjEwODMsMTEuMTc3OC0uNzExNy43MjM4LTEuNzk1OCwyLjA4MDUtMy41MzcyLDIuODU1OC0xLjcwOC43NjAxLTMuMzM3My41MTc5LTUuNjYzMSwxLjgwOC0zLjUyNSwxLjk2NTQtMy4zODg4LDQuODgxOC02LjUzMjIsNC44ODE4LS42NjAyLDAtMS4zNzE5LS4xNzI2LTIuMTMyLS40ODE1LDEuNDE0My0xLjQxNDMsMy43OTE2LTMuNjA5OCw3LjA1MDEtNS44NjYuNjQ1LS40NTEyLDEuOTY1NC0xLjI0MTYsNC41OTQxLTIuODQzNywyLjY2MTktMS42MjkzLDQuMTY0LTIuNTcxMSw1LjkxNDQtNC4xNTUuNDg3Ni0uNDUxMiwxLjQzNTUtMS4zMzU1LDIuMzg5NC0yLjY3NzEuNjY2Mi0uOTQxOCwxLjQ5OTEtMi4zMTk3LDEuMzUwNy0yLjQ0MDktLjIwOS0uMTU3NS0xLjY4MDgsMi4zNDA5LTQuODE1Miw0LjY4OC0xLjYwMiwxLjE5OTItMy40MjUxLDIuMTc0NC01LjkyOTYsMy41ODI2LTEuMDkwMi42MDg3LTEuOTg5NiwxLjA5OTMtMy42MzEsMi4wNTMyLS45MDU1LjUyMzktMS45MDc5LDEuMTExNC0yLjc0MDcsMS42NDQ0LTEuMzA1Mi44MzI4LTMuMTI4MywyLjExNjgtNS4yMDI4LDQuMDMzOCwwLDAtLjU2MDMuNTAyNy0uOTc1MS45MTc2LS41MDI3LS4zMjQtMS4wMjA2LS42OTA1LTEuNTM1NC0xLjA5MDIsMS41NTA1LTEuNTQ0NSwyLjk4Ni0yLjY3NzEsNC4wNDktMy40NDYzLjA3ODctLjA1NzUuMTMwMi0uMDk5OS4xNTc1LS4xMjExLDMuMzUyNC0yLjU5ODQsNi4zODk5LTQuNDE1NCw4LjYwNjctNS42MTQ2LDMuNDI1MS0xLjg1MzQsNS4wMDktMi44NTU4LDYuMTk2MS0zLjc5MTUuODY2MS0uNjg0NCwxLjUwMjEtMS4yOTAxLDEuNzUwNC0xLjUyOTMsMS41MzI0LTEuNDYyNywyLjYyODYtMi44NzA5LDMuMzY3Ni0zLjkzMzkuMTMwMi0uMTk5OS42OTY1LTEuMTA1NC42MDg3LTEuMjA1My0uMDg0OC0uMDcyNy0uNTc1NC4zOTM3LTEuMTA1NC45NzUxLS44ODQzLjk2My0yLjE4OTUsMi4yNzQzLTMuOTMzOSwzLjY2NzQtLjgxMTYuNjM5LTEuNDM1NSwxLjA4NDItMS43ODA3LDEuMzIwNC0zLjM3MzYsMi4zMjU4LTcuNDU4OSw0LjIyNzYtNy45ODI4LDQuNDc5LTUuNjM1OCwyLjYyODYtOS45MTE5LDYuMTQ0Ni0xMS42ODA1LDcuNzIyNC0uNDMtLjM4MTYtLjg1NC0uNzkwNC0xLjI4NC0xLjE5OTIsMy4yMzczLTIuNzg2MSw3LjQxMzUtNS4zNDgxLDcuNDEzNS01LjM0ODEuNjA4Ny0uMzY2NCwxLjE4NzEtLjcwODYsMS43MzIyLTEuMDIwNiwxLjU3NDctLjkwNTUsMi43OTUyLTEuNTQxNSwzLjM0MzMtMS44MjkxLDMuMzg1Ny0xLjc2NTYsOC42MzM5LTQuNDU0OCwxMC42NTk5LTcuMDUwMS4xNDIzLS4xODE3LjcwMjYtLjg5OTQuNjExNy0uOTkwMy0uMDkwOC0uMDg3OC0uNzM1OS40Njk0LTEuMzU2Ny45NDc5LTEuMDI2Ni43OTA0LTIuMDk1NiwxLjUyOTMtMy4xODU5LDIuMjQxLDAsMC0uMjI0MS4xNDIzLS40My4yNzI2LS43OTY1LjUwMjctMi4wNjg0LDEuMTc4LTYuMjY1NywzLjIzNzQsMCwwLTIuMjEwNy45OTYzLTQuNzY2NywyLjMxOTctMy45OTE0LDIuMDUzMi03LjExOTgsNC4yNzkxLTkuMTA5NCw1Ljg1MDktLjQ0NTItLjQ3MjQtLjg5MDMtLjk1MzktMS4zMjA0LTEuNDM1NSw0LjAwNjYtMy4yNjQ2LDguMTc2Ny01LjI5NjcsMTIuMTU5LTcuNDcxLDIuMzg5NC0xLjI5OTIsNC4yODUyLTIuMzMxOSw1LjgzNTctMy4xOTVsMi4zODk0LTEuMzYyOGguMDA2MWMuNjA4Ny0uMzU3NCwxLjA4NzItLjY2MDIsMS4zODctLjg2MDEsMi4zMzE5LTEuNTIzMywzLjIyNTItMi41MzE3LDQuNjY5OC0yLjQ4MDMuMjU0NC4wMDkxLjQ1NzMuMDQ4NS41NjkzLjA3MjdsLS4wMDYxLjAwNjFaTTExNi44MDQsMy44ODg1YzYuMzIzMywwLDEyLjQyNTUuOTQxOCwxOC4xNzY0LDIuNjkyMi0yLjc5MjIsMS41NTA1LTUuNTU3MSwyLjk0OTctNy4zMzQ4LDMuODQ2MS0yLjk1ODcsMS41MDgxLTYuMzIzMywzLjA4NTktMTAuNDY2MSw2LjEwMjIsMCwwLTEuMTg0MS0xLjM2MjgtMi41NzExLTEuOTQ0Mi0xLjAwNTQtLjM4MTYtMS40NTA2LS4xOTM4LTIuNDgzMy0uNjk2NS0xLjIyNjUtLjYwMjYtMS4wOTAyLTEuMTExNC0yLjA2ODQtMS41NjU3LTEuNDA4Mi0uNjQ1LTEuOTgwNi4yODc3LTMuOTcwMi0uMTE1MS0xLjY4NjgtLjM0NTItMS43NTA0LTEuMTA1NC0zLjA0OTYtMS4wNDE4LTEuMTQxNy4wNTc1LTEuMjcxOS42NTQxLTIuNjg2Mi43OTA0LS4wNzI3LDAtLjEzNjMuMDA2MS0uMTk5OS4wMTUxLTEuMTA1NC4wNTc1LTEuMjc4LS4zNTEzLTIuMjk1NS0uMTY2Ni0xLjE2MjkuMjE1LTEuMTg0MS43OTY1LTIuNTU2LDEuMjA1My0xLjI0NzcuMzcyNS0xLjM1MDctLjA3MjctMi41MTk2LjI4NzctMS40ODY5LjQ1MTItMS4yMjA0LDEuMTIwNS0yLjg1NTgsMS42ODY4LS45MDU1LjMxNS0xLjQ2NTcuNDM5MS0xLjcyOTIsMS4wMDU0LS4xODc4LjM4MTYtLjE1NzUuODYwMS4wNDI0LDEuMTc4LjE3MjYuMjY2NS40MzkxLjQwMjguNjM5LjQ3MjQsMS4wNDE4LjM3MjUsNi4wMDgzLDEuMjE0NCwxMS4yODM4LDIuNDE5Nyw0LjA2NDEuODMyOCw3LjUyMjUsMS44NDQzLDEwLjM3MjIsMy4wNzk5LTEuNDU2NywxLjYyOTMtMi44MDczLDMuMzk0OC00LjA2NDEsNS4yMDI4LS4zMzAxLS4wOTk5LS42MzktLjIzNjItMS4yNzgtLjI5MzgtMS43MjMxLS4xNTc1LTIuMjQxLjQwODgtMy44NjEyLjIzMDItMS4xMTE0LS4xMjExLTEuMDg0Mi0uNDA4OC0yLjAwMTgtLjM5MzctMS4xMDU0LjAxNTEtMS4yMjY1LjQzLTIuNTEzNi42MzI5LTEuNDkzLjIzNjItMS42NjU2LS4yNzI2LTIuODM0Ni4wNDI0LTEuMDIwNi4yNzI2LS45MTE1LjY3NTMtMi4yMTA3LDEuMTY5LTEuMzA1Mi41MDI4LTEuNTIwMy4xMzYzLTIuNDYyMS42NDUxLS45NzUxLjUzLS44NTQuOTg0Mi0xLjg1MzQsMS40MDgyLS43OTY1LjMzMDEtMS4wNTM5LjEzMDItMS43MzgzLjUzLS41NDUxLjMyNC0uNDY2NC41MDg4LTEuMjI2NSwxLjE3OC0uNzM4OS42NTQxLTEuMDYzLjcyMzgtMS40MjAzLDEuMDIwNi0uMTMwMi4xMTUxLS4yMzYyLjIyNDEtLjI5MzguMjkzOC0uNDE3OS40ODE1LS41NjAzLDEuMzA1Mi0uNDM5MSwxLjYxNDEuMzAyOC43NzUzLDMuMDk1LjIxNSw2LjM1MzYtLjE5MzguNjMyOS0uMDc4Nyw2LjExNzQtLjc0OCwxMi4zMTA0LS41NTQyLjQwODguMDE1MS45NjMuMDUxNS45NjMuMDUxNXYuMDE1MWMtNC4xNDg5LDcuNjk1MS02LjM3NDgsMTQuNDc4Ny02LjM3NDgsMTQuNDc4Ny0xLjEyNjYsMi44NDM3LTMuMjczNywzLjM3OTctNC4yNTc5LDMuNDY3NS0uMjI0MS4wMjEyLS4zNzI1LS4yMTUtLjI3MjYtLjQxNzkuOTc1MS0xLjgzODIsMS4wNzgxLTQuNTg4LDEuMDQxOC02LjA3MTksMC0uMjkzOC0uMzkzNy0uMzgxNi0uNTMtLjEzMDItNi4yMDgyLDExLjI0NzQtMTUuNjA1Myw2Ljg4MzUtMTYuNTUzMiw2LjQwMi0uMDUxNS0uMDI3My0uMTA5LS4wMjczLS4xNTc1LDAtLjgxNzcuMzY2NC0xMS4wMjY0LDIuNzQwNy0xOS4xNDU1LjE1MTRDNjEuNTY2MiwyNS4yMzg2LDg2LjY4OTcsMy44ODg1LDExNi44MDQsMy44ODg1WiIgZmlsbD0iIzFkNThhNCIvPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Ik0yMDEuNTE4OCw4Mi44OTI5Yy0yLjAxMDktLjAzMDMtNy4zNzExLS4wMTUxLTE0Ljc0NTIsMHYuNzM4OWMxLjUwODIuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDEsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTUuNTYzMmMyLjAyMy4wMTUxLDQuMDQ5LjAyMTIsNi4wNjU5LjAzNjMuMTY2NiwwLC40MTc5LjAxNTEuNjk2NS4wOTM5LjUzOS4xNTc1Ljg4NDMuNDY2NCwxLjA0NzguNjE3OC4xNDIzLjEzMDIuMzI0LjMzMDEuNDk2Ni42MTc4aC43MTE3di04LjAyNTJoLS43MTE3Yy0uMDc4Ny4yMDktLjIxNS40NzU1LS40NzU1LjcxNzctLjQwMjguMzkzNy0uODU0LjUwMjctMS4wNDc4LjU1NDItLjI5MzguMDcyNy0uNTQ1MS4wNzI3LS43MTc3LjA2MzYtMi4wMTY5LjAxNTEtNC4wMzM4LjAxNTEtNi4wNjU5LjAyMTJ2LTYuMjY1N2MwLS4zOTM3LDAtLjc2MDEuMDE1MS0xLjExMTRoNi45MjU5YzEuNjA4MSwwLDIuNDc3Mi4zNjY0LDIuNzI4NiwxLjIzNTZsLjEzMDIuNDk2N2guNzQ1bDEuNzY1Ni03LjExOTdjLS4wMzYzLDAtLjA5OTkuMDE1MS0uMTc4Ny4wMTUxLTIuNjEzNS4yMzYyLTQuNjAwMS4xOTk5LTUuMzA1Ny4xODc4di4wMTUxaC0uMDA2MWwtLjAwNjEtLjAwNjF2LS4wMTIxWiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICAgIDxwYXRoIGQ9Ik0xNzUuMDQ0Niw4Mi44OTI5di43Mzg5YzEuNTA4MS40MywxLjczODMsMS45ODA2LDEuNzM4Myw1LjU1NzF2MTcuMTM0NmMwLDMuNTczNS0uMjMwMiw1LjEyNC0xLjczODMsNS41NTcxdi43NDVoOS42Njk3di0uNzQ1Yy0xLjUwODEtLjQzLTEuNzM4My0xLjk4MDYtMS43MzgzLTUuNTU3MXYtMTcuMTM0NmMwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTdaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTIyOC43NTMxLDEwNS4zMDk0Yy0xLjg1OTQsMS40NzE4LTQuODMwMywyLjM0MDktNy44MTAyLDIuMzQwOS0yLjU3NzIsMC0zLjk2MTEtLjMzNjEtNC4zNDg4LS40NTEydi02LjQzMjNjMi4wMjMuMDE1MSw0LjAzOTkuMDIxMiw2LjA2NTkuMDM2My4xNjM1LDAsLjQwODguMDE1MS42OTY1LjA5MzkuNTQ1MS4xNTE0Ljg4NDMuNDY2NCwxLjA0MTguNjE3OC4xNDIzLjEzMDIuMzI0LjMzMDEuNTAyNy42MTc4aC43MTc3di04LjA0MDRoLS43MTc3Yy0uMDc4Ny4yMDktLjIzMDIuNDcyNC0uNDc1NS43MTc3LS40MDI4LjM5MzctLjg1NC41MDI3LTEuMDUzOS41NTQyLS4yOTM4LjA3MjctLjU0NTEuMDcyNy0uNzE3Ny4wNjM2LTIuMDE2OSwwLTQuMDMzOC4wMTUxLTYuMDUwNy4wMjEyLDAsMCwuMDA2MS03LjAyNTkuMDE1MS03LjM3MTFoNi45MjU5YzEuNjA4MSwwLDIuNDc3Mi4zNjY0LDIuNzE5NSwxLjIzNTZsLjEyMTEuNDg3NmguNzM4OWwxLjc3MTYtNy4xMjg4cy0uMDYzNiwwLS4xODc4LjAxNTFjLTEuNzY1Ni4xNTE0LTMuNTMxMS4yMTUtNS4zMDU3LjE4NzhoLTE0Ljc0NTJ2LjczODljMS41MDgxLjQzLDEuNzM4MywxLjk3NDUsMS43MzgzLDUuNTU3MXYxNy4xMzQ2YzAsMy41NzM1LS4yMjExLDUuMTMzMS0xLjczODMsNS41NTcxdi43NDVoMTguOTc4OWwxLjgxNy03LjMwMTRoLS43MDI2di4wMDYxaC4wMDN2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTE3My4wNTc5LDEwNS4zMTg1Yy0xLjg1OTQsMS40Nzc4LTUuMTU0MywyLjM0MDktOC4xMzQzLDIuMzQwOS0yLjY3MSwwLTQuMDU1LS4zNjY0LTQuMzg1MS0uNDY2NHYtMTcuOTk0N2MwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTd2LjczODljMS41MDgxLjQzLDEuNzM4MywxLjk4MDYsMS43MzgzLDUuNTU3MXYxNy4xMzQ2YzAsMy41NzM1LS4yMzAyLDUuMTI0LTEuNzM4Myw1LjU1NzF2Ljc0NWgxOS4zMzkzbDEuODE3LTcuMzA3NWgtLjcwMjZ2LS4wMDYxaC0uMDAzdi0uMDAzWiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICAgIDxwYXRoIGQ9Ik0xNC43MDYzLDgzLjIyOTRjLTEuMzI2NC0uMzM2Mi0yLjQ4MzMtLjM2NjQtMy4yODg4LS4zMjRsLTExLjQwNDktLjAxNTF2Ljc0NWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNTM5NHYtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTQuODI0MmwuMjg3Ny4xMTUxYzQuNTc4OSwxLjcwOCw5LjQyNDQuNzc1MywxMi4wODkzLTIuMjUzMSwyLjIyNTktMi41MjU3LDIuMzMxOS01LjgyOTcsMi4zNDA5LTYuMjg2OS4wNTE1LTIuNzk4Mi0xLjA5MDItNC43OTM5LTEuMzk5MS01LjMwNTctMi4wNDcyLTMuMzY3Ni01LjQ4NDQtNC4zMDAzLTYuNDMyMy00LjU0MjZoLjAwNjFaTTE0Ljc3OSw5Ny45MTFjLTEuMjcxOSwxLjIwNTMtMy4yNjQ2LDIuMDM4MS01LjY0OCwxLjk4MDZsLTEuMjk5Mi0uMDkzOXYtMTEuNzg2NWgxLjUwODFjMy43MTg5LS4wOTM5LDYuMDAyMywxLjI0MTYsNi44Nzc1LDMuMjc5OHYuMDE1MWMuODk2NCwyLjEyNTkuNDYwMyw0LjgwOTEtMS40MzU1LDYuNjA0OWgtLjAwM1oiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNOTkuMTg2NCw4Mi44OTI5Yy0yLjAxMDktLjAzMDMtNy4zNzExLS4wMTUxLTE0Ljc0NTIsMHYuNzM4OWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTUuNTYzMmMyLjAyMy4wMTUxLDQuMDQ5LjAyMTIsNi4wNjU5LjAzNjMuMTYzNSwwLC40MDg4LjAxNTEuNjk2NS4wOTM5LjUzOTEuMTU3NS44ODQzLjQ2NjQsMS4wNDE4LjYxNzguMTQyMy4xMzAyLjMzMDEuMzMwMS40OTY3LjYxNzhoLjcxMTd2LTguMDI1MmgtLjcxMTdjLS4wNzg3LjIwOS0uMjI0MS40NzU1LS40NzI0LjcxNzctLjQwMjguMzkzNy0uODQ3OS41MDI3LTEuMDQ3OC41NTQyLS4yOTM4LjA3MjctLjU0NTEuMDcyNy0uNzE3Ny4wNjM2LTIuMDE2OS4wMTUxLTQuMDMzOC4wMTUxLTYuMDY1OS4wMjEydi02LjI2NTdjMC0uMzkzNywwLS43NjAxLjAxNTEtMS4xMTE0aDYuOTI1OWMxLjYwODEsMCwyLjQ3NzIuMzY2NCwyLjcyODYsMS4yMzU2bC4xMzAyLjQ5NjdoLjc0OGwxLjc2NTYtNy4xMTk3Yy0uMDM2MywwLS4wOTk5LjAxNTEtLjE3ODcuMDE1MS0yLjYxMzUuMjM2Mi00LjYwMDEuMTk5OS01LjMwNTcuMTg3OHYuMDE1MWgtLjAwNjF2LS4wMDYxbC0uMDA2MS0uMDEyMVoiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNNzIuNzA2MSw4Mi44OTI5di43Mzg5YzEuNTA4MS40MywxLjczODMsMS45ODA2LDEuNzM4Myw1LjU1NzF2MTcuMTM0NmMwLDMuNTczNS0uMjMwMiw1LjEyNC0xLjczODMsNS41NTcxdi43NDVoOS42Njk3di0uNzQ1Yy0xLjUwODEtLjQzLTEuNzM4My0xLjk4MDYtMS43MzgzLTUuNTU3MXYtMTcuMTM0NmMwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTdaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTcwLjkwNDIsMTAyLjkwNDlsLS4wNDI0LjE2NjYtMi4xMzgsOC42MzM5Yy0uMjA5LjE1MTQtMS45NjU0LDEuMjIwNC03Ljg4MjksMS4yMjA0LTQuMTMzOCwwLTcuOTMxNC0xLjUyMDMtMTAuNjgxMS00LjMwNjQtMi43NTU4LTIuNzg2MS00LjI3OTEtNi42NTM0LTQuMjc5MS0xMC44OTYyczEuNTI5My04LjA2NzYsNC4yOTEyLTEwLjgyMzVjMi43NDk4LTIuNzM0Niw2LjUzODMtNC4yMzM3LDEwLjY4NzItNC4yMzM3LDEuODQ0MywwLDMuMDIyMy4yMDksMy44NzYzLjM3MjUsMS4yMjY1LjIyMTEsMS43MjkyLjI3MjYsMi45NzA5LS40M2wuNjA4Ny4xOTk5LDIuMjgzNCw5LjMzOTYuMDQyNC4xNzI2LS41NDUxLjMwMjhjLS4xNzg3LS4xNzI2LS4zNTEzLS4zNDUyLS41MjM5LS41MDg4LS41MjM5LS40OTY3LTEuMDQxOC0uOTQ3OS0xLjU1NjYtMS4zNDE2LTIuMDk1Ni0xLjY1OTYtNC4xNzYyLTIuNTE5Ni02LjY3NDYtMi41MTk2LTUuNDQyLDAtOS4zODgsNC4wMjc4LTkuMzg4LDkuNTYwNiwwLC4xMzAyLDAsLjI1NzQuMDA2MS4zODc2LjI2NjUsNS4yMzMxLDQuMTI3Nyw4Ljk3OTIsOS4zNzU5LDguOTc5MiwyLjI0MSwwLDQuMTkxMy0uNjE3OCw2LjAwODMtMS44MjMxLjg4MTMtLjU4MTQsMS43MzgzLTEuMjk5MiwyLjU3NzItMi4xNTMyLjE2MzUtLjE2NjYuMzMwMS0uMzM2Mi41MDI3LS41MTc5bC40ODE1LjIyMTF2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0Ii8+CiAgICAgIDxwYXRoIGQ9Ik0xNDIuNTcxMSwxMDIuOTA0OWwtLjA0MjQuMTY2Ni0yLjEzOCw4LjYzMzljLS4yMDkuMTUxNC0xLjk2NTQsMS4yMjA0LTcuODgyOSwxLjIyMDQtNC4xMzM4LDAtNy45MzE0LTEuNTIwMy0xMC42ODExLTQuMzA2NC0yLjc1NTgtMi43ODYxLTQuMjc5MS02LjY1MzQtNC4yNzkxLTEwLjg5NjJzMS41MjkzLTguMDY3Niw0LjI5NDMtMTAuODIzNWMyLjc0OTgtMi43MzQ2LDYuNTM4My00LjIzMzcsMTAuNjg3Mi00LjIzMzcsMS44NDQzLDAsMy4wMjIzLjIwOSwzLjg3NjMuMzcyNSwxLjIyNjUuMjIxMSwxLjcyOTIuMjcyNiwyLjk3MDktLjQzbC42MTE3LjE5OTksMi4yODM0LDkuMzM5Ni4wNDI0LjE3MjYtLjU0NTEuMzAyOGMtLjE3ODctLjE3MjYtLjM1MTMtLjM0NTItLjUyMzktLjUwODgtLjUyMzktLjQ5NjctMS4wNDE4LS45NDc5LTEuNTU2Ni0xLjM0MTYtMi4wOTU3LTEuNjU5Ni00LjE3OTItMi41MTk2LTYuNjc0Ni0yLjUxOTYtNS40NDIsMC05LjM4OCw0LjAyNzgtOS4zODgsOS41NjA2LDAsLjEzMDIsMCwuMjU3NC4wMDYxLjM4NzYuMjY2NSw1LjIzMzEsNC4xMjc3LDguOTc5Miw5LjM3NTksOC45NzkyLDIuMjM4LDAsNC4xOTEzLS42MTc4LDYuMDA4My0xLjgyMzEuODg0My0uNTgxNCwxLjczODMtMS4yOTkyLDIuNTc3Mi0yLjE1MzIuMTYzNS0uMTY2Ni4zMzAxLS4zMzYyLjUwMjctLjUxNzlsLjQ4MTUuMjIxMWgtLjAwNjF2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0Ii8+CiAgICAgIDxwYXRoIGQ9Ik00NC42NTQxLDEwNi4yMTQ5bC04Ljg0OS0yMy4zMTU2aC04LjI0MDN2Ljg2MDFsLjMzMDEuMDg3OGMuMTA2LjAyNDIuMjYwNC4wNjk3LjQ0MjEuMTQyMy4wMzMzLjAxNTEuMDYwNi4wMjczLjA3NTcuMDMwMy4xOTk5LjA3ODcuMzkzNy4xOTk5LjUzOTEuMzUxMy4zMzAxLjM2NjQuNDg3Ni45MTE1LjA5OTksMi4xMDQ3LS4yNDUzLjc0NS03LjMwNzUsMTkuNzM5MS03LjMwNzUsMTkuNzM5MS0uNjk2NSwxLjg1OTQtMS41NTA1LDQuNDYzOC0yLjgxMzQsNS4yNjAzLS4xNTE0LjA5MzktLjMwMjguMTcyNi0uNDY2NC4yMzAybC0uNDMuMTcyNnYuNzQ1aDkuNDA5MnYtLjc0NXMtLjY1NDEtLjEzMDItLjkxNzYtLjM1MTNjLS41NjAzLS40NzU1LS43NDgtMS4zMzU1LjA1MTUtMy41OTc3bDEuMTExNC0zLjMzNzNoOS45MDU5Yy4yNDUzLjYxNzguNDk2NywxLjYwODEuOTg0MiwzLjA4NTkuMzE1Ljg3NTIuNzQ4LDIuMDEwOS43MzI5LDIuODcwOSwwLC41NDUxLS4zNTEzLDEuMDI2Ni0uODYwMSwxLjIyNjVsLS4yNDUzLjA5OTl2Ljc0NWg5LjkwNTl2LS43NDVjLS4xMjExLS4wMzYzLS4zMTUtLjA5OTktLjUxNzktLjIzMDItLjYxNzgtLjM2NjQtLjg5NjQtLjk0MTgtMS4wNjMtMS4yNzgtLjkzMjctMS45MzgyLTEuNzE0MS0zLjc3NjQtMS44ODA2LTQuMTcwMXYuMDE1MWguMDA2MWwtLjAwMy4wMDNaTTI5LjMwMDIsOTkuOTEyOGwzLjM1MjQtOS4xMzA2LDMuMzM3Myw5LjEzMDZoLTYuNjg5N1oiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNMTA2LjMzMDMsODIuODkyOXYuNzM4OWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTE3LjEzNDZjMC0zLjU3MzUuMjMwMi01LjEyNCwxLjczODMtNS41NTcxdi0uNzM4OWgtOS42Njk3WiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICA8L2c+CiAgPC9nPgogIDxyZWN0IHdpZHRoPSIyMjkuNDY1MiIgaGVpZ2h0PSIxMTIuOTI1OCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "ttl1",
+        "kind": "text",
+        "body": "## Pacific Life -- Brand Scorecard",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#0B2E4F"
+        }
+      },
+      {
+        "id": "sub1",
+        "kind": "text",
+        "body": "Marketing event & sponsorship tracking",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#5B6B79"
+        }
+      },
+      {
+        "id": "k1a",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k1av",
+            "formula": "Count([Scorecard/Event Name])",
+            "name": "Total Events"
+          }
+        ],
+        "value": {
+          "columnId": "k1av",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Total Events",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k1b",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k1bv",
+            "formula": "CountIf([Scorecard/Status]=\"Pending Brand Council Review\")",
+            "name": "Pending Brand Council Review"
+          }
+        ],
+        "value": {
+          "columnId": "k1bv",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Pending Brand Council Review",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k1c",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k1cv",
+            "formula": "CountIf([Scorecard/Status]=\"Approved\")",
+            "name": "Approved Events"
+          }
+        ],
+        "value": {
+          "columnId": "k1cv",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Approved Events",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k1d",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k1dv",
+            "formula": "Sum([Scorecard/Requested Budget])",
+            "name": "Total Requested Budget"
+          }
+        ],
+        "value": {
+          "columnId": "k1dv",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Total Requested Budget",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "events-list",
+        "kind": "table",
+        "name": "Events List",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "el-name",
+            "formula": "[Scorecard/Event Name]",
+            "name": "Event Name"
+          },
+          {
+            "id": "el-type",
+            "formula": "[Scorecard/Event Type]",
+            "name": "Event Type"
+          },
+          {
+            "id": "el-date",
+            "formula": "[Scorecard/Event Date]",
+            "name": "Event Date"
+          },
+          {
+            "id": "el-owner",
+            "formula": "[Scorecard/Requested By]",
+            "name": "Requested By"
+          },
+          {
+            "id": "el-budget",
+            "formula": "[Scorecard/Requested Budget]",
+            "name": "Requested Budget"
+          },
+          {
+            "id": "el-status",
+            "formula": "[Scorecard/Status]",
+            "name": "Status"
+          }
+        ],
+        "order": [
+          "el-name",
+          "el-type",
+          "el-date",
+          "el-owner",
+          "el-budget",
+          "el-status"
+        ],
+        "conditionalFormats": [
+          {
+            "type": "single",
+            "columnIds": [
+              "el-status"
+            ],
+            "condition": "=",
+            "value": "Approved",
+            "style": {
+              "backgroundColor": "#DCF3E6"
+            }
+          },
+          {
+            "type": "single",
+            "columnIds": [
+              "el-status"
+            ],
+            "condition": "=",
+            "value": "Denied",
+            "style": {
+              "backgroundColor": "#FBE1E1"
+            }
+          },
+          {
+            "type": "single",
+            "columnIds": [
+              "el-status"
+            ],
+            "condition": "=",
+            "value": "Pending Brand Council Review",
+            "style": {
+              "backgroundColor": "#FCF2DA"
+            }
+          }
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "p1-note",
+        "kind": "text",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#5B6B79"
+        },
+        "body": "**+ Add Event:** click the **+** at the bottom of the table below to submit a new event / sponsorship request (name, type, date, requester, budget, justification). Finance and Brand Council pick it up from there."
+      },
+      {
+        "id": "tbl-events",
+        "kind": "input-table",
+        "name": "Events",
+        "source": {
+          "kind": "empty",
+          "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4"
+        },
+        "inputMode": "edit",
+        "columns": [
+          {
+            "id": "ev-name",
+            "type": "text",
+            "name": "Event Name"
+          },
+          {
+            "id": "ev-type",
+            "type": "text",
+            "name": "Event Type",
+            "values": [
+              "PGA Tour Sponsorship",
+              "Golf Pro-Am",
+              "Concert Series",
+              "Industry Conference",
+              "Community Event"
+            ],
+            "pills": "color-by-option"
+          },
+          {
+            "id": "ev-date",
+            "type": "text",
+            "name": "Event Date"
+          },
+          {
+            "id": "ev-owner",
+            "type": "text",
+            "name": "Requested By"
+          },
+          {
+            "id": "ev-budget",
+            "type": "number",
+            "name": "Requested Budget"
+          },
+          {
+            "id": "ev-just",
+            "type": "text",
+            "name": "Summary and Justification"
+          },
+          {
+            "id": "CREATED_AT"
+          }
+        ],
+        "order": [
+          "ev-name",
+          "ev-type",
+          "ev-date",
+          "ev-owner",
+          "ev-budget",
+          "ev-just",
+          "CREATED_AT"
+        ]
+      },
+      {
+        "id": "c-hdr2",
+        "kind": "container",
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "logo2",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyMjkuNDY1MiAxMTIuOTI1OCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDMwLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDEzNikgIC0tPgogIDxnPgogICAgPHBhdGggZD0iTTE4MC45MzMzLDYzLjYwNTRjLTMzLjM5NDEsMS44MDc5LTkzLjM4OTUuMDMwMy0xMjYuNDI5My0uMDIxMi4wMjEyLS41NTEyLjA1MTUtMS4xMTE0LjA5MzktMS42NTk2LDM0LjM2OTItLjIzMDIsOTIuMDk2NC0uMDkzOSwxMjYuMjUwNiwwLS4wNTc1LS44NzUyLS4xMzAyLTEuNzM4My0uMjIxMS0yLjYwNDQtNDIuMzczMywxLjY2NTYtODQuNzE2Mi0uMzcyNS0xMjUuNzYzMS0uMjU3NC4xMjExLTEuMDUzOS4yNjY1LTIuMTEwOC40NDUyLTMuMTQ5NSw3Ljg4MjksMi41MDQ1LDE3LjAyNTYuMzE1LDE3LjAyNTYuMzE1LDAsMCw4LjkzNjgsMy4xMTYyLDE2LjI2NTUsMCwwLDAsNC4zNjM5LDIuNDgzMyw4LjQxMjktMS4wOTAyLDAsMCwyMi4zMjUzLDkuMDg4MiwzMS40OTgzLTUuNTg0NC4xNTc1LS4yNDUzLjUzLS4xMzAyLjUyMzkuMTYzNS0uMDkzOSwyLjEzMi4xMzAyLDYuMjk2LDMuMjU4Niw2LjgxOTkuMjM2Mi4wMzYzLjQwODgtLjIxNS4yODc3LS40MjQtLjY2MDItMS4xMjA1LTEuODAxOS00LjQyMTUuODAyNS0xMS44NzQzLjEwOS0uMjk5OC41NjAyLS4yMjExLjU0NTEuMDk5OS0uMTc4Nyw0LjQyNzUuNDAyOCwxNC41NzI2LDkuODEyLDEyLjIwMTQsMCwwLDkuNTY5NywzLjgxODgsMjMuOTAzMS0uMTkzOCwwLDAsMi43NzcsMi4xMTA4LDEwLjkxMTMsMS4zMjA0aC4wMDYxYy42MDU3LS4wNjk3LDEuMjExNC0uMTM5MywxLjgxNy0uMjA5LS4wNzI3LS41NDUxLS4xNTc1LTEuMDkwMi0uMjM2Mi0xLjYzNTMtLjAwNi0uMDUxNS0uMDE1MS0uMDk5OS0uMDIxMi0uMTU3NS0uMDMwMy0uMTU3NS0uMDUxNS0uMzE1LS4wNzI3LS40NzU1LTIuOTI4NC0xNy40MTMzLTEyLjYzNDQtMzIuNTI1LTI2LjMyODgtNDIuNTA5Ni0uMzQ1Mi44NzUyLS43MTE3LDEuNzE3MS0xLjA5MDIsMi41MjU3LDEzLjMyMTksOS4zNzU5LDIyLjgwMzgsMjMuODMwNSwyNS42NDE0LDQwLjU1MDMtNC44NjA2LDEuMTYyOS04LjgwNjYtLjkzMjctOS40Mzk1LTEuMjkzMS0uMDU3NS0uMDMwMy0uMTIxMS0uMDMwMy0uMTc4NywwLTQuNzgxOCwyLjY4MzItOC4zMzQxLS4wODQ4LTkuMDE1NS0uNjc1My0uMDcyNy0uMDU3NS0uMTcyNi0uMDU3NS0uMjQ1MywwLTQuOTYwNSw0LjE1NS0xNC45NjAzLDMuMDU4Ny0xNy4xNTU4LTQuMzI3Ni0uMDg0OC0uMjg3Ny0uNTAyNy0uMjU3NC0uNTQ1MS4wNDI0LS4yMDksMS4yNDE2LS4zNDUyLDMuMjQzNC40MjQsNS4wMzkyLjA5MzkuMjMwMi0uMTA5LjQ2MDMtLjM0NTIuMzg3Ni0xMC4xMDU3LTMuMzAwOS0yLjU2Mi0xOC45OTQxLTEuNzU5NS0yMC4zMDg0LjgwMjUtMS4zMTQzLDMuMTQzNS04LjEyNTMsNS4wMDktMTEuNjA3OS44Mzg5LTEuNTY1Nyw3LjcxNjMtMTAuNDM1OCw4LjIwMzktMTkuNTc1NS4wNTE1LS45NjMuMDYzNi0yLjQxOTctLjg1NC0zLjA0OTYtLjc5NjUtLjU0NTEtMS45MzgyLS4zMzYyLTIuMjg5NS0uMjcyNi0xLjIwNTMuMjQ1My0xLjM3NzkuODQ4LTIuNTI1NywxLjIwNTMtMS4xODQxLjM2NjQtMS43NjU2LS4wMzYzLTIuODkyMS0uMDE1MS0xLjExNDQuMDIxMi0yLjE4MzUuNzkwNC00LjMzNjcsMi4wODk2LS43MTE3LjQzLTEuMjkwMS44MDI1LTEuNjgwOCwxLjA2My0xLjYxMTEtLjYyMzgtMy44OTQ1LTEuNDM4NS02LjY4NjctMi4xODk1LDAsMC04LjQxODktMi4yNjgzLTE3LjIyODUtMi4yNjgzQzc4LjEzNDUsMCw0OC40NzQ0LDI5LjY2MDEsNDguNDc0NCw2Ni4yNTUzaDEzMi41MTY0YzAtLjg4NDMtLjAyMTItMS43NjU2LS4wNTc1LTIuNjQwOHYtLjAxNTEuMDA2MVpNMTA4LjA5NzQsNDYuMDg5MmMtLjcxMTcsMi43NzctMS4xMTE0LDUuMzg0NS0xLjMzNTUsNy43Mzc1LS45NjkxLS4wOTk5LTEuODgwNi0uMjI0MS0yLjcxOTUtLjM3MjUuMjMwMi0xLjUyMDMuNTYwMy0zLjI2NDYsMS4wMTE1LTUuMTYwNC4xODc4LS43NjAxLjcyMzgtMi45Mzc1LDEuNTg2OS01LjQ2MzIsMCwwLDMuMTQzNS05LjE5NDIsOC44NzkyLTE2LjY2MjMuMDYzNi0uMDg0OC4xMzYzLS4xNzg3LjIwOS0uMjY2NS41ODE0LjM0NTIsMS4xMjY2LjY4MTQsMS42NTk2LDEuMDExNS0uMDcyNy4wOTM5LS4xMzYzLjE4NzgtLjIwOS4yNzg2LS4zMDI4LjQwODgtLjYwODcuODU0LS45MTE1LDEuMzE0My0yLjc3MSwzLjg5NzYtNi4xOTYxLDkuOC04LjE2MTUsMTcuNTcwOGwtLjAwNjEuMDA2MXYuMDA2MWgtLjAwM1pNMTEzLjU2NjcsMjQuOTY2MWMtMS43MjMyLDIuMDgwNS01LjIyNyw2LjY1MzUtOC4zNzY1LDEzLjIwNjktMS43MDIsMy41NDYyLTMuNjQ2Miw4LjM4NTYtNS4wMTIsMTQuMzg0OS0xLjQ0MTUtLjQyNC0yLjI2ODMtLjc3NTMtMi4yNjgzLS43NzUzLDAsMCwyLjgxMzQtMTMuOTQ4OCwxNC4wMDMzLTI3Ljg5NDYuNjIzOC4yOTM4LDEuMjIwNC41OTY2LDEuNzg2Ny44OTY0LS4wNTE1LjA1NzUtLjA5MzkuMTE1MS0uMTUxNC4xNzg3aC4wMTgydi4wMDNaTTExMC43NTk0LDU0LjAwODRjLjA5OTktMS42ODA4LjMxNS0zLjcxODkuNzM4OS01Ljk5MzIsMS41MzU0LTguMjkxNyw0LjgwMy0xNC4wMjc1LDYuNDMyMy0xNi44MzE4LjUzOTEtLjkyNjcsMS4wNjktMS43NzQ3LDEuNTcxNy0yLjUyNTguMDUxNS0uMDcyNy4wOTk5LS4xNDIzLjE0MjMtLjIxNS40ODc2LjMzNjIuOTYzLjY2NjIsMS40MTQzLjk4NDItLjAzMDMuMDQyNC0uMDU3NS4wODQ4LS4wODQ4LjEzNjMtMS45MzgyLDMuMDM3Ni01LjEzOTIsOS4xNDU4LTYuNDAyLDE3LjgxNjEtLjIzNjIsMS42MjkzLS40NjY0LDMuODU1MS0uNTAyNyw2LjQ1OTYtMS4xNDE3LjExNTEtMi4yNDEuMTc4Ny0zLjMwMDkuMTg3OGwtLjAwNjEtLjAxNTFoLS4wMDN2LS4wMDNaTTEyNC4zMDU0LDMyLjg1MjFjLTQuMDE4Nyw5LjAzNjctMi41MTk2LDE5LjI1MTUtMi41MTk2LDE5LjI1MTUtLjkzMjcuMzI0LTEuODUwNC42MDI3LTIuNzY0OS44MzI4LS4zODc2LTUuMjYwMy4xNTE0LTkuNTE4Mi43MTE3LTEyLjM4OTEsMS4xMjA1LTUuNzIwNiwyLjg4NjEtOC44NjQxLDMuMzUyNC05LjY3NTcsMCwwLC4wMjEyLS4wMzYzLjAzMDMtLjA1NzUsMi4xNjgzLDEuMzk5MSwzLjk3MDIsMi4yMTA3LDYuMDE0NCwxLjgwOC0xLjk0NDIsMS43NjU2LTQuODMwMy4yMzAyLTQuODMwMy4yMzAyaC4wMDYxWk0xMzkuMDYyNywyNC40MzMxYy0uMTUxNC4yMDktLjYxMTcuODYwMS0xLjQ4NywxLjA5MDItMS4xODQxLjMzNjItMi4zNDA5LS4yODc3LTIuMzI1OC0uMzcyNSwwLS4wMzYzLjE5MzgsMCwuNTE3OS0uMDIxMi4yNjY1LS4wMDYxLjc4MTMtLjA1NzUsMS4zNzE5LS4yODc3LS4wNzI3LS4wMjczLS4xNDIzLS4wNTc1LS4yMDktLjEwOS0uNDcyNC0uMzI0LS41ODc1LS45NzUxLS4yNjY1LTEuNDUwNi4zMjQtLjQ3MjQuOTc1Mi0uNTk2NiwxLjQ1MDYtLjI3MjYuMzA4OS4yMTUuNDY2NC41NjAzLjQ1MTIuOTExNS4xMjExLS4xMjExLjI0NTMtLjI2NjUuMzUxMy0uNDI0LjQ1MTItLjY0NS41MjM5LTEuMTYyOS41ODc1LTEuMTQ3OC4xMDYuMDIxMi4xOTk5LDEuMTQxNy0uNDM5MSwyLjA4MDVoLS4wMDZsLjAwMy4wMDNaTTE0NS4yMDczLDIuMzM3OWMuMTgxNy4wMjczLjE1NzUuMDMzMy4zMzYxLjA2MDYuMjc1Ni4wMzk0LjY5MDUuMDc4NywxLjE4NDEuMDMzMy4yODc3LS4wMjczLjU5NjYtLjA4NDguOTUzOS0uMjA5LDEuMjI2NS0uMzg3NiwxLjgyOTItMS4xOTAyLDIuOTU4Ny0xLjAzMjcuMjIxMS4wMjczLjU4MTQuMDc4Ny44NTQuMzM2Mi43NjkyLjcxNzcuMjM2MiwyLjQyNTctLjA4NzgsMy40OTQ4LTEuMjA1MywzLjk2MTEtMi40NzcyLDcuNTAxMy02LjEwODMsMTEuMTc3OC0uNzExNy43MjM4LTEuNzk1OCwyLjA4MDUtMy41MzcyLDIuODU1OC0xLjcwOC43NjAxLTMuMzM3My41MTc5LTUuNjYzMSwxLjgwOC0zLjUyNSwxLjk2NTQtMy4zODg4LDQuODgxOC02LjUzMjIsNC44ODE4LS42NjAyLDAtMS4zNzE5LS4xNzI2LTIuMTMyLS40ODE1LDEuNDE0My0xLjQxNDMsMy43OTE2LTMuNjA5OCw3LjA1MDEtNS44NjYuNjQ1LS40NTEyLDEuOTY1NC0xLjI0MTYsNC41OTQxLTIuODQzNywyLjY2MTktMS42MjkzLDQuMTY0LTIuNTcxMSw1LjkxNDQtNC4xNTUuNDg3Ni0uNDUxMiwxLjQzNTUtMS4zMzU1LDIuMzg5NC0yLjY3NzEuNjY2Mi0uOTQxOCwxLjQ5OTEtMi4zMTk3LDEuMzUwNy0yLjQ0MDktLjIwOS0uMTU3NS0xLjY4MDgsMi4zNDA5LTQuODE1Miw0LjY4OC0xLjYwMiwxLjE5OTItMy40MjUxLDIuMTc0NC01LjkyOTYsMy41ODI2LTEuMDkwMi42MDg3LTEuOTg5NiwxLjA5OTMtMy42MzEsMi4wNTMyLS45MDU1LjUyMzktMS45MDc5LDEuMTExNC0yLjc0MDcsMS42NDQ0LTEuMzA1Mi44MzI4LTMuMTI4MywyLjExNjgtNS4yMDI4LDQuMDMzOCwwLDAtLjU2MDMuNTAyNy0uOTc1MS45MTc2LS41MDI3LS4zMjQtMS4wMjA2LS42OTA1LTEuNTM1NC0xLjA5MDIsMS41NTA1LTEuNTQ0NSwyLjk4Ni0yLjY3NzEsNC4wNDktMy40NDYzLjA3ODctLjA1NzUuMTMwMi0uMDk5OS4xNTc1LS4xMjExLDMuMzUyNC0yLjU5ODQsNi4zODk5LTQuNDE1NCw4LjYwNjctNS42MTQ2LDMuNDI1MS0xLjg1MzQsNS4wMDktMi44NTU4LDYuMTk2MS0zLjc5MTUuODY2MS0uNjg0NCwxLjUwMjEtMS4yOTAxLDEuNzUwNC0xLjUyOTMsMS41MzI0LTEuNDYyNywyLjYyODYtMi44NzA5LDMuMzY3Ni0zLjkzMzkuMTMwMi0uMTk5OS42OTY1LTEuMTA1NC42MDg3LTEuMjA1My0uMDg0OC0uMDcyNy0uNTc1NC4zOTM3LTEuMTA1NC45NzUxLS44ODQzLjk2My0yLjE4OTUsMi4yNzQzLTMuOTMzOSwzLjY2NzQtLjgxMTYuNjM5LTEuNDM1NSwxLjA4NDItMS43ODA3LDEuMzIwNC0zLjM3MzYsMi4zMjU4LTcuNDU4OSw0LjIyNzYtNy45ODI4LDQuNDc5LTUuNjM1OCwyLjYyODYtOS45MTE5LDYuMTQ0Ni0xMS42ODA1LDcuNzIyNC0uNDMtLjM4MTYtLjg1NC0uNzkwNC0xLjI4NC0xLjE5OTIsMy4yMzczLTIuNzg2MSw3LjQxMzUtNS4zNDgxLDcuNDEzNS01LjM0ODEuNjA4Ny0uMzY2NCwxLjE4NzEtLjcwODYsMS43MzIyLTEuMDIwNiwxLjU3NDctLjkwNTUsMi43OTUyLTEuNTQxNSwzLjM0MzMtMS44MjkxLDMuMzg1Ny0xLjc2NTYsOC42MzM5LTQuNDU0OCwxMC42NTk5LTcuMDUwMS4xNDIzLS4xODE3LjcwMjYtLjg5OTQuNjExNy0uOTkwMy0uMDkwOC0uMDg3OC0uNzM1OS40Njk0LTEuMzU2Ny45NDc5LTEuMDI2Ni43OTA0LTIuMDk1NiwxLjUyOTMtMy4xODU5LDIuMjQxLDAsMC0uMjI0MS4xNDIzLS40My4yNzI2LS43OTY1LjUwMjctMi4wNjg0LDEuMTc4LTYuMjY1NywzLjIzNzQsMCwwLTIuMjEwNy45OTYzLTQuNzY2NywyLjMxOTctMy45OTE0LDIuMDUzMi03LjExOTgsNC4yNzkxLTkuMTA5NCw1Ljg1MDktLjQ0NTItLjQ3MjQtLjg5MDMtLjk1MzktMS4zMjA0LTEuNDM1NSw0LjAwNjYtMy4yNjQ2LDguMTc2Ny01LjI5NjcsMTIuMTU5LTcuNDcxLDIuMzg5NC0xLjI5OTIsNC4yODUyLTIuMzMxOSw1LjgzNTctMy4xOTVsMi4zODk0LTEuMzYyOGguMDA2MWMuNjA4Ny0uMzU3NCwxLjA4NzItLjY2MDIsMS4zODctLjg2MDEsMi4zMzE5LTEuNTIzMywzLjIyNTItMi41MzE3LDQuNjY5OC0yLjQ4MDMuMjU0NC4wMDkxLjQ1NzMuMDQ4NS41NjkzLjA3MjdsLS4wMDYxLjAwNjFaTTExNi44MDQsMy44ODg1YzYuMzIzMywwLDEyLjQyNTUuOTQxOCwxOC4xNzY0LDIuNjkyMi0yLjc5MjIsMS41NTA1LTUuNTU3MSwyLjk0OTctNy4zMzQ4LDMuODQ2MS0yLjk1ODcsMS41MDgxLTYuMzIzMywzLjA4NTktMTAuNDY2MSw2LjEwMjIsMCwwLTEuMTg0MS0xLjM2MjgtMi41NzExLTEuOTQ0Mi0xLjAwNTQtLjM4MTYtMS40NTA2LS4xOTM4LTIuNDgzMy0uNjk2NS0xLjIyNjUtLjYwMjYtMS4wOTAyLTEuMTExNC0yLjA2ODQtMS41NjU3LTEuNDA4Mi0uNjQ1LTEuOTgwNi4yODc3LTMuOTcwMi0uMTE1MS0xLjY4NjgtLjM0NTItMS43NTA0LTEuMTA1NC0zLjA0OTYtMS4wNDE4LTEuMTQxNy4wNTc1LTEuMjcxOS42NTQxLTIuNjg2Mi43OTA0LS4wNzI3LDAtLjEzNjMuMDA2MS0uMTk5OS4wMTUxLTEuMTA1NC4wNTc1LTEuMjc4LS4zNTEzLTIuMjk1NS0uMTY2Ni0xLjE2MjkuMjE1LTEuMTg0MS43OTY1LTIuNTU2LDEuMjA1My0xLjI0NzcuMzcyNS0xLjM1MDctLjA3MjctMi41MTk2LjI4NzctMS40ODY5LjQ1MTItMS4yMjA0LDEuMTIwNS0yLjg1NTgsMS42ODY4LS45MDU1LjMxNS0xLjQ2NTcuNDM5MS0xLjcyOTIsMS4wMDU0LS4xODc4LjM4MTYtLjE1NzUuODYwMS4wNDI0LDEuMTc4LjE3MjYuMjY2NS40MzkxLjQwMjguNjM5LjQ3MjQsMS4wNDE4LjM3MjUsNi4wMDgzLDEuMjE0NCwxMS4yODM4LDIuNDE5Nyw0LjA2NDEuODMyOCw3LjUyMjUsMS44NDQzLDEwLjM3MjIsMy4wNzk5LTEuNDU2NywxLjYyOTMtMi44MDczLDMuMzk0OC00LjA2NDEsNS4yMDI4LS4zMzAxLS4wOTk5LS42MzktLjIzNjItMS4yNzgtLjI5MzgtMS43MjMxLS4xNTc1LTIuMjQxLjQwODgtMy44NjEyLjIzMDItMS4xMTE0LS4xMjExLTEuMDg0Mi0uNDA4OC0yLjAwMTgtLjM5MzctMS4xMDU0LjAxNTEtMS4yMjY1LjQzLTIuNTEzNi42MzI5LTEuNDkzLjIzNjItMS42NjU2LS4yNzI2LTIuODM0Ni4wNDI0LTEuMDIwNi4yNzI2LS45MTE1LjY3NTMtMi4yMTA3LDEuMTY5LTEuMzA1Mi41MDI4LTEuNTIwMy4xMzYzLTIuNDYyMS42NDUxLS45NzUxLjUzLS44NTQuOTg0Mi0xLjg1MzQsMS40MDgyLS43OTY1LjMzMDEtMS4wNTM5LjEzMDItMS43MzgzLjUzLS41NDUxLjMyNC0uNDY2NC41MDg4LTEuMjI2NSwxLjE3OC0uNzM4OS42NTQxLTEuMDYzLjcyMzgtMS40MjAzLDEuMDIwNi0uMTMwMi4xMTUxLS4yMzYyLjIyNDEtLjI5MzguMjkzOC0uNDE3OS40ODE1LS41NjAzLDEuMzA1Mi0uNDM5MSwxLjYxNDEuMzAyOC43NzUzLDMuMDk1LjIxNSw2LjM1MzYtLjE5MzguNjMyOS0uMDc4Nyw2LjExNzQtLjc0OCwxMi4zMTA0LS41NTQyLjQwODguMDE1MS45NjMuMDUxNS45NjMuMDUxNXYuMDE1MWMtNC4xNDg5LDcuNjk1MS02LjM3NDgsMTQuNDc4Ny02LjM3NDgsMTQuNDc4Ny0xLjEyNjYsMi44NDM3LTMuMjczNywzLjM3OTctNC4yNTc5LDMuNDY3NS0uMjI0MS4wMjEyLS4zNzI1LS4yMTUtLjI3MjYtLjQxNzkuOTc1MS0xLjgzODIsMS4wNzgxLTQuNTg4LDEuMDQxOC02LjA3MTksMC0uMjkzOC0uMzkzNy0uMzgxNi0uNTMtLjEzMDItNi4yMDgyLDExLjI0NzQtMTUuNjA1Myw2Ljg4MzUtMTYuNTUzMiw2LjQwMi0uMDUxNS0uMDI3My0uMTA5LS4wMjczLS4xNTc1LDAtLjgxNzcuMzY2NC0xMS4wMjY0LDIuNzQwNy0xOS4xNDU1LjE1MTRDNjEuNTY2MiwyNS4yMzg2LDg2LjY4OTcsMy44ODg1LDExNi44MDQsMy44ODg1WiIgZmlsbD0iIzFkNThhNCIvPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Ik0yMDEuNTE4OCw4Mi44OTI5Yy0yLjAxMDktLjAzMDMtNy4zNzExLS4wMTUxLTE0Ljc0NTIsMHYuNzM4OWMxLjUwODIuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDEsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTUuNTYzMmMyLjAyMy4wMTUxLDQuMDQ5LjAyMTIsNi4wNjU5LjAzNjMuMTY2NiwwLC40MTc5LjAxNTEuNjk2NS4wOTM5LjUzOS4xNTc1Ljg4NDMuNDY2NCwxLjA0NzguNjE3OC4xNDIzLjEzMDIuMzI0LjMzMDEuNDk2Ni42MTc4aC43MTE3di04LjAyNTJoLS43MTE3Yy0uMDc4Ny4yMDktLjIxNS40NzU1LS40NzU1LjcxNzctLjQwMjguMzkzNy0uODU0LjUwMjctMS4wNDc4LjU1NDItLjI5MzguMDcyNy0uNTQ1MS4wNzI3LS43MTc3LjA2MzYtMi4wMTY5LjAxNTEtNC4wMzM4LjAxNTEtNi4wNjU5LjAyMTJ2LTYuMjY1N2MwLS4zOTM3LDAtLjc2MDEuMDE1MS0xLjExMTRoNi45MjU5YzEuNjA4MSwwLDIuNDc3Mi4zNjY0LDIuNzI4NiwxLjIzNTZsLjEzMDIuNDk2N2guNzQ1bDEuNzY1Ni03LjExOTdjLS4wMzYzLDAtLjA5OTkuMDE1MS0uMTc4Ny4wMTUxLTIuNjEzNS4yMzYyLTQuNjAwMS4xOTk5LTUuMzA1Ny4xODc4di4wMTUxaC0uMDA2MWwtLjAwNjEtLjAwNjF2LS4wMTIxWiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICAgIDxwYXRoIGQ9Ik0xNzUuMDQ0Niw4Mi44OTI5di43Mzg5YzEuNTA4MS40MywxLjczODMsMS45ODA2LDEuNzM4Myw1LjU1NzF2MTcuMTM0NmMwLDMuNTczNS0uMjMwMiw1LjEyNC0xLjczODMsNS41NTcxdi43NDVoOS42Njk3di0uNzQ1Yy0xLjUwODEtLjQzLTEuNzM4My0xLjk4MDYtMS43MzgzLTUuNTU3MXYtMTcuMTM0NmMwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTdaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTIyOC43NTMxLDEwNS4zMDk0Yy0xLjg1OTQsMS40NzE4LTQuODMwMywyLjM0MDktNy44MTAyLDIuMzQwOS0yLjU3NzIsMC0zLjk2MTEtLjMzNjEtNC4zNDg4LS40NTEydi02LjQzMjNjMi4wMjMuMDE1MSw0LjAzOTkuMDIxMiw2LjA2NTkuMDM2My4xNjM1LDAsLjQwODguMDE1MS42OTY1LjA5MzkuNTQ1MS4xNTE0Ljg4NDMuNDY2NCwxLjA0MTguNjE3OC4xNDIzLjEzMDIuMzI0LjMzMDEuNTAyNy42MTc4aC43MTc3di04LjA0MDRoLS43MTc3Yy0uMDc4Ny4yMDktLjIzMDIuNDcyNC0uNDc1NS43MTc3LS40MDI4LjM5MzctLjg1NC41MDI3LTEuMDUzOS41NTQyLS4yOTM4LjA3MjctLjU0NTEuMDcyNy0uNzE3Ny4wNjM2LTIuMDE2OSwwLTQuMDMzOC4wMTUxLTYuMDUwNy4wMjEyLDAsMCwuMDA2MS03LjAyNTkuMDE1MS03LjM3MTFoNi45MjU5YzEuNjA4MSwwLDIuNDc3Mi4zNjY0LDIuNzE5NSwxLjIzNTZsLjEyMTEuNDg3NmguNzM4OWwxLjc3MTYtNy4xMjg4cy0uMDYzNiwwLS4xODc4LjAxNTFjLTEuNzY1Ni4xNTE0LTMuNTMxMS4yMTUtNS4zMDU3LjE4NzhoLTE0Ljc0NTJ2LjczODljMS41MDgxLjQzLDEuNzM4MywxLjk3NDUsMS43MzgzLDUuNTU3MXYxNy4xMzQ2YzAsMy41NzM1LS4yMjExLDUuMTMzMS0xLjczODMsNS41NTcxdi43NDVoMTguOTc4OWwxLjgxNy03LjMwMTRoLS43MDI2di4wMDYxaC4wMDN2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTE3My4wNTc5LDEwNS4zMTg1Yy0xLjg1OTQsMS40Nzc4LTUuMTU0MywyLjM0MDktOC4xMzQzLDIuMzQwOS0yLjY3MSwwLTQuMDU1LS4zNjY0LTQuMzg1MS0uNDY2NHYtMTcuOTk0N2MwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTd2LjczODljMS41MDgxLjQzLDEuNzM4MywxLjk4MDYsMS43MzgzLDUuNTU3MXYxNy4xMzQ2YzAsMy41NzM1LS4yMzAyLDUuMTI0LTEuNzM4Myw1LjU1NzF2Ljc0NWgxOS4zMzkzbDEuODE3LTcuMzA3NWgtLjcwMjZ2LS4wMDYxaC0uMDAzdi0uMDAzWiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICAgIDxwYXRoIGQ9Ik0xNC43MDYzLDgzLjIyOTRjLTEuMzI2NC0uMzM2Mi0yLjQ4MzMtLjM2NjQtMy4yODg4LS4zMjRsLTExLjQwNDktLjAxNTF2Ljc0NWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNTM5NHYtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTQuODI0MmwuMjg3Ny4xMTUxYzQuNTc4OSwxLjcwOCw5LjQyNDQuNzc1MywxMi4wODkzLTIuMjUzMSwyLjIyNTktMi41MjU3LDIuMzMxOS01LjgyOTcsMi4zNDA5LTYuMjg2OS4wNTE1LTIuNzk4Mi0xLjA5MDItNC43OTM5LTEuMzk5MS01LjMwNTctMi4wNDcyLTMuMzY3Ni01LjQ4NDQtNC4zMDAzLTYuNDMyMy00LjU0MjZoLjAwNjFaTTE0Ljc3OSw5Ny45MTFjLTEuMjcxOSwxLjIwNTMtMy4yNjQ2LDIuMDM4MS01LjY0OCwxLjk4MDZsLTEuMjk5Mi0uMDkzOXYtMTEuNzg2NWgxLjUwODFjMy43MTg5LS4wOTM5LDYuMDAyMywxLjI0MTYsNi44Nzc1LDMuMjc5OHYuMDE1MWMuODk2NCwyLjEyNTkuNDYwMyw0LjgwOTEtMS40MzU1LDYuNjA0OWgtLjAwM1oiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNOTkuMTg2NCw4Mi44OTI5Yy0yLjAxMDktLjAzMDMtNy4zNzExLS4wMTUxLTE0Ljc0NTIsMHYuNzM4OWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTUuNTYzMmMyLjAyMy4wMTUxLDQuMDQ5LjAyMTIsNi4wNjU5LjAzNjMuMTYzNSwwLC40MDg4LjAxNTEuNjk2NS4wOTM5LjUzOTEuMTU3NS44ODQzLjQ2NjQsMS4wNDE4LjYxNzguMTQyMy4xMzAyLjMzMDEuMzMwMS40OTY3LjYxNzhoLjcxMTd2LTguMDI1MmgtLjcxMTdjLS4wNzg3LjIwOS0uMjI0MS40NzU1LS40NzI0LjcxNzctLjQwMjguMzkzNy0uODQ3OS41MDI3LTEuMDQ3OC41NTQyLS4yOTM4LjA3MjctLjU0NTEuMDcyNy0uNzE3Ny4wNjM2LTIuMDE2OS4wMTUxLTQuMDMzOC4wMTUxLTYuMDY1OS4wMjEydi02LjI2NTdjMC0uMzkzNywwLS43NjAxLjAxNTEtMS4xMTE0aDYuOTI1OWMxLjYwODEsMCwyLjQ3NzIuMzY2NCwyLjcyODYsMS4yMzU2bC4xMzAyLjQ5NjdoLjc0OGwxLjc2NTYtNy4xMTk3Yy0uMDM2MywwLS4wOTk5LjAxNTEtLjE3ODcuMDE1MS0yLjYxMzUuMjM2Mi00LjYwMDEuMTk5OS01LjMwNTcuMTg3OHYuMDE1MWgtLjAwNjF2LS4wMDYxbC0uMDA2MS0uMDEyMVoiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNNzIuNzA2MSw4Mi44OTI5di43Mzg5YzEuNTA4MS40MywxLjczODMsMS45ODA2LDEuNzM4Myw1LjU1NzF2MTcuMTM0NmMwLDMuNTczNS0uMjMwMiw1LjEyNC0xLjczODMsNS41NTcxdi43NDVoOS42Njk3di0uNzQ1Yy0xLjUwODEtLjQzLTEuNzM4My0xLjk4MDYtMS43MzgzLTUuNTU3MXYtMTcuMTM0NmMwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTdaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTcwLjkwNDIsMTAyLjkwNDlsLS4wNDI0LjE2NjYtMi4xMzgsOC42MzM5Yy0uMjA5LjE1MTQtMS45NjU0LDEuMjIwNC03Ljg4MjksMS4yMjA0LTQuMTMzOCwwLTcuOTMxNC0xLjUyMDMtMTAuNjgxMS00LjMwNjQtMi43NTU4LTIuNzg2MS00LjI3OTEtNi42NTM0LTQuMjc5MS0xMC44OTYyczEuNTI5My04LjA2NzYsNC4yOTEyLTEwLjgyMzVjMi43NDk4LTIuNzM0Niw2LjUzODMtNC4yMzM3LDEwLjY4NzItNC4yMzM3LDEuODQ0MywwLDMuMDIyMy4yMDksMy44NzYzLjM3MjUsMS4yMjY1LjIyMTEsMS43MjkyLjI3MjYsMi45NzA5LS40M2wuNjA4Ny4xOTk5LDIuMjgzNCw5LjMzOTYuMDQyNC4xNzI2LS41NDUxLjMwMjhjLS4xNzg3LS4xNzI2LS4zNTEzLS4zNDUyLS41MjM5LS41MDg4LS41MjM5LS40OTY3LTEuMDQxOC0uOTQ3OS0xLjU1NjYtMS4zNDE2LTIuMDk1Ni0xLjY1OTYtNC4xNzYyLTIuNTE5Ni02LjY3NDYtMi41MTk2LTUuNDQyLDAtOS4zODgsNC4wMjc4LTkuMzg4LDkuNTYwNiwwLC4xMzAyLDAsLjI1NzQuMDA2MS4zODc2LjI2NjUsNS4yMzMxLDQuMTI3Nyw4Ljk3OTIsOS4zNzU5LDguOTc5MiwyLjI0MSwwLDQuMTkxMy0uNjE3OCw2LjAwODMtMS44MjMxLjg4MTMtLjU4MTQsMS43MzgzLTEuMjk5MiwyLjU3NzItMi4xNTMyLjE2MzUtLjE2NjYuMzMwMS0uMzM2Mi41MDI3LS41MTc5bC40ODE1LjIyMTF2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0Ii8+CiAgICAgIDxwYXRoIGQ9Ik0xNDIuNTcxMSwxMDIuOTA0OWwtLjA0MjQuMTY2Ni0yLjEzOCw4LjYzMzljLS4yMDkuMTUxNC0xLjk2NTQsMS4yMjA0LTcuODgyOSwxLjIyMDQtNC4xMzM4LDAtNy45MzE0LTEuNTIwMy0xMC42ODExLTQuMzA2NC0yLjc1NTgtMi43ODYxLTQuMjc5MS02LjY1MzQtNC4yNzkxLTEwLjg5NjJzMS41MjkzLTguMDY3Niw0LjI5NDMtMTAuODIzNWMyLjc0OTgtMi43MzQ2LDYuNTM4My00LjIzMzcsMTAuNjg3Mi00LjIzMzcsMS44NDQzLDAsMy4wMjIzLjIwOSwzLjg3NjMuMzcyNSwxLjIyNjUuMjIxMSwxLjcyOTIuMjcyNiwyLjk3MDktLjQzbC42MTE3LjE5OTksMi4yODM0LDkuMzM5Ni4wNDI0LjE3MjYtLjU0NTEuMzAyOGMtLjE3ODctLjE3MjYtLjM1MTMtLjM0NTItLjUyMzktLjUwODgtLjUyMzktLjQ5NjctMS4wNDE4LS45NDc5LTEuNTU2Ni0xLjM0MTYtMi4wOTU3LTEuNjU5Ni00LjE3OTItMi41MTk2LTYuNjc0Ni0yLjUxOTYtNS40NDIsMC05LjM4OCw0LjAyNzgtOS4zODgsOS41NjA2LDAsLjEzMDIsMCwuMjU3NC4wMDYxLjM4NzYuMjY2NSw1LjIzMzEsNC4xMjc3LDguOTc5Miw5LjM3NTksOC45NzkyLDIuMjM4LDAsNC4xOTEzLS42MTc4LDYuMDA4My0xLjgyMzEuODg0My0uNTgxNCwxLjczODMtMS4yOTkyLDIuNTc3Mi0yLjE1MzIuMTYzNS0uMTY2Ni4zMzAxLS4zMzYyLjUwMjctLjUxNzlsLjQ4MTUuMjIxMWgtLjAwNjF2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0Ii8+CiAgICAgIDxwYXRoIGQ9Ik00NC42NTQxLDEwNi4yMTQ5bC04Ljg0OS0yMy4zMTU2aC04LjI0MDN2Ljg2MDFsLjMzMDEuMDg3OGMuMTA2LjAyNDIuMjYwNC4wNjk3LjQ0MjEuMTQyMy4wMzMzLjAxNTEuMDYwNi4wMjczLjA3NTcuMDMwMy4xOTk5LjA3ODcuMzkzNy4xOTk5LjUzOTEuMzUxMy4zMzAxLjM2NjQuNDg3Ni45MTE1LjA5OTksMi4xMDQ3LS4yNDUzLjc0NS03LjMwNzUsMTkuNzM5MS03LjMwNzUsMTkuNzM5MS0uNjk2NSwxLjg1OTQtMS41NTA1LDQuNDYzOC0yLjgxMzQsNS4yNjAzLS4xNTE0LjA5MzktLjMwMjguMTcyNi0uNDY2NC4yMzAybC0uNDMuMTcyNnYuNzQ1aDkuNDA5MnYtLjc0NXMtLjY1NDEtLjEzMDItLjkxNzYtLjM1MTNjLS41NjAzLS40NzU1LS43NDgtMS4zMzU1LjA1MTUtMy41OTc3bDEuMTExNC0zLjMzNzNoOS45MDU5Yy4yNDUzLjYxNzguNDk2NywxLjYwODEuOTg0MiwzLjA4NTkuMzE1Ljg3NTIuNzQ4LDIuMDEwOS43MzI5LDIuODcwOSwwLC41NDUxLS4zNTEzLDEuMDI2Ni0uODYwMSwxLjIyNjVsLS4yNDUzLjA5OTl2Ljc0NWg5LjkwNTl2LS43NDVjLS4xMjExLS4wMzYzLS4zMTUtLjA5OTktLjUxNzktLjIzMDItLjYxNzgtLjM2NjQtLjg5NjQtLjk0MTgtMS4wNjMtMS4yNzgtLjkzMjctMS45MzgyLTEuNzE0MS0zLjc3NjQtMS44ODA2LTQuMTcwMXYuMDE1MWguMDA2MWwtLjAwMy4wMDNaTTI5LjMwMDIsOTkuOTEyOGwzLjM1MjQtOS4xMzA2LDMuMzM3Myw5LjEzMDZoLTYuNjg5N1oiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNMTA2LjMzMDMsODIuODkyOXYuNzM4OWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTE3LjEzNDZjMC0zLjU3MzUuMjMwMi01LjEyNCwxLjczODMtNS41NTcxdi0uNzM4OWgtOS42Njk3WiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICA8L2c+CiAgPC9nPgogIDxyZWN0IHdpZHRoPSIyMjkuNDY1MiIgaGVpZ2h0PSIxMTIuOTI1OCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "ttl2",
+        "kind": "text",
+        "body": "## Finance -- Enter Targets & Approved Budget",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#0B2E4F"
+        }
+      },
+      {
+        "id": "sub2",
+        "kind": "text",
+        "body": "Set performance targets before Brand Council review",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#5B6B79"
+        }
+      },
+      {
+        "id": "k2a",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k2av",
+            "formula": "CountIf([Scorecard/Has Targets]=False)",
+            "name": "Awaiting Targets"
+          }
+        ],
+        "value": {
+          "columnId": "k2av",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Awaiting Targets",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "awaiting-targets",
+        "kind": "table",
+        "name": "Awaiting Targets",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "at-name",
+            "formula": "[Scorecard/Event Name]",
+            "name": "Event Name"
+          },
+          {
+            "id": "at-type",
+            "formula": "[Scorecard/Event Type]",
+            "name": "Event Type"
+          },
+          {
+            "id": "at-req",
+            "formula": "[Scorecard/Requested Budget]",
+            "name": "Requested Budget"
+          },
+          {
+            "id": "at-just",
+            "formula": "[Scorecard/Justification]",
+            "name": "Justification"
+          }
+        ],
+        "order": [
+          "at-name",
+          "at-type",
+          "at-req",
+          "at-just"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "p2-note",
+        "kind": "text",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#5B6B79"
+        },
+        "body": "**Alert:** the events below have no targets yet. Add a row in the table underneath -- type the **Event Name** exactly as it appears above, then the target metrics and the Finance-approved budget."
+      },
+      {
+        "id": "tbl-targets",
+        "kind": "input-table",
+        "name": "Targets",
+        "source": {
+          "kind": "empty",
+          "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4"
+        },
+        "inputMode": "edit",
+        "columns": [
+          {
+            "id": "tg-event",
+            "type": "text",
+            "name": "Event Name"
+          },
+          {
+            "id": "tg-impr",
+            "type": "number",
+            "name": "Target Impressions"
+          },
+          {
+            "id": "tg-eng",
+            "type": "number",
+            "name": "Target Engagements"
+          },
+          {
+            "id": "tg-leads",
+            "type": "number",
+            "name": "Target Leads and Meetings"
+          },
+          {
+            "id": "tg-emv",
+            "type": "number",
+            "name": "Target Earned Media Value"
+          },
+          {
+            "id": "tg-lift",
+            "type": "number",
+            "name": "Target Brand Lift %"
+          },
+          {
+            "id": "tg-budget",
+            "type": "number",
+            "name": "Approved Budget"
+          },
+          {
+            "id": "CREATED_AT"
+          }
+        ],
+        "order": [
+          "tg-event",
+          "tg-impr",
+          "tg-eng",
+          "tg-leads",
+          "tg-emv",
+          "tg-lift",
+          "tg-budget",
+          "CREATED_AT"
+        ]
+      },
+      {
+        "id": "targets-table",
+        "kind": "table",
+        "name": "Targets Submitted",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "tt-name",
+            "formula": "[Scorecard/Event Name]",
+            "name": "Event Name"
+          },
+          {
+            "id": "tt-type",
+            "formula": "[Scorecard/Event Type]",
+            "name": "Event Type"
+          },
+          {
+            "id": "tt-req",
+            "formula": "[Scorecard/Requested Budget]",
+            "name": "Requested Budget"
+          },
+          {
+            "id": "tt-impr",
+            "formula": "[Scorecard/Target Impressions]",
+            "name": "Target Impressions"
+          },
+          {
+            "id": "tt-eng",
+            "formula": "[Scorecard/Target Engagements]",
+            "name": "Target Engagements"
+          },
+          {
+            "id": "tt-leads",
+            "formula": "[Scorecard/Target Leads and Meetings]",
+            "name": "Target Leads and Meetings"
+          },
+          {
+            "id": "tt-emv",
+            "formula": "[Scorecard/Target Earned Media Value]",
+            "name": "Target Earned Media Value"
+          },
+          {
+            "id": "tt-lift",
+            "formula": "[Scorecard/Target Brand Lift %]",
+            "name": "Target Brand Lift %"
+          },
+          {
+            "id": "tt-budget",
+            "formula": "[Scorecard/Approved Budget]",
+            "name": "Approved Budget"
+          }
+        ],
+        "order": [
+          "tt-name",
+          "tt-type",
+          "tt-req",
+          "tt-impr",
+          "tt-eng",
+          "tt-leads",
+          "tt-emv",
+          "tt-lift",
+          "tt-budget"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "c-hdr3",
+        "kind": "container",
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "logo3",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyMjkuNDY1MiAxMTIuOTI1OCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDMwLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDEzNikgIC0tPgogIDxnPgogICAgPHBhdGggZD0iTTE4MC45MzMzLDYzLjYwNTRjLTMzLjM5NDEsMS44MDc5LTkzLjM4OTUuMDMwMy0xMjYuNDI5My0uMDIxMi4wMjEyLS41NTEyLjA1MTUtMS4xMTE0LjA5MzktMS42NTk2LDM0LjM2OTItLjIzMDIsOTIuMDk2NC0uMDkzOSwxMjYuMjUwNiwwLS4wNTc1LS44NzUyLS4xMzAyLTEuNzM4My0uMjIxMS0yLjYwNDQtNDIuMzczMywxLjY2NTYtODQuNzE2Mi0uMzcyNS0xMjUuNzYzMS0uMjU3NC4xMjExLTEuMDUzOS4yNjY1LTIuMTEwOC40NDUyLTMuMTQ5NSw3Ljg4MjksMi41MDQ1LDE3LjAyNTYuMzE1LDE3LjAyNTYuMzE1LDAsMCw4LjkzNjgsMy4xMTYyLDE2LjI2NTUsMCwwLDAsNC4zNjM5LDIuNDgzMyw4LjQxMjktMS4wOTAyLDAsMCwyMi4zMjUzLDkuMDg4MiwzMS40OTgzLTUuNTg0NC4xNTc1LS4yNDUzLjUzLS4xMzAyLjUyMzkuMTYzNS0uMDkzOSwyLjEzMi4xMzAyLDYuMjk2LDMuMjU4Niw2LjgxOTkuMjM2Mi4wMzYzLjQwODgtLjIxNS4yODc3LS40MjQtLjY2MDItMS4xMjA1LTEuODAxOS00LjQyMTUuODAyNS0xMS44NzQzLjEwOS0uMjk5OC41NjAyLS4yMjExLjU0NTEuMDk5OS0uMTc4Nyw0LjQyNzUuNDAyOCwxNC41NzI2LDkuODEyLDEyLjIwMTQsMCwwLDkuNTY5NywzLjgxODgsMjMuOTAzMS0uMTkzOCwwLDAsMi43NzcsMi4xMTA4LDEwLjkxMTMsMS4zMjA0aC4wMDYxYy42MDU3LS4wNjk3LDEuMjExNC0uMTM5MywxLjgxNy0uMjA5LS4wNzI3LS41NDUxLS4xNTc1LTEuMDkwMi0uMjM2Mi0xLjYzNTMtLjAwNi0uMDUxNS0uMDE1MS0uMDk5OS0uMDIxMi0uMTU3NS0uMDMwMy0uMTU3NS0uMDUxNS0uMzE1LS4wNzI3LS40NzU1LTIuOTI4NC0xNy40MTMzLTEyLjYzNDQtMzIuNTI1LTI2LjMyODgtNDIuNTA5Ni0uMzQ1Mi44NzUyLS43MTE3LDEuNzE3MS0xLjA5MDIsMi41MjU3LDEzLjMyMTksOS4zNzU5LDIyLjgwMzgsMjMuODMwNSwyNS42NDE0LDQwLjU1MDMtNC44NjA2LDEuMTYyOS04LjgwNjYtLjkzMjctOS40Mzk1LTEuMjkzMS0uMDU3NS0uMDMwMy0uMTIxMS0uMDMwMy0uMTc4NywwLTQuNzgxOCwyLjY4MzItOC4zMzQxLS4wODQ4LTkuMDE1NS0uNjc1My0uMDcyNy0uMDU3NS0uMTcyNi0uMDU3NS0uMjQ1MywwLTQuOTYwNSw0LjE1NS0xNC45NjAzLDMuMDU4Ny0xNy4xNTU4LTQuMzI3Ni0uMDg0OC0uMjg3Ny0uNTAyNy0uMjU3NC0uNTQ1MS4wNDI0LS4yMDksMS4yNDE2LS4zNDUyLDMuMjQzNC40MjQsNS4wMzkyLjA5MzkuMjMwMi0uMTA5LjQ2MDMtLjM0NTIuMzg3Ni0xMC4xMDU3LTMuMzAwOS0yLjU2Mi0xOC45OTQxLTEuNzU5NS0yMC4zMDg0LjgwMjUtMS4zMTQzLDMuMTQzNS04LjEyNTMsNS4wMDktMTEuNjA3OS44Mzg5LTEuNTY1Nyw3LjcxNjMtMTAuNDM1OCw4LjIwMzktMTkuNTc1NS4wNTE1LS45NjMuMDYzNi0yLjQxOTctLjg1NC0zLjA0OTYtLjc5NjUtLjU0NTEtMS45MzgyLS4zMzYyLTIuMjg5NS0uMjcyNi0xLjIwNTMuMjQ1My0xLjM3NzkuODQ4LTIuNTI1NywxLjIwNTMtMS4xODQxLjM2NjQtMS43NjU2LS4wMzYzLTIuODkyMS0uMDE1MS0xLjExNDQuMDIxMi0yLjE4MzUuNzkwNC00LjMzNjcsMi4wODk2LS43MTE3LjQzLTEuMjkwMS44MDI1LTEuNjgwOCwxLjA2My0xLjYxMTEtLjYyMzgtMy44OTQ1LTEuNDM4NS02LjY4NjctMi4xODk1LDAsMC04LjQxODktMi4yNjgzLTE3LjIyODUtMi4yNjgzQzc4LjEzNDUsMCw0OC40NzQ0LDI5LjY2MDEsNDguNDc0NCw2Ni4yNTUzaDEzMi41MTY0YzAtLjg4NDMtLjAyMTItMS43NjU2LS4wNTc1LTIuNjQwOHYtLjAxNTEuMDA2MVpNMTA4LjA5NzQsNDYuMDg5MmMtLjcxMTcsMi43NzctMS4xMTE0LDUuMzg0NS0xLjMzNTUsNy43Mzc1LS45NjkxLS4wOTk5LTEuODgwNi0uMjI0MS0yLjcxOTUtLjM3MjUuMjMwMi0xLjUyMDMuNTYwMy0zLjI2NDYsMS4wMTE1LTUuMTYwNC4xODc4LS43NjAxLjcyMzgtMi45Mzc1LDEuNTg2OS01LjQ2MzIsMCwwLDMuMTQzNS05LjE5NDIsOC44NzkyLTE2LjY2MjMuMDYzNi0uMDg0OC4xMzYzLS4xNzg3LjIwOS0uMjY2NS41ODE0LjM0NTIsMS4xMjY2LjY4MTQsMS42NTk2LDEuMDExNS0uMDcyNy4wOTM5LS4xMzYzLjE4NzgtLjIwOS4yNzg2LS4zMDI4LjQwODgtLjYwODcuODU0LS45MTE1LDEuMzE0My0yLjc3MSwzLjg5NzYtNi4xOTYxLDkuOC04LjE2MTUsMTcuNTcwOGwtLjAwNjEuMDA2MXYuMDA2MWgtLjAwM1pNMTEzLjU2NjcsMjQuOTY2MWMtMS43MjMyLDIuMDgwNS01LjIyNyw2LjY1MzUtOC4zNzY1LDEzLjIwNjktMS43MDIsMy41NDYyLTMuNjQ2Miw4LjM4NTYtNS4wMTIsMTQuMzg0OS0xLjQ0MTUtLjQyNC0yLjI2ODMtLjc3NTMtMi4yNjgzLS43NzUzLDAsMCwyLjgxMzQtMTMuOTQ4OCwxNC4wMDMzLTI3Ljg5NDYuNjIzOC4yOTM4LDEuMjIwNC41OTY2LDEuNzg2Ny44OTY0LS4wNTE1LjA1NzUtLjA5MzkuMTE1MS0uMTUxNC4xNzg3aC4wMTgydi4wMDNaTTExMC43NTk0LDU0LjAwODRjLjA5OTktMS42ODA4LjMxNS0zLjcxODkuNzM4OS01Ljk5MzIsMS41MzU0LTguMjkxNyw0LjgwMy0xNC4wMjc1LDYuNDMyMy0xNi44MzE4LjUzOTEtLjkyNjcsMS4wNjktMS43NzQ3LDEuNTcxNy0yLjUyNTguMDUxNS0uMDcyNy4wOTk5LS4xNDIzLjE0MjMtLjIxNS40ODc2LjMzNjIuOTYzLjY2NjIsMS40MTQzLjk4NDItLjAzMDMuMDQyNC0uMDU3NS4wODQ4LS4wODQ4LjEzNjMtMS45MzgyLDMuMDM3Ni01LjEzOTIsOS4xNDU4LTYuNDAyLDE3LjgxNjEtLjIzNjIsMS42MjkzLS40NjY0LDMuODU1MS0uNTAyNyw2LjQ1OTYtMS4xNDE3LjExNTEtMi4yNDEuMTc4Ny0zLjMwMDkuMTg3OGwtLjAwNjEtLjAxNTFoLS4wMDN2LS4wMDNaTTEyNC4zMDU0LDMyLjg1MjFjLTQuMDE4Nyw5LjAzNjctMi41MTk2LDE5LjI1MTUtMi41MTk2LDE5LjI1MTUtLjkzMjcuMzI0LTEuODUwNC42MDI3LTIuNzY0OS44MzI4LS4zODc2LTUuMjYwMy4xNTE0LTkuNTE4Mi43MTE3LTEyLjM4OTEsMS4xMjA1LTUuNzIwNiwyLjg4NjEtOC44NjQxLDMuMzUyNC05LjY3NTcsMCwwLC4wMjEyLS4wMzYzLjAzMDMtLjA1NzUsMi4xNjgzLDEuMzk5MSwzLjk3MDIsMi4yMTA3LDYuMDE0NCwxLjgwOC0xLjk0NDIsMS43NjU2LTQuODMwMy4yMzAyLTQuODMwMy4yMzAyaC4wMDYxWk0xMzkuMDYyNywyNC40MzMxYy0uMTUxNC4yMDktLjYxMTcuODYwMS0xLjQ4NywxLjA5MDItMS4xODQxLjMzNjItMi4zNDA5LS4yODc3LTIuMzI1OC0uMzcyNSwwLS4wMzYzLjE5MzgsMCwuNTE3OS0uMDIxMi4yNjY1LS4wMDYxLjc4MTMtLjA1NzUsMS4zNzE5LS4yODc3LS4wNzI3LS4wMjczLS4xNDIzLS4wNTc1LS4yMDktLjEwOS0uNDcyNC0uMzI0LS41ODc1LS45NzUxLS4yNjY1LTEuNDUwNi4zMjQtLjQ3MjQuOTc1Mi0uNTk2NiwxLjQ1MDYtLjI3MjYuMzA4OS4yMTUuNDY2NC41NjAzLjQ1MTIuOTExNS4xMjExLS4xMjExLjI0NTMtLjI2NjUuMzUxMy0uNDI0LjQ1MTItLjY0NS41MjM5LTEuMTYyOS41ODc1LTEuMTQ3OC4xMDYuMDIxMi4xOTk5LDEuMTQxNy0uNDM5MSwyLjA4MDVoLS4wMDZsLjAwMy4wMDNaTTE0NS4yMDczLDIuMzM3OWMuMTgxNy4wMjczLjE1NzUuMDMzMy4zMzYxLjA2MDYuMjc1Ni4wMzk0LjY5MDUuMDc4NywxLjE4NDEuMDMzMy4yODc3LS4wMjczLjU5NjYtLjA4NDguOTUzOS0uMjA5LDEuMjI2NS0uMzg3NiwxLjgyOTItMS4xOTAyLDIuOTU4Ny0xLjAzMjcuMjIxMS4wMjczLjU4MTQuMDc4Ny44NTQuMzM2Mi43NjkyLjcxNzcuMjM2MiwyLjQyNTctLjA4NzgsMy40OTQ4LTEuMjA1MywzLjk2MTEtMi40NzcyLDcuNTAxMy02LjEwODMsMTEuMTc3OC0uNzExNy43MjM4LTEuNzk1OCwyLjA4MDUtMy41MzcyLDIuODU1OC0xLjcwOC43NjAxLTMuMzM3My41MTc5LTUuNjYzMSwxLjgwOC0zLjUyNSwxLjk2NTQtMy4zODg4LDQuODgxOC02LjUzMjIsNC44ODE4LS42NjAyLDAtMS4zNzE5LS4xNzI2LTIuMTMyLS40ODE1LDEuNDE0My0xLjQxNDMsMy43OTE2LTMuNjA5OCw3LjA1MDEtNS44NjYuNjQ1LS40NTEyLDEuOTY1NC0xLjI0MTYsNC41OTQxLTIuODQzNywyLjY2MTktMS42MjkzLDQuMTY0LTIuNTcxMSw1LjkxNDQtNC4xNTUuNDg3Ni0uNDUxMiwxLjQzNTUtMS4zMzU1LDIuMzg5NC0yLjY3NzEuNjY2Mi0uOTQxOCwxLjQ5OTEtMi4zMTk3LDEuMzUwNy0yLjQ0MDktLjIwOS0uMTU3NS0xLjY4MDgsMi4zNDA5LTQuODE1Miw0LjY4OC0xLjYwMiwxLjE5OTItMy40MjUxLDIuMTc0NC01LjkyOTYsMy41ODI2LTEuMDkwMi42MDg3LTEuOTg5NiwxLjA5OTMtMy42MzEsMi4wNTMyLS45MDU1LjUyMzktMS45MDc5LDEuMTExNC0yLjc0MDcsMS42NDQ0LTEuMzA1Mi44MzI4LTMuMTI4MywyLjExNjgtNS4yMDI4LDQuMDMzOCwwLDAtLjU2MDMuNTAyNy0uOTc1MS45MTc2LS41MDI3LS4zMjQtMS4wMjA2LS42OTA1LTEuNTM1NC0xLjA5MDIsMS41NTA1LTEuNTQ0NSwyLjk4Ni0yLjY3NzEsNC4wNDktMy40NDYzLjA3ODctLjA1NzUuMTMwMi0uMDk5OS4xNTc1LS4xMjExLDMuMzUyNC0yLjU5ODQsNi4zODk5LTQuNDE1NCw4LjYwNjctNS42MTQ2LDMuNDI1MS0xLjg1MzQsNS4wMDktMi44NTU4LDYuMTk2MS0zLjc5MTUuODY2MS0uNjg0NCwxLjUwMjEtMS4yOTAxLDEuNzUwNC0xLjUyOTMsMS41MzI0LTEuNDYyNywyLjYyODYtMi44NzA5LDMuMzY3Ni0zLjkzMzkuMTMwMi0uMTk5OS42OTY1LTEuMTA1NC42MDg3LTEuMjA1My0uMDg0OC0uMDcyNy0uNTc1NC4zOTM3LTEuMTA1NC45NzUxLS44ODQzLjk2My0yLjE4OTUsMi4yNzQzLTMuOTMzOSwzLjY2NzQtLjgxMTYuNjM5LTEuNDM1NSwxLjA4NDItMS43ODA3LDEuMzIwNC0zLjM3MzYsMi4zMjU4LTcuNDU4OSw0LjIyNzYtNy45ODI4LDQuNDc5LTUuNjM1OCwyLjYyODYtOS45MTE5LDYuMTQ0Ni0xMS42ODA1LDcuNzIyNC0uNDMtLjM4MTYtLjg1NC0uNzkwNC0xLjI4NC0xLjE5OTIsMy4yMzczLTIuNzg2MSw3LjQxMzUtNS4zNDgxLDcuNDEzNS01LjM0ODEuNjA4Ny0uMzY2NCwxLjE4NzEtLjcwODYsMS43MzIyLTEuMDIwNiwxLjU3NDctLjkwNTUsMi43OTUyLTEuNTQxNSwzLjM0MzMtMS44MjkxLDMuMzg1Ny0xLjc2NTYsOC42MzM5LTQuNDU0OCwxMC42NTk5LTcuMDUwMS4xNDIzLS4xODE3LjcwMjYtLjg5OTQuNjExNy0uOTkwMy0uMDkwOC0uMDg3OC0uNzM1OS40Njk0LTEuMzU2Ny45NDc5LTEuMDI2Ni43OTA0LTIuMDk1NiwxLjUyOTMtMy4xODU5LDIuMjQxLDAsMC0uMjI0MS4xNDIzLS40My4yNzI2LS43OTY1LjUwMjctMi4wNjg0LDEuMTc4LTYuMjY1NywzLjIzNzQsMCwwLTIuMjEwNy45OTYzLTQuNzY2NywyLjMxOTctMy45OTE0LDIuMDUzMi03LjExOTgsNC4yNzkxLTkuMTA5NCw1Ljg1MDktLjQ0NTItLjQ3MjQtLjg5MDMtLjk1MzktMS4zMjA0LTEuNDM1NSw0LjAwNjYtMy4yNjQ2LDguMTc2Ny01LjI5NjcsMTIuMTU5LTcuNDcxLDIuMzg5NC0xLjI5OTIsNC4yODUyLTIuMzMxOSw1LjgzNTctMy4xOTVsMi4zODk0LTEuMzYyOGguMDA2MWMuNjA4Ny0uMzU3NCwxLjA4NzItLjY2MDIsMS4zODctLjg2MDEsMi4zMzE5LTEuNTIzMywzLjIyNTItMi41MzE3LDQuNjY5OC0yLjQ4MDMuMjU0NC4wMDkxLjQ1NzMuMDQ4NS41NjkzLjA3MjdsLS4wMDYxLjAwNjFaTTExNi44MDQsMy44ODg1YzYuMzIzMywwLDEyLjQyNTUuOTQxOCwxOC4xNzY0LDIuNjkyMi0yLjc5MjIsMS41NTA1LTUuNTU3MSwyLjk0OTctNy4zMzQ4LDMuODQ2MS0yLjk1ODcsMS41MDgxLTYuMzIzMywzLjA4NTktMTAuNDY2MSw2LjEwMjIsMCwwLTEuMTg0MS0xLjM2MjgtMi41NzExLTEuOTQ0Mi0xLjAwNTQtLjM4MTYtMS40NTA2LS4xOTM4LTIuNDgzMy0uNjk2NS0xLjIyNjUtLjYwMjYtMS4wOTAyLTEuMTExNC0yLjA2ODQtMS41NjU3LTEuNDA4Mi0uNjQ1LTEuOTgwNi4yODc3LTMuOTcwMi0uMTE1MS0xLjY4NjgtLjM0NTItMS43NTA0LTEuMTA1NC0zLjA0OTYtMS4wNDE4LTEuMTQxNy4wNTc1LTEuMjcxOS42NTQxLTIuNjg2Mi43OTA0LS4wNzI3LDAtLjEzNjMuMDA2MS0uMTk5OS4wMTUxLTEuMTA1NC4wNTc1LTEuMjc4LS4zNTEzLTIuMjk1NS0uMTY2Ni0xLjE2MjkuMjE1LTEuMTg0MS43OTY1LTIuNTU2LDEuMjA1My0xLjI0NzcuMzcyNS0xLjM1MDctLjA3MjctMi41MTk2LjI4NzctMS40ODY5LjQ1MTItMS4yMjA0LDEuMTIwNS0yLjg1NTgsMS42ODY4LS45MDU1LjMxNS0xLjQ2NTcuNDM5MS0xLjcyOTIsMS4wMDU0LS4xODc4LjM4MTYtLjE1NzUuODYwMS4wNDI0LDEuMTc4LjE3MjYuMjY2NS40MzkxLjQwMjguNjM5LjQ3MjQsMS4wNDE4LjM3MjUsNi4wMDgzLDEuMjE0NCwxMS4yODM4LDIuNDE5Nyw0LjA2NDEuODMyOCw3LjUyMjUsMS44NDQzLDEwLjM3MjIsMy4wNzk5LTEuNDU2NywxLjYyOTMtMi44MDczLDMuMzk0OC00LjA2NDEsNS4yMDI4LS4zMzAxLS4wOTk5LS42MzktLjIzNjItMS4yNzgtLjI5MzgtMS43MjMxLS4xNTc1LTIuMjQxLjQwODgtMy44NjEyLjIzMDItMS4xMTE0LS4xMjExLTEuMDg0Mi0uNDA4OC0yLjAwMTgtLjM5MzctMS4xMDU0LjAxNTEtMS4yMjY1LjQzLTIuNTEzNi42MzI5LTEuNDkzLjIzNjItMS42NjU2LS4yNzI2LTIuODM0Ni4wNDI0LTEuMDIwNi4yNzI2LS45MTE1LjY3NTMtMi4yMTA3LDEuMTY5LTEuMzA1Mi41MDI4LTEuNTIwMy4xMzYzLTIuNDYyMS42NDUxLS45NzUxLjUzLS44NTQuOTg0Mi0xLjg1MzQsMS40MDgyLS43OTY1LjMzMDEtMS4wNTM5LjEzMDItMS43MzgzLjUzLS41NDUxLjMyNC0uNDY2NC41MDg4LTEuMjI2NSwxLjE3OC0uNzM4OS42NTQxLTEuMDYzLjcyMzgtMS40MjAzLDEuMDIwNi0uMTMwMi4xMTUxLS4yMzYyLjIyNDEtLjI5MzguMjkzOC0uNDE3OS40ODE1LS41NjAzLDEuMzA1Mi0uNDM5MSwxLjYxNDEuMzAyOC43NzUzLDMuMDk1LjIxNSw2LjM1MzYtLjE5MzguNjMyOS0uMDc4Nyw2LjExNzQtLjc0OCwxMi4zMTA0LS41NTQyLjQwODguMDE1MS45NjMuMDUxNS45NjMuMDUxNXYuMDE1MWMtNC4xNDg5LDcuNjk1MS02LjM3NDgsMTQuNDc4Ny02LjM3NDgsMTQuNDc4Ny0xLjEyNjYsMi44NDM3LTMuMjczNywzLjM3OTctNC4yNTc5LDMuNDY3NS0uMjI0MS4wMjEyLS4zNzI1LS4yMTUtLjI3MjYtLjQxNzkuOTc1MS0xLjgzODIsMS4wNzgxLTQuNTg4LDEuMDQxOC02LjA3MTksMC0uMjkzOC0uMzkzNy0uMzgxNi0uNTMtLjEzMDItNi4yMDgyLDExLjI0NzQtMTUuNjA1Myw2Ljg4MzUtMTYuNTUzMiw2LjQwMi0uMDUxNS0uMDI3My0uMTA5LS4wMjczLS4xNTc1LDAtLjgxNzcuMzY2NC0xMS4wMjY0LDIuNzQwNy0xOS4xNDU1LjE1MTRDNjEuNTY2MiwyNS4yMzg2LDg2LjY4OTcsMy44ODg1LDExNi44MDQsMy44ODg1WiIgZmlsbD0iIzFkNThhNCIvPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Ik0yMDEuNTE4OCw4Mi44OTI5Yy0yLjAxMDktLjAzMDMtNy4zNzExLS4wMTUxLTE0Ljc0NTIsMHYuNzM4OWMxLjUwODIuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDEsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTUuNTYzMmMyLjAyMy4wMTUxLDQuMDQ5LjAyMTIsNi4wNjU5LjAzNjMuMTY2NiwwLC40MTc5LjAxNTEuNjk2NS4wOTM5LjUzOS4xNTc1Ljg4NDMuNDY2NCwxLjA0NzguNjE3OC4xNDIzLjEzMDIuMzI0LjMzMDEuNDk2Ni42MTc4aC43MTE3di04LjAyNTJoLS43MTE3Yy0uMDc4Ny4yMDktLjIxNS40NzU1LS40NzU1LjcxNzctLjQwMjguMzkzNy0uODU0LjUwMjctMS4wNDc4LjU1NDItLjI5MzguMDcyNy0uNTQ1MS4wNzI3LS43MTc3LjA2MzYtMi4wMTY5LjAxNTEtNC4wMzM4LjAxNTEtNi4wNjU5LjAyMTJ2LTYuMjY1N2MwLS4zOTM3LDAtLjc2MDEuMDE1MS0xLjExMTRoNi45MjU5YzEuNjA4MSwwLDIuNDc3Mi4zNjY0LDIuNzI4NiwxLjIzNTZsLjEzMDIuNDk2N2guNzQ1bDEuNzY1Ni03LjExOTdjLS4wMzYzLDAtLjA5OTkuMDE1MS0uMTc4Ny4wMTUxLTIuNjEzNS4yMzYyLTQuNjAwMS4xOTk5LTUuMzA1Ny4xODc4di4wMTUxaC0uMDA2MWwtLjAwNjEtLjAwNjF2LS4wMTIxWiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICAgIDxwYXRoIGQ9Ik0xNzUuMDQ0Niw4Mi44OTI5di43Mzg5YzEuNTA4MS40MywxLjczODMsMS45ODA2LDEuNzM4Myw1LjU1NzF2MTcuMTM0NmMwLDMuNTczNS0uMjMwMiw1LjEyNC0xLjczODMsNS41NTcxdi43NDVoOS42Njk3di0uNzQ1Yy0xLjUwODEtLjQzLTEuNzM4My0xLjk4MDYtMS43MzgzLTUuNTU3MXYtMTcuMTM0NmMwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTdaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTIyOC43NTMxLDEwNS4zMDk0Yy0xLjg1OTQsMS40NzE4LTQuODMwMywyLjM0MDktNy44MTAyLDIuMzQwOS0yLjU3NzIsMC0zLjk2MTEtLjMzNjEtNC4zNDg4LS40NTEydi02LjQzMjNjMi4wMjMuMDE1MSw0LjAzOTkuMDIxMiw2LjA2NTkuMDM2My4xNjM1LDAsLjQwODguMDE1MS42OTY1LjA5MzkuNTQ1MS4xNTE0Ljg4NDMuNDY2NCwxLjA0MTguNjE3OC4xNDIzLjEzMDIuMzI0LjMzMDEuNTAyNy42MTc4aC43MTc3di04LjA0MDRoLS43MTc3Yy0uMDc4Ny4yMDktLjIzMDIuNDcyNC0uNDc1NS43MTc3LS40MDI4LjM5MzctLjg1NC41MDI3LTEuMDUzOS41NTQyLS4yOTM4LjA3MjctLjU0NTEuMDcyNy0uNzE3Ny4wNjM2LTIuMDE2OSwwLTQuMDMzOC4wMTUxLTYuMDUwNy4wMjEyLDAsMCwuMDA2MS03LjAyNTkuMDE1MS03LjM3MTFoNi45MjU5YzEuNjA4MSwwLDIuNDc3Mi4zNjY0LDIuNzE5NSwxLjIzNTZsLjEyMTEuNDg3NmguNzM4OWwxLjc3MTYtNy4xMjg4cy0uMDYzNiwwLS4xODc4LjAxNTFjLTEuNzY1Ni4xNTE0LTMuNTMxMS4yMTUtNS4zMDU3LjE4NzhoLTE0Ljc0NTJ2LjczODljMS41MDgxLjQzLDEuNzM4MywxLjk3NDUsMS43MzgzLDUuNTU3MXYxNy4xMzQ2YzAsMy41NzM1LS4yMjExLDUuMTMzMS0xLjczODMsNS41NTcxdi43NDVoMTguOTc4OWwxLjgxNy03LjMwMTRoLS43MDI2di4wMDYxaC4wMDN2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTE3My4wNTc5LDEwNS4zMTg1Yy0xLjg1OTQsMS40Nzc4LTUuMTU0MywyLjM0MDktOC4xMzQzLDIuMzQwOS0yLjY3MSwwLTQuMDU1LS4zNjY0LTQuMzg1MS0uNDY2NHYtMTcuOTk0N2MwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTd2LjczODljMS41MDgxLjQzLDEuNzM4MywxLjk4MDYsMS43MzgzLDUuNTU3MXYxNy4xMzQ2YzAsMy41NzM1LS4yMzAyLDUuMTI0LTEuNzM4Myw1LjU1NzF2Ljc0NWgxOS4zMzkzbDEuODE3LTcuMzA3NWgtLjcwMjZ2LS4wMDYxaC0uMDAzdi0uMDAzWiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICAgIDxwYXRoIGQ9Ik0xNC43MDYzLDgzLjIyOTRjLTEuMzI2NC0uMzM2Mi0yLjQ4MzMtLjM2NjQtMy4yODg4LS4zMjRsLTExLjQwNDktLjAxNTF2Ljc0NWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNTM5NHYtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTQuODI0MmwuMjg3Ny4xMTUxYzQuNTc4OSwxLjcwOCw5LjQyNDQuNzc1MywxMi4wODkzLTIuMjUzMSwyLjIyNTktMi41MjU3LDIuMzMxOS01LjgyOTcsMi4zNDA5LTYuMjg2OS4wNTE1LTIuNzk4Mi0xLjA5MDItNC43OTM5LTEuMzk5MS01LjMwNTctMi4wNDcyLTMuMzY3Ni01LjQ4NDQtNC4zMDAzLTYuNDMyMy00LjU0MjZoLjAwNjFaTTE0Ljc3OSw5Ny45MTFjLTEuMjcxOSwxLjIwNTMtMy4yNjQ2LDIuMDM4MS01LjY0OCwxLjk4MDZsLTEuMjk5Mi0uMDkzOXYtMTEuNzg2NWgxLjUwODFjMy43MTg5LS4wOTM5LDYuMDAyMywxLjI0MTYsNi44Nzc1LDMuMjc5OHYuMDE1MWMuODk2NCwyLjEyNTkuNDYwMyw0LjgwOTEtMS40MzU1LDYuNjA0OWgtLjAwM1oiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNOTkuMTg2NCw4Mi44OTI5Yy0yLjAxMDktLjAzMDMtNy4zNzExLS4wMTUxLTE0Ljc0NTIsMHYuNzM4OWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTUuNTYzMmMyLjAyMy4wMTUxLDQuMDQ5LjAyMTIsNi4wNjU5LjAzNjMuMTYzNSwwLC40MDg4LjAxNTEuNjk2NS4wOTM5LjUzOTEuMTU3NS44ODQzLjQ2NjQsMS4wNDE4LjYxNzguMTQyMy4xMzAyLjMzMDEuMzMwMS40OTY3LjYxNzhoLjcxMTd2LTguMDI1MmgtLjcxMTdjLS4wNzg3LjIwOS0uMjI0MS40NzU1LS40NzI0LjcxNzctLjQwMjguMzkzNy0uODQ3OS41MDI3LTEuMDQ3OC41NTQyLS4yOTM4LjA3MjctLjU0NTEuMDcyNy0uNzE3Ny4wNjM2LTIuMDE2OS4wMTUxLTQuMDMzOC4wMTUxLTYuMDY1OS4wMjEydi02LjI2NTdjMC0uMzkzNywwLS43NjAxLjAxNTEtMS4xMTE0aDYuOTI1OWMxLjYwODEsMCwyLjQ3NzIuMzY2NCwyLjcyODYsMS4yMzU2bC4xMzAyLjQ5NjdoLjc0OGwxLjc2NTYtNy4xMTk3Yy0uMDM2MywwLS4wOTk5LjAxNTEtLjE3ODcuMDE1MS0yLjYxMzUuMjM2Mi00LjYwMDEuMTk5OS01LjMwNTcuMTg3OHYuMDE1MWgtLjAwNjF2LS4wMDYxbC0uMDA2MS0uMDEyMVoiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNNzIuNzA2MSw4Mi44OTI5di43Mzg5YzEuNTA4MS40MywxLjczODMsMS45ODA2LDEuNzM4Myw1LjU1NzF2MTcuMTM0NmMwLDMuNTczNS0uMjMwMiw1LjEyNC0xLjczODMsNS41NTcxdi43NDVoOS42Njk3di0uNzQ1Yy0xLjUwODEtLjQzLTEuNzM4My0xLjk4MDYtMS43MzgzLTUuNTU3MXYtMTcuMTM0NmMwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTdaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTcwLjkwNDIsMTAyLjkwNDlsLS4wNDI0LjE2NjYtMi4xMzgsOC42MzM5Yy0uMjA5LjE1MTQtMS45NjU0LDEuMjIwNC03Ljg4MjksMS4yMjA0LTQuMTMzOCwwLTcuOTMxNC0xLjUyMDMtMTAuNjgxMS00LjMwNjQtMi43NTU4LTIuNzg2MS00LjI3OTEtNi42NTM0LTQuMjc5MS0xMC44OTYyczEuNTI5My04LjA2NzYsNC4yOTEyLTEwLjgyMzVjMi43NDk4LTIuNzM0Niw2LjUzODMtNC4yMzM3LDEwLjY4NzItNC4yMzM3LDEuODQ0MywwLDMuMDIyMy4yMDksMy44NzYzLjM3MjUsMS4yMjY1LjIyMTEsMS43MjkyLjI3MjYsMi45NzA5LS40M2wuNjA4Ny4xOTk5LDIuMjgzNCw5LjMzOTYuMDQyNC4xNzI2LS41NDUxLjMwMjhjLS4xNzg3LS4xNzI2LS4zNTEzLS4zNDUyLS41MjM5LS41MDg4LS41MjM5LS40OTY3LTEuMDQxOC0uOTQ3OS0xLjU1NjYtMS4zNDE2LTIuMDk1Ni0xLjY1OTYtNC4xNzYyLTIuNTE5Ni02LjY3NDYtMi41MTk2LTUuNDQyLDAtOS4zODgsNC4wMjc4LTkuMzg4LDkuNTYwNiwwLC4xMzAyLDAsLjI1NzQuMDA2MS4zODc2LjI2NjUsNS4yMzMxLDQuMTI3Nyw4Ljk3OTIsOS4zNzU5LDguOTc5MiwyLjI0MSwwLDQuMTkxMy0uNjE3OCw2LjAwODMtMS44MjMxLjg4MTMtLjU4MTQsMS43MzgzLTEuMjk5MiwyLjU3NzItMi4xNTMyLjE2MzUtLjE2NjYuMzMwMS0uMzM2Mi41MDI3LS41MTc5bC40ODE1LjIyMTF2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0Ii8+CiAgICAgIDxwYXRoIGQ9Ik0xNDIuNTcxMSwxMDIuOTA0OWwtLjA0MjQuMTY2Ni0yLjEzOCw4LjYzMzljLS4yMDkuMTUxNC0xLjk2NTQsMS4yMjA0LTcuODgyOSwxLjIyMDQtNC4xMzM4LDAtNy45MzE0LTEuNTIwMy0xMC42ODExLTQuMzA2NC0yLjc1NTgtMi43ODYxLTQuMjc5MS02LjY1MzQtNC4yNzkxLTEwLjg5NjJzMS41MjkzLTguMDY3Niw0LjI5NDMtMTAuODIzNWMyLjc0OTgtMi43MzQ2LDYuNTM4My00LjIzMzcsMTAuNjg3Mi00LjIzMzcsMS44NDQzLDAsMy4wMjIzLjIwOSwzLjg3NjMuMzcyNSwxLjIyNjUuMjIxMSwxLjcyOTIuMjcyNiwyLjk3MDktLjQzbC42MTE3LjE5OTksMi4yODM0LDkuMzM5Ni4wNDI0LjE3MjYtLjU0NTEuMzAyOGMtLjE3ODctLjE3MjYtLjM1MTMtLjM0NTItLjUyMzktLjUwODgtLjUyMzktLjQ5NjctMS4wNDE4LS45NDc5LTEuNTU2Ni0xLjM0MTYtMi4wOTU3LTEuNjU5Ni00LjE3OTItMi41MTk2LTYuNjc0Ni0yLjUxOTYtNS40NDIsMC05LjM4OCw0LjAyNzgtOS4zODgsOS41NjA2LDAsLjEzMDIsMCwuMjU3NC4wMDYxLjM4NzYuMjY2NSw1LjIzMzEsNC4xMjc3LDguOTc5Miw5LjM3NTksOC45NzkyLDIuMjM4LDAsNC4xOTEzLS42MTc4LDYuMDA4My0xLjgyMzEuODg0My0uNTgxNCwxLjczODMtMS4yOTkyLDIuNTc3Mi0yLjE1MzIuMTYzNS0uMTY2Ni4zMzAxLS4zMzYyLjUwMjctLjUxNzlsLjQ4MTUuMjIxMWgtLjAwNjF2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0Ii8+CiAgICAgIDxwYXRoIGQ9Ik00NC42NTQxLDEwNi4yMTQ5bC04Ljg0OS0yMy4zMTU2aC04LjI0MDN2Ljg2MDFsLjMzMDEuMDg3OGMuMTA2LjAyNDIuMjYwNC4wNjk3LjQ0MjEuMTQyMy4wMzMzLjAxNTEuMDYwNi4wMjczLjA3NTcuMDMwMy4xOTk5LjA3ODcuMzkzNy4xOTk5LjUzOTEuMzUxMy4zMzAxLjM2NjQuNDg3Ni45MTE1LjA5OTksMi4xMDQ3LS4yNDUzLjc0NS03LjMwNzUsMTkuNzM5MS03LjMwNzUsMTkuNzM5MS0uNjk2NSwxLjg1OTQtMS41NTA1LDQuNDYzOC0yLjgxMzQsNS4yNjAzLS4xNTE0LjA5MzktLjMwMjguMTcyNi0uNDY2NC4yMzAybC0uNDMuMTcyNnYuNzQ1aDkuNDA5MnYtLjc0NXMtLjY1NDEtLjEzMDItLjkxNzYtLjM1MTNjLS41NjAzLS40NzU1LS43NDgtMS4zMzU1LjA1MTUtMy41OTc3bDEuMTExNC0zLjMzNzNoOS45MDU5Yy4yNDUzLjYxNzguNDk2NywxLjYwODEuOTg0MiwzLjA4NTkuMzE1Ljg3NTIuNzQ4LDIuMDEwOS43MzI5LDIuODcwOSwwLC41NDUxLS4zNTEzLDEuMDI2Ni0uODYwMSwxLjIyNjVsLS4yNDUzLjA5OTl2Ljc0NWg5LjkwNTl2LS43NDVjLS4xMjExLS4wMzYzLS4zMTUtLjA5OTktLjUxNzktLjIzMDItLjYxNzgtLjM2NjQtLjg5NjQtLjk0MTgtMS4wNjMtMS4yNzgtLjkzMjctMS45MzgyLTEuNzE0MS0zLjc3NjQtMS44ODA2LTQuMTcwMXYuMDE1MWguMDA2MWwtLjAwMy4wMDNaTTI5LjMwMDIsOTkuOTEyOGwzLjM1MjQtOS4xMzA2LDMuMzM3Myw5LjEzMDZoLTYuNjg5N1oiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNMTA2LjMzMDMsODIuODkyOXYuNzM4OWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTE3LjEzNDZjMC0zLjU3MzUuMjMwMi01LjEyNCwxLjczODMtNS41NTcxdi0uNzM4OWgtOS42Njk3WiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICA8L2c+CiAgPC9nPgogIDxyZWN0IHdpZHRoPSIyMjkuNDY1MiIgaGVpZ2h0PSIxMTIuOTI1OCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "ttl3",
+        "kind": "text",
+        "body": "## Brand Council -- Approve or Deny",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#0B2E4F"
+        }
+      },
+      {
+        "id": "sub3",
+        "kind": "text",
+        "body": "Review targets & budget, then record a decision",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#5B6B79"
+        }
+      },
+      {
+        "id": "k3a",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k3av",
+            "formula": "CountIf([Scorecard/Has Targets]=True And IsNull([Scorecard/Decision]))",
+            "name": "Awaiting Decision"
+          }
+        ],
+        "value": {
+          "columnId": "k3av",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Awaiting Decision",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "pending-approval",
+        "kind": "table",
+        "name": "Awaiting Decision",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "pa-name",
+            "formula": "[Scorecard/Event Name]",
+            "name": "Event Name"
+          },
+          {
+            "id": "pa-type",
+            "formula": "[Scorecard/Event Type]",
+            "name": "Event Type"
+          },
+          {
+            "id": "pa-just",
+            "formula": "[Scorecard/Justification]",
+            "name": "Justification"
+          },
+          {
+            "id": "pa-req",
+            "formula": "[Scorecard/Requested Budget]",
+            "name": "Requested Budget"
+          },
+          {
+            "id": "pa-budget",
+            "formula": "[Scorecard/Approved Budget]",
+            "name": "Finance-Approved Budget"
+          },
+          {
+            "id": "pa-status",
+            "formula": "[Scorecard/Status]",
+            "name": "Status"
+          }
+        ],
+        "order": [
+          "pa-name",
+          "pa-type",
+          "pa-just",
+          "pa-req",
+          "pa-budget",
+          "pa-status"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "p3-note",
+        "kind": "text",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#5B6B79"
+        },
+        "body": "Add a row below -- type the **Event Name** exactly as it appears above, then set **Decision** (Approved/Denied), **Reviewer**, and **Comments**."
+      },
+      {
+        "id": "tbl-approvals",
+        "kind": "input-table",
+        "name": "Approvals",
+        "source": {
+          "kind": "empty",
+          "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4"
+        },
+        "inputMode": "edit",
+        "columns": [
+          {
+            "id": "ap-event",
+            "type": "text",
+            "name": "Event Name"
+          },
+          {
+            "id": "ap-decision",
+            "type": "text",
+            "name": "Decision",
+            "values": [
+              "Approved",
+              "Denied"
+            ],
+            "pills": "color-by-option"
+          },
+          {
+            "id": "ap-reviewer",
+            "type": "text",
+            "name": "Reviewer"
+          },
+          {
+            "id": "ap-comments",
+            "type": "text",
+            "name": "Comments"
+          },
+          {
+            "id": "CREATED_AT"
+          }
+        ],
+        "order": [
+          "ap-event",
+          "ap-decision",
+          "ap-reviewer",
+          "ap-comments",
+          "CREATED_AT"
+        ]
+      },
+      {
+        "id": "decisions-log",
+        "kind": "table",
+        "name": "Decisions Log",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "dl-name",
+            "formula": "[Scorecard/Event Name]",
+            "name": "Event Name"
+          },
+          {
+            "id": "dl-decision",
+            "formula": "[Scorecard/Decision]",
+            "name": "Decision"
+          },
+          {
+            "id": "dl-reviewer",
+            "formula": "[Scorecard/Reviewer]",
+            "name": "Reviewer"
+          },
+          {
+            "id": "dl-comments",
+            "formula": "[Scorecard/Review Comments]",
+            "name": "Comments"
+          }
+        ],
+        "order": [
+          "dl-name",
+          "dl-decision",
+          "dl-reviewer",
+          "dl-comments"
+        ],
+        "conditionalFormats": [
+          {
+            "type": "single",
+            "columnIds": [
+              "dl-decision"
+            ],
+            "condition": "=",
+            "value": "Approved",
+            "style": {
+              "backgroundColor": "#DCF3E6"
+            }
+          },
+          {
+            "type": "single",
+            "columnIds": [
+              "dl-decision"
+            ],
+            "condition": "=",
+            "value": "Denied",
+            "style": {
+              "backgroundColor": "#FBE1E1"
+            }
+          }
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "c-hdr4",
+        "kind": "container",
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "logo4",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyMjkuNDY1MiAxMTIuOTI1OCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDMwLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDEzNikgIC0tPgogIDxnPgogICAgPHBhdGggZD0iTTE4MC45MzMzLDYzLjYwNTRjLTMzLjM5NDEsMS44MDc5LTkzLjM4OTUuMDMwMy0xMjYuNDI5My0uMDIxMi4wMjEyLS41NTEyLjA1MTUtMS4xMTE0LjA5MzktMS42NTk2LDM0LjM2OTItLjIzMDIsOTIuMDk2NC0uMDkzOSwxMjYuMjUwNiwwLS4wNTc1LS44NzUyLS4xMzAyLTEuNzM4My0uMjIxMS0yLjYwNDQtNDIuMzczMywxLjY2NTYtODQuNzE2Mi0uMzcyNS0xMjUuNzYzMS0uMjU3NC4xMjExLTEuMDUzOS4yNjY1LTIuMTEwOC40NDUyLTMuMTQ5NSw3Ljg4MjksMi41MDQ1LDE3LjAyNTYuMzE1LDE3LjAyNTYuMzE1LDAsMCw4LjkzNjgsMy4xMTYyLDE2LjI2NTUsMCwwLDAsNC4zNjM5LDIuNDgzMyw4LjQxMjktMS4wOTAyLDAsMCwyMi4zMjUzLDkuMDg4MiwzMS40OTgzLTUuNTg0NC4xNTc1LS4yNDUzLjUzLS4xMzAyLjUyMzkuMTYzNS0uMDkzOSwyLjEzMi4xMzAyLDYuMjk2LDMuMjU4Niw2LjgxOTkuMjM2Mi4wMzYzLjQwODgtLjIxNS4yODc3LS40MjQtLjY2MDItMS4xMjA1LTEuODAxOS00LjQyMTUuODAyNS0xMS44NzQzLjEwOS0uMjk5OC41NjAyLS4yMjExLjU0NTEuMDk5OS0uMTc4Nyw0LjQyNzUuNDAyOCwxNC41NzI2LDkuODEyLDEyLjIwMTQsMCwwLDkuNTY5NywzLjgxODgsMjMuOTAzMS0uMTkzOCwwLDAsMi43NzcsMi4xMTA4LDEwLjkxMTMsMS4zMjA0aC4wMDYxYy42MDU3LS4wNjk3LDEuMjExNC0uMTM5MywxLjgxNy0uMjA5LS4wNzI3LS41NDUxLS4xNTc1LTEuMDkwMi0uMjM2Mi0xLjYzNTMtLjAwNi0uMDUxNS0uMDE1MS0uMDk5OS0uMDIxMi0uMTU3NS0uMDMwMy0uMTU3NS0uMDUxNS0uMzE1LS4wNzI3LS40NzU1LTIuOTI4NC0xNy40MTMzLTEyLjYzNDQtMzIuNTI1LTI2LjMyODgtNDIuNTA5Ni0uMzQ1Mi44NzUyLS43MTE3LDEuNzE3MS0xLjA5MDIsMi41MjU3LDEzLjMyMTksOS4zNzU5LDIyLjgwMzgsMjMuODMwNSwyNS42NDE0LDQwLjU1MDMtNC44NjA2LDEuMTYyOS04LjgwNjYtLjkzMjctOS40Mzk1LTEuMjkzMS0uMDU3NS0uMDMwMy0uMTIxMS0uMDMwMy0uMTc4NywwLTQuNzgxOCwyLjY4MzItOC4zMzQxLS4wODQ4LTkuMDE1NS0uNjc1My0uMDcyNy0uMDU3NS0uMTcyNi0uMDU3NS0uMjQ1MywwLTQuOTYwNSw0LjE1NS0xNC45NjAzLDMuMDU4Ny0xNy4xNTU4LTQuMzI3Ni0uMDg0OC0uMjg3Ny0uNTAyNy0uMjU3NC0uNTQ1MS4wNDI0LS4yMDksMS4yNDE2LS4zNDUyLDMuMjQzNC40MjQsNS4wMzkyLjA5MzkuMjMwMi0uMTA5LjQ2MDMtLjM0NTIuMzg3Ni0xMC4xMDU3LTMuMzAwOS0yLjU2Mi0xOC45OTQxLTEuNzU5NS0yMC4zMDg0LjgwMjUtMS4zMTQzLDMuMTQzNS04LjEyNTMsNS4wMDktMTEuNjA3OS44Mzg5LTEuNTY1Nyw3LjcxNjMtMTAuNDM1OCw4LjIwMzktMTkuNTc1NS4wNTE1LS45NjMuMDYzNi0yLjQxOTctLjg1NC0zLjA0OTYtLjc5NjUtLjU0NTEtMS45MzgyLS4zMzYyLTIuMjg5NS0uMjcyNi0xLjIwNTMuMjQ1My0xLjM3NzkuODQ4LTIuNTI1NywxLjIwNTMtMS4xODQxLjM2NjQtMS43NjU2LS4wMzYzLTIuODkyMS0uMDE1MS0xLjExNDQuMDIxMi0yLjE4MzUuNzkwNC00LjMzNjcsMi4wODk2LS43MTE3LjQzLTEuMjkwMS44MDI1LTEuNjgwOCwxLjA2My0xLjYxMTEtLjYyMzgtMy44OTQ1LTEuNDM4NS02LjY4NjctMi4xODk1LDAsMC04LjQxODktMi4yNjgzLTE3LjIyODUtMi4yNjgzQzc4LjEzNDUsMCw0OC40NzQ0LDI5LjY2MDEsNDguNDc0NCw2Ni4yNTUzaDEzMi41MTY0YzAtLjg4NDMtLjAyMTItMS43NjU2LS4wNTc1LTIuNjQwOHYtLjAxNTEuMDA2MVpNMTA4LjA5NzQsNDYuMDg5MmMtLjcxMTcsMi43NzctMS4xMTE0LDUuMzg0NS0xLjMzNTUsNy43Mzc1LS45NjkxLS4wOTk5LTEuODgwNi0uMjI0MS0yLjcxOTUtLjM3MjUuMjMwMi0xLjUyMDMuNTYwMy0zLjI2NDYsMS4wMTE1LTUuMTYwNC4xODc4LS43NjAxLjcyMzgtMi45Mzc1LDEuNTg2OS01LjQ2MzIsMCwwLDMuMTQzNS05LjE5NDIsOC44NzkyLTE2LjY2MjMuMDYzNi0uMDg0OC4xMzYzLS4xNzg3LjIwOS0uMjY2NS41ODE0LjM0NTIsMS4xMjY2LjY4MTQsMS42NTk2LDEuMDExNS0uMDcyNy4wOTM5LS4xMzYzLjE4NzgtLjIwOS4yNzg2LS4zMDI4LjQwODgtLjYwODcuODU0LS45MTE1LDEuMzE0My0yLjc3MSwzLjg5NzYtNi4xOTYxLDkuOC04LjE2MTUsMTcuNTcwOGwtLjAwNjEuMDA2MXYuMDA2MWgtLjAwM1pNMTEzLjU2NjcsMjQuOTY2MWMtMS43MjMyLDIuMDgwNS01LjIyNyw2LjY1MzUtOC4zNzY1LDEzLjIwNjktMS43MDIsMy41NDYyLTMuNjQ2Miw4LjM4NTYtNS4wMTIsMTQuMzg0OS0xLjQ0MTUtLjQyNC0yLjI2ODMtLjc3NTMtMi4yNjgzLS43NzUzLDAsMCwyLjgxMzQtMTMuOTQ4OCwxNC4wMDMzLTI3Ljg5NDYuNjIzOC4yOTM4LDEuMjIwNC41OTY2LDEuNzg2Ny44OTY0LS4wNTE1LjA1NzUtLjA5MzkuMTE1MS0uMTUxNC4xNzg3aC4wMTgydi4wMDNaTTExMC43NTk0LDU0LjAwODRjLjA5OTktMS42ODA4LjMxNS0zLjcxODkuNzM4OS01Ljk5MzIsMS41MzU0LTguMjkxNyw0LjgwMy0xNC4wMjc1LDYuNDMyMy0xNi44MzE4LjUzOTEtLjkyNjcsMS4wNjktMS43NzQ3LDEuNTcxNy0yLjUyNTguMDUxNS0uMDcyNy4wOTk5LS4xNDIzLjE0MjMtLjIxNS40ODc2LjMzNjIuOTYzLjY2NjIsMS40MTQzLjk4NDItLjAzMDMuMDQyNC0uMDU3NS4wODQ4LS4wODQ4LjEzNjMtMS45MzgyLDMuMDM3Ni01LjEzOTIsOS4xNDU4LTYuNDAyLDE3LjgxNjEtLjIzNjIsMS42MjkzLS40NjY0LDMuODU1MS0uNTAyNyw2LjQ1OTYtMS4xNDE3LjExNTEtMi4yNDEuMTc4Ny0zLjMwMDkuMTg3OGwtLjAwNjEtLjAxNTFoLS4wMDN2LS4wMDNaTTEyNC4zMDU0LDMyLjg1MjFjLTQuMDE4Nyw5LjAzNjctMi41MTk2LDE5LjI1MTUtMi41MTk2LDE5LjI1MTUtLjkzMjcuMzI0LTEuODUwNC42MDI3LTIuNzY0OS44MzI4LS4zODc2LTUuMjYwMy4xNTE0LTkuNTE4Mi43MTE3LTEyLjM4OTEsMS4xMjA1LTUuNzIwNiwyLjg4NjEtOC44NjQxLDMuMzUyNC05LjY3NTcsMCwwLC4wMjEyLS4wMzYzLjAzMDMtLjA1NzUsMi4xNjgzLDEuMzk5MSwzLjk3MDIsMi4yMTA3LDYuMDE0NCwxLjgwOC0xLjk0NDIsMS43NjU2LTQuODMwMy4yMzAyLTQuODMwMy4yMzAyaC4wMDYxWk0xMzkuMDYyNywyNC40MzMxYy0uMTUxNC4yMDktLjYxMTcuODYwMS0xLjQ4NywxLjA5MDItMS4xODQxLjMzNjItMi4zNDA5LS4yODc3LTIuMzI1OC0uMzcyNSwwLS4wMzYzLjE5MzgsMCwuNTE3OS0uMDIxMi4yNjY1LS4wMDYxLjc4MTMtLjA1NzUsMS4zNzE5LS4yODc3LS4wNzI3LS4wMjczLS4xNDIzLS4wNTc1LS4yMDktLjEwOS0uNDcyNC0uMzI0LS41ODc1LS45NzUxLS4yNjY1LTEuNDUwNi4zMjQtLjQ3MjQuOTc1Mi0uNTk2NiwxLjQ1MDYtLjI3MjYuMzA4OS4yMTUuNDY2NC41NjAzLjQ1MTIuOTExNS4xMjExLS4xMjExLjI0NTMtLjI2NjUuMzUxMy0uNDI0LjQ1MTItLjY0NS41MjM5LTEuMTYyOS41ODc1LTEuMTQ3OC4xMDYuMDIxMi4xOTk5LDEuMTQxNy0uNDM5MSwyLjA4MDVoLS4wMDZsLjAwMy4wMDNaTTE0NS4yMDczLDIuMzM3OWMuMTgxNy4wMjczLjE1NzUuMDMzMy4zMzYxLjA2MDYuMjc1Ni4wMzk0LjY5MDUuMDc4NywxLjE4NDEuMDMzMy4yODc3LS4wMjczLjU5NjYtLjA4NDguOTUzOS0uMjA5LDEuMjI2NS0uMzg3NiwxLjgyOTItMS4xOTAyLDIuOTU4Ny0xLjAzMjcuMjIxMS4wMjczLjU4MTQuMDc4Ny44NTQuMzM2Mi43NjkyLjcxNzcuMjM2MiwyLjQyNTctLjA4NzgsMy40OTQ4LTEuMjA1MywzLjk2MTEtMi40NzcyLDcuNTAxMy02LjEwODMsMTEuMTc3OC0uNzExNy43MjM4LTEuNzk1OCwyLjA4MDUtMy41MzcyLDIuODU1OC0xLjcwOC43NjAxLTMuMzM3My41MTc5LTUuNjYzMSwxLjgwOC0zLjUyNSwxLjk2NTQtMy4zODg4LDQuODgxOC02LjUzMjIsNC44ODE4LS42NjAyLDAtMS4zNzE5LS4xNzI2LTIuMTMyLS40ODE1LDEuNDE0My0xLjQxNDMsMy43OTE2LTMuNjA5OCw3LjA1MDEtNS44NjYuNjQ1LS40NTEyLDEuOTY1NC0xLjI0MTYsNC41OTQxLTIuODQzNywyLjY2MTktMS42MjkzLDQuMTY0LTIuNTcxMSw1LjkxNDQtNC4xNTUuNDg3Ni0uNDUxMiwxLjQzNTUtMS4zMzU1LDIuMzg5NC0yLjY3NzEuNjY2Mi0uOTQxOCwxLjQ5OTEtMi4zMTk3LDEuMzUwNy0yLjQ0MDktLjIwOS0uMTU3NS0xLjY4MDgsMi4zNDA5LTQuODE1Miw0LjY4OC0xLjYwMiwxLjE5OTItMy40MjUxLDIuMTc0NC01LjkyOTYsMy41ODI2LTEuMDkwMi42MDg3LTEuOTg5NiwxLjA5OTMtMy42MzEsMi4wNTMyLS45MDU1LjUyMzktMS45MDc5LDEuMTExNC0yLjc0MDcsMS42NDQ0LTEuMzA1Mi44MzI4LTMuMTI4MywyLjExNjgtNS4yMDI4LDQuMDMzOCwwLDAtLjU2MDMuNTAyNy0uOTc1MS45MTc2LS41MDI3LS4zMjQtMS4wMjA2LS42OTA1LTEuNTM1NC0xLjA5MDIsMS41NTA1LTEuNTQ0NSwyLjk4Ni0yLjY3NzEsNC4wNDktMy40NDYzLjA3ODctLjA1NzUuMTMwMi0uMDk5OS4xNTc1LS4xMjExLDMuMzUyNC0yLjU5ODQsNi4zODk5LTQuNDE1NCw4LjYwNjctNS42MTQ2LDMuNDI1MS0xLjg1MzQsNS4wMDktMi44NTU4LDYuMTk2MS0zLjc5MTUuODY2MS0uNjg0NCwxLjUwMjEtMS4yOTAxLDEuNzUwNC0xLjUyOTMsMS41MzI0LTEuNDYyNywyLjYyODYtMi44NzA5LDMuMzY3Ni0zLjkzMzkuMTMwMi0uMTk5OS42OTY1LTEuMTA1NC42MDg3LTEuMjA1My0uMDg0OC0uMDcyNy0uNTc1NC4zOTM3LTEuMTA1NC45NzUxLS44ODQzLjk2My0yLjE4OTUsMi4yNzQzLTMuOTMzOSwzLjY2NzQtLjgxMTYuNjM5LTEuNDM1NSwxLjA4NDItMS43ODA3LDEuMzIwNC0zLjM3MzYsMi4zMjU4LTcuNDU4OSw0LjIyNzYtNy45ODI4LDQuNDc5LTUuNjM1OCwyLjYyODYtOS45MTE5LDYuMTQ0Ni0xMS42ODA1LDcuNzIyNC0uNDMtLjM4MTYtLjg1NC0uNzkwNC0xLjI4NC0xLjE5OTIsMy4yMzczLTIuNzg2MSw3LjQxMzUtNS4zNDgxLDcuNDEzNS01LjM0ODEuNjA4Ny0uMzY2NCwxLjE4NzEtLjcwODYsMS43MzIyLTEuMDIwNiwxLjU3NDctLjkwNTUsMi43OTUyLTEuNTQxNSwzLjM0MzMtMS44MjkxLDMuMzg1Ny0xLjc2NTYsOC42MzM5LTQuNDU0OCwxMC42NTk5LTcuMDUwMS4xNDIzLS4xODE3LjcwMjYtLjg5OTQuNjExNy0uOTkwMy0uMDkwOC0uMDg3OC0uNzM1OS40Njk0LTEuMzU2Ny45NDc5LTEuMDI2Ni43OTA0LTIuMDk1NiwxLjUyOTMtMy4xODU5LDIuMjQxLDAsMC0uMjI0MS4xNDIzLS40My4yNzI2LS43OTY1LjUwMjctMi4wNjg0LDEuMTc4LTYuMjY1NywzLjIzNzQsMCwwLTIuMjEwNy45OTYzLTQuNzY2NywyLjMxOTctMy45OTE0LDIuMDUzMi03LjExOTgsNC4yNzkxLTkuMTA5NCw1Ljg1MDktLjQ0NTItLjQ3MjQtLjg5MDMtLjk1MzktMS4zMjA0LTEuNDM1NSw0LjAwNjYtMy4yNjQ2LDguMTc2Ny01LjI5NjcsMTIuMTU5LTcuNDcxLDIuMzg5NC0xLjI5OTIsNC4yODUyLTIuMzMxOSw1LjgzNTctMy4xOTVsMi4zODk0LTEuMzYyOGguMDA2MWMuNjA4Ny0uMzU3NCwxLjA4NzItLjY2MDIsMS4zODctLjg2MDEsMi4zMzE5LTEuNTIzMywzLjIyNTItMi41MzE3LDQuNjY5OC0yLjQ4MDMuMjU0NC4wMDkxLjQ1NzMuMDQ4NS41NjkzLjA3MjdsLS4wMDYxLjAwNjFaTTExNi44MDQsMy44ODg1YzYuMzIzMywwLDEyLjQyNTUuOTQxOCwxOC4xNzY0LDIuNjkyMi0yLjc5MjIsMS41NTA1LTUuNTU3MSwyLjk0OTctNy4zMzQ4LDMuODQ2MS0yLjk1ODcsMS41MDgxLTYuMzIzMywzLjA4NTktMTAuNDY2MSw2LjEwMjIsMCwwLTEuMTg0MS0xLjM2MjgtMi41NzExLTEuOTQ0Mi0xLjAwNTQtLjM4MTYtMS40NTA2LS4xOTM4LTIuNDgzMy0uNjk2NS0xLjIyNjUtLjYwMjYtMS4wOTAyLTEuMTExNC0yLjA2ODQtMS41NjU3LTEuNDA4Mi0uNjQ1LTEuOTgwNi4yODc3LTMuOTcwMi0uMTE1MS0xLjY4NjgtLjM0NTItMS43NTA0LTEuMTA1NC0zLjA0OTYtMS4wNDE4LTEuMTQxNy4wNTc1LTEuMjcxOS42NTQxLTIuNjg2Mi43OTA0LS4wNzI3LDAtLjEzNjMuMDA2MS0uMTk5OS4wMTUxLTEuMTA1NC4wNTc1LTEuMjc4LS4zNTEzLTIuMjk1NS0uMTY2Ni0xLjE2MjkuMjE1LTEuMTg0MS43OTY1LTIuNTU2LDEuMjA1My0xLjI0NzcuMzcyNS0xLjM1MDctLjA3MjctMi41MTk2LjI4NzctMS40ODY5LjQ1MTItMS4yMjA0LDEuMTIwNS0yLjg1NTgsMS42ODY4LS45MDU1LjMxNS0xLjQ2NTcuNDM5MS0xLjcyOTIsMS4wMDU0LS4xODc4LjM4MTYtLjE1NzUuODYwMS4wNDI0LDEuMTc4LjE3MjYuMjY2NS40MzkxLjQwMjguNjM5LjQ3MjQsMS4wNDE4LjM3MjUsNi4wMDgzLDEuMjE0NCwxMS4yODM4LDIuNDE5Nyw0LjA2NDEuODMyOCw3LjUyMjUsMS44NDQzLDEwLjM3MjIsMy4wNzk5LTEuNDU2NywxLjYyOTMtMi44MDczLDMuMzk0OC00LjA2NDEsNS4yMDI4LS4zMzAxLS4wOTk5LS42MzktLjIzNjItMS4yNzgtLjI5MzgtMS43MjMxLS4xNTc1LTIuMjQxLjQwODgtMy44NjEyLjIzMDItMS4xMTE0LS4xMjExLTEuMDg0Mi0uNDA4OC0yLjAwMTgtLjM5MzctMS4xMDU0LjAxNTEtMS4yMjY1LjQzLTIuNTEzNi42MzI5LTEuNDkzLjIzNjItMS42NjU2LS4yNzI2LTIuODM0Ni4wNDI0LTEuMDIwNi4yNzI2LS45MTE1LjY3NTMtMi4yMTA3LDEuMTY5LTEuMzA1Mi41MDI4LTEuNTIwMy4xMzYzLTIuNDYyMS42NDUxLS45NzUxLjUzLS44NTQuOTg0Mi0xLjg1MzQsMS40MDgyLS43OTY1LjMzMDEtMS4wNTM5LjEzMDItMS43MzgzLjUzLS41NDUxLjMyNC0uNDY2NC41MDg4LTEuMjI2NSwxLjE3OC0uNzM4OS42NTQxLTEuMDYzLjcyMzgtMS40MjAzLDEuMDIwNi0uMTMwMi4xMTUxLS4yMzYyLjIyNDEtLjI5MzguMjkzOC0uNDE3OS40ODE1LS41NjAzLDEuMzA1Mi0uNDM5MSwxLjYxNDEuMzAyOC43NzUzLDMuMDk1LjIxNSw2LjM1MzYtLjE5MzguNjMyOS0uMDc4Nyw2LjExNzQtLjc0OCwxMi4zMTA0LS41NTQyLjQwODguMDE1MS45NjMuMDUxNS45NjMuMDUxNXYuMDE1MWMtNC4xNDg5LDcuNjk1MS02LjM3NDgsMTQuNDc4Ny02LjM3NDgsMTQuNDc4Ny0xLjEyNjYsMi44NDM3LTMuMjczNywzLjM3OTctNC4yNTc5LDMuNDY3NS0uMjI0MS4wMjEyLS4zNzI1LS4yMTUtLjI3MjYtLjQxNzkuOTc1MS0xLjgzODIsMS4wNzgxLTQuNTg4LDEuMDQxOC02LjA3MTksMC0uMjkzOC0uMzkzNy0uMzgxNi0uNTMtLjEzMDItNi4yMDgyLDExLjI0NzQtMTUuNjA1Myw2Ljg4MzUtMTYuNTUzMiw2LjQwMi0uMDUxNS0uMDI3My0uMTA5LS4wMjczLS4xNTc1LDAtLjgxNzcuMzY2NC0xMS4wMjY0LDIuNzQwNy0xOS4xNDU1LjE1MTRDNjEuNTY2MiwyNS4yMzg2LDg2LjY4OTcsMy44ODg1LDExNi44MDQsMy44ODg1WiIgZmlsbD0iIzFkNThhNCIvPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Ik0yMDEuNTE4OCw4Mi44OTI5Yy0yLjAxMDktLjAzMDMtNy4zNzExLS4wMTUxLTE0Ljc0NTIsMHYuNzM4OWMxLjUwODIuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDEsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTUuNTYzMmMyLjAyMy4wMTUxLDQuMDQ5LjAyMTIsNi4wNjU5LjAzNjMuMTY2NiwwLC40MTc5LjAxNTEuNjk2NS4wOTM5LjUzOS4xNTc1Ljg4NDMuNDY2NCwxLjA0NzguNjE3OC4xNDIzLjEzMDIuMzI0LjMzMDEuNDk2Ni42MTc4aC43MTE3di04LjAyNTJoLS43MTE3Yy0uMDc4Ny4yMDktLjIxNS40NzU1LS40NzU1LjcxNzctLjQwMjguMzkzNy0uODU0LjUwMjctMS4wNDc4LjU1NDItLjI5MzguMDcyNy0uNTQ1MS4wNzI3LS43MTc3LjA2MzYtMi4wMTY5LjAxNTEtNC4wMzM4LjAxNTEtNi4wNjU5LjAyMTJ2LTYuMjY1N2MwLS4zOTM3LDAtLjc2MDEuMDE1MS0xLjExMTRoNi45MjU5YzEuNjA4MSwwLDIuNDc3Mi4zNjY0LDIuNzI4NiwxLjIzNTZsLjEzMDIuNDk2N2guNzQ1bDEuNzY1Ni03LjExOTdjLS4wMzYzLDAtLjA5OTkuMDE1MS0uMTc4Ny4wMTUxLTIuNjEzNS4yMzYyLTQuNjAwMS4xOTk5LTUuMzA1Ny4xODc4di4wMTUxaC0uMDA2MWwtLjAwNjEtLjAwNjF2LS4wMTIxWiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICAgIDxwYXRoIGQ9Ik0xNzUuMDQ0Niw4Mi44OTI5di43Mzg5YzEuNTA4MS40MywxLjczODMsMS45ODA2LDEuNzM4Myw1LjU1NzF2MTcuMTM0NmMwLDMuNTczNS0uMjMwMiw1LjEyNC0xLjczODMsNS41NTcxdi43NDVoOS42Njk3di0uNzQ1Yy0xLjUwODEtLjQzLTEuNzM4My0xLjk4MDYtMS43MzgzLTUuNTU3MXYtMTcuMTM0NmMwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTdaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTIyOC43NTMxLDEwNS4zMDk0Yy0xLjg1OTQsMS40NzE4LTQuODMwMywyLjM0MDktNy44MTAyLDIuMzQwOS0yLjU3NzIsMC0zLjk2MTEtLjMzNjEtNC4zNDg4LS40NTEydi02LjQzMjNjMi4wMjMuMDE1MSw0LjAzOTkuMDIxMiw2LjA2NTkuMDM2My4xNjM1LDAsLjQwODguMDE1MS42OTY1LjA5MzkuNTQ1MS4xNTE0Ljg4NDMuNDY2NCwxLjA0MTguNjE3OC4xNDIzLjEzMDIuMzI0LjMzMDEuNTAyNy42MTc4aC43MTc3di04LjA0MDRoLS43MTc3Yy0uMDc4Ny4yMDktLjIzMDIuNDcyNC0uNDc1NS43MTc3LS40MDI4LjM5MzctLjg1NC41MDI3LTEuMDUzOS41NTQyLS4yOTM4LjA3MjctLjU0NTEuMDcyNy0uNzE3Ny4wNjM2LTIuMDE2OSwwLTQuMDMzOC4wMTUxLTYuMDUwNy4wMjEyLDAsMCwuMDA2MS03LjAyNTkuMDE1MS03LjM3MTFoNi45MjU5YzEuNjA4MSwwLDIuNDc3Mi4zNjY0LDIuNzE5NSwxLjIzNTZsLjEyMTEuNDg3NmguNzM4OWwxLjc3MTYtNy4xMjg4cy0uMDYzNiwwLS4xODc4LjAxNTFjLTEuNzY1Ni4xNTE0LTMuNTMxMS4yMTUtNS4zMDU3LjE4NzhoLTE0Ljc0NTJ2LjczODljMS41MDgxLjQzLDEuNzM4MywxLjk3NDUsMS43MzgzLDUuNTU3MXYxNy4xMzQ2YzAsMy41NzM1LS4yMjExLDUuMTMzMS0xLjczODMsNS41NTcxdi43NDVoMTguOTc4OWwxLjgxNy03LjMwMTRoLS43MDI2di4wMDYxaC4wMDN2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTE3My4wNTc5LDEwNS4zMTg1Yy0xLjg1OTQsMS40Nzc4LTUuMTU0MywyLjM0MDktOC4xMzQzLDIuMzQwOS0yLjY3MSwwLTQuMDU1LS4zNjY0LTQuMzg1MS0uNDY2NHYtMTcuOTk0N2MwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTd2LjczODljMS41MDgxLjQzLDEuNzM4MywxLjk4MDYsMS43MzgzLDUuNTU3MXYxNy4xMzQ2YzAsMy41NzM1LS4yMzAyLDUuMTI0LTEuNzM4Myw1LjU1NzF2Ljc0NWgxOS4zMzkzbDEuODE3LTcuMzA3NWgtLjcwMjZ2LS4wMDYxaC0uMDAzdi0uMDAzWiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICAgIDxwYXRoIGQ9Ik0xNC43MDYzLDgzLjIyOTRjLTEuMzI2NC0uMzM2Mi0yLjQ4MzMtLjM2NjQtMy4yODg4LS4zMjRsLTExLjQwNDktLjAxNTF2Ljc0NWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNTM5NHYtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTQuODI0MmwuMjg3Ny4xMTUxYzQuNTc4OSwxLjcwOCw5LjQyNDQuNzc1MywxMi4wODkzLTIuMjUzMSwyLjIyNTktMi41MjU3LDIuMzMxOS01LjgyOTcsMi4zNDA5LTYuMjg2OS4wNTE1LTIuNzk4Mi0xLjA5MDItNC43OTM5LTEuMzk5MS01LjMwNTctMi4wNDcyLTMuMzY3Ni01LjQ4NDQtNC4zMDAzLTYuNDMyMy00LjU0MjZoLjAwNjFaTTE0Ljc3OSw5Ny45MTFjLTEuMjcxOSwxLjIwNTMtMy4yNjQ2LDIuMDM4MS01LjY0OCwxLjk4MDZsLTEuMjk5Mi0uMDkzOXYtMTEuNzg2NWgxLjUwODFjMy43MTg5LS4wOTM5LDYuMDAyMywxLjI0MTYsNi44Nzc1LDMuMjc5OHYuMDE1MWMuODk2NCwyLjEyNTkuNDYwMyw0LjgwOTEtMS40MzU1LDYuNjA0OWgtLjAwM1oiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNOTkuMTg2NCw4Mi44OTI5Yy0yLjAxMDktLjAzMDMtNy4zNzExLS4wMTUxLTE0Ljc0NTIsMHYuNzM4OWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTUuNTYzMmMyLjAyMy4wMTUxLDQuMDQ5LjAyMTIsNi4wNjU5LjAzNjMuMTYzNSwwLC40MDg4LjAxNTEuNjk2NS4wOTM5LjUzOTEuMTU3NS44ODQzLjQ2NjQsMS4wNDE4LjYxNzguMTQyMy4xMzAyLjMzMDEuMzMwMS40OTY3LjYxNzhoLjcxMTd2LTguMDI1MmgtLjcxMTdjLS4wNzg3LjIwOS0uMjI0MS40NzU1LS40NzI0LjcxNzctLjQwMjguMzkzNy0uODQ3OS41MDI3LTEuMDQ3OC41NTQyLS4yOTM4LjA3MjctLjU0NTEuMDcyNy0uNzE3Ny4wNjM2LTIuMDE2OS4wMTUxLTQuMDMzOC4wMTUxLTYuMDY1OS4wMjEydi02LjI2NTdjMC0uMzkzNywwLS43NjAxLjAxNTEtMS4xMTE0aDYuOTI1OWMxLjYwODEsMCwyLjQ3NzIuMzY2NCwyLjcyODYsMS4yMzU2bC4xMzAyLjQ5NjdoLjc0OGwxLjc2NTYtNy4xMTk3Yy0uMDM2MywwLS4wOTk5LjAxNTEtLjE3ODcuMDE1MS0yLjYxMzUuMjM2Mi00LjYwMDEuMTk5OS01LjMwNTcuMTg3OHYuMDE1MWgtLjAwNjF2LS4wMDYxbC0uMDA2MS0uMDEyMVoiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNNzIuNzA2MSw4Mi44OTI5di43Mzg5YzEuNTA4MS40MywxLjczODMsMS45ODA2LDEuNzM4Myw1LjU1NzF2MTcuMTM0NmMwLDMuNTczNS0uMjMwMiw1LjEyNC0xLjczODMsNS41NTcxdi43NDVoOS42Njk3di0uNzQ1Yy0xLjUwODEtLjQzLTEuNzM4My0xLjk4MDYtMS43MzgzLTUuNTU3MXYtMTcuMTM0NmMwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTdaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTcwLjkwNDIsMTAyLjkwNDlsLS4wNDI0LjE2NjYtMi4xMzgsOC42MzM5Yy0uMjA5LjE1MTQtMS45NjU0LDEuMjIwNC03Ljg4MjksMS4yMjA0LTQuMTMzOCwwLTcuOTMxNC0xLjUyMDMtMTAuNjgxMS00LjMwNjQtMi43NTU4LTIuNzg2MS00LjI3OTEtNi42NTM0LTQuMjc5MS0xMC44OTYyczEuNTI5My04LjA2NzYsNC4yOTEyLTEwLjgyMzVjMi43NDk4LTIuNzM0Niw2LjUzODMtNC4yMzM3LDEwLjY4NzItNC4yMzM3LDEuODQ0MywwLDMuMDIyMy4yMDksMy44NzYzLjM3MjUsMS4yMjY1LjIyMTEsMS43MjkyLjI3MjYsMi45NzA5LS40M2wuNjA4Ny4xOTk5LDIuMjgzNCw5LjMzOTYuMDQyNC4xNzI2LS41NDUxLjMwMjhjLS4xNzg3LS4xNzI2LS4zNTEzLS4zNDUyLS41MjM5LS41MDg4LS41MjM5LS40OTY3LTEuMDQxOC0uOTQ3OS0xLjU1NjYtMS4zNDE2LTIuMDk1Ni0xLjY1OTYtNC4xNzYyLTIuNTE5Ni02LjY3NDYtMi41MTk2LTUuNDQyLDAtOS4zODgsNC4wMjc4LTkuMzg4LDkuNTYwNiwwLC4xMzAyLDAsLjI1NzQuMDA2MS4zODc2LjI2NjUsNS4yMzMxLDQuMTI3Nyw4Ljk3OTIsOS4zNzU5LDguOTc5MiwyLjI0MSwwLDQuMTkxMy0uNjE3OCw2LjAwODMtMS44MjMxLjg4MTMtLjU4MTQsMS43MzgzLTEuMjk5MiwyLjU3NzItMi4xNTMyLjE2MzUtLjE2NjYuMzMwMS0uMzM2Mi41MDI3LS41MTc5bC40ODE1LjIyMTF2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0Ii8+CiAgICAgIDxwYXRoIGQ9Ik0xNDIuNTcxMSwxMDIuOTA0OWwtLjA0MjQuMTY2Ni0yLjEzOCw4LjYzMzljLS4yMDkuMTUxNC0xLjk2NTQsMS4yMjA0LTcuODgyOSwxLjIyMDQtNC4xMzM4LDAtNy45MzE0LTEuNTIwMy0xMC42ODExLTQuMzA2NC0yLjc1NTgtMi43ODYxLTQuMjc5MS02LjY1MzQtNC4yNzkxLTEwLjg5NjJzMS41MjkzLTguMDY3Niw0LjI5NDMtMTAuODIzNWMyLjc0OTgtMi43MzQ2LDYuNTM4My00LjIzMzcsMTAuNjg3Mi00LjIzMzcsMS44NDQzLDAsMy4wMjIzLjIwOSwzLjg3NjMuMzcyNSwxLjIyNjUuMjIxMSwxLjcyOTIuMjcyNiwyLjk3MDktLjQzbC42MTE3LjE5OTksMi4yODM0LDkuMzM5Ni4wNDI0LjE3MjYtLjU0NTEuMzAyOGMtLjE3ODctLjE3MjYtLjM1MTMtLjM0NTItLjUyMzktLjUwODgtLjUyMzktLjQ5NjctMS4wNDE4LS45NDc5LTEuNTU2Ni0xLjM0MTYtMi4wOTU3LTEuNjU5Ni00LjE3OTItMi41MTk2LTYuNjc0Ni0yLjUxOTYtNS40NDIsMC05LjM4OCw0LjAyNzgtOS4zODgsOS41NjA2LDAsLjEzMDIsMCwuMjU3NC4wMDYxLjM4NzYuMjY2NSw1LjIzMzEsNC4xMjc3LDguOTc5Miw5LjM3NTksOC45NzkyLDIuMjM4LDAsNC4xOTEzLS42MTc4LDYuMDA4My0xLjgyMzEuODg0My0uNTgxNCwxLjczODMtMS4yOTkyLDIuNTc3Mi0yLjE1MzIuMTYzNS0uMTY2Ni4zMzAxLS4zMzYyLjUwMjctLjUxNzlsLjQ4MTUuMjIxMWgtLjAwNjF2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0Ii8+CiAgICAgIDxwYXRoIGQ9Ik00NC42NTQxLDEwNi4yMTQ5bC04Ljg0OS0yMy4zMTU2aC04LjI0MDN2Ljg2MDFsLjMzMDEuMDg3OGMuMTA2LjAyNDIuMjYwNC4wNjk3LjQ0MjEuMTQyMy4wMzMzLjAxNTEuMDYwNi4wMjczLjA3NTcuMDMwMy4xOTk5LjA3ODcuMzkzNy4xOTk5LjUzOTEuMzUxMy4zMzAxLjM2NjQuNDg3Ni45MTE1LjA5OTksMi4xMDQ3LS4yNDUzLjc0NS03LjMwNzUsMTkuNzM5MS03LjMwNzUsMTkuNzM5MS0uNjk2NSwxLjg1OTQtMS41NTA1LDQuNDYzOC0yLjgxMzQsNS4yNjAzLS4xNTE0LjA5MzktLjMwMjguMTcyNi0uNDY2NC4yMzAybC0uNDMuMTcyNnYuNzQ1aDkuNDA5MnYtLjc0NXMtLjY1NDEtLjEzMDItLjkxNzYtLjM1MTNjLS41NjAzLS40NzU1LS43NDgtMS4zMzU1LjA1MTUtMy41OTc3bDEuMTExNC0zLjMzNzNoOS45MDU5Yy4yNDUzLjYxNzguNDk2NywxLjYwODEuOTg0MiwzLjA4NTkuMzE1Ljg3NTIuNzQ4LDIuMDEwOS43MzI5LDIuODcwOSwwLC41NDUxLS4zNTEzLDEuMDI2Ni0uODYwMSwxLjIyNjVsLS4yNDUzLjA5OTl2Ljc0NWg5LjkwNTl2LS43NDVjLS4xMjExLS4wMzYzLS4zMTUtLjA5OTktLjUxNzktLjIzMDItLjYxNzgtLjM2NjQtLjg5NjQtLjk0MTgtMS4wNjMtMS4yNzgtLjkzMjctMS45MzgyLTEuNzE0MS0zLjc3NjQtMS44ODA2LTQuMTcwMXYuMDE1MWguMDA2MWwtLjAwMy4wMDNaTTI5LjMwMDIsOTkuOTEyOGwzLjM1MjQtOS4xMzA2LDMuMzM3Myw5LjEzMDZoLTYuNjg5N1oiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNMTA2LjMzMDMsODIuODkyOXYuNzM4OWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTE3LjEzNDZjMC0zLjU3MzUuMjMwMi01LjEyNCwxLjczODMtNS41NTcxdi0uNzM4OWgtOS42Njk3WiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICA8L2c+CiAgPC9nPgogIDxyZWN0IHdpZHRoPSIyMjkuNDY1MiIgaGVpZ2h0PSIxMTIuOTI1OCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "ttl4",
+        "kind": "text",
+        "body": "## Event Scorecard",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#0B2E4F"
+        }
+      },
+      {
+        "id": "sub4",
+        "kind": "text",
+        "body": "Targets vs. actuals for a single event",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#5B6B79"
+        }
+      },
+      {
+        "kind": "control",
+        "id": "ctrl-sc-event",
+        "controlId": "ScEvent",
+        "name": "Select Event",
+        "controlType": "list",
+        "selectionMode": "single",
+        "mode": "include",
+        "values": [],
+        "filters": [
+          {
+            "source": {
+              "kind": "table",
+              "elementId": "scorecard-view"
+            },
+            "columnId": "sc-name"
+          }
+        ],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "scorecard-view"
+          },
+          "columnId": "sc-name"
+        }
+      },
+      {
+        "id": "k4a",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard-view",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k4av",
+            "formula": "[Scorecard View/Actual Spend]",
+            "name": "Actual Spend vs Approved Budget"
+          },
+          {
+            "id": "k4ac",
+            "formula": "[Scorecard View/Approved Budget]",
+            "name": "Target"
+          }
+        ],
+        "value": {
+          "columnId": "k4av",
+          "fontSize": 26,
+          "color": "#0B2E4F"
+        },
+        "comparisonColumn": {
+          "columnId": "k4ac"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#2FA36B",
+          "colorBad": "#D64545",
+          "fontSize": 12
+        },
+        "name": {
+          "text": "Actual Spend vs Approved Budget",
+          "fontSize": 12,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k4b",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard-view",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k4bv",
+            "formula": "[Scorecard View/Actual Impressions]",
+            "name": "Impressions"
+          },
+          {
+            "id": "k4bc",
+            "formula": "[Scorecard View/Target Impressions]",
+            "name": "Target"
+          }
+        ],
+        "value": {
+          "columnId": "k4bv",
+          "fontSize": 26,
+          "color": "#0B2E4F"
+        },
+        "comparisonColumn": {
+          "columnId": "k4bc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#2FA36B",
+          "colorBad": "#D64545",
+          "fontSize": 12
+        },
+        "name": {
+          "text": "Impressions",
+          "fontSize": 12,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k4c",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard-view",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k4cv",
+            "formula": "[Scorecard View/Actual Engagements]",
+            "name": "Engagements"
+          },
+          {
+            "id": "k4cc",
+            "formula": "[Scorecard View/Target Engagements]",
+            "name": "Target"
+          }
+        ],
+        "value": {
+          "columnId": "k4cv",
+          "fontSize": 26,
+          "color": "#0B2E4F"
+        },
+        "comparisonColumn": {
+          "columnId": "k4cc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#2FA36B",
+          "colorBad": "#D64545",
+          "fontSize": 12
+        },
+        "name": {
+          "text": "Engagements",
+          "fontSize": 12,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k4d",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard-view",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k4dv",
+            "formula": "[Scorecard View/Actual Leads and Meetings]",
+            "name": "Leads / Meetings"
+          },
+          {
+            "id": "k4dc",
+            "formula": "[Scorecard View/Target Leads and Meetings]",
+            "name": "Target"
+          }
+        ],
+        "value": {
+          "columnId": "k4dv",
+          "fontSize": 26,
+          "color": "#0B2E4F"
+        },
+        "comparisonColumn": {
+          "columnId": "k4dc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#2FA36B",
+          "colorBad": "#D64545",
+          "fontSize": 12
+        },
+        "name": {
+          "text": "Leads / Meetings",
+          "fontSize": 12,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k4e",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard-view",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k4ev",
+            "formula": "[Scorecard View/Actual Earned Media Value]",
+            "name": "Earned Media Value"
+          },
+          {
+            "id": "k4ec",
+            "formula": "[Scorecard View/Target Earned Media Value]",
+            "name": "Target"
+          }
+        ],
+        "value": {
+          "columnId": "k4ev",
+          "fontSize": 26,
+          "color": "#0B2E4F"
+        },
+        "comparisonColumn": {
+          "columnId": "k4ec"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#2FA36B",
+          "colorBad": "#D64545",
+          "fontSize": 12
+        },
+        "name": {
+          "text": "Earned Media Value",
+          "fontSize": 12,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k4f",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard-view",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k4fv",
+            "formula": "[Scorecard View/Actual Brand Lift %]",
+            "name": "Brand Lift %"
+          },
+          {
+            "id": "k4fc",
+            "formula": "[Scorecard View/Target Brand Lift %]",
+            "name": "Target"
+          }
+        ],
+        "value": {
+          "columnId": "k4fv",
+          "fontSize": 26,
+          "color": "#0B2E4F"
+        },
+        "comparisonColumn": {
+          "columnId": "k4fc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#2FA36B",
+          "colorBad": "#D64545",
+          "fontSize": 12
+        },
+        "name": {
+          "text": "Brand Lift %",
+          "fontSize": 12,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "sc-detail",
+        "kind": "table",
+        "name": "Event Detail",
+        "source": {
+          "elementId": "scorecard-view",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "sd-type",
+            "formula": "[Scorecard View/Event Type]",
+            "name": "Event Type"
+          },
+          {
+            "id": "sd-date",
+            "formula": "[Scorecard View/Event Date]",
+            "name": "Event Date"
+          },
+          {
+            "id": "sd-owner",
+            "formula": "[Scorecard View/Requested By]",
+            "name": "Requested By"
+          },
+          {
+            "id": "sd-status",
+            "formula": "[Scorecard View/Status]",
+            "name": "Status"
+          },
+          {
+            "id": "sd-just",
+            "formula": "[Scorecard View/Justification]",
+            "name": "Justification"
+          },
+          {
+            "id": "sd-reviewer",
+            "formula": "[Scorecard View/Reviewer]",
+            "name": "Reviewer"
+          },
+          {
+            "id": "sd-comments",
+            "formula": "[Scorecard View/Review Comments]",
+            "name": "Review Comments"
+          }
+        ],
+        "order": [
+          "sd-type",
+          "sd-date",
+          "sd-owner",
+          "sd-status",
+          "sd-just",
+          "sd-reviewer",
+          "sd-comments"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "p4-note",
+        "kind": "text",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#5B6B79"
+        },
+        "body": "**Enter Actuals** (after the event runs): add a row below -- type the **Event Name** exactly as it appears in the picker above, then the actual results and spend."
+      },
+      {
+        "id": "tbl-actuals",
+        "kind": "input-table",
+        "name": "Actuals",
+        "source": {
+          "kind": "empty",
+          "connectionId": "bee6615c-7d11-435c-8819-e32207b27fe4"
+        },
+        "inputMode": "edit",
+        "columns": [
+          {
+            "id": "ac-event",
+            "type": "text",
+            "name": "Event Name"
+          },
+          {
+            "id": "ac-impr",
+            "type": "number",
+            "name": "Actual Impressions"
+          },
+          {
+            "id": "ac-eng",
+            "type": "number",
+            "name": "Actual Engagements"
+          },
+          {
+            "id": "ac-leads",
+            "type": "number",
+            "name": "Actual Leads and Meetings"
+          },
+          {
+            "id": "ac-emv",
+            "type": "number",
+            "name": "Actual Earned Media Value"
+          },
+          {
+            "id": "ac-lift",
+            "type": "number",
+            "name": "Actual Brand Lift %"
+          },
+          {
+            "id": "ac-spend",
+            "type": "number",
+            "name": "Actual Spend"
+          },
+          {
+            "id": "CREATED_AT"
+          }
+        ],
+        "order": [
+          "ac-event",
+          "ac-impr",
+          "ac-eng",
+          "ac-leads",
+          "ac-emv",
+          "ac-lift",
+          "ac-spend",
+          "CREATED_AT"
+        ]
+      },
+      {
+        "id": "c-hdr5",
+        "kind": "container",
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "logo5",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyMjkuNDY1MiAxMTIuOTI1OCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDMwLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDEzNikgIC0tPgogIDxnPgogICAgPHBhdGggZD0iTTE4MC45MzMzLDYzLjYwNTRjLTMzLjM5NDEsMS44MDc5LTkzLjM4OTUuMDMwMy0xMjYuNDI5My0uMDIxMi4wMjEyLS41NTEyLjA1MTUtMS4xMTE0LjA5MzktMS42NTk2LDM0LjM2OTItLjIzMDIsOTIuMDk2NC0uMDkzOSwxMjYuMjUwNiwwLS4wNTc1LS44NzUyLS4xMzAyLTEuNzM4My0uMjIxMS0yLjYwNDQtNDIuMzczMywxLjY2NTYtODQuNzE2Mi0uMzcyNS0xMjUuNzYzMS0uMjU3NC4xMjExLTEuMDUzOS4yNjY1LTIuMTEwOC40NDUyLTMuMTQ5NSw3Ljg4MjksMi41MDQ1LDE3LjAyNTYuMzE1LDE3LjAyNTYuMzE1LDAsMCw4LjkzNjgsMy4xMTYyLDE2LjI2NTUsMCwwLDAsNC4zNjM5LDIuNDgzMyw4LjQxMjktMS4wOTAyLDAsMCwyMi4zMjUzLDkuMDg4MiwzMS40OTgzLTUuNTg0NC4xNTc1LS4yNDUzLjUzLS4xMzAyLjUyMzkuMTYzNS0uMDkzOSwyLjEzMi4xMzAyLDYuMjk2LDMuMjU4Niw2LjgxOTkuMjM2Mi4wMzYzLjQwODgtLjIxNS4yODc3LS40MjQtLjY2MDItMS4xMjA1LTEuODAxOS00LjQyMTUuODAyNS0xMS44NzQzLjEwOS0uMjk5OC41NjAyLS4yMjExLjU0NTEuMDk5OS0uMTc4Nyw0LjQyNzUuNDAyOCwxNC41NzI2LDkuODEyLDEyLjIwMTQsMCwwLDkuNTY5NywzLjgxODgsMjMuOTAzMS0uMTkzOCwwLDAsMi43NzcsMi4xMTA4LDEwLjkxMTMsMS4zMjA0aC4wMDYxYy42MDU3LS4wNjk3LDEuMjExNC0uMTM5MywxLjgxNy0uMjA5LS4wNzI3LS41NDUxLS4xNTc1LTEuMDkwMi0uMjM2Mi0xLjYzNTMtLjAwNi0uMDUxNS0uMDE1MS0uMDk5OS0uMDIxMi0uMTU3NS0uMDMwMy0uMTU3NS0uMDUxNS0uMzE1LS4wNzI3LS40NzU1LTIuOTI4NC0xNy40MTMzLTEyLjYzNDQtMzIuNTI1LTI2LjMyODgtNDIuNTA5Ni0uMzQ1Mi44NzUyLS43MTE3LDEuNzE3MS0xLjA5MDIsMi41MjU3LDEzLjMyMTksOS4zNzU5LDIyLjgwMzgsMjMuODMwNSwyNS42NDE0LDQwLjU1MDMtNC44NjA2LDEuMTYyOS04LjgwNjYtLjkzMjctOS40Mzk1LTEuMjkzMS0uMDU3NS0uMDMwMy0uMTIxMS0uMDMwMy0uMTc4NywwLTQuNzgxOCwyLjY4MzItOC4zMzQxLS4wODQ4LTkuMDE1NS0uNjc1My0uMDcyNy0uMDU3NS0uMTcyNi0uMDU3NS0uMjQ1MywwLTQuOTYwNSw0LjE1NS0xNC45NjAzLDMuMDU4Ny0xNy4xNTU4LTQuMzI3Ni0uMDg0OC0uMjg3Ny0uNTAyNy0uMjU3NC0uNTQ1MS4wNDI0LS4yMDksMS4yNDE2LS4zNDUyLDMuMjQzNC40MjQsNS4wMzkyLjA5MzkuMjMwMi0uMTA5LjQ2MDMtLjM0NTIuMzg3Ni0xMC4xMDU3LTMuMzAwOS0yLjU2Mi0xOC45OTQxLTEuNzU5NS0yMC4zMDg0LjgwMjUtMS4zMTQzLDMuMTQzNS04LjEyNTMsNS4wMDktMTEuNjA3OS44Mzg5LTEuNTY1Nyw3LjcxNjMtMTAuNDM1OCw4LjIwMzktMTkuNTc1NS4wNTE1LS45NjMuMDYzNi0yLjQxOTctLjg1NC0zLjA0OTYtLjc5NjUtLjU0NTEtMS45MzgyLS4zMzYyLTIuMjg5NS0uMjcyNi0xLjIwNTMuMjQ1My0xLjM3NzkuODQ4LTIuNTI1NywxLjIwNTMtMS4xODQxLjM2NjQtMS43NjU2LS4wMzYzLTIuODkyMS0uMDE1MS0xLjExNDQuMDIxMi0yLjE4MzUuNzkwNC00LjMzNjcsMi4wODk2LS43MTE3LjQzLTEuMjkwMS44MDI1LTEuNjgwOCwxLjA2My0xLjYxMTEtLjYyMzgtMy44OTQ1LTEuNDM4NS02LjY4NjctMi4xODk1LDAsMC04LjQxODktMi4yNjgzLTE3LjIyODUtMi4yNjgzQzc4LjEzNDUsMCw0OC40NzQ0LDI5LjY2MDEsNDguNDc0NCw2Ni4yNTUzaDEzMi41MTY0YzAtLjg4NDMtLjAyMTItMS43NjU2LS4wNTc1LTIuNjQwOHYtLjAxNTEuMDA2MVpNMTA4LjA5NzQsNDYuMDg5MmMtLjcxMTcsMi43NzctMS4xMTE0LDUuMzg0NS0xLjMzNTUsNy43Mzc1LS45NjkxLS4wOTk5LTEuODgwNi0uMjI0MS0yLjcxOTUtLjM3MjUuMjMwMi0xLjUyMDMuNTYwMy0zLjI2NDYsMS4wMTE1LTUuMTYwNC4xODc4LS43NjAxLjcyMzgtMi45Mzc1LDEuNTg2OS01LjQ2MzIsMCwwLDMuMTQzNS05LjE5NDIsOC44NzkyLTE2LjY2MjMuMDYzNi0uMDg0OC4xMzYzLS4xNzg3LjIwOS0uMjY2NS41ODE0LjM0NTIsMS4xMjY2LjY4MTQsMS42NTk2LDEuMDExNS0uMDcyNy4wOTM5LS4xMzYzLjE4NzgtLjIwOS4yNzg2LS4zMDI4LjQwODgtLjYwODcuODU0LS45MTE1LDEuMzE0My0yLjc3MSwzLjg5NzYtNi4xOTYxLDkuOC04LjE2MTUsMTcuNTcwOGwtLjAwNjEuMDA2MXYuMDA2MWgtLjAwM1pNMTEzLjU2NjcsMjQuOTY2MWMtMS43MjMyLDIuMDgwNS01LjIyNyw2LjY1MzUtOC4zNzY1LDEzLjIwNjktMS43MDIsMy41NDYyLTMuNjQ2Miw4LjM4NTYtNS4wMTIsMTQuMzg0OS0xLjQ0MTUtLjQyNC0yLjI2ODMtLjc3NTMtMi4yNjgzLS43NzUzLDAsMCwyLjgxMzQtMTMuOTQ4OCwxNC4wMDMzLTI3Ljg5NDYuNjIzOC4yOTM4LDEuMjIwNC41OTY2LDEuNzg2Ny44OTY0LS4wNTE1LjA1NzUtLjA5MzkuMTE1MS0uMTUxNC4xNzg3aC4wMTgydi4wMDNaTTExMC43NTk0LDU0LjAwODRjLjA5OTktMS42ODA4LjMxNS0zLjcxODkuNzM4OS01Ljk5MzIsMS41MzU0LTguMjkxNyw0LjgwMy0xNC4wMjc1LDYuNDMyMy0xNi44MzE4LjUzOTEtLjkyNjcsMS4wNjktMS43NzQ3LDEuNTcxNy0yLjUyNTguMDUxNS0uMDcyNy4wOTk5LS4xNDIzLjE0MjMtLjIxNS40ODc2LjMzNjIuOTYzLjY2NjIsMS40MTQzLjk4NDItLjAzMDMuMDQyNC0uMDU3NS4wODQ4LS4wODQ4LjEzNjMtMS45MzgyLDMuMDM3Ni01LjEzOTIsOS4xNDU4LTYuNDAyLDE3LjgxNjEtLjIzNjIsMS42MjkzLS40NjY0LDMuODU1MS0uNTAyNyw2LjQ1OTYtMS4xNDE3LjExNTEtMi4yNDEuMTc4Ny0zLjMwMDkuMTg3OGwtLjAwNjEtLjAxNTFoLS4wMDN2LS4wMDNaTTEyNC4zMDU0LDMyLjg1MjFjLTQuMDE4Nyw5LjAzNjctMi41MTk2LDE5LjI1MTUtMi41MTk2LDE5LjI1MTUtLjkzMjcuMzI0LTEuODUwNC42MDI3LTIuNzY0OS44MzI4LS4zODc2LTUuMjYwMy4xNTE0LTkuNTE4Mi43MTE3LTEyLjM4OTEsMS4xMjA1LTUuNzIwNiwyLjg4NjEtOC44NjQxLDMuMzUyNC05LjY3NTcsMCwwLC4wMjEyLS4wMzYzLjAzMDMtLjA1NzUsMi4xNjgzLDEuMzk5MSwzLjk3MDIsMi4yMTA3LDYuMDE0NCwxLjgwOC0xLjk0NDIsMS43NjU2LTQuODMwMy4yMzAyLTQuODMwMy4yMzAyaC4wMDYxWk0xMzkuMDYyNywyNC40MzMxYy0uMTUxNC4yMDktLjYxMTcuODYwMS0xLjQ4NywxLjA5MDItMS4xODQxLjMzNjItMi4zNDA5LS4yODc3LTIuMzI1OC0uMzcyNSwwLS4wMzYzLjE5MzgsMCwuNTE3OS0uMDIxMi4yNjY1LS4wMDYxLjc4MTMtLjA1NzUsMS4zNzE5LS4yODc3LS4wNzI3LS4wMjczLS4xNDIzLS4wNTc1LS4yMDktLjEwOS0uNDcyNC0uMzI0LS41ODc1LS45NzUxLS4yNjY1LTEuNDUwNi4zMjQtLjQ3MjQuOTc1Mi0uNTk2NiwxLjQ1MDYtLjI3MjYuMzA4OS4yMTUuNDY2NC41NjAzLjQ1MTIuOTExNS4xMjExLS4xMjExLjI0NTMtLjI2NjUuMzUxMy0uNDI0LjQ1MTItLjY0NS41MjM5LTEuMTYyOS41ODc1LTEuMTQ3OC4xMDYuMDIxMi4xOTk5LDEuMTQxNy0uNDM5MSwyLjA4MDVoLS4wMDZsLjAwMy4wMDNaTTE0NS4yMDczLDIuMzM3OWMuMTgxNy4wMjczLjE1NzUuMDMzMy4zMzYxLjA2MDYuMjc1Ni4wMzk0LjY5MDUuMDc4NywxLjE4NDEuMDMzMy4yODc3LS4wMjczLjU5NjYtLjA4NDguOTUzOS0uMjA5LDEuMjI2NS0uMzg3NiwxLjgyOTItMS4xOTAyLDIuOTU4Ny0xLjAzMjcuMjIxMS4wMjczLjU4MTQuMDc4Ny44NTQuMzM2Mi43NjkyLjcxNzcuMjM2MiwyLjQyNTctLjA4NzgsMy40OTQ4LTEuMjA1MywzLjk2MTEtMi40NzcyLDcuNTAxMy02LjEwODMsMTEuMTc3OC0uNzExNy43MjM4LTEuNzk1OCwyLjA4MDUtMy41MzcyLDIuODU1OC0xLjcwOC43NjAxLTMuMzM3My41MTc5LTUuNjYzMSwxLjgwOC0zLjUyNSwxLjk2NTQtMy4zODg4LDQuODgxOC02LjUzMjIsNC44ODE4LS42NjAyLDAtMS4zNzE5LS4xNzI2LTIuMTMyLS40ODE1LDEuNDE0My0xLjQxNDMsMy43OTE2LTMuNjA5OCw3LjA1MDEtNS44NjYuNjQ1LS40NTEyLDEuOTY1NC0xLjI0MTYsNC41OTQxLTIuODQzNywyLjY2MTktMS42MjkzLDQuMTY0LTIuNTcxMSw1LjkxNDQtNC4xNTUuNDg3Ni0uNDUxMiwxLjQzNTUtMS4zMzU1LDIuMzg5NC0yLjY3NzEuNjY2Mi0uOTQxOCwxLjQ5OTEtMi4zMTk3LDEuMzUwNy0yLjQ0MDktLjIwOS0uMTU3NS0xLjY4MDgsMi4zNDA5LTQuODE1Miw0LjY4OC0xLjYwMiwxLjE5OTItMy40MjUxLDIuMTc0NC01LjkyOTYsMy41ODI2LTEuMDkwMi42MDg3LTEuOTg5NiwxLjA5OTMtMy42MzEsMi4wNTMyLS45MDU1LjUyMzktMS45MDc5LDEuMTExNC0yLjc0MDcsMS42NDQ0LTEuMzA1Mi44MzI4LTMuMTI4MywyLjExNjgtNS4yMDI4LDQuMDMzOCwwLDAtLjU2MDMuNTAyNy0uOTc1MS45MTc2LS41MDI3LS4zMjQtMS4wMjA2LS42OTA1LTEuNTM1NC0xLjA5MDIsMS41NTA1LTEuNTQ0NSwyLjk4Ni0yLjY3NzEsNC4wNDktMy40NDYzLjA3ODctLjA1NzUuMTMwMi0uMDk5OS4xNTc1LS4xMjExLDMuMzUyNC0yLjU5ODQsNi4zODk5LTQuNDE1NCw4LjYwNjctNS42MTQ2LDMuNDI1MS0xLjg1MzQsNS4wMDktMi44NTU4LDYuMTk2MS0zLjc5MTUuODY2MS0uNjg0NCwxLjUwMjEtMS4yOTAxLDEuNzUwNC0xLjUyOTMsMS41MzI0LTEuNDYyNywyLjYyODYtMi44NzA5LDMuMzY3Ni0zLjkzMzkuMTMwMi0uMTk5OS42OTY1LTEuMTA1NC42MDg3LTEuMjA1My0uMDg0OC0uMDcyNy0uNTc1NC4zOTM3LTEuMTA1NC45NzUxLS44ODQzLjk2My0yLjE4OTUsMi4yNzQzLTMuOTMzOSwzLjY2NzQtLjgxMTYuNjM5LTEuNDM1NSwxLjA4NDItMS43ODA3LDEuMzIwNC0zLjM3MzYsMi4zMjU4LTcuNDU4OSw0LjIyNzYtNy45ODI4LDQuNDc5LTUuNjM1OCwyLjYyODYtOS45MTE5LDYuMTQ0Ni0xMS42ODA1LDcuNzIyNC0uNDMtLjM4MTYtLjg1NC0uNzkwNC0xLjI4NC0xLjE5OTIsMy4yMzczLTIuNzg2MSw3LjQxMzUtNS4zNDgxLDcuNDEzNS01LjM0ODEuNjA4Ny0uMzY2NCwxLjE4NzEtLjcwODYsMS43MzIyLTEuMDIwNiwxLjU3NDctLjkwNTUsMi43OTUyLTEuNTQxNSwzLjM0MzMtMS44MjkxLDMuMzg1Ny0xLjc2NTYsOC42MzM5LTQuNDU0OCwxMC42NTk5LTcuMDUwMS4xNDIzLS4xODE3LjcwMjYtLjg5OTQuNjExNy0uOTkwMy0uMDkwOC0uMDg3OC0uNzM1OS40Njk0LTEuMzU2Ny45NDc5LTEuMDI2Ni43OTA0LTIuMDk1NiwxLjUyOTMtMy4xODU5LDIuMjQxLDAsMC0uMjI0MS4xNDIzLS40My4yNzI2LS43OTY1LjUwMjctMi4wNjg0LDEuMTc4LTYuMjY1NywzLjIzNzQsMCwwLTIuMjEwNy45OTYzLTQuNzY2NywyLjMxOTctMy45OTE0LDIuMDUzMi03LjExOTgsNC4yNzkxLTkuMTA5NCw1Ljg1MDktLjQ0NTItLjQ3MjQtLjg5MDMtLjk1MzktMS4zMjA0LTEuNDM1NSw0LjAwNjYtMy4yNjQ2LDguMTc2Ny01LjI5NjcsMTIuMTU5LTcuNDcxLDIuMzg5NC0xLjI5OTIsNC4yODUyLTIuMzMxOSw1LjgzNTctMy4xOTVsMi4zODk0LTEuMzYyOGguMDA2MWMuNjA4Ny0uMzU3NCwxLjA4NzItLjY2MDIsMS4zODctLjg2MDEsMi4zMzE5LTEuNTIzMywzLjIyNTItMi41MzE3LDQuNjY5OC0yLjQ4MDMuMjU0NC4wMDkxLjQ1NzMuMDQ4NS41NjkzLjA3MjdsLS4wMDYxLjAwNjFaTTExNi44MDQsMy44ODg1YzYuMzIzMywwLDEyLjQyNTUuOTQxOCwxOC4xNzY0LDIuNjkyMi0yLjc5MjIsMS41NTA1LTUuNTU3MSwyLjk0OTctNy4zMzQ4LDMuODQ2MS0yLjk1ODcsMS41MDgxLTYuMzIzMywzLjA4NTktMTAuNDY2MSw2LjEwMjIsMCwwLTEuMTg0MS0xLjM2MjgtMi41NzExLTEuOTQ0Mi0xLjAwNTQtLjM4MTYtMS40NTA2LS4xOTM4LTIuNDgzMy0uNjk2NS0xLjIyNjUtLjYwMjYtMS4wOTAyLTEuMTExNC0yLjA2ODQtMS41NjU3LTEuNDA4Mi0uNjQ1LTEuOTgwNi4yODc3LTMuOTcwMi0uMTE1MS0xLjY4NjgtLjM0NTItMS43NTA0LTEuMTA1NC0zLjA0OTYtMS4wNDE4LTEuMTQxNy4wNTc1LTEuMjcxOS42NTQxLTIuNjg2Mi43OTA0LS4wNzI3LDAtLjEzNjMuMDA2MS0uMTk5OS4wMTUxLTEuMTA1NC4wNTc1LTEuMjc4LS4zNTEzLTIuMjk1NS0uMTY2Ni0xLjE2MjkuMjE1LTEuMTg0MS43OTY1LTIuNTU2LDEuMjA1My0xLjI0NzcuMzcyNS0xLjM1MDctLjA3MjctMi41MTk2LjI4NzctMS40ODY5LjQ1MTItMS4yMjA0LDEuMTIwNS0yLjg1NTgsMS42ODY4LS45MDU1LjMxNS0xLjQ2NTcuNDM5MS0xLjcyOTIsMS4wMDU0LS4xODc4LjM4MTYtLjE1NzUuODYwMS4wNDI0LDEuMTc4LjE3MjYuMjY2NS40MzkxLjQwMjguNjM5LjQ3MjQsMS4wNDE4LjM3MjUsNi4wMDgzLDEuMjE0NCwxMS4yODM4LDIuNDE5Nyw0LjA2NDEuODMyOCw3LjUyMjUsMS44NDQzLDEwLjM3MjIsMy4wNzk5LTEuNDU2NywxLjYyOTMtMi44MDczLDMuMzk0OC00LjA2NDEsNS4yMDI4LS4zMzAxLS4wOTk5LS42MzktLjIzNjItMS4yNzgtLjI5MzgtMS43MjMxLS4xNTc1LTIuMjQxLjQwODgtMy44NjEyLjIzMDItMS4xMTE0LS4xMjExLTEuMDg0Mi0uNDA4OC0yLjAwMTgtLjM5MzctMS4xMDU0LjAxNTEtMS4yMjY1LjQzLTIuNTEzNi42MzI5LTEuNDkzLjIzNjItMS42NjU2LS4yNzI2LTIuODM0Ni4wNDI0LTEuMDIwNi4yNzI2LS45MTE1LjY3NTMtMi4yMTA3LDEuMTY5LTEuMzA1Mi41MDI4LTEuNTIwMy4xMzYzLTIuNDYyMS42NDUxLS45NzUxLjUzLS44NTQuOTg0Mi0xLjg1MzQsMS40MDgyLS43OTY1LjMzMDEtMS4wNTM5LjEzMDItMS43MzgzLjUzLS41NDUxLjMyNC0uNDY2NC41MDg4LTEuMjI2NSwxLjE3OC0uNzM4OS42NTQxLTEuMDYzLjcyMzgtMS40MjAzLDEuMDIwNi0uMTMwMi4xMTUxLS4yMzYyLjIyNDEtLjI5MzguMjkzOC0uNDE3OS40ODE1LS41NjAzLDEuMzA1Mi0uNDM5MSwxLjYxNDEuMzAyOC43NzUzLDMuMDk1LjIxNSw2LjM1MzYtLjE5MzguNjMyOS0uMDc4Nyw2LjExNzQtLjc0OCwxMi4zMTA0LS41NTQyLjQwODguMDE1MS45NjMuMDUxNS45NjMuMDUxNXYuMDE1MWMtNC4xNDg5LDcuNjk1MS02LjM3NDgsMTQuNDc4Ny02LjM3NDgsMTQuNDc4Ny0xLjEyNjYsMi44NDM3LTMuMjczNywzLjM3OTctNC4yNTc5LDMuNDY3NS0uMjI0MS4wMjEyLS4zNzI1LS4yMTUtLjI3MjYtLjQxNzkuOTc1MS0xLjgzODIsMS4wNzgxLTQuNTg4LDEuMDQxOC02LjA3MTksMC0uMjkzOC0uMzkzNy0uMzgxNi0uNTMtLjEzMDItNi4yMDgyLDExLjI0NzQtMTUuNjA1Myw2Ljg4MzUtMTYuNTUzMiw2LjQwMi0uMDUxNS0uMDI3My0uMTA5LS4wMjczLS4xNTc1LDAtLjgxNzcuMzY2NC0xMS4wMjY0LDIuNzQwNy0xOS4xNDU1LjE1MTRDNjEuNTY2MiwyNS4yMzg2LDg2LjY4OTcsMy44ODg1LDExNi44MDQsMy44ODg1WiIgZmlsbD0iIzFkNThhNCIvPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Ik0yMDEuNTE4OCw4Mi44OTI5Yy0yLjAxMDktLjAzMDMtNy4zNzExLS4wMTUxLTE0Ljc0NTIsMHYuNzM4OWMxLjUwODIuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDEsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTUuNTYzMmMyLjAyMy4wMTUxLDQuMDQ5LjAyMTIsNi4wNjU5LjAzNjMuMTY2NiwwLC40MTc5LjAxNTEuNjk2NS4wOTM5LjUzOS4xNTc1Ljg4NDMuNDY2NCwxLjA0NzguNjE3OC4xNDIzLjEzMDIuMzI0LjMzMDEuNDk2Ni42MTc4aC43MTE3di04LjAyNTJoLS43MTE3Yy0uMDc4Ny4yMDktLjIxNS40NzU1LS40NzU1LjcxNzctLjQwMjguMzkzNy0uODU0LjUwMjctMS4wNDc4LjU1NDItLjI5MzguMDcyNy0uNTQ1MS4wNzI3LS43MTc3LjA2MzYtMi4wMTY5LjAxNTEtNC4wMzM4LjAxNTEtNi4wNjU5LjAyMTJ2LTYuMjY1N2MwLS4zOTM3LDAtLjc2MDEuMDE1MS0xLjExMTRoNi45MjU5YzEuNjA4MSwwLDIuNDc3Mi4zNjY0LDIuNzI4NiwxLjIzNTZsLjEzMDIuNDk2N2guNzQ1bDEuNzY1Ni03LjExOTdjLS4wMzYzLDAtLjA5OTkuMDE1MS0uMTc4Ny4wMTUxLTIuNjEzNS4yMzYyLTQuNjAwMS4xOTk5LTUuMzA1Ny4xODc4di4wMTUxaC0uMDA2MWwtLjAwNjEtLjAwNjF2LS4wMTIxWiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICAgIDxwYXRoIGQ9Ik0xNzUuMDQ0Niw4Mi44OTI5di43Mzg5YzEuNTA4MS40MywxLjczODMsMS45ODA2LDEuNzM4Myw1LjU1NzF2MTcuMTM0NmMwLDMuNTczNS0uMjMwMiw1LjEyNC0xLjczODMsNS41NTcxdi43NDVoOS42Njk3di0uNzQ1Yy0xLjUwODEtLjQzLTEuNzM4My0xLjk4MDYtMS43MzgzLTUuNTU3MXYtMTcuMTM0NmMwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTdaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTIyOC43NTMxLDEwNS4zMDk0Yy0xLjg1OTQsMS40NzE4LTQuODMwMywyLjM0MDktNy44MTAyLDIuMzQwOS0yLjU3NzIsMC0zLjk2MTEtLjMzNjEtNC4zNDg4LS40NTEydi02LjQzMjNjMi4wMjMuMDE1MSw0LjAzOTkuMDIxMiw2LjA2NTkuMDM2My4xNjM1LDAsLjQwODguMDE1MS42OTY1LjA5MzkuNTQ1MS4xNTE0Ljg4NDMuNDY2NCwxLjA0MTguNjE3OC4xNDIzLjEzMDIuMzI0LjMzMDEuNTAyNy42MTc4aC43MTc3di04LjA0MDRoLS43MTc3Yy0uMDc4Ny4yMDktLjIzMDIuNDcyNC0uNDc1NS43MTc3LS40MDI4LjM5MzctLjg1NC41MDI3LTEuMDUzOS41NTQyLS4yOTM4LjA3MjctLjU0NTEuMDcyNy0uNzE3Ny4wNjM2LTIuMDE2OSwwLTQuMDMzOC4wMTUxLTYuMDUwNy4wMjEyLDAsMCwuMDA2MS03LjAyNTkuMDE1MS03LjM3MTFoNi45MjU5YzEuNjA4MSwwLDIuNDc3Mi4zNjY0LDIuNzE5NSwxLjIzNTZsLjEyMTEuNDg3NmguNzM4OWwxLjc3MTYtNy4xMjg4cy0uMDYzNiwwLS4xODc4LjAxNTFjLTEuNzY1Ni4xNTE0LTMuNTMxMS4yMTUtNS4zMDU3LjE4NzhoLTE0Ljc0NTJ2LjczODljMS41MDgxLjQzLDEuNzM4MywxLjk3NDUsMS43MzgzLDUuNTU3MXYxNy4xMzQ2YzAsMy41NzM1LS4yMjExLDUuMTMzMS0xLjczODMsNS41NTcxdi43NDVoMTguOTc4OWwxLjgxNy03LjMwMTRoLS43MDI2di4wMDYxaC4wMDN2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTE3My4wNTc5LDEwNS4zMTg1Yy0xLjg1OTQsMS40Nzc4LTUuMTU0MywyLjM0MDktOC4xMzQzLDIuMzQwOS0yLjY3MSwwLTQuMDU1LS4zNjY0LTQuMzg1MS0uNDY2NHYtMTcuOTk0N2MwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTd2LjczODljMS41MDgxLjQzLDEuNzM4MywxLjk4MDYsMS43MzgzLDUuNTU3MXYxNy4xMzQ2YzAsMy41NzM1LS4yMzAyLDUuMTI0LTEuNzM4Myw1LjU1NzF2Ljc0NWgxOS4zMzkzbDEuODE3LTcuMzA3NWgtLjcwMjZ2LS4wMDYxaC0uMDAzdi0uMDAzWiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICAgIDxwYXRoIGQ9Ik0xNC43MDYzLDgzLjIyOTRjLTEuMzI2NC0uMzM2Mi0yLjQ4MzMtLjM2NjQtMy4yODg4LS4zMjRsLTExLjQwNDktLjAxNTF2Ljc0NWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNTM5NHYtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTQuODI0MmwuMjg3Ny4xMTUxYzQuNTc4OSwxLjcwOCw5LjQyNDQuNzc1MywxMi4wODkzLTIuMjUzMSwyLjIyNTktMi41MjU3LDIuMzMxOS01LjgyOTcsMi4zNDA5LTYuMjg2OS4wNTE1LTIuNzk4Mi0xLjA5MDItNC43OTM5LTEuMzk5MS01LjMwNTctMi4wNDcyLTMuMzY3Ni01LjQ4NDQtNC4zMDAzLTYuNDMyMy00LjU0MjZoLjAwNjFaTTE0Ljc3OSw5Ny45MTFjLTEuMjcxOSwxLjIwNTMtMy4yNjQ2LDIuMDM4MS01LjY0OCwxLjk4MDZsLTEuMjk5Mi0uMDkzOXYtMTEuNzg2NWgxLjUwODFjMy43MTg5LS4wOTM5LDYuMDAyMywxLjI0MTYsNi44Nzc1LDMuMjc5OHYuMDE1MWMuODk2NCwyLjEyNTkuNDYwMyw0LjgwOTEtMS40MzU1LDYuNjA0OWgtLjAwM1oiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNOTkuMTg2NCw4Mi44OTI5Yy0yLjAxMDktLjAzMDMtNy4zNzExLS4wMTUxLTE0Ljc0NTIsMHYuNzM4OWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTUuNTYzMmMyLjAyMy4wMTUxLDQuMDQ5LjAyMTIsNi4wNjU5LjAzNjMuMTYzNSwwLC40MDg4LjAxNTEuNjk2NS4wOTM5LjUzOTEuMTU3NS44ODQzLjQ2NjQsMS4wNDE4LjYxNzguMTQyMy4xMzAyLjMzMDEuMzMwMS40OTY3LjYxNzhoLjcxMTd2LTguMDI1MmgtLjcxMTdjLS4wNzg3LjIwOS0uMjI0MS40NzU1LS40NzI0LjcxNzctLjQwMjguMzkzNy0uODQ3OS41MDI3LTEuMDQ3OC41NTQyLS4yOTM4LjA3MjctLjU0NTEuMDcyNy0uNzE3Ny4wNjM2LTIuMDE2OS4wMTUxLTQuMDMzOC4wMTUxLTYuMDY1OS4wMjEydi02LjI2NTdjMC0uMzkzNywwLS43NjAxLjAxNTEtMS4xMTE0aDYuOTI1OWMxLjYwODEsMCwyLjQ3NzIuMzY2NCwyLjcyODYsMS4yMzU2bC4xMzAyLjQ5NjdoLjc0OGwxLjc2NTYtNy4xMTk3Yy0uMDM2MywwLS4wOTk5LjAxNTEtLjE3ODcuMDE1MS0yLjYxMzUuMjM2Mi00LjYwMDEuMTk5OS01LjMwNTcuMTg3OHYuMDE1MWgtLjAwNjF2LS4wMDYxbC0uMDA2MS0uMDEyMVoiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNNzIuNzA2MSw4Mi44OTI5di43Mzg5YzEuNTA4MS40MywxLjczODMsMS45ODA2LDEuNzM4Myw1LjU1NzF2MTcuMTM0NmMwLDMuNTczNS0uMjMwMiw1LjEyNC0xLjczODMsNS41NTcxdi43NDVoOS42Njk3di0uNzQ1Yy0xLjUwODEtLjQzLTEuNzM4My0xLjk4MDYtMS43MzgzLTUuNTU3MXYtMTcuMTM0NmMwLTMuNTczNS4yMzAyLTUuMTI0LDEuNzM4My01LjU1NzF2LS43Mzg5aC05LjY2OTdaIiBmaWxsPSIjMWQ1OGE0IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICAgICAgPHBhdGggZD0iTTcwLjkwNDIsMTAyLjkwNDlsLS4wNDI0LjE2NjYtMi4xMzgsOC42MzM5Yy0uMjA5LjE1MTQtMS45NjU0LDEuMjIwNC03Ljg4MjksMS4yMjA0LTQuMTMzOCwwLTcuOTMxNC0xLjUyMDMtMTAuNjgxMS00LjMwNjQtMi43NTU4LTIuNzg2MS00LjI3OTEtNi42NTM0LTQuMjc5MS0xMC44OTYyczEuNTI5My04LjA2NzYsNC4yOTEyLTEwLjgyMzVjMi43NDk4LTIuNzM0Niw2LjUzODMtNC4yMzM3LDEwLjY4NzItNC4yMzM3LDEuODQ0MywwLDMuMDIyMy4yMDksMy44NzYzLjM3MjUsMS4yMjY1LjIyMTEsMS43MjkyLjI3MjYsMi45NzA5LS40M2wuNjA4Ny4xOTk5LDIuMjgzNCw5LjMzOTYuMDQyNC4xNzI2LS41NDUxLjMwMjhjLS4xNzg3LS4xNzI2LS4zNTEzLS4zNDUyLS41MjM5LS41MDg4LS41MjM5LS40OTY3LTEuMDQxOC0uOTQ3OS0xLjU1NjYtMS4zNDE2LTIuMDk1Ni0xLjY1OTYtNC4xNzYyLTIuNTE5Ni02LjY3NDYtMi41MTk2LTUuNDQyLDAtOS4zODgsNC4wMjc4LTkuMzg4LDkuNTYwNiwwLC4xMzAyLDAsLjI1NzQuMDA2MS4zODc2LjI2NjUsNS4yMzMxLDQuMTI3Nyw4Ljk3OTIsOS4zNzU5LDguOTc5MiwyLjI0MSwwLDQuMTkxMy0uNjE3OCw2LjAwODMtMS44MjMxLjg4MTMtLjU4MTQsMS43MzgzLTEuMjk5MiwyLjU3NzItMi4xNTMyLjE2MzUtLjE2NjYuMzMwMS0uMzM2Mi41MDI3LS41MTc5bC40ODE1LjIyMTF2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0Ii8+CiAgICAgIDxwYXRoIGQ9Ik0xNDIuNTcxMSwxMDIuOTA0OWwtLjA0MjQuMTY2Ni0yLjEzOCw4LjYzMzljLS4yMDkuMTUxNC0xLjk2NTQsMS4yMjA0LTcuODgyOSwxLjIyMDQtNC4xMzM4LDAtNy45MzE0LTEuNTIwMy0xMC42ODExLTQuMzA2NC0yLjc1NTgtMi43ODYxLTQuMjc5MS02LjY1MzQtNC4yNzkxLTEwLjg5NjJzMS41MjkzLTguMDY3Niw0LjI5NDMtMTAuODIzNWMyLjc0OTgtMi43MzQ2LDYuNTM4My00LjIzMzcsMTAuNjg3Mi00LjIzMzcsMS44NDQzLDAsMy4wMjIzLjIwOSwzLjg3NjMuMzcyNSwxLjIyNjUuMjIxMSwxLjcyOTIuMjcyNiwyLjk3MDktLjQzbC42MTE3LjE5OTksMi4yODM0LDkuMzM5Ni4wNDI0LjE3MjYtLjU0NTEuMzAyOGMtLjE3ODctLjE3MjYtLjM1MTMtLjM0NTItLjUyMzktLjUwODgtLjUyMzktLjQ5NjctMS4wNDE4LS45NDc5LTEuNTU2Ni0xLjM0MTYtMi4wOTU3LTEuNjU5Ni00LjE3OTItMi41MTk2LTYuNjc0Ni0yLjUxOTYtNS40NDIsMC05LjM4OCw0LjAyNzgtOS4zODgsOS41NjA2LDAsLjEzMDIsMCwuMjU3NC4wMDYxLjM4NzYuMjY2NSw1LjIzMzEsNC4xMjc3LDguOTc5Miw5LjM3NTksOC45NzkyLDIuMjM4LDAsNC4xOTEzLS42MTc4LDYuMDA4My0xLjgyMzEuODg0My0uNTgxNCwxLjczODMtMS4yOTkyLDIuNTc3Mi0yLjE1MzIuMTYzNS0uMTY2Ni4zMzAxLS4zMzYyLjUwMjctLjUxNzlsLjQ4MTUuMjIxMWgtLjAwNjF2LS4wMDNaIiBmaWxsPSIjMWQ1OGE0Ii8+CiAgICAgIDxwYXRoIGQ9Ik00NC42NTQxLDEwNi4yMTQ5bC04Ljg0OS0yMy4zMTU2aC04LjI0MDN2Ljg2MDFsLjMzMDEuMDg3OGMuMTA2LjAyNDIuMjYwNC4wNjk3LjQ0MjEuMTQyMy4wMzMzLjAxNTEuMDYwNi4wMjczLjA3NTcuMDMwMy4xOTk5LjA3ODcuMzkzNy4xOTk5LjUzOTEuMzUxMy4zMzAxLjM2NjQuNDg3Ni45MTE1LjA5OTksMi4xMDQ3LS4yNDUzLjc0NS03LjMwNzUsMTkuNzM5MS03LjMwNzUsMTkuNzM5MS0uNjk2NSwxLjg1OTQtMS41NTA1LDQuNDYzOC0yLjgxMzQsNS4yNjAzLS4xNTE0LjA5MzktLjMwMjguMTcyNi0uNDY2NC4yMzAybC0uNDMuMTcyNnYuNzQ1aDkuNDA5MnYtLjc0NXMtLjY1NDEtLjEzMDItLjkxNzYtLjM1MTNjLS41NjAzLS40NzU1LS43NDgtMS4zMzU1LjA1MTUtMy41OTc3bDEuMTExNC0zLjMzNzNoOS45MDU5Yy4yNDUzLjYxNzguNDk2NywxLjYwODEuOTg0MiwzLjA4NTkuMzE1Ljg3NTIuNzQ4LDIuMDEwOS43MzI5LDIuODcwOSwwLC41NDUxLS4zNTEzLDEuMDI2Ni0uODYwMSwxLjIyNjVsLS4yNDUzLjA5OTl2Ljc0NWg5LjkwNTl2LS43NDVjLS4xMjExLS4wMzYzLS4zMTUtLjA5OTktLjUxNzktLjIzMDItLjYxNzgtLjM2NjQtLjg5NjQtLjk0MTgtMS4wNjMtMS4yNzgtLjkzMjctMS45MzgyLTEuNzE0MS0zLjc3NjQtMS44ODA2LTQuMTcwMXYuMDE1MWguMDA2MWwtLjAwMy4wMDNaTTI5LjMwMDIsOTkuOTEyOGwzLjM1MjQtOS4xMzA2LDMuMzM3Myw5LjEzMDZoLTYuNjg5N1oiIGZpbGw9IiMxZDU4YTQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogICAgICA8cGF0aCBkPSJNMTA2LjMzMDMsODIuODkyOXYuNzM4OWMxLjUwODEuNDMsMS43MzgzLDEuOTgwNiwxLjczODMsNS41NTcxdjE3LjEzNDZjMCwzLjU3MzUtLjIzMDIsNS4xMjQtMS43MzgzLDUuNTU3MXYuNzQ1aDkuNjY5N3YtLjc0NWMtMS41MDgxLS40My0xLjczODMtMS45ODA2LTEuNzM4My01LjU1NzF2LTE3LjEzNDZjMC0zLjU3MzUuMjMwMi01LjEyNCwxLjczODMtNS41NTcxdi0uNzM4OWgtOS42Njk3WiIgZmlsbD0iIzFkNThhNCIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICA8L2c+CiAgPC9nPgogIDxyZWN0IHdpZHRoPSIyMjkuNDY1MiIgaGVpZ2h0PSIxMTIuOTI1OCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "ttl5",
+        "kind": "text",
+        "body": "## Annual Brand Scorecard",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#0B2E4F"
+        }
+      },
+      {
+        "id": "sub5",
+        "kind": "text",
+        "body": "Aggregate performance across all events this year",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#5B6B79"
+        }
+      },
+      {
+        "id": "k5a",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k5av",
+            "formula": "Count([Scorecard/Event Name])",
+            "name": "Total Events"
+          }
+        ],
+        "value": {
+          "columnId": "k5av",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Total Events",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k5b",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k5bv",
+            "formula": "Sum([Scorecard/Requested Budget])",
+            "name": "Total Requested Budget"
+          }
+        ],
+        "value": {
+          "columnId": "k5bv",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Total Requested Budget",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k5c",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k5cv",
+            "formula": "Sum([Scorecard/Approved Budget])",
+            "name": "Total Approved Budget"
+          }
+        ],
+        "value": {
+          "columnId": "k5cv",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Total Approved Budget",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k5d",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k5dv",
+            "formula": "Sum([Scorecard/Actual Spend])",
+            "name": "Total Actual Spend"
+          }
+        ],
+        "value": {
+          "columnId": "k5dv",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Total Actual Spend",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k5e",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k5ev",
+            "formula": "Sum([Scorecard/Actual Earned Media Value])",
+            "name": "Total Earned Media Value"
+          }
+        ],
+        "value": {
+          "columnId": "k5ev",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Total Earned Media Value",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k5f",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k5fv",
+            "formula": "AvgIf([Scorecard/Actual Brand Lift %],IsNotNull([Scorecard/Actual Brand Lift %]))",
+            "name": "Blended Brand Lift %"
+          }
+        ],
+        "value": {
+          "columnId": "k5fv",
+          "fontSize": 30,
+          "color": "#0B2E4F"
+        },
+        "name": {
+          "text": "Blended Brand Lift %",
+          "fontSize": 13,
+          "color": "#5B6B79"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "spend-bar",
+        "kind": "bar-chart",
+        "name": "Actual Spend by Event",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "sb-name",
+            "formula": "[Scorecard/Event Name]",
+            "name": "Event Name"
+          },
+          {
+            "id": "sb-spend",
+            "formula": "[Scorecard/Actual Spend]",
+            "name": "Actual Spend"
+          },
+          {
+            "id": "sb-status",
+            "formula": "[Scorecard/Status]",
+            "name": "Status"
+          }
+        ],
+        "xAxis": {
+          "columnId": "sb-name",
+          "sort": {
+            "by": "sb-spend",
+            "direction": "descending"
+          }
+        },
+        "yAxis": {
+          "columnIds": [
+            "sb-spend"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "sb-status",
+          "scheme": [
+            "#2FA36B",
+            "#D64545",
+            "#C9A24B"
+          ]
+        },
+        "legend": {
+          "visibility": "visible"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "status-donut",
+        "kind": "donut-chart",
+        "name": "Events by Status",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "sd2-status",
+            "formula": "[Scorecard/Status]",
+            "name": "Status"
+          },
+          {
+            "id": "sd2-count",
+            "formula": "Count([Scorecard/Event Name])",
+            "name": "Events"
+          }
+        ],
+        "color": {
+          "id": "sd2-status"
+        },
+        "value": {
+          "id": "sd2-count"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "rollup",
+        "kind": "table",
+        "name": "Annual Rollup",
+        "source": {
+          "elementId": "scorecard",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "ru-name",
+            "formula": "[Scorecard/Event Name]",
+            "name": "Event Name"
+          },
+          {
+            "id": "ru-type",
+            "formula": "[Scorecard/Event Type]",
+            "name": "Event Type"
+          },
+          {
+            "id": "ru-status",
+            "formula": "[Scorecard/Status]",
+            "name": "Status"
+          },
+          {
+            "id": "ru-budget",
+            "formula": "[Scorecard/Approved Budget]",
+            "name": "Approved Budget"
+          },
+          {
+            "id": "ru-spend",
+            "formula": "[Scorecard/Actual Spend]",
+            "name": "Actual Spend"
+          },
+          {
+            "id": "ru-tgimpr",
+            "formula": "[Scorecard/Target Impressions]",
+            "name": "Target Impressions"
+          },
+          {
+            "id": "ru-acimpr",
+            "formula": "[Scorecard/Actual Impressions]",
+            "name": "Actual Impressions"
+          },
+          {
+            "id": "ru-tgemv",
+            "formula": "[Scorecard/Target Earned Media Value]",
+            "name": "Target EMV"
+          },
+          {
+            "id": "ru-acemv",
+            "formula": "[Scorecard/Actual Earned Media Value]",
+            "name": "Actual EMV"
+          },
+          {
+            "id": "ru-varimpr",
+            "formula": "[Scorecard/Actual Impressions]-[Scorecard/Target Impressions]",
+            "name": "Impressions Variance"
+          }
+        ],
+        "order": [
+          "ru-name",
+          "ru-type",
+          "ru-status",
+          "ru-budget",
+          "ru-spend",
+          "ru-tgimpr",
+          "ru-acimpr",
+          "ru-tgemv",
+          "ru-acemv",
+          "ru-varimpr"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E1E6EC",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      }
+    ],
+    "pages": [
+      {
+        "id": "pgData",
+        "name": "Data",
+        "visibility": "hidden"
+      },
+      {
+        "id": "pgEvents",
+        "name": "Events"
+      },
+      {
+        "id": "pgFinance",
+        "name": "Finance - Targets"
+      },
+      {
+        "id": "pgApprovals",
+        "name": "Brand Council"
+      },
+      {
+        "id": "pgScorecard",
+        "name": "Event Scorecard"
+      },
+      {
+        "id": "pgAnnual",
+        "name": "Annual Scorecard"
+      }
+    ],
+    "settings": {
+      "theme": {
+        "overrides": {
+          "colors": {
+            "text": "#12212F",
+            "highlight": "#1C5C8C",
+            "success": "#2FA36B",
+            "warning": "#C9A24B",
+            "danger": "#D64545",
+            "darkMode": "hidden"
+          },
+          "colorOverrides": {
+            "backgroundCanvas": "#FFFFFF",
+            "canvasBackground": "#F7F9FB"
+          },
+          "categoricalScheme": [
+            "#0B2E4F",
+            "#1C5C8C",
+            "#2E8B8B",
+            "#C9A24B",
+            "#2FA36B",
+            "#D64545"
+          ],
+          "fonts": {
+            "textFont": "Inter",
+            "dataFont": "Inter"
+          },
+          "pageWidth": "large",
+          "tableStyles": {
+            "preset": "presentation",
+            "cellSpacing": "small"
+          }
+        }
+      }
+    },
+    "layout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24,1fr)\" gridTemplateRows=\"auto\" id=\"pgData\"><Element elementId=\"scorecard\" gridColumn=\"1 / 25\" gridRow=\"1 / 5\"/><Element elementId=\"scorecard-view\" gridColumn=\"1 / 25\" gridRow=\"5 / 9\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgEvents\"><Container elementId=\"c-hdr1\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo1\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl1\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub1\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k1a\" gridColumn=\"1 / 7\" gridRow=\"7 / 15\"/><Element elementId=\"k1b\" gridColumn=\"7 / 13\" gridRow=\"7 / 15\"/><Element elementId=\"k1c\" gridColumn=\"13 / 19\" gridRow=\"7 / 15\"/><Element elementId=\"k1d\" gridColumn=\"19 / 25\" gridRow=\"7 / 15\"/><Element elementId=\"events-list\" gridColumn=\"1 / 25\" gridRow=\"16 / 32\"/><Element elementId=\"p1-note\" gridColumn=\"1 / 25\" gridRow=\"33 / 35\"/><Element elementId=\"tbl-events\" gridColumn=\"1 / 25\" gridRow=\"35 / 48\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgFinance\"><Container elementId=\"c-hdr2\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo2\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl2\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub2\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k2a\" gridColumn=\"1 / 7\" gridRow=\"7 / 14\"/><Element elementId=\"awaiting-targets\" gridColumn=\"1 / 25\" gridRow=\"15 / 27\"/><Element elementId=\"p2-note\" gridColumn=\"1 / 25\" gridRow=\"28 / 30\"/><Element elementId=\"tbl-targets\" gridColumn=\"1 / 25\" gridRow=\"30 / 40\"/><Element elementId=\"targets-table\" gridColumn=\"1 / 25\" gridRow=\"41 / 55\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgApprovals\"><Container elementId=\"c-hdr3\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo3\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl3\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub3\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k3a\" gridColumn=\"1 / 7\" gridRow=\"7 / 14\"/><Element elementId=\"pending-approval\" gridColumn=\"1 / 25\" gridRow=\"15 / 27\"/><Element elementId=\"p3-note\" gridColumn=\"1 / 25\" gridRow=\"28 / 30\"/><Element elementId=\"tbl-approvals\" gridColumn=\"1 / 25\" gridRow=\"30 / 38\"/><Element elementId=\"decisions-log\" gridColumn=\"1 / 25\" gridRow=\"39 / 51\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgScorecard\"><Container elementId=\"c-hdr4\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo4\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl4\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub4\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"ctrl-sc-event\" gridColumn=\"1 / 9\" gridRow=\"7 / 10\"/><Element elementId=\"k4a\" gridColumn=\"1 / 5\" gridRow=\"11 / 20\"/><Element elementId=\"k4b\" gridColumn=\"5 / 9\" gridRow=\"11 / 20\"/><Element elementId=\"k4c\" gridColumn=\"9 / 13\" gridRow=\"11 / 20\"/><Element elementId=\"k4d\" gridColumn=\"13 / 17\" gridRow=\"11 / 20\"/><Element elementId=\"k4e\" gridColumn=\"17 / 21\" gridRow=\"11 / 20\"/><Element elementId=\"k4f\" gridColumn=\"21 / 25\" gridRow=\"11 / 20\"/><Element elementId=\"sc-detail\" gridColumn=\"1 / 25\" gridRow=\"21 / 30\"/><Element elementId=\"p4-note\" gridColumn=\"1 / 25\" gridRow=\"31 / 33\"/><Element elementId=\"tbl-actuals\" gridColumn=\"1 / 25\" gridRow=\"33 / 43\"/></Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgAnnual\"><Container elementId=\"c-hdr5\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"repeat(5,1fr)\"><Element elementId=\"logo5\" gridColumn=\"1 / 5\" gridRow=\"1 / 6\"/><Element elementId=\"ttl5\" gridColumn=\"5 / 20\" gridRow=\"1 / 4\"/><Element elementId=\"sub5\" gridColumn=\"5 / 20\" gridRow=\"4 / 6\"/></Container><Element elementId=\"k5a\" gridColumn=\"1 / 5\" gridRow=\"7 / 15\"/><Element elementId=\"k5b\" gridColumn=\"5 / 9\" gridRow=\"7 / 15\"/><Element elementId=\"k5c\" gridColumn=\"9 / 13\" gridRow=\"7 / 15\"/><Element elementId=\"k5d\" gridColumn=\"13 / 17\" gridRow=\"7 / 15\"/><Element elementId=\"k5e\" gridColumn=\"17 / 21\" gridRow=\"7 / 15\"/><Element elementId=\"k5f\" gridColumn=\"21 / 25\" gridRow=\"7 / 15\"/><Element elementId=\"spend-bar\" gridColumn=\"1 / 17\" gridRow=\"16 / 34\"/><Element elementId=\"status-donut\" gridColumn=\"17 / 25\" gridRow=\"16 / 34\"/><Element elementId=\"rollup\" gridColumn=\"1 / 25\" gridRow=\"35 / 55\"/></Page>"
+  }
+}
