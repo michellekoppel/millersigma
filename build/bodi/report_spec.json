@@ -1,0 +1,1600 @@
+{
+  "name": "BODi \u2014 Nutrition Program Performance",
+  "folderId": "004d8497-18ea-4cf6-a8c5-deca403c22d9",
+  "document": {
+    "schemaVersion": 1,
+    "kind": "report",
+    "elements": [
+      {
+        "id": "fact",
+        "kind": "table",
+        "name": "Fact",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "kind": "sql",
+          "statement": "\nWITH months AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) - 1 AS month_idx\n  FROM TABLE(GENERATOR(ROWCOUNT => 24))\n),\nmembers0 AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) AS member_id\n  FROM TABLE(GENERATOR(ROWCOUNT => 6000))\n),\nmembers AS (\n  SELECT member_id,\n    MOD(ABS(HASH(member_id, 1)), 10000) / 10000.0 AS r1,\n    MOD(ABS(HASH(member_id, 2)), 10000) / 10000.0 AS r2,\n    MOD(ABS(HASH(member_id, 3)), 10000) / 10000.0 AS r3,\n    MOD(ABS(HASH(member_id, 4)), 10000) / 10000.0 AS r4,\n    MOD(ABS(HASH(member_id, 5)), 10000) / 10000.0 AS r5,\n    MOD(ABS(HASH(member_id, 6)), 10000) / 10000.0 AS r6,\n    MOD(ABS(HASH(member_id, 7)), 10000) / 10000.0 AS r7,\n    MOD(ABS(HASH(member_id, 8)), 10000) / 10000.0 AS r8,\n    MOD(ABS(HASH(member_id, 9)), 10000) / 10000.0 AS r9,\n    MOD(ABS(HASH(member_id, 10)), 10000) / 10000.0 AS r10,\n    MOD(ABS(HASH(member_id, 11)), 10000) / 10000.0 AS r11,\n    MOD(ABS(HASH(member_id, 12)), 10000) / 10000.0 AS r12,\n    MOD(ABS(HASH(member_id, 13)), 10000) / 10000.0 AS r13\n  FROM members0\n),\nmem AS (\n  SELECT\n    member_id, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13,\n    FLOOR(r1 * 24)::INT AS signup_month_idx,\n    CASE WHEN r2 < 0.28 THEN 'Organic'\n         WHEN r2 < 0.52 THEN 'Paid Social'\n         WHEN r2 < 0.62 THEN 'Influencer'\n         WHEN r2 < 0.72 THEN 'Affiliate'\n         WHEN r2 < 0.90 THEN 'Coach Referral'\n         ELSE 'Retail' END AS signup_channel,\n    CASE WHEN r3 < 0.22 THEN '21 Day Fix'\n         WHEN r3 < 0.38 THEN 'LIIFT4'\n         WHEN r3 < 0.48 THEN '80 Day Obsession'\n         WHEN r3 < 0.62 THEN 'P90X'\n         WHEN r3 < 0.74 THEN 'Insanity Max:30'\n         WHEN r3 < 0.87 THEN 'Barre Blend'\n         ELSE '9 Week Control Freak' END AS fitness_program\n  FROM members\n),\nprog_dim AS (\n  SELECT * FROM VALUES\n    ('21 Day Fix', 1, 0.62, 9, 0.70),\n    ('LIIFT4', 2, 0.38, 7, 0.60),\n    ('80 Day Obsession', 3, 0.55, 10, 0.65),\n    ('P90X', 3, 0.30, 6, 0.55),\n    ('Insanity Max:30', 2, 0.28, 5, 0.50),\n    ('Barre Blend', 2, 0.45, 8, 0.68),\n    ('9 Week Control Freak', 3, 0.50, 8, 0.62)\n  AS t(fitness_program, program_length_months, base_attach_prob, avg_tenure_months, completion_prob)\n),\nmem2 AS (\n  SELECT mem.*, pd.program_length_months, pd.base_attach_prob, pd.avg_tenure_months, pd.completion_prob\n  FROM mem JOIN prog_dim pd ON pd.fitness_program = mem.fitness_program\n),\nmem3 AS (\n  SELECT mem2.*,\n    (signup_channel = 'Coach Referral' OR r4 < 0.30) AS coach_attached\n  FROM mem2\n),\nmem4 AS (\n  SELECT mem3.*,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 'Shake & Bar Starter Bundle' WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 'Portion Fix Kickstart Bundle' WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN '2B Mindset + Shakeology Combo' ELSE NULL END AS bundle_name_if_eligible,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.2 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.15 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.25 ELSE 0.0 END AS promo_discount_pct,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.15 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.12 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.18 ELSE 0.0 END AS bundle_attach_boost\n  FROM mem3\n),\nmem5 AS (\n  SELECT mem4.*,\n    (bundle_name_if_eligible IS NOT NULL) AS bundle_eligible,\n    (bundle_name_if_eligible IS NOT NULL AND r5 < 0.5) AS bundle_flag\n  FROM mem4\n),\nmem6 AS (\n  SELECT mem5.*,\n    IFF(bundle_flag, bundle_name_if_eligible, NULL) AS bundle_name_raw,\n    GREATEST(0.03, LEAST(0.95,\n      base_attach_prob\n      + IFF(coach_attached, 0.12, 0)\n      + IFF(signup_channel = 'Coach Referral', 0.05, 0)\n      + IFF(bundle_flag, bundle_attach_boost, 0)\n    )) AS adjusted_attach_prob\n  FROM mem5\n),\nmem7 AS (\n  SELECT mem6.*, (r6 < adjusted_attach_prob) AS nutrition_subscriber\n  FROM mem6\n),\nmem8 AS (\n  SELECT mem7.*,\n    CASE WHEN NOT nutrition_subscriber THEN 'None'\n      WHEN fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN\n        CASE WHEN r7 < 0.55 THEN 'Portion Fix' WHEN r7 < 0.85 THEN 'Ultimate Portion Fix' ELSE '2B Mindset' END\n      WHEN fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN\n        CASE WHEN r7 < 0.65 THEN '2B Mindset' WHEN r7 < 0.85 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n      ELSE\n        CASE WHEN r7 < 0.5 THEN '2B Mindset' WHEN r7 < 0.8 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n    END AS nutrition_program\n  FROM mem7\n),\nmem9 AS (\n  SELECT mem8.*,\n    (nutrition_subscriber AND r8 < 0.68) AS shakeology_flag,\n    (nutrition_program <> 'None') AS mealplan_flag,\n    ((nutrition_subscriber AND r9 < 0.35) OR (NOT nutrition_subscriber AND r9 < 0.04)) AS bars_flag,\n    GREATEST(2, ROUND(avg_tenure_months * (0.4 + r10 * 1.3)))::INT AS nutrition_tenure_months,\n    (r11 < completion_prob) AS will_complete\n  FROM mem8\n),\nmem10 AS (\n  SELECT mem9.*, (signup_month_idx + nutrition_tenure_months) AS churn_month_idx\n  FROM mem9\n),\nfact_rows AS (\n  SELECT\n    mem10.*, months.month_idx,\n    (months.month_idx - mem10.signup_month_idx) AS months_since_signup,\n    (months.month_idx = 23) AS is_current_month,\n    (months.month_idx = 22) AS is_prior_month,\n    (months.month_idx = 11) AS is_year_ago_month,\n    DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS signup_date,\n    TO_CHAR(DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())), 'Mon YYYY') AS signup_cohort,\n    ('Q' || DATE_PART('quarter', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE()))) || ' '\n      || DATE_PART('year', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())))) AS signup_cohort_qtr,\n    DATEADD('month', months.month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS calendar_month\n  FROM mem10\n  CROSS JOIN months\n  WHERE months.month_idx >= mem10.signup_month_idx\n),\nfc1 AS (\n  SELECT fact_rows.*,\n    CASE\n      WHEN months_since_signup = 0 THEN 'Started'\n      WHEN months_since_signup < program_length_months THEN 'Mid-Program'\n      WHEN will_complete THEN 'Completed'\n      ELSE 'Dropped'\n    END AS program_stage,\n    (months_since_signup >= program_length_months AND will_complete) AS completed_flag,\n    (months_since_signup >= program_length_months AND NOT will_complete) AS dropped_flag\n  FROM fact_rows\n),\nfc2 AS (\n  SELECT fc1.*,\n    GREATEST(20, LEAST(100, ROUND(55 + IFF(coach_attached, 15, 0) + IFF(completed_flag, 20, 0) + (r12 * 10 - 5)))) AS adherence_pct\n  FROM fc1\n),\nfc3 AS (\n  SELECT fc2.*,\n    ROUND(-(2 + (adherence_pct / 100.0) * 6 + r13 * 3), 1) AS weight_change_pct\n  FROM fc2\n),\nfc4 AS (\n  SELECT fc3.*,\n    (nutrition_subscriber AND months_since_signup < nutrition_tenure_months) AS nutrition_active,\n    (nutrition_subscriber AND months_since_signup = nutrition_tenure_months - 1) AS nutrition_churned_this_month\n  FROM fc3\n),\nfc5 AS (\n  SELECT fc4.*,\n    ROUND(IFF(nutrition_active AND shakeology_flag, 129 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS shake_revenue,\n    ROUND(IFF(nutrition_active AND mealplan_flag, 44 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS mealplan_revenue,\n    ROUND(IFF(nutrition_active AND bars_flag, 39 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS bars_revenue\n  FROM fc4\n),\nfc6 AS (\n  SELECT fc5.*,\n    ROUND(shake_revenue + mealplan_revenue + bars_revenue, 2) AS product_revenue,\n    ROUND(IFF(months_since_signup > 0 AND nutrition_active, shake_revenue + mealplan_revenue + bars_revenue, 0), 2) AS reorder_revenue,\n    (months_since_signup = 0) AS first_purchase_flag,\n    (months_since_signup > 0) AS reorder_flag,\n    CASE\n      WHEN shakeology_flag THEN GET(ARRAY_CONSTRUCT('Shakeology - Chocolate','Shakeology - Vanilla','Shakeology - Vegan Chocolate'), MOD(member_id, 3))::string\n      WHEN mealplan_flag THEN nutrition_program || ' Program Kit'\n      WHEN bars_flag THEN 'Beachbar & Boost Bundle'\n      ELSE NULL\n    END AS primary_sku,\n    CASE WHEN shakeology_flag THEN 0.62 WHEN mealplan_flag THEN 0.70 WHEN bars_flag THEN 0.55 ELSE NULL END AS sku_margin_pct,\n    GREATEST(7, ROUND(30 * (2 - adherence_pct / 100.0)))::INT AS time_to_first_reorder_days,\n    COALESCE(bundle_name_raw, 'None') AS bundle_name,\n    COALESCE(bundle_name_if_eligible, 'Not Eligible') AS bundle_campaign\n  FROM fc5\n)\n\nSELECT\n  member_id, signup_date, signup_cohort, signup_cohort_qtr, calendar_month, months_since_signup, is_current_month,\n  is_prior_month, is_year_ago_month,\n  signup_channel, coach_attached, fitness_program, program_stage, completed_flag, dropped_flag,\n  adherence_pct, weight_change_pct,\n  nutrition_subscriber, nutrition_program, nutrition_active, nutrition_churned_this_month,\n  shakeology_flag, mealplan_flag, bars_flag,\n  bundle_eligible, bundle_name, bundle_campaign, bundle_flag, promo_discount_pct,\n  first_purchase_flag, reorder_flag,\n  shake_revenue, mealplan_revenue, bars_revenue, product_revenue, reorder_revenue,\n  primary_sku, sku_margin_pct, time_to_first_reorder_days\nFROM fc6\n"
+        },
+        "columns": [
+          {
+            "id": "f-member",
+            "formula": "[Custom SQL/MEMBER_ID]",
+            "name": "Member Id"
+          },
+          {
+            "id": "f-signup",
+            "formula": "[Custom SQL/SIGNUP_DATE]",
+            "name": "Signup Date"
+          },
+          {
+            "id": "f-cohort",
+            "formula": "[Custom SQL/SIGNUP_COHORT]",
+            "name": "Signup Cohort"
+          },
+          {
+            "id": "f-cohortq",
+            "formula": "[Custom SQL/SIGNUP_COHORT_QTR]",
+            "name": "Signup Cohort Qtr"
+          },
+          {
+            "id": "f-cal",
+            "formula": "[Custom SQL/CALENDAR_MONTH]",
+            "name": "Calendar Month"
+          },
+          {
+            "id": "f-msince",
+            "formula": "[Custom SQL/MONTHS_SINCE_SIGNUP]",
+            "name": "Months Since Signup"
+          },
+          {
+            "id": "f-iscur",
+            "formula": "[Custom SQL/IS_CURRENT_MONTH]",
+            "name": "Is Current Month"
+          },
+          {
+            "id": "f-isprior",
+            "formula": "[Custom SQL/IS_PRIOR_MONTH]",
+            "name": "Is Prior Month"
+          },
+          {
+            "id": "f-isyearago",
+            "formula": "[Custom SQL/IS_YEAR_AGO_MONTH]",
+            "name": "Is Year Ago Month"
+          },
+          {
+            "id": "f-chan",
+            "formula": "[Custom SQL/SIGNUP_CHANNEL]",
+            "name": "Signup Channel"
+          },
+          {
+            "id": "f-coach",
+            "formula": "[Custom SQL/COACH_ATTACHED]",
+            "name": "Coach Attached"
+          },
+          {
+            "id": "f-fitprog",
+            "formula": "[Custom SQL/FITNESS_PROGRAM]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "f-stage",
+            "formula": "[Custom SQL/PROGRAM_STAGE]",
+            "name": "Program Stage"
+          },
+          {
+            "id": "f-completed",
+            "formula": "[Custom SQL/COMPLETED_FLAG]",
+            "name": "Completed Flag"
+          },
+          {
+            "id": "f-dropped",
+            "formula": "[Custom SQL/DROPPED_FLAG]",
+            "name": "Dropped Flag"
+          },
+          {
+            "id": "f-adherence",
+            "formula": "[Custom SQL/ADHERENCE_PCT]",
+            "name": "Adherence Pct"
+          },
+          {
+            "id": "f-weight",
+            "formula": "[Custom SQL/WEIGHT_CHANGE_PCT]",
+            "name": "Weight Change Pct"
+          },
+          {
+            "id": "f-nutsub",
+            "formula": "[Custom SQL/NUTRITION_SUBSCRIBER]",
+            "name": "Nutrition Subscriber"
+          },
+          {
+            "id": "f-nutprog",
+            "formula": "[Custom SQL/NUTRITION_PROGRAM]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "f-nutactive",
+            "formula": "[Custom SQL/NUTRITION_ACTIVE]",
+            "name": "Nutrition Active"
+          },
+          {
+            "id": "f-nutchurn",
+            "formula": "[Custom SQL/NUTRITION_CHURNED_THIS_MONTH]",
+            "name": "Nutrition Churned This Month"
+          },
+          {
+            "id": "f-shake",
+            "formula": "[Custom SQL/SHAKEOLOGY_FLAG]",
+            "name": "Shakeology Flag"
+          },
+          {
+            "id": "f-meal",
+            "formula": "[Custom SQL/MEALPLAN_FLAG]",
+            "name": "Mealplan Flag"
+          },
+          {
+            "id": "f-bars",
+            "formula": "[Custom SQL/BARS_FLAG]",
+            "name": "Bars Flag"
+          },
+          {
+            "id": "f-bunelig",
+            "formula": "[Custom SQL/BUNDLE_ELIGIBLE]",
+            "name": "Bundle Eligible"
+          },
+          {
+            "id": "f-bunname",
+            "formula": "[Custom SQL/BUNDLE_NAME]",
+            "name": "Bundle Name"
+          },
+          {
+            "id": "f-buncamp",
+            "formula": "[Custom SQL/BUNDLE_CAMPAIGN]",
+            "name": "Bundle Campaign"
+          },
+          {
+            "id": "f-bunflag",
+            "formula": "[Custom SQL/BUNDLE_FLAG]",
+            "name": "Bundle Flag"
+          },
+          {
+            "id": "f-discount",
+            "formula": "[Custom SQL/PROMO_DISCOUNT_PCT]",
+            "name": "Promo Discount Pct"
+          },
+          {
+            "id": "f-firstp",
+            "formula": "[Custom SQL/FIRST_PURCHASE_FLAG]",
+            "name": "First Purchase Flag"
+          },
+          {
+            "id": "f-reorderf",
+            "formula": "[Custom SQL/REORDER_FLAG]",
+            "name": "Reorder Flag"
+          },
+          {
+            "id": "f-shakerev",
+            "formula": "[Custom SQL/SHAKE_REVENUE]",
+            "name": "Shake Revenue"
+          },
+          {
+            "id": "f-mealrev",
+            "formula": "[Custom SQL/MEALPLAN_REVENUE]",
+            "name": "Mealplan Revenue"
+          },
+          {
+            "id": "f-barsrev",
+            "formula": "[Custom SQL/BARS_REVENUE]",
+            "name": "Bars Revenue"
+          },
+          {
+            "id": "f-prodrev",
+            "formula": "[Custom SQL/PRODUCT_REVENUE]",
+            "name": "Product Revenue"
+          },
+          {
+            "id": "f-reorderrev",
+            "formula": "[Custom SQL/REORDER_REVENUE]",
+            "name": "Reorder Revenue"
+          },
+          {
+            "id": "f-sku",
+            "formula": "[Custom SQL/PRIMARY_SKU]",
+            "name": "Primary Sku"
+          },
+          {
+            "id": "f-margin",
+            "formula": "[Custom SQL/SKU_MARGIN_PCT]",
+            "name": "Sku Margin Pct"
+          },
+          {
+            "id": "f-ttfr",
+            "formula": "[Custom SQL/TIME_TO_FIRST_REORDER_DAYS]",
+            "name": "Time To First Reorder Days"
+          }
+        ],
+        "order": [
+          "f-member",
+          "f-signup",
+          "f-cohort",
+          "f-cohortq",
+          "f-cal",
+          "f-msince",
+          "f-iscur",
+          "f-isprior",
+          "f-isyearago",
+          "f-chan",
+          "f-coach",
+          "f-fitprog",
+          "f-stage",
+          "f-completed",
+          "f-dropped",
+          "f-adherence",
+          "f-weight",
+          "f-nutsub",
+          "f-nutprog",
+          "f-nutactive",
+          "f-nutchurn",
+          "f-shake",
+          "f-meal",
+          "f-bars",
+          "f-bunelig",
+          "f-bunname",
+          "f-buncamp",
+          "f-bunflag",
+          "f-discount",
+          "f-firstp",
+          "f-reorderf",
+          "f-shakerev",
+          "f-mealrev",
+          "f-barsrev",
+          "f-prodrev",
+          "f-reorderrev",
+          "f-sku",
+          "f-margin",
+          "f-ttfr"
+        ]
+      },
+      {
+        "id": "rp-qtr",
+        "kind": "table",
+        "name": "Quarterly By Program",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "kind": "sql",
+          "statement": "\nWITH months AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) - 1 AS month_idx\n  FROM TABLE(GENERATOR(ROWCOUNT => 24))\n),\nmembers0 AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) AS member_id\n  FROM TABLE(GENERATOR(ROWCOUNT => 6000))\n),\nmembers AS (\n  SELECT member_id,\n    MOD(ABS(HASH(member_id, 1)), 10000) / 10000.0 AS r1,\n    MOD(ABS(HASH(member_id, 2)), 10000) / 10000.0 AS r2,\n    MOD(ABS(HASH(member_id, 3)), 10000) / 10000.0 AS r3,\n    MOD(ABS(HASH(member_id, 4)), 10000) / 10000.0 AS r4,\n    MOD(ABS(HASH(member_id, 5)), 10000) / 10000.0 AS r5,\n    MOD(ABS(HASH(member_id, 6)), 10000) / 10000.0 AS r6,\n    MOD(ABS(HASH(member_id, 7)), 10000) / 10000.0 AS r7,\n    MOD(ABS(HASH(member_id, 8)), 10000) / 10000.0 AS r8,\n    MOD(ABS(HASH(member_id, 9)), 10000) / 10000.0 AS r9,\n    MOD(ABS(HASH(member_id, 10)), 10000) / 10000.0 AS r10,\n    MOD(ABS(HASH(member_id, 11)), 10000) / 10000.0 AS r11,\n    MOD(ABS(HASH(member_id, 12)), 10000) / 10000.0 AS r12,\n    MOD(ABS(HASH(member_id, 13)), 10000) / 10000.0 AS r13\n  FROM members0\n),\nmem AS (\n  SELECT\n    member_id, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13,\n    FLOOR(r1 * 24)::INT AS signup_month_idx,\n    CASE WHEN r2 < 0.28 THEN 'Organic'\n         WHEN r2 < 0.52 THEN 'Paid Social'\n         WHEN r2 < 0.62 THEN 'Influencer'\n         WHEN r2 < 0.72 THEN 'Affiliate'\n         WHEN r2 < 0.90 THEN 'Coach Referral'\n         ELSE 'Retail' END AS signup_channel,\n    CASE WHEN r3 < 0.22 THEN '21 Day Fix'\n         WHEN r3 < 0.38 THEN 'LIIFT4'\n         WHEN r3 < 0.48 THEN '80 Day Obsession'\n         WHEN r3 < 0.62 THEN 'P90X'\n         WHEN r3 < 0.74 THEN 'Insanity Max:30'\n         WHEN r3 < 0.87 THEN 'Barre Blend'\n         ELSE '9 Week Control Freak' END AS fitness_program\n  FROM members\n),\nprog_dim AS (\n  SELECT * FROM VALUES\n    ('21 Day Fix', 1, 0.62, 9, 0.70),\n    ('LIIFT4', 2, 0.38, 7, 0.60),\n    ('80 Day Obsession', 3, 0.55, 10, 0.65),\n    ('P90X', 3, 0.30, 6, 0.55),\n    ('Insanity Max:30', 2, 0.28, 5, 0.50),\n    ('Barre Blend', 2, 0.45, 8, 0.68),\n    ('9 Week Control Freak', 3, 0.50, 8, 0.62)\n  AS t(fitness_program, program_length_months, base_attach_prob, avg_tenure_months, completion_prob)\n),\nmem2 AS (\n  SELECT mem.*, pd.program_length_months, pd.base_attach_prob, pd.avg_tenure_months, pd.completion_prob\n  FROM mem JOIN prog_dim pd ON pd.fitness_program = mem.fitness_program\n),\nmem3 AS (\n  SELECT mem2.*,\n    (signup_channel = 'Coach Referral' OR r4 < 0.30) AS coach_attached\n  FROM mem2\n),\nmem4 AS (\n  SELECT mem3.*,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 'Shake & Bar Starter Bundle' WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 'Portion Fix Kickstart Bundle' WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN '2B Mindset + Shakeology Combo' ELSE NULL END AS bundle_name_if_eligible,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.2 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.15 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.25 ELSE 0.0 END AS promo_discount_pct,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.15 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.12 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.18 ELSE 0.0 END AS bundle_attach_boost\n  FROM mem3\n),\nmem5 AS (\n  SELECT mem4.*,\n    (bundle_name_if_eligible IS NOT NULL) AS bundle_eligible,\n    (bundle_name_if_eligible IS NOT NULL AND r5 < 0.5) AS bundle_flag\n  FROM mem4\n),\nmem6 AS (\n  SELECT mem5.*,\n    IFF(bundle_flag, bundle_name_if_eligible, NULL) AS bundle_name_raw,\n    GREATEST(0.03, LEAST(0.95,\n      base_attach_prob\n      + IFF(coach_attached, 0.12, 0)\n      + IFF(signup_channel = 'Coach Referral', 0.05, 0)\n      + IFF(bundle_flag, bundle_attach_boost, 0)\n    )) AS adjusted_attach_prob\n  FROM mem5\n),\nmem7 AS (\n  SELECT mem6.*, (r6 < adjusted_attach_prob) AS nutrition_subscriber\n  FROM mem6\n),\nmem8 AS (\n  SELECT mem7.*,\n    CASE WHEN NOT nutrition_subscriber THEN 'None'\n      WHEN fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN\n        CASE WHEN r7 < 0.55 THEN 'Portion Fix' WHEN r7 < 0.85 THEN 'Ultimate Portion Fix' ELSE '2B Mindset' END\n      WHEN fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN\n        CASE WHEN r7 < 0.65 THEN '2B Mindset' WHEN r7 < 0.85 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n      ELSE\n        CASE WHEN r7 < 0.5 THEN '2B Mindset' WHEN r7 < 0.8 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n    END AS nutrition_program\n  FROM mem7\n),\nmem9 AS (\n  SELECT mem8.*,\n    (nutrition_subscriber AND r8 < 0.68) AS shakeology_flag,\n    (nutrition_program <> 'None') AS mealplan_flag,\n    ((nutrition_subscriber AND r9 < 0.35) OR (NOT nutrition_subscriber AND r9 < 0.04)) AS bars_flag,\n    GREATEST(2, ROUND(avg_tenure_months * (0.4 + r10 * 1.3)))::INT AS nutrition_tenure_months,\n    (r11 < completion_prob) AS will_complete\n  FROM mem8\n),\nmem10 AS (\n  SELECT mem9.*, (signup_month_idx + nutrition_tenure_months) AS churn_month_idx\n  FROM mem9\n),\nfact_rows AS (\n  SELECT\n    mem10.*, months.month_idx,\n    (months.month_idx - mem10.signup_month_idx) AS months_since_signup,\n    (months.month_idx = 23) AS is_current_month,\n    (months.month_idx = 22) AS is_prior_month,\n    (months.month_idx = 11) AS is_year_ago_month,\n    DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS signup_date,\n    TO_CHAR(DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())), 'Mon YYYY') AS signup_cohort,\n    ('Q' || DATE_PART('quarter', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE()))) || ' '\n      || DATE_PART('year', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())))) AS signup_cohort_qtr,\n    DATEADD('month', months.month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS calendar_month\n  FROM mem10\n  CROSS JOIN months\n  WHERE months.month_idx >= mem10.signup_month_idx\n),\nfc1 AS (\n  SELECT fact_rows.*,\n    CASE\n      WHEN months_since_signup = 0 THEN 'Started'\n      WHEN months_since_signup < program_length_months THEN 'Mid-Program'\n      WHEN will_complete THEN 'Completed'\n      ELSE 'Dropped'\n    END AS program_stage,\n    (months_since_signup >= program_length_months AND will_complete) AS completed_flag,\n    (months_since_signup >= program_length_months AND NOT will_complete) AS dropped_flag\n  FROM fact_rows\n),\nfc2 AS (\n  SELECT fc1.*,\n    GREATEST(20, LEAST(100, ROUND(55 + IFF(coach_attached, 15, 0) + IFF(completed_flag, 20, 0) + (r12 * 10 - 5)))) AS adherence_pct\n  FROM fc1\n),\nfc3 AS (\n  SELECT fc2.*,\n    ROUND(-(2 + (adherence_pct / 100.0) * 6 + r13 * 3), 1) AS weight_change_pct\n  FROM fc2\n),\nfc4 AS (\n  SELECT fc3.*,\n    (nutrition_subscriber AND months_since_signup < nutrition_tenure_months) AS nutrition_active,\n    (nutrition_subscriber AND months_since_signup = nutrition_tenure_months - 1) AS nutrition_churned_this_month\n  FROM fc3\n),\nfc5 AS (\n  SELECT fc4.*,\n    ROUND(IFF(nutrition_active AND shakeology_flag, 129 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS shake_revenue,\n    ROUND(IFF(nutrition_active AND mealplan_flag, 44 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS mealplan_revenue,\n    ROUND(IFF(nutrition_active AND bars_flag, 39 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS bars_revenue\n  FROM fc4\n),\nfc6 AS (\n  SELECT fc5.*,\n    ROUND(shake_revenue + mealplan_revenue + bars_revenue, 2) AS product_revenue,\n    ROUND(IFF(months_since_signup > 0 AND nutrition_active, shake_revenue + mealplan_revenue + bars_revenue, 0), 2) AS reorder_revenue,\n    (months_since_signup = 0) AS first_purchase_flag,\n    (months_since_signup > 0) AS reorder_flag,\n    CASE\n      WHEN shakeology_flag THEN GET(ARRAY_CONSTRUCT('Shakeology - Chocolate','Shakeology - Vanilla','Shakeology - Vegan Chocolate'), MOD(member_id, 3))::string\n      WHEN mealplan_flag THEN nutrition_program || ' Program Kit'\n      WHEN bars_flag THEN 'Beachbar & Boost Bundle'\n      ELSE NULL\n    END AS primary_sku,\n    CASE WHEN shakeology_flag THEN 0.62 WHEN mealplan_flag THEN 0.70 WHEN bars_flag THEN 0.55 ELSE NULL END AS sku_margin_pct,\n    GREATEST(7, ROUND(30 * (2 - adherence_pct / 100.0)))::INT AS time_to_first_reorder_days,\n    COALESCE(bundle_name_raw, 'None') AS bundle_name,\n    COALESCE(bundle_name_if_eligible, 'Not Eligible') AS bundle_campaign\n  FROM fc5\n)\n\n, qtr AS (\n  SELECT DATE_TRUNC('quarter', calendar_month) AS qtr,\n    nutrition_program,\n    COUNT(DISTINCT IFF(nutrition_active, member_id, NULL)) AS active_subs,\n    SUM(product_revenue) AS revenue\n  FROM fc6\n  WHERE calendar_month < DATE_TRUNC('quarter', CURRENT_DATE())\n    AND calendar_month >= DATEADD('month', -18, DATE_TRUNC('quarter', CURRENT_DATE()))\n    AND nutrition_program <> 'None'\n  GROUP BY 1, 2\n)\nSELECT qtr, nutrition_program, active_subs, revenue FROM qtr ORDER BY qtr, nutrition_program\n"
+        },
+        "columns": [
+          {
+            "id": "q-q",
+            "formula": "[Custom SQL/QTR]",
+            "name": "Qtr"
+          },
+          {
+            "id": "q-prog",
+            "formula": "[Custom SQL/NUTRITION_PROGRAM]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "q-subs",
+            "formula": "[Custom SQL/ACTIVE_SUBS]",
+            "name": "Active Subs"
+          },
+          {
+            "id": "q-rev",
+            "formula": "[Custom SQL/REVENUE]",
+            "name": "Revenue"
+          }
+        ],
+        "order": [
+          "q-q",
+          "q-prog",
+          "q-subs",
+          "q-rev"
+        ]
+      },
+      {
+        "id": "rp-qtrtotal",
+        "kind": "table",
+        "name": "Quarterly Total",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "kind": "sql",
+          "statement": "\nWITH months AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) - 1 AS month_idx\n  FROM TABLE(GENERATOR(ROWCOUNT => 24))\n),\nmembers0 AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) AS member_id\n  FROM TABLE(GENERATOR(ROWCOUNT => 6000))\n),\nmembers AS (\n  SELECT member_id,\n    MOD(ABS(HASH(member_id, 1)), 10000) / 10000.0 AS r1,\n    MOD(ABS(HASH(member_id, 2)), 10000) / 10000.0 AS r2,\n    MOD(ABS(HASH(member_id, 3)), 10000) / 10000.0 AS r3,\n    MOD(ABS(HASH(member_id, 4)), 10000) / 10000.0 AS r4,\n    MOD(ABS(HASH(member_id, 5)), 10000) / 10000.0 AS r5,\n    MOD(ABS(HASH(member_id, 6)), 10000) / 10000.0 AS r6,\n    MOD(ABS(HASH(member_id, 7)), 10000) / 10000.0 AS r7,\n    MOD(ABS(HASH(member_id, 8)), 10000) / 10000.0 AS r8,\n    MOD(ABS(HASH(member_id, 9)), 10000) / 10000.0 AS r9,\n    MOD(ABS(HASH(member_id, 10)), 10000) / 10000.0 AS r10,\n    MOD(ABS(HASH(member_id, 11)), 10000) / 10000.0 AS r11,\n    MOD(ABS(HASH(member_id, 12)), 10000) / 10000.0 AS r12,\n    MOD(ABS(HASH(member_id, 13)), 10000) / 10000.0 AS r13\n  FROM members0\n),\nmem AS (\n  SELECT\n    member_id, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13,\n    FLOOR(r1 * 24)::INT AS signup_month_idx,\n    CASE WHEN r2 < 0.28 THEN 'Organic'\n         WHEN r2 < 0.52 THEN 'Paid Social'\n         WHEN r2 < 0.62 THEN 'Influencer'\n         WHEN r2 < 0.72 THEN 'Affiliate'\n         WHEN r2 < 0.90 THEN 'Coach Referral'\n         ELSE 'Retail' END AS signup_channel,\n    CASE WHEN r3 < 0.22 THEN '21 Day Fix'\n         WHEN r3 < 0.38 THEN 'LIIFT4'\n         WHEN r3 < 0.48 THEN '80 Day Obsession'\n         WHEN r3 < 0.62 THEN 'P90X'\n         WHEN r3 < 0.74 THEN 'Insanity Max:30'\n         WHEN r3 < 0.87 THEN 'Barre Blend'\n         ELSE '9 Week Control Freak' END AS fitness_program\n  FROM members\n),\nprog_dim AS (\n  SELECT * FROM VALUES\n    ('21 Day Fix', 1, 0.62, 9, 0.70),\n    ('LIIFT4', 2, 0.38, 7, 0.60),\n    ('80 Day Obsession', 3, 0.55, 10, 0.65),\n    ('P90X', 3, 0.30, 6, 0.55),\n    ('Insanity Max:30', 2, 0.28, 5, 0.50),\n    ('Barre Blend', 2, 0.45, 8, 0.68),\n    ('9 Week Control Freak', 3, 0.50, 8, 0.62)\n  AS t(fitness_program, program_length_months, base_attach_prob, avg_tenure_months, completion_prob)\n),\nmem2 AS (\n  SELECT mem.*, pd.program_length_months, pd.base_attach_prob, pd.avg_tenure_months, pd.completion_prob\n  FROM mem JOIN prog_dim pd ON pd.fitness_program = mem.fitness_program\n),\nmem3 AS (\n  SELECT mem2.*,\n    (signup_channel = 'Coach Referral' OR r4 < 0.30) AS coach_attached\n  FROM mem2\n),\nmem4 AS (\n  SELECT mem3.*,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 'Shake & Bar Starter Bundle' WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 'Portion Fix Kickstart Bundle' WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN '2B Mindset + Shakeology Combo' ELSE NULL END AS bundle_name_if_eligible,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.2 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.15 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.25 ELSE 0.0 END AS promo_discount_pct,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.15 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.12 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.18 ELSE 0.0 END AS bundle_attach_boost\n  FROM mem3\n),\nmem5 AS (\n  SELECT mem4.*,\n    (bundle_name_if_eligible IS NOT NULL) AS bundle_eligible,\n    (bundle_name_if_eligible IS NOT NULL AND r5 < 0.5) AS bundle_flag\n  FROM mem4\n),\nmem6 AS (\n  SELECT mem5.*,\n    IFF(bundle_flag, bundle_name_if_eligible, NULL) AS bundle_name_raw,\n    GREATEST(0.03, LEAST(0.95,\n      base_attach_prob\n      + IFF(coach_attached, 0.12, 0)\n      + IFF(signup_channel = 'Coach Referral', 0.05, 0)\n      + IFF(bundle_flag, bundle_attach_boost, 0)\n    )) AS adjusted_attach_prob\n  FROM mem5\n),\nmem7 AS (\n  SELECT mem6.*, (r6 < adjusted_attach_prob) AS nutrition_subscriber\n  FROM mem6\n),\nmem8 AS (\n  SELECT mem7.*,\n    CASE WHEN NOT nutrition_subscriber THEN 'None'\n      WHEN fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN\n        CASE WHEN r7 < 0.55 THEN 'Portion Fix' WHEN r7 < 0.85 THEN 'Ultimate Portion Fix' ELSE '2B Mindset' END\n      WHEN fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN\n        CASE WHEN r7 < 0.65 THEN '2B Mindset' WHEN r7 < 0.85 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n      ELSE\n        CASE WHEN r7 < 0.5 THEN '2B Mindset' WHEN r7 < 0.8 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n    END AS nutrition_program\n  FROM mem7\n),\nmem9 AS (\n  SELECT mem8.*,\n    (nutrition_subscriber AND r8 < 0.68) AS shakeology_flag,\n    (nutrition_program <> 'None') AS mealplan_flag,\n    ((nutrition_subscriber AND r9 < 0.35) OR (NOT nutrition_subscriber AND r9 < 0.04)) AS bars_flag,\n    GREATEST(2, ROUND(avg_tenure_months * (0.4 + r10 * 1.3)))::INT AS nutrition_tenure_months,\n    (r11 < completion_prob) AS will_complete\n  FROM mem8\n),\nmem10 AS (\n  SELECT mem9.*, (signup_month_idx + nutrition_tenure_months) AS churn_month_idx\n  FROM mem9\n),\nfact_rows AS (\n  SELECT\n    mem10.*, months.month_idx,\n    (months.month_idx - mem10.signup_month_idx) AS months_since_signup,\n    (months.month_idx = 23) AS is_current_month,\n    (months.month_idx = 22) AS is_prior_month,\n    (months.month_idx = 11) AS is_year_ago_month,\n    DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS signup_date,\n    TO_CHAR(DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())), 'Mon YYYY') AS signup_cohort,\n    ('Q' || DATE_PART('quarter', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE()))) || ' '\n      || DATE_PART('year', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())))) AS signup_cohort_qtr,\n    DATEADD('month', months.month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS calendar_month\n  FROM mem10\n  CROSS JOIN months\n  WHERE months.month_idx >= mem10.signup_month_idx\n),\nfc1 AS (\n  SELECT fact_rows.*,\n    CASE\n      WHEN months_since_signup = 0 THEN 'Started'\n      WHEN months_since_signup < program_length_months THEN 'Mid-Program'\n      WHEN will_complete THEN 'Completed'\n      ELSE 'Dropped'\n    END AS program_stage,\n    (months_since_signup >= program_length_months AND will_complete) AS completed_flag,\n    (months_since_signup >= program_length_months AND NOT will_complete) AS dropped_flag\n  FROM fact_rows\n),\nfc2 AS (\n  SELECT fc1.*,\n    GREATEST(20, LEAST(100, ROUND(55 + IFF(coach_attached, 15, 0) + IFF(completed_flag, 20, 0) + (r12 * 10 - 5)))) AS adherence_pct\n  FROM fc1\n),\nfc3 AS (\n  SELECT fc2.*,\n    ROUND(-(2 + (adherence_pct / 100.0) * 6 + r13 * 3), 1) AS weight_change_pct\n  FROM fc2\n),\nfc4 AS (\n  SELECT fc3.*,\n    (nutrition_subscriber AND months_since_signup < nutrition_tenure_months) AS nutrition_active,\n    (nutrition_subscriber AND months_since_signup = nutrition_tenure_months - 1) AS nutrition_churned_this_month\n  FROM fc3\n),\nfc5 AS (\n  SELECT fc4.*,\n    ROUND(IFF(nutrition_active AND shakeology_flag, 129 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS shake_revenue,\n    ROUND(IFF(nutrition_active AND mealplan_flag, 44 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS mealplan_revenue,\n    ROUND(IFF(nutrition_active AND bars_flag, 39 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS bars_revenue\n  FROM fc4\n),\nfc6 AS (\n  SELECT fc5.*,\n    ROUND(shake_revenue + mealplan_revenue + bars_revenue, 2) AS product_revenue,\n    ROUND(IFF(months_since_signup > 0 AND nutrition_active, shake_revenue + mealplan_revenue + bars_revenue, 0), 2) AS reorder_revenue,\n    (months_since_signup = 0) AS first_purchase_flag,\n    (months_since_signup > 0) AS reorder_flag,\n    CASE\n      WHEN shakeology_flag THEN GET(ARRAY_CONSTRUCT('Shakeology - Chocolate','Shakeology - Vanilla','Shakeology - Vegan Chocolate'), MOD(member_id, 3))::string\n      WHEN mealplan_flag THEN nutrition_program || ' Program Kit'\n      WHEN bars_flag THEN 'Beachbar & Boost Bundle'\n      ELSE NULL\n    END AS primary_sku,\n    CASE WHEN shakeology_flag THEN 0.62 WHEN mealplan_flag THEN 0.70 WHEN bars_flag THEN 0.55 ELSE NULL END AS sku_margin_pct,\n    GREATEST(7, ROUND(30 * (2 - adherence_pct / 100.0)))::INT AS time_to_first_reorder_days,\n    COALESCE(bundle_name_raw, 'None') AS bundle_name,\n    COALESCE(bundle_name_if_eligible, 'Not Eligible') AS bundle_campaign\n  FROM fc5\n)\n\n, qtr AS (\n  SELECT DATE_TRUNC('quarter', calendar_month) AS qtr,\n    COUNT(DISTINCT IFF(nutrition_active, member_id, NULL)) AS active_subs,\n    SUM(product_revenue) AS revenue\n  FROM fc6\n  WHERE calendar_month < DATE_TRUNC('quarter', CURRENT_DATE())\n    AND calendar_month >= DATEADD('month', -18, DATE_TRUNC('quarter', CURRENT_DATE()))\n  GROUP BY 1\n)\nSELECT\n  qtr,\n  TO_CHAR(qtr, 'YYYY') || ' Q' || DATE_PART('quarter', qtr) AS qtr_label,\n  active_subs,\n  revenue,\n  ROUND(revenue / active_subs / 3, 0) AS revenue_per_sub_mo,\n  LAG(active_subs) OVER (ORDER BY qtr) AS prior_subs,\n  ROUND((active_subs - LAG(active_subs) OVER (ORDER BY qtr)) / NULLIF(LAG(active_subs) OVER (ORDER BY qtr), 0), 3) AS growth_pct\nFROM qtr\nORDER BY qtr\n"
+        },
+        "columns": [
+          {
+            "id": "qt-q",
+            "formula": "[Custom SQL/QTR]",
+            "name": "Qtr"
+          },
+          {
+            "id": "qt-label",
+            "formula": "[Custom SQL/QTR_LABEL]",
+            "name": "Qtr Label"
+          },
+          {
+            "id": "qt-subs",
+            "formula": "[Custom SQL/ACTIVE_SUBS]",
+            "name": "Active Subs"
+          },
+          {
+            "id": "qt-rev",
+            "formula": "[Custom SQL/REVENUE]",
+            "name": "Revenue"
+          },
+          {
+            "id": "qt-rpsm",
+            "formula": "[Custom SQL/REVENUE_PER_SUB_MO]",
+            "name": "Revenue Per Sub Mo"
+          },
+          {
+            "id": "qt-prior",
+            "formula": "[Custom SQL/PRIOR_SUBS]",
+            "name": "Prior Subs"
+          },
+          {
+            "id": "qt-growth",
+            "formula": "[Custom SQL/GROWTH_PCT]",
+            "name": "Growth Pct"
+          }
+        ],
+        "order": [
+          "qt-q",
+          "qt-label",
+          "qt-subs",
+          "qt-rev",
+          "qt-rpsm",
+          "qt-prior",
+          "qt-growth"
+        ]
+      },
+      {
+        "id": "rp-retention",
+        "kind": "table",
+        "name": "Retention By Program",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "kind": "sql",
+          "statement": "\nWITH months AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) - 1 AS month_idx\n  FROM TABLE(GENERATOR(ROWCOUNT => 24))\n),\nmembers0 AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) AS member_id\n  FROM TABLE(GENERATOR(ROWCOUNT => 6000))\n),\nmembers AS (\n  SELECT member_id,\n    MOD(ABS(HASH(member_id, 1)), 10000) / 10000.0 AS r1,\n    MOD(ABS(HASH(member_id, 2)), 10000) / 10000.0 AS r2,\n    MOD(ABS(HASH(member_id, 3)), 10000) / 10000.0 AS r3,\n    MOD(ABS(HASH(member_id, 4)), 10000) / 10000.0 AS r4,\n    MOD(ABS(HASH(member_id, 5)), 10000) / 10000.0 AS r5,\n    MOD(ABS(HASH(member_id, 6)), 10000) / 10000.0 AS r6,\n    MOD(ABS(HASH(member_id, 7)), 10000) / 10000.0 AS r7,\n    MOD(ABS(HASH(member_id, 8)), 10000) / 10000.0 AS r8,\n    MOD(ABS(HASH(member_id, 9)), 10000) / 10000.0 AS r9,\n    MOD(ABS(HASH(member_id, 10)), 10000) / 10000.0 AS r10,\n    MOD(ABS(HASH(member_id, 11)), 10000) / 10000.0 AS r11,\n    MOD(ABS(HASH(member_id, 12)), 10000) / 10000.0 AS r12,\n    MOD(ABS(HASH(member_id, 13)), 10000) / 10000.0 AS r13\n  FROM members0\n),\nmem AS (\n  SELECT\n    member_id, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13,\n    FLOOR(r1 * 24)::INT AS signup_month_idx,\n    CASE WHEN r2 < 0.28 THEN 'Organic'\n         WHEN r2 < 0.52 THEN 'Paid Social'\n         WHEN r2 < 0.62 THEN 'Influencer'\n         WHEN r2 < 0.72 THEN 'Affiliate'\n         WHEN r2 < 0.90 THEN 'Coach Referral'\n         ELSE 'Retail' END AS signup_channel,\n    CASE WHEN r3 < 0.22 THEN '21 Day Fix'\n         WHEN r3 < 0.38 THEN 'LIIFT4'\n         WHEN r3 < 0.48 THEN '80 Day Obsession'\n         WHEN r3 < 0.62 THEN 'P90X'\n         WHEN r3 < 0.74 THEN 'Insanity Max:30'\n         WHEN r3 < 0.87 THEN 'Barre Blend'\n         ELSE '9 Week Control Freak' END AS fitness_program\n  FROM members\n),\nprog_dim AS (\n  SELECT * FROM VALUES\n    ('21 Day Fix', 1, 0.62, 9, 0.70),\n    ('LIIFT4', 2, 0.38, 7, 0.60),\n    ('80 Day Obsession', 3, 0.55, 10, 0.65),\n    ('P90X', 3, 0.30, 6, 0.55),\n    ('Insanity Max:30', 2, 0.28, 5, 0.50),\n    ('Barre Blend', 2, 0.45, 8, 0.68),\n    ('9 Week Control Freak', 3, 0.50, 8, 0.62)\n  AS t(fitness_program, program_length_months, base_attach_prob, avg_tenure_months, completion_prob)\n),\nmem2 AS (\n  SELECT mem.*, pd.program_length_months, pd.base_attach_prob, pd.avg_tenure_months, pd.completion_prob\n  FROM mem JOIN prog_dim pd ON pd.fitness_program = mem.fitness_program\n),\nmem3 AS (\n  SELECT mem2.*,\n    (signup_channel = 'Coach Referral' OR r4 < 0.30) AS coach_attached\n  FROM mem2\n),\nmem4 AS (\n  SELECT mem3.*,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 'Shake & Bar Starter Bundle' WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 'Portion Fix Kickstart Bundle' WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN '2B Mindset + Shakeology Combo' ELSE NULL END AS bundle_name_if_eligible,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.2 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.15 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.25 ELSE 0.0 END AS promo_discount_pct,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.15 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.12 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.18 ELSE 0.0 END AS bundle_attach_boost\n  FROM mem3\n),\nmem5 AS (\n  SELECT mem4.*,\n    (bundle_name_if_eligible IS NOT NULL) AS bundle_eligible,\n    (bundle_name_if_eligible IS NOT NULL AND r5 < 0.5) AS bundle_flag\n  FROM mem4\n),\nmem6 AS (\n  SELECT mem5.*,\n    IFF(bundle_flag, bundle_name_if_eligible, NULL) AS bundle_name_raw,\n    GREATEST(0.03, LEAST(0.95,\n      base_attach_prob\n      + IFF(coach_attached, 0.12, 0)\n      + IFF(signup_channel = 'Coach Referral', 0.05, 0)\n      + IFF(bundle_flag, bundle_attach_boost, 0)\n    )) AS adjusted_attach_prob\n  FROM mem5\n),\nmem7 AS (\n  SELECT mem6.*, (r6 < adjusted_attach_prob) AS nutrition_subscriber\n  FROM mem6\n),\nmem8 AS (\n  SELECT mem7.*,\n    CASE WHEN NOT nutrition_subscriber THEN 'None'\n      WHEN fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN\n        CASE WHEN r7 < 0.55 THEN 'Portion Fix' WHEN r7 < 0.85 THEN 'Ultimate Portion Fix' ELSE '2B Mindset' END\n      WHEN fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN\n        CASE WHEN r7 < 0.65 THEN '2B Mindset' WHEN r7 < 0.85 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n      ELSE\n        CASE WHEN r7 < 0.5 THEN '2B Mindset' WHEN r7 < 0.8 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n    END AS nutrition_program\n  FROM mem7\n),\nmem9 AS (\n  SELECT mem8.*,\n    (nutrition_subscriber AND r8 < 0.68) AS shakeology_flag,\n    (nutrition_program <> 'None') AS mealplan_flag,\n    ((nutrition_subscriber AND r9 < 0.35) OR (NOT nutrition_subscriber AND r9 < 0.04)) AS bars_flag,\n    GREATEST(2, ROUND(avg_tenure_months * (0.4 + r10 * 1.3)))::INT AS nutrition_tenure_months,\n    (r11 < completion_prob) AS will_complete\n  FROM mem8\n),\nmem10 AS (\n  SELECT mem9.*, (signup_month_idx + nutrition_tenure_months) AS churn_month_idx\n  FROM mem9\n),\nfact_rows AS (\n  SELECT\n    mem10.*, months.month_idx,\n    (months.month_idx - mem10.signup_month_idx) AS months_since_signup,\n    (months.month_idx = 23) AS is_current_month,\n    (months.month_idx = 22) AS is_prior_month,\n    (months.month_idx = 11) AS is_year_ago_month,\n    DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS signup_date,\n    TO_CHAR(DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())), 'Mon YYYY') AS signup_cohort,\n    ('Q' || DATE_PART('quarter', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE()))) || ' '\n      || DATE_PART('year', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())))) AS signup_cohort_qtr,\n    DATEADD('month', months.month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS calendar_month\n  FROM mem10\n  CROSS JOIN months\n  WHERE months.month_idx >= mem10.signup_month_idx\n),\nfc1 AS (\n  SELECT fact_rows.*,\n    CASE\n      WHEN months_since_signup = 0 THEN 'Started'\n      WHEN months_since_signup < program_length_months THEN 'Mid-Program'\n      WHEN will_complete THEN 'Completed'\n      ELSE 'Dropped'\n    END AS program_stage,\n    (months_since_signup >= program_length_months AND will_complete) AS completed_flag,\n    (months_since_signup >= program_length_months AND NOT will_complete) AS dropped_flag\n  FROM fact_rows\n),\nfc2 AS (\n  SELECT fc1.*,\n    GREATEST(20, LEAST(100, ROUND(55 + IFF(coach_attached, 15, 0) + IFF(completed_flag, 20, 0) + (r12 * 10 - 5)))) AS adherence_pct\n  FROM fc1\n),\nfc3 AS (\n  SELECT fc2.*,\n    ROUND(-(2 + (adherence_pct / 100.0) * 6 + r13 * 3), 1) AS weight_change_pct\n  FROM fc2\n),\nfc4 AS (\n  SELECT fc3.*,\n    (nutrition_subscriber AND months_since_signup < nutrition_tenure_months) AS nutrition_active,\n    (nutrition_subscriber AND months_since_signup = nutrition_tenure_months - 1) AS nutrition_churned_this_month\n  FROM fc3\n),\nfc5 AS (\n  SELECT fc4.*,\n    ROUND(IFF(nutrition_active AND shakeology_flag, 129 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS shake_revenue,\n    ROUND(IFF(nutrition_active AND mealplan_flag, 44 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS mealplan_revenue,\n    ROUND(IFF(nutrition_active AND bars_flag, 39 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS bars_revenue\n  FROM fc4\n),\nfc6 AS (\n  SELECT fc5.*,\n    ROUND(shake_revenue + mealplan_revenue + bars_revenue, 2) AS product_revenue,\n    ROUND(IFF(months_since_signup > 0 AND nutrition_active, shake_revenue + mealplan_revenue + bars_revenue, 0), 2) AS reorder_revenue,\n    (months_since_signup = 0) AS first_purchase_flag,\n    (months_since_signup > 0) AS reorder_flag,\n    CASE\n      WHEN shakeology_flag THEN GET(ARRAY_CONSTRUCT('Shakeology - Chocolate','Shakeology - Vanilla','Shakeology - Vegan Chocolate'), MOD(member_id, 3))::string\n      WHEN mealplan_flag THEN nutrition_program || ' Program Kit'\n      WHEN bars_flag THEN 'Beachbar & Boost Bundle'\n      ELSE NULL\n    END AS primary_sku,\n    CASE WHEN shakeology_flag THEN 0.62 WHEN mealplan_flag THEN 0.70 WHEN bars_flag THEN 0.55 ELSE NULL END AS sku_margin_pct,\n    GREATEST(7, ROUND(30 * (2 - adherence_pct / 100.0)))::INT AS time_to_first_reorder_days,\n    COALESCE(bundle_name_raw, 'None') AS bundle_name,\n    COALESCE(bundle_name_if_eligible, 'Not Eligible') AS bundle_campaign\n  FROM fc5\n)\n\nSELECT fitness_program, months_since_signup,\n  COUNT(DISTINCT IFF(nutrition_subscriber, member_id, NULL)) AS cohort_size,\n  COUNT(DISTINCT IFF(nutrition_active, member_id, NULL)) AS still_active,\n  ROUND(COUNT(DISTINCT IFF(nutrition_active, member_id, NULL)) / NULLIF(COUNT(DISTINCT IFF(nutrition_subscriber, member_id, NULL)), 0), 3) AS retention_rate\nFROM fc6\nWHERE nutrition_subscriber AND months_since_signup IN (3, 6, 12)\nGROUP BY 1, 2\nORDER BY 1, 2\n"
+        },
+        "columns": [
+          {
+            "id": "rt-prog",
+            "formula": "[Custom SQL/FITNESS_PROGRAM]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "rt-mo",
+            "formula": "[Custom SQL/MONTHS_SINCE_SIGNUP]",
+            "name": "Months Since Signup"
+          },
+          {
+            "id": "rt-cohort",
+            "formula": "[Custom SQL/COHORT_SIZE]",
+            "name": "Cohort Size"
+          },
+          {
+            "id": "rt-active",
+            "formula": "[Custom SQL/STILL_ACTIVE]",
+            "name": "Still Active"
+          },
+          {
+            "id": "rt-rate",
+            "formula": "[Custom SQL/RETENTION_RATE]",
+            "name": "Retention Rate"
+          }
+        ],
+        "order": [
+          "rt-prog",
+          "rt-mo",
+          "rt-cohort",
+          "rt-active",
+          "rt-rate"
+        ]
+      },
+      {
+        "id": "rp-coach",
+        "kind": "table",
+        "name": "Coach Attach",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "kind": "sql",
+          "statement": "\nWITH months AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) - 1 AS month_idx\n  FROM TABLE(GENERATOR(ROWCOUNT => 24))\n),\nmembers0 AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) AS member_id\n  FROM TABLE(GENERATOR(ROWCOUNT => 6000))\n),\nmembers AS (\n  SELECT member_id,\n    MOD(ABS(HASH(member_id, 1)), 10000) / 10000.0 AS r1,\n    MOD(ABS(HASH(member_id, 2)), 10000) / 10000.0 AS r2,\n    MOD(ABS(HASH(member_id, 3)), 10000) / 10000.0 AS r3,\n    MOD(ABS(HASH(member_id, 4)), 10000) / 10000.0 AS r4,\n    MOD(ABS(HASH(member_id, 5)), 10000) / 10000.0 AS r5,\n    MOD(ABS(HASH(member_id, 6)), 10000) / 10000.0 AS r6,\n    MOD(ABS(HASH(member_id, 7)), 10000) / 10000.0 AS r7,\n    MOD(ABS(HASH(member_id, 8)), 10000) / 10000.0 AS r8,\n    MOD(ABS(HASH(member_id, 9)), 10000) / 10000.0 AS r9,\n    MOD(ABS(HASH(member_id, 10)), 10000) / 10000.0 AS r10,\n    MOD(ABS(HASH(member_id, 11)), 10000) / 10000.0 AS r11,\n    MOD(ABS(HASH(member_id, 12)), 10000) / 10000.0 AS r12,\n    MOD(ABS(HASH(member_id, 13)), 10000) / 10000.0 AS r13\n  FROM members0\n),\nmem AS (\n  SELECT\n    member_id, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13,\n    FLOOR(r1 * 24)::INT AS signup_month_idx,\n    CASE WHEN r2 < 0.28 THEN 'Organic'\n         WHEN r2 < 0.52 THEN 'Paid Social'\n         WHEN r2 < 0.62 THEN 'Influencer'\n         WHEN r2 < 0.72 THEN 'Affiliate'\n         WHEN r2 < 0.90 THEN 'Coach Referral'\n         ELSE 'Retail' END AS signup_channel,\n    CASE WHEN r3 < 0.22 THEN '21 Day Fix'\n         WHEN r3 < 0.38 THEN 'LIIFT4'\n         WHEN r3 < 0.48 THEN '80 Day Obsession'\n         WHEN r3 < 0.62 THEN 'P90X'\n         WHEN r3 < 0.74 THEN 'Insanity Max:30'\n         WHEN r3 < 0.87 THEN 'Barre Blend'\n         ELSE '9 Week Control Freak' END AS fitness_program\n  FROM members\n),\nprog_dim AS (\n  SELECT * FROM VALUES\n    ('21 Day Fix', 1, 0.62, 9, 0.70),\n    ('LIIFT4', 2, 0.38, 7, 0.60),\n    ('80 Day Obsession', 3, 0.55, 10, 0.65),\n    ('P90X', 3, 0.30, 6, 0.55),\n    ('Insanity Max:30', 2, 0.28, 5, 0.50),\n    ('Barre Blend', 2, 0.45, 8, 0.68),\n    ('9 Week Control Freak', 3, 0.50, 8, 0.62)\n  AS t(fitness_program, program_length_months, base_attach_prob, avg_tenure_months, completion_prob)\n),\nmem2 AS (\n  SELECT mem.*, pd.program_length_months, pd.base_attach_prob, pd.avg_tenure_months, pd.completion_prob\n  FROM mem JOIN prog_dim pd ON pd.fitness_program = mem.fitness_program\n),\nmem3 AS (\n  SELECT mem2.*,\n    (signup_channel = 'Coach Referral' OR r4 < 0.30) AS coach_attached\n  FROM mem2\n),\nmem4 AS (\n  SELECT mem3.*,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 'Shake & Bar Starter Bundle' WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 'Portion Fix Kickstart Bundle' WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN '2B Mindset + Shakeology Combo' ELSE NULL END AS bundle_name_if_eligible,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.2 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.15 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.25 ELSE 0.0 END AS promo_discount_pct,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.15 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.12 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.18 ELSE 0.0 END AS bundle_attach_boost\n  FROM mem3\n),\nmem5 AS (\n  SELECT mem4.*,\n    (bundle_name_if_eligible IS NOT NULL) AS bundle_eligible,\n    (bundle_name_if_eligible IS NOT NULL AND r5 < 0.5) AS bundle_flag\n  FROM mem4\n),\nmem6 AS (\n  SELECT mem5.*,\n    IFF(bundle_flag, bundle_name_if_eligible, NULL) AS bundle_name_raw,\n    GREATEST(0.03, LEAST(0.95,\n      base_attach_prob\n      + IFF(coach_attached, 0.12, 0)\n      + IFF(signup_channel = 'Coach Referral', 0.05, 0)\n      + IFF(bundle_flag, bundle_attach_boost, 0)\n    )) AS adjusted_attach_prob\n  FROM mem5\n),\nmem7 AS (\n  SELECT mem6.*, (r6 < adjusted_attach_prob) AS nutrition_subscriber\n  FROM mem6\n),\nmem8 AS (\n  SELECT mem7.*,\n    CASE WHEN NOT nutrition_subscriber THEN 'None'\n      WHEN fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN\n        CASE WHEN r7 < 0.55 THEN 'Portion Fix' WHEN r7 < 0.85 THEN 'Ultimate Portion Fix' ELSE '2B Mindset' END\n      WHEN fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN\n        CASE WHEN r7 < 0.65 THEN '2B Mindset' WHEN r7 < 0.85 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n      ELSE\n        CASE WHEN r7 < 0.5 THEN '2B Mindset' WHEN r7 < 0.8 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n    END AS nutrition_program\n  FROM mem7\n),\nmem9 AS (\n  SELECT mem8.*,\n    (nutrition_subscriber AND r8 < 0.68) AS shakeology_flag,\n    (nutrition_program <> 'None') AS mealplan_flag,\n    ((nutrition_subscriber AND r9 < 0.35) OR (NOT nutrition_subscriber AND r9 < 0.04)) AS bars_flag,\n    GREATEST(2, ROUND(avg_tenure_months * (0.4 + r10 * 1.3)))::INT AS nutrition_tenure_months,\n    (r11 < completion_prob) AS will_complete\n  FROM mem8\n),\nmem10 AS (\n  SELECT mem9.*, (signup_month_idx + nutrition_tenure_months) AS churn_month_idx\n  FROM mem9\n),\nfact_rows AS (\n  SELECT\n    mem10.*, months.month_idx,\n    (months.month_idx - mem10.signup_month_idx) AS months_since_signup,\n    (months.month_idx = 23) AS is_current_month,\n    (months.month_idx = 22) AS is_prior_month,\n    (months.month_idx = 11) AS is_year_ago_month,\n    DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS signup_date,\n    TO_CHAR(DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())), 'Mon YYYY') AS signup_cohort,\n    ('Q' || DATE_PART('quarter', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE()))) || ' '\n      || DATE_PART('year', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())))) AS signup_cohort_qtr,\n    DATEADD('month', months.month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS calendar_month\n  FROM mem10\n  CROSS JOIN months\n  WHERE months.month_idx >= mem10.signup_month_idx\n),\nfc1 AS (\n  SELECT fact_rows.*,\n    CASE\n      WHEN months_since_signup = 0 THEN 'Started'\n      WHEN months_since_signup < program_length_months THEN 'Mid-Program'\n      WHEN will_complete THEN 'Completed'\n      ELSE 'Dropped'\n    END AS program_stage,\n    (months_since_signup >= program_length_months AND will_complete) AS completed_flag,\n    (months_since_signup >= program_length_months AND NOT will_complete) AS dropped_flag\n  FROM fact_rows\n),\nfc2 AS (\n  SELECT fc1.*,\n    GREATEST(20, LEAST(100, ROUND(55 + IFF(coach_attached, 15, 0) + IFF(completed_flag, 20, 0) + (r12 * 10 - 5)))) AS adherence_pct\n  FROM fc1\n),\nfc3 AS (\n  SELECT fc2.*,\n    ROUND(-(2 + (adherence_pct / 100.0) * 6 + r13 * 3), 1) AS weight_change_pct\n  FROM fc2\n),\nfc4 AS (\n  SELECT fc3.*,\n    (nutrition_subscriber AND months_since_signup < nutrition_tenure_months) AS nutrition_active,\n    (nutrition_subscriber AND months_since_signup = nutrition_tenure_months - 1) AS nutrition_churned_this_month\n  FROM fc3\n),\nfc5 AS (\n  SELECT fc4.*,\n    ROUND(IFF(nutrition_active AND shakeology_flag, 129 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS shake_revenue,\n    ROUND(IFF(nutrition_active AND mealplan_flag, 44 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS mealplan_revenue,\n    ROUND(IFF(nutrition_active AND bars_flag, 39 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS bars_revenue\n  FROM fc4\n),\nfc6 AS (\n  SELECT fc5.*,\n    ROUND(shake_revenue + mealplan_revenue + bars_revenue, 2) AS product_revenue,\n    ROUND(IFF(months_since_signup > 0 AND nutrition_active, shake_revenue + mealplan_revenue + bars_revenue, 0), 2) AS reorder_revenue,\n    (months_since_signup = 0) AS first_purchase_flag,\n    (months_since_signup > 0) AS reorder_flag,\n    CASE\n      WHEN shakeology_flag THEN GET(ARRAY_CONSTRUCT('Shakeology - Chocolate','Shakeology - Vanilla','Shakeology - Vegan Chocolate'), MOD(member_id, 3))::string\n      WHEN mealplan_flag THEN nutrition_program || ' Program Kit'\n      WHEN bars_flag THEN 'Beachbar & Boost Bundle'\n      ELSE NULL\n    END AS primary_sku,\n    CASE WHEN shakeology_flag THEN 0.62 WHEN mealplan_flag THEN 0.70 WHEN bars_flag THEN 0.55 ELSE NULL END AS sku_margin_pct,\n    GREATEST(7, ROUND(30 * (2 - adherence_pct / 100.0)))::INT AS time_to_first_reorder_days,\n    COALESCE(bundle_name_raw, 'None') AS bundle_name,\n    COALESCE(bundle_name_if_eligible, 'Not Eligible') AS bundle_campaign\n  FROM fc5\n)\n\nSELECT coach_attached,\n  COUNT(DISTINCT member_id) AS total,\n  COUNT(DISTINCT IFF(nutrition_subscriber, member_id, NULL)) AS attached,\n  ROUND(COUNT(DISTINCT IFF(nutrition_subscriber, member_id, NULL)) / COUNT(DISTINCT member_id), 3) AS attach_rate\nFROM fc6\nWHERE is_current_month\nGROUP BY 1\n"
+        },
+        "columns": [
+          {
+            "id": "c-coach",
+            "formula": "[Custom SQL/COACH_ATTACHED]",
+            "name": "Coach Attached"
+          },
+          {
+            "id": "c-total",
+            "formula": "[Custom SQL/TOTAL]",
+            "name": "Total"
+          },
+          {
+            "id": "c-attached",
+            "formula": "[Custom SQL/ATTACHED]",
+            "name": "Attached"
+          },
+          {
+            "id": "c-rate",
+            "formula": "[Custom SQL/ATTACH_RATE]",
+            "name": "Attach Rate"
+          }
+        ],
+        "order": [
+          "c-coach",
+          "c-total",
+          "c-attached",
+          "c-rate"
+        ]
+      },
+      {
+        "id": "cv-bg",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MTYiIGhlaWdodD0iMTA1NiI+PHJlY3Qgd2lkdGg9IjgxNiIgaGVpZ2h0PSIxMDU2IiBmaWxsPSIjMDAwMDAwIi8+PC9zdmc+"
+        },
+        "style": {
+          "fit": "stretch"
+        }
+      },
+      {
+        "id": "cv-logo",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTkiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCA5OSAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzNfMikiPgo8cGF0aCBkPSJNMCAwLjIwNzIzSDE3LjE4NTFDMTkuMzgyNSAwLjIwNzIzIDIwLjU4MjggMC40MTIwNzQgMjEuNTggMC45MDU1NjJDMjMuMTIwMyAxLjcyMDI4IDIzLjc1MDEgMy4wMzA4MSAyMy43NTAxIDUuNTA1MjRDMjMuNzUwMSA3Ljk3OTY2IDIyLjg5NDQgOS4zNDgzOSAyMS4wOTYzIDkuNjk3NTVDMjMuNjY1NyAxMC4xOTM0IDI0LjUyMTQgMTEuMzI3IDI0LjUyMTQgMTQuMTUyOUMyNC41MjE0IDE2LjU5OTQgMjMuODM2OCAxOC4xNDI3IDIyLjMyMzkgMTguOTU3NEMyMS40Mzg1IDE5LjQyMyAyMC4xODM1IDE5LjYyNzggMTcuOTg2IDE5LjYyNzhIMFYwLjIwNzIzWk0xNS4zODQ2IDcuOTUxNzNDMTYuNDk4MiA3Ljk1MTczIDE2Ljg5NzUgNy44OTM1MyAxNy4yNjk1IDcuNzE4OTVDMTcuNzI1OSA3LjQ1NTkxIDE4LjAxMTEgNi45MzIxNiAxOC4wMTExIDYuMjY0MDlDMTguMDExMSA1LjQ3NzMgMTcuNjM5MiA0Ljg5NTM2IDE3LjAxMTYgNC42NjI1OEMxNi42Mzk3IDQuNTQ2MTkgMTYuMzU0NCA0LjUxNTkzIDE1LjI0MDkgNC41MTU5M0g1LjY1MjI5VjcuOTUxNzNIMTUuMzg2OUgxNS4zODQ2Wk0xNi4wMTQ0IDE1LjMxOTFDMTcuMTg1MSAxNS4zMTkxIDE3LjQxMzMgMTUuMjkxMiAxNy43ODUyIDE1LjE3NDhDMTguMzU1NyAxNC45NyAxOC42OTggMTQuMzg4IDE4LjY5OCAxMy41NzMzQzE4LjY5OCAxMi43NTg2IDE4LjM1NTcgMTIuMTQ2NCAxNy43MjgyIDExLjkxMzZDMTcuMzg1OSAxMS43OTcyIDE3LjE1NzcgMTEuNzY5MyAxNS44NzMgMTEuNzY5M0g1LjY1MjI5VjE1LjMyMTVIMTYuMDE0NFYxNS4zMTkxWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ5LjIzOSAwLjI5MzI5OUM1Mi4xNzgxIDAuODQ3MzA5IDUzLjYwNjYgMi4zOTA2MiA1NC4wMDU5IDUuNTA1MThDNTQuMTIgNi4yOTE5NyA1NC4xNzcxIDcuODYzMjIgNTQuMTc3MSAxMC4yMjEyQzU0LjE3NzEgMTQuOTA5NCA1My42OTEgMTYuODAxOSA1Mi4wNjQgMTguMTcwNkM1MC45MjMxIDE5LjE1OTkgNDkuMzIzNSAxOS42MjU1IDQ2LjU1NTUgMTkuNzQxOEM0NS41Mjg3IDE5LjggNDIuOTg2NiAxOS44MzAzIDQxLjEzMTQgMTkuODMwM0MzNi41OTI3IDE5LjgzMDMgMzQuMjgxMSAxOS43NDE4IDMzLjEzNzkgMTkuNTA5MUMzMS4wMjQ4IDE5LjEyOTYgMjkuNzk3MiAxOC4zMTQ5IDI5LjA4NTIgMTYuODg4QzI4LjM0MzYgMTUuNDYxMSAyOC4xNzI1IDE0LjAzNDEgMjguMTcyNSA5Ljc4MzYzQzI4LjE3MjUgNi41MjI0MiAyOC4yMjk1IDUuNzA3NyAyOC41NzE4IDQuMzk3MTZDMjkuMTE0OSAyLjMzMDEgMzAuMjI4NSAxLjIyNDQxIDMyLjM2ODkgMC41ODE5NDNDMzMuOTY4NSAwLjExNjM4OSAzNS43MDk2IDAgNDAuNzMyMSAwQzQ2LjIxMzIgMCA0Ny44OTczIDAuMDU4MTk0MyA0OS4yMzkgMC4yOTA5NzJWMC4yOTMyOTlaTTM1LjAyMjcgNS40NDY5OUMzNC4yNTE1IDYuMDU5MTkgMzQuMDIzMyA3LjAxODIzIDM0LjAyMzMgOS44MTM4OUMzNC4wMjMzIDEyLjYwOTUgMzQuMjUxNSAxMy43MTUyIDM0Ljk2NTcgMTQuMzI3NEMzNS43MzcgMTQuOTY3NiAzNi42Nzk0IDE1LjA4NCA0MS4wNDQ3IDE1LjA4NEM0Ni4wMzk4IDE1LjA4NCA0Ny4wNjY3IDE0LjkwOTQgNDcuNzIzOSAxMy45NzgzQzQ4LjI2NjkgMTMuMjc5OSA0OC40MDg0IDEyLjI4ODMgNDguNDA4NCA5LjY5NzVDNDguNDA4NCA0LjgwNDUyIDQ4LjMyMTcgNC43NDYzMyA0MS4xODYyIDQuNzQ2MzNDMzYuOTMyNyA0Ljc0NjMzIDM1Ljc2MjEgNC44OTI5OCAzNS4wMjA1IDUuNDQ0NjZMMzUuMDIyNyA1LjQ0Njk5WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTU4Ljc0MzIgMC4yMDcyM0g3NS4xODQ0Qzc5LjIwOTcgMC4yMDcyMyA4MS4wOTIyIDAuNjcyNzg1IDgyLjQwNjYgMi4wMTM1OEM4My40NjMyIDMuMDYxMDggODMuODg5OSA0LjI4NTQ4IDg0LjA5MDcgNi43NTk5MUM4NC4xNDc3IDcuNjYzMDggODQuMjA0OCA5LjAwMTU1IDg0LjIwNDggOS45MzQ5OUM4NC4yMDQ4IDExLjY4MDggODQuMDkwNyAxMy42OTIgODMuOTE5NSAxNC43OTc3QzgzLjYwNDYgMTcuMTI3OCA4Mi4wMDczIDE4LjkzMTggNzkuOTIzOSAxOS4zMzkyQzc4Ljg0IDE5LjU3MiA3Ny45ODIgMTkuNjMwMiA3NS45NTU3IDE5LjYzMDJINTguNzQzMlYwLjIwNzIzWk03NC4yNDIgMTQuOTk3OUM3NS44MTE5IDE0Ljk5NzkgNzUuOTI2IDE0Ljk5NzkgNzYuNjEwNiAxNC43NjUxQzc4LjAwOTQgMTQuMzI3NSA3OC4zODEzIDEzLjMxMDMgNzguMzgxMyA5Ljk2MDU5Qzc4LjM4MTMgNS44ODQ2NiA3Ny42OTY4IDUuMDM5NjggNzQuMzU2IDUuMDM5NjhINjQuNTM3VjE0Ljk5NzlINzQuMjQyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTk0LjMyOTYgMTUuNzY4MUM5NC43MDE1IDE2LjI2NjMgOTQuNTA5OCAxNi44NDEzIDk0LjAyMTUgMTcuMzEzOEM5MS44MTI2IDE5LjQzNjcgODkuNjY3NiAxOS42MzIyIDg4LjMwNzYgMTkuNjMyMkM4Ny4wNjE3IDE5LjYzMjIgODYuMzgxNyAxOC44MDU5IDg2Ljk4NDEgMTYuODY5MkM4Ny43MDI5IDE0LjY1NTUgODguNTc2OSAxMi4yODM1IDg5LjE0MDUgMTAuNDM3NUM4OS4zOTgzIDkuNjI1MTYgODkuMzU5NiA5LjM5MDA1IDg5LjAyNDEgOS4zOTAwNUM4OC42Mzg1IDkuMzkwMDUgODcuNzc4MiA5Ljc4MzQ0IDg2Ljk1NjcgMTAuMjkzMkM4Ni42MDk5IDkuNzU1NTEgODcuMDM0MyA5LjE0MDk4IDg4LjExMTMgOC40MTkzN0M5MC4yNjc4IDcuMDA0MDggOTEuNzgyOSA2LjY4OTgzIDkzLjAwMzggNi42ODk4M0M5NC4yODg1IDYuNjg5ODMgOTQuNTk2NSA3LjU0MTggOTMuNzYxNCAxMC4xMDkzQzkzLjE5NTQgMTEuODI0OSA5Mi4zNjI1IDE0LjE5NjkgOTEuNzk2NiAxNS45MTI1QzkxLjUzODggMTYuNjA2MSA5MS41Mzg4IDE2Ljk5OTUgOTEuODM1NCAxNi45OTk1QzkyLjEzMjEgMTYuOTk5NSA5My4wODE0IDE2LjYwNjEgOTQuMjg4NSAxNS43MDNMOTQuMzI3MyAxNS43NjgxSDk0LjMyOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTUuMDUwNyAyLjI2MjU4Qzk1LjA1MDcgMy42NjM5IDkzLjgwNDcgNC45ODg0IDkxLjk2NzggNC45ODg0QzkwLjQ2NjMgNC45ODg0IDg5LjQyNTggNC4xNzYwMSA4OS40MjU4IDIuODI1OUM4OS40MjU4IDEuNjQ4MDQgOTAuNTQzOSAwLjEzOTY0OCA5Mi42NzUyIDAuMTM5NjQ4Qzk0LjMxODIgMC4xMzk2NDggOTUuMDUwNyAxLjEwOCA5NS4wNTA3IDIuMjYyNThaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTYuNTg2MyAwLjgwMjg2M0M5Ni42NDM0IDAuNjc3MTc1IDk2LjcxODcgMC41NzAxMDcgOTYuODEyMiAwLjQ4MTY2Qzk2LjkwNTggMC4zOTMyMTMgOTcuMDE1MyAwLjMyNTcxNCA5Ny4xNDA4IDAuMjc2ODM1Qzk3LjI2NCAwLjIyNzk1NyA5Ny4zOTQxIDAuMjA0NjgxIDk3LjUzMSAwLjIwNDY4MUM5Ny42Njc5IDAuMjA0NjgxIDk3Ljc5NTYgMC4yMjc5NTcgOTcuOTIxMSAwLjI3NjgzNUM5OC4wNDY2IDAuMzI1NzE0IDk4LjE1MzkgMC4zOTMyMTMgOTguMjQ5NyAwLjQ4MTY2Qzk4LjM0MzIgMC41NzAxMDcgOTguNDE4NSAwLjY3NzE3NSA5OC40NzU2IDAuODAyODYzQzk4LjUzMjYgMC45Mjg1NTEgOTguNTYgMS4wNjgyIDk4LjU2IDEuMjI0MTVDOTguNTYgMS4zODAwOSA5OC41MzI2IDEuNTIyMDcgOTguNDc1NiAxLjY0Nzc2Qzk4LjQxODUgMS43NzM0NSA5OC4zNDMyIDEuODgwNTIgOTguMjQ5NyAxLjk2ODk2Qzk4LjE1NjEgMi4wNTc0MSA5OC4wNDY2IDIuMTI3MjQgOTcuOTIxMSAyLjE3Mzc5Qzk3Ljc5NTYgMi4yMjAzNCA5Ny42Njc5IDIuMjQzNjIgOTcuNTMxIDIuMjQzNjJDOTcuMzk0MSAyLjI0MzYyIDk3LjI2NjMgMi4yMjAzNCA5Ny4xNDA4IDIuMTczNzlDOTcuMDE3NiAyLjEyNzI0IDk2LjkwODEgMi4wNTc0MSA5Ni44MTIyIDEuOTY4OTZDOTYuNzE4NyAxLjg4MDUyIDk2LjY0MzQgMS43NzM0NSA5Ni41ODYzIDEuNjQ3NzZDOTYuNTI5MyAxLjUyMjA3IDk2LjUwMTkgMS4zODI0MiA5Ni41MDE5IDEuMjI0MTVDOTYuNTAxOSAxLjA2NTg3IDk2LjUyOTMgMC45Mjg1NTEgOTYuNTg2MyAwLjgwMjg2M1pNOTYuODMyNyAxLjU0NTM1Qzk2Ljg3MTUgMS42NDMxMSA5Ni45MjYzIDEuNzI5MjMgOTYuOTkyNSAxLjgwMTM4Qzk3LjA2MDkgMS44NzM1MyA5Ny4xNDA4IDEuOTI5NCA5Ny4yMzIxIDEuOTY4OTZDOTcuMzIzMyAyLjAwODUzIDk3LjQyMTQgMi4wMjk0OCA5Ny41Mjg3IDIuMDI5NDhDOTcuNjM1OSAyLjAyOTQ4IDk3LjcyOTUgMi4wMDg1MyA5Ny44MjA3IDEuOTY4OTZDOTcuOTEyIDEuOTI5NCA5Ny45OTE5IDEuODczNTMgOTguMDYwMyAxLjgwMTM4Qzk4LjEyODggMS43MjkyMyA5OC4xODEyIDEuNjQ1NDMgOTguMjIyMyAxLjU0NTM1Qzk4LjI2MzQgMS40NDc1OSA5OC4yODE2IDEuMzQwNTIgOTguMjgxNiAxLjIyNDE1Qzk4LjI4MTYgMS4xMDc3NyA5OC4yNjExIDEuMDAwNyA5OC4yMjIzIDAuOTAyOTQ4Qzk4LjE4MzUgMC44MDUxOTEgOTguMTI4OCAwLjcyMTM5OSA5OC4wNjAzIDAuNjUxNTcyQzk3Ljk5MTkgMC41ODE3NDUgOTcuOTEyIDAuNTI1ODg0IDk3LjgyMDcgMC40ODYzMTVDOTcuNzI5NSAwLjQ0Njc0NyA5Ny42MzEzIDAuNDI1Nzk5IDk3LjUyODcgMC40MjU3OTlDOTcuNDI2IDAuNDI1Nzk5IDk3LjMyNTYgMC40NDY3NDcgOTcuMjMyMSAwLjQ4NjMxNUM5Ny4xNDA4IDAuNTI1ODg0IDk3LjA2MDkgMC41ODE3NDUgOTYuOTkyNSAwLjY1MTU3MkM5Ni45MjQgMC43MjM3MjYgOTYuODcxNSAwLjgwNzUxOCA5Ni44MzI3IDAuOTAyOTQ4Qzk2Ljc5NCAwLjk5ODM3OCA5Ni43NzM0IDEuMTA3NzcgOTYuNzczNCAxLjIyNDE1Qzk2Ljc3MzQgMS4zNDA1MiA5Ni43OTQgMS40NDc1OSA5Ni44MzI3IDEuNTQ1MzVaTTk3LjU1MTUgMC42NTE1NzJDOTcuNjkyOSAwLjY1MTU3MiA5Ny44MDAyIDAuNjc3MTc1IDk3Ljg3NTUgMC43MjgzODFDOTcuOTUwOCAwLjc3OTU4NyA5Ny45ODk2IDAuODY1NzA3IDk3Ljk4OTYgMC45OTEzOTVDOTcuOTg5NiAxLjA0NDkyIDk3Ljk4MjcgMS4wODkxNSA5Ny45NjY4IDEuMTI2MzlDOTcuOTUwOCAxLjE2MzYzIDk3LjkzMDMgMS4xOTM4OSA5Ny45MDI5IDEuMjE3MTZDOTcuODc1NSAxLjI0MDQ0IDk3Ljg0NTggMS4yNTkwNiA5Ny44MDkzIDEuMjcwN0M5Ny43NzI4IDEuMjgyMzQgOTcuNzM2MyAxLjI5MTY1IDk3LjY5NTIgMS4yOTM5N0w5Ny45OTQxIDEuNzkyMDdIOTcuNzYxNEw5Ny40ODc2IDEuMzAzMjhIOTcuMzQ4NFYxLjc5MjA3SDk3LjEyNzFWMC42NTE1NzJIOTcuNTUxNVpNOTcuNTQ5MiAxLjEyODcyQzk3LjYxMzEgMS4xMjg3MiA5Ny42NjU2IDEuMTE5NDEgOTcuNzA2NiAxLjEwMDc5Qzk3Ljc0NzcgMS4wODIxNyA5Ny43NjgyIDEuMDM3OTQgOTcuNzY4MiAwLjk3MDQ0N0M5Ny43NjgyIDAuOTQwMTg5IDk3Ljc2MTQgMC45MTQ1ODYgOTcuNzQ3NyAwLjg5NTk2NUM5Ny43MzQgMC44NzczNDUgOTcuNzE1OCAwLjg2MzM4IDk3LjY5MjkgMC44NTQwNjlDOTcuNjcwMSAwLjg0NDc1OSA5Ny42NDUgMC44Mzc3NzYgOTcuNjE3NyAwLjgzMzEyMUM5Ny41OTAzIDAuODI4NDY2IDk3LjU2MjkgMC44Mjg0NjYgOTcuNTM3OCAwLjgyODQ2Nkg5Ny4zNTA3VjEuMTI4NzJIOTcuNTQ5MloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfM18yIj4KPHJlY3Qgd2lkdGg9Ijk5IiBoZWlnaHQ9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "cv-tag",
+        "kind": "text",
+        "body": "**<span style=\"color:#5FBE9A;font-family:Helvetica;font-size:11px\">CONFIDENTIAL \u00b7 DEMONSTRATION DATA</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "cv-title1",
+        "kind": "text",
+        "body": "# **<span style=\"color:#FFFFFF;font-family:Helvetica;font-size:44px\">Nutrition Program</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "cv-title2",
+        "kind": "text",
+        "body": "# **<span style=\"color:#FFFFFF;font-family:Helvetica;font-size:44px\">Performance</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "cv-rule",
+        "kind": "divider",
+        "style": {
+          "color": "#208468"
+        }
+      },
+      {
+        "id": "cv-sub",
+        "kind": "text",
+        "body": "<span style=\"color:#C8C8C8;font-family:Helvetica;font-size:15px\">A Sigma analysis of BODi's nutrition subscription business \u2014 subscriber growth, revenue per account, program retention, and bundle performance across a rolling 24-month window.</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "cv-foot",
+        "kind": "text",
+        "body": "<span style=\"color:#8A8A8A;font-family:Helvetica;font-size:11px\">Prepared for BODi \u00b7 Built in Sigma \u00b7 September 2026</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p2-hdrbg",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MTYiIGhlaWdodD0iODQiPjxyZWN0IHdpZHRoPSI4MTYiIGhlaWdodD0iODQiIGZpbGw9IiMwMDAwMDAiLz48cmVjdCB5PSI4MCIgd2lkdGg9IjgxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjMjA4NDY4Ii8+PC9zdmc+"
+        },
+        "style": {
+          "fit": "stretch"
+        }
+      },
+      {
+        "id": "p2-logo",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTkiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCA5OSAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzNfMikiPgo8cGF0aCBkPSJNMCAwLjIwNzIzSDE3LjE4NTFDMTkuMzgyNSAwLjIwNzIzIDIwLjU4MjggMC40MTIwNzQgMjEuNTggMC45MDU1NjJDMjMuMTIwMyAxLjcyMDI4IDIzLjc1MDEgMy4wMzA4MSAyMy43NTAxIDUuNTA1MjRDMjMuNzUwMSA3Ljk3OTY2IDIyLjg5NDQgOS4zNDgzOSAyMS4wOTYzIDkuNjk3NTVDMjMuNjY1NyAxMC4xOTM0IDI0LjUyMTQgMTEuMzI3IDI0LjUyMTQgMTQuMTUyOUMyNC41MjE0IDE2LjU5OTQgMjMuODM2OCAxOC4xNDI3IDIyLjMyMzkgMTguOTU3NEMyMS40Mzg1IDE5LjQyMyAyMC4xODM1IDE5LjYyNzggMTcuOTg2IDE5LjYyNzhIMFYwLjIwNzIzWk0xNS4zODQ2IDcuOTUxNzNDMTYuNDk4MiA3Ljk1MTczIDE2Ljg5NzUgNy44OTM1MyAxNy4yNjk1IDcuNzE4OTVDMTcuNzI1OSA3LjQ1NTkxIDE4LjAxMTEgNi45MzIxNiAxOC4wMTExIDYuMjY0MDlDMTguMDExMSA1LjQ3NzMgMTcuNjM5MiA0Ljg5NTM2IDE3LjAxMTYgNC42NjI1OEMxNi42Mzk3IDQuNTQ2MTkgMTYuMzU0NCA0LjUxNTkzIDE1LjI0MDkgNC41MTU5M0g1LjY1MjI5VjcuOTUxNzNIMTUuMzg2OUgxNS4zODQ2Wk0xNi4wMTQ0IDE1LjMxOTFDMTcuMTg1MSAxNS4zMTkxIDE3LjQxMzMgMTUuMjkxMiAxNy43ODUyIDE1LjE3NDhDMTguMzU1NyAxNC45NyAxOC42OTggMTQuMzg4IDE4LjY5OCAxMy41NzMzQzE4LjY5OCAxMi43NTg2IDE4LjM1NTcgMTIuMTQ2NCAxNy43MjgyIDExLjkxMzZDMTcuMzg1OSAxMS43OTcyIDE3LjE1NzcgMTEuNzY5MyAxNS44NzMgMTEuNzY5M0g1LjY1MjI5VjE1LjMyMTVIMTYuMDE0NFYxNS4zMTkxWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ5LjIzOSAwLjI5MzI5OUM1Mi4xNzgxIDAuODQ3MzA5IDUzLjYwNjYgMi4zOTA2MiA1NC4wMDU5IDUuNTA1MThDNTQuMTIgNi4yOTE5NyA1NC4xNzcxIDcuODYzMjIgNTQuMTc3MSAxMC4yMjEyQzU0LjE3NzEgMTQuOTA5NCA1My42OTEgMTYuODAxOSA1Mi4wNjQgMTguMTcwNkM1MC45MjMxIDE5LjE1OTkgNDkuMzIzNSAxOS42MjU1IDQ2LjU1NTUgMTkuNzQxOEM0NS41Mjg3IDE5LjggNDIuOTg2NiAxOS44MzAzIDQxLjEzMTQgMTkuODMwM0MzNi41OTI3IDE5LjgzMDMgMzQuMjgxMSAxOS43NDE4IDMzLjEzNzkgMTkuNTA5MUMzMS4wMjQ4IDE5LjEyOTYgMjkuNzk3MiAxOC4zMTQ5IDI5LjA4NTIgMTYuODg4QzI4LjM0MzYgMTUuNDYxMSAyOC4xNzI1IDE0LjAzNDEgMjguMTcyNSA5Ljc4MzYzQzI4LjE3MjUgNi41MjI0MiAyOC4yMjk1IDUuNzA3NyAyOC41NzE4IDQuMzk3MTZDMjkuMTE0OSAyLjMzMDEgMzAuMjI4NSAxLjIyNDQxIDMyLjM2ODkgMC41ODE5NDNDMzMuOTY4NSAwLjExNjM4OSAzNS43MDk2IDAgNDAuNzMyMSAwQzQ2LjIxMzIgMCA0Ny44OTczIDAuMDU4MTk0MyA0OS4yMzkgMC4yOTA5NzJWMC4yOTMyOTlaTTM1LjAyMjcgNS40NDY5OUMzNC4yNTE1IDYuMDU5MTkgMzQuMDIzMyA3LjAxODIzIDM0LjAyMzMgOS44MTM4OUMzNC4wMjMzIDEyLjYwOTUgMzQuMjUxNSAxMy43MTUyIDM0Ljk2NTcgMTQuMzI3NEMzNS43MzcgMTQuOTY3NiAzNi42Nzk0IDE1LjA4NCA0MS4wNDQ3IDE1LjA4NEM0Ni4wMzk4IDE1LjA4NCA0Ny4wNjY3IDE0LjkwOTQgNDcuNzIzOSAxMy45NzgzQzQ4LjI2NjkgMTMuMjc5OSA0OC40MDg0IDEyLjI4ODMgNDguNDA4NCA5LjY5NzVDNDguNDA4NCA0LjgwNDUyIDQ4LjMyMTcgNC43NDYzMyA0MS4xODYyIDQuNzQ2MzNDMzYuOTMyNyA0Ljc0NjMzIDM1Ljc2MjEgNC44OTI5OCAzNS4wMjA1IDUuNDQ0NjZMMzUuMDIyNyA1LjQ0Njk5WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTU4Ljc0MzIgMC4yMDcyM0g3NS4xODQ0Qzc5LjIwOTcgMC4yMDcyMyA4MS4wOTIyIDAuNjcyNzg1IDgyLjQwNjYgMi4wMTM1OEM4My40NjMyIDMuMDYxMDggODMuODg5OSA0LjI4NTQ4IDg0LjA5MDcgNi43NTk5MUM4NC4xNDc3IDcuNjYzMDggODQuMjA0OCA5LjAwMTU1IDg0LjIwNDggOS45MzQ5OUM4NC4yMDQ4IDExLjY4MDggODQuMDkwNyAxMy42OTIgODMuOTE5NSAxNC43OTc3QzgzLjYwNDYgMTcuMTI3OCA4Mi4wMDczIDE4LjkzMTggNzkuOTIzOSAxOS4zMzkyQzc4Ljg0IDE5LjU3MiA3Ny45ODIgMTkuNjMwMiA3NS45NTU3IDE5LjYzMDJINTguNzQzMlYwLjIwNzIzWk03NC4yNDIgMTQuOTk3OUM3NS44MTE5IDE0Ljk5NzkgNzUuOTI2IDE0Ljk5NzkgNzYuNjEwNiAxNC43NjUxQzc4LjAwOTQgMTQuMzI3NSA3OC4zODEzIDEzLjMxMDMgNzguMzgxMyA5Ljk2MDU5Qzc4LjM4MTMgNS44ODQ2NiA3Ny42OTY4IDUuMDM5NjggNzQuMzU2IDUuMDM5NjhINjQuNTM3VjE0Ljk5NzlINzQuMjQyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTk0LjMyOTYgMTUuNzY4MUM5NC43MDE1IDE2LjI2NjMgOTQuNTA5OCAxNi44NDEzIDk0LjAyMTUgMTcuMzEzOEM5MS44MTI2IDE5LjQzNjcgODkuNjY3NiAxOS42MzIyIDg4LjMwNzYgMTkuNjMyMkM4Ny4wNjE3IDE5LjYzMjIgODYuMzgxNyAxOC44MDU5IDg2Ljk4NDEgMTYuODY5MkM4Ny43MDI5IDE0LjY1NTUgODguNTc2OSAxMi4yODM1IDg5LjE0MDUgMTAuNDM3NUM4OS4zOTgzIDkuNjI1MTYgODkuMzU5NiA5LjM5MDA1IDg5LjAyNDEgOS4zOTAwNUM4OC42Mzg1IDkuMzkwMDUgODcuNzc4MiA5Ljc4MzQ0IDg2Ljk1NjcgMTAuMjkzMkM4Ni42MDk5IDkuNzU1NTEgODcuMDM0MyA5LjE0MDk4IDg4LjExMTMgOC40MTkzN0M5MC4yNjc4IDcuMDA0MDggOTEuNzgyOSA2LjY4OTgzIDkzLjAwMzggNi42ODk4M0M5NC4yODg1IDYuNjg5ODMgOTQuNTk2NSA3LjU0MTggOTMuNzYxNCAxMC4xMDkzQzkzLjE5NTQgMTEuODI0OSA5Mi4zNjI1IDE0LjE5NjkgOTEuNzk2NiAxNS45MTI1QzkxLjUzODggMTYuNjA2MSA5MS41Mzg4IDE2Ljk5OTUgOTEuODM1NCAxNi45OTk1QzkyLjEzMjEgMTYuOTk5NSA5My4wODE0IDE2LjYwNjEgOTQuMjg4NSAxNS43MDNMOTQuMzI3MyAxNS43NjgxSDk0LjMyOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTUuMDUwNyAyLjI2MjU4Qzk1LjA1MDcgMy42NjM5IDkzLjgwNDcgNC45ODg0IDkxLjk2NzggNC45ODg0QzkwLjQ2NjMgNC45ODg0IDg5LjQyNTggNC4xNzYwMSA4OS40MjU4IDIuODI1OUM4OS40MjU4IDEuNjQ4MDQgOTAuNTQzOSAwLjEzOTY0OCA5Mi42NzUyIDAuMTM5NjQ4Qzk0LjMxODIgMC4xMzk2NDggOTUuMDUwNyAxLjEwOCA5NS4wNTA3IDIuMjYyNThaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTYuNTg2MyAwLjgwMjg2M0M5Ni42NDM0IDAuNjc3MTc1IDk2LjcxODcgMC41NzAxMDcgOTYuODEyMiAwLjQ4MTY2Qzk2LjkwNTggMC4zOTMyMTMgOTcuMDE1MyAwLjMyNTcxNCA5Ny4xNDA4IDAuMjc2ODM1Qzk3LjI2NCAwLjIyNzk1NyA5Ny4zOTQxIDAuMjA0NjgxIDk3LjUzMSAwLjIwNDY4MUM5Ny42Njc5IDAuMjA0NjgxIDk3Ljc5NTYgMC4yMjc5NTcgOTcuOTIxMSAwLjI3NjgzNUM5OC4wNDY2IDAuMzI1NzE0IDk4LjE1MzkgMC4zOTMyMTMgOTguMjQ5NyAwLjQ4MTY2Qzk4LjM0MzIgMC41NzAxMDcgOTguNDE4NSAwLjY3NzE3NSA5OC40NzU2IDAuODAyODYzQzk4LjUzMjYgMC45Mjg1NTEgOTguNTYgMS4wNjgyIDk4LjU2IDEuMjI0MTVDOTguNTYgMS4zODAwOSA5OC41MzI2IDEuNTIyMDcgOTguNDc1NiAxLjY0Nzc2Qzk4LjQxODUgMS43NzM0NSA5OC4zNDMyIDEuODgwNTIgOTguMjQ5NyAxLjk2ODk2Qzk4LjE1NjEgMi4wNTc0MSA5OC4wNDY2IDIuMTI3MjQgOTcuOTIxMSAyLjE3Mzc5Qzk3Ljc5NTYgMi4yMjAzNCA5Ny42Njc5IDIuMjQzNjIgOTcuNTMxIDIuMjQzNjJDOTcuMzk0MSAyLjI0MzYyIDk3LjI2NjMgMi4yMjAzNCA5Ny4xNDA4IDIuMTczNzlDOTcuMDE3NiAyLjEyNzI0IDk2LjkwODEgMi4wNTc0MSA5Ni44MTIyIDEuOTY4OTZDOTYuNzE4NyAxLjg4MDUyIDk2LjY0MzQgMS43NzM0NSA5Ni41ODYzIDEuNjQ3NzZDOTYuNTI5MyAxLjUyMjA3IDk2LjUwMTkgMS4zODI0MiA5Ni41MDE5IDEuMjI0MTVDOTYuNTAxOSAxLjA2NTg3IDk2LjUyOTMgMC45Mjg1NTEgOTYuNTg2MyAwLjgwMjg2M1pNOTYuODMyNyAxLjU0NTM1Qzk2Ljg3MTUgMS42NDMxMSA5Ni45MjYzIDEuNzI5MjMgOTYuOTkyNSAxLjgwMTM4Qzk3LjA2MDkgMS44NzM1MyA5Ny4xNDA4IDEuOTI5NCA5Ny4yMzIxIDEuOTY4OTZDOTcuMzIzMyAyLjAwODUzIDk3LjQyMTQgMi4wMjk0OCA5Ny41Mjg3IDIuMDI5NDhDOTcuNjM1OSAyLjAyOTQ4IDk3LjcyOTUgMi4wMDg1MyA5Ny44MjA3IDEuOTY4OTZDOTcuOTEyIDEuOTI5NCA5Ny45OTE5IDEuODczNTMgOTguMDYwMyAxLjgwMTM4Qzk4LjEyODggMS43MjkyMyA5OC4xODEyIDEuNjQ1NDMgOTguMjIyMyAxLjU0NTM1Qzk4LjI2MzQgMS40NDc1OSA5OC4yODE2IDEuMzQwNTIgOTguMjgxNiAxLjIyNDE1Qzk4LjI4MTYgMS4xMDc3NyA5OC4yNjExIDEuMDAwNyA5OC4yMjIzIDAuOTAyOTQ4Qzk4LjE4MzUgMC44MDUxOTEgOTguMTI4OCAwLjcyMTM5OSA5OC4wNjAzIDAuNjUxNTcyQzk3Ljk5MTkgMC41ODE3NDUgOTcuOTEyIDAuNTI1ODg0IDk3LjgyMDcgMC40ODYzMTVDOTcuNzI5NSAwLjQ0Njc0NyA5Ny42MzEzIDAuNDI1Nzk5IDk3LjUyODcgMC40MjU3OTlDOTcuNDI2IDAuNDI1Nzk5IDk3LjMyNTYgMC40NDY3NDcgOTcuMjMyMSAwLjQ4NjMxNUM5Ny4xNDA4IDAuNTI1ODg0IDk3LjA2MDkgMC41ODE3NDUgOTYuOTkyNSAwLjY1MTU3MkM5Ni45MjQgMC43MjM3MjYgOTYuODcxNSAwLjgwNzUxOCA5Ni44MzI3IDAuOTAyOTQ4Qzk2Ljc5NCAwLjk5ODM3OCA5Ni43NzM0IDEuMTA3NzcgOTYuNzczNCAxLjIyNDE1Qzk2Ljc3MzQgMS4zNDA1MiA5Ni43OTQgMS40NDc1OSA5Ni44MzI3IDEuNTQ1MzVaTTk3LjU1MTUgMC42NTE1NzJDOTcuNjkyOSAwLjY1MTU3MiA5Ny44MDAyIDAuNjc3MTc1IDk3Ljg3NTUgMC43MjgzODFDOTcuOTUwOCAwLjc3OTU4NyA5Ny45ODk2IDAuODY1NzA3IDk3Ljk4OTYgMC45OTEzOTVDOTcuOTg5NiAxLjA0NDkyIDk3Ljk4MjcgMS4wODkxNSA5Ny45NjY4IDEuMTI2MzlDOTcuOTUwOCAxLjE2MzYzIDk3LjkzMDMgMS4xOTM4OSA5Ny45MDI5IDEuMjE3MTZDOTcuODc1NSAxLjI0MDQ0IDk3Ljg0NTggMS4yNTkwNiA5Ny44MDkzIDEuMjcwN0M5Ny43NzI4IDEuMjgyMzQgOTcuNzM2MyAxLjI5MTY1IDk3LjY5NTIgMS4yOTM5N0w5Ny45OTQxIDEuNzkyMDdIOTcuNzYxNEw5Ny40ODc2IDEuMzAzMjhIOTcuMzQ4NFYxLjc5MjA3SDk3LjEyNzFWMC42NTE1NzJIOTcuNTUxNVpNOTcuNTQ5MiAxLjEyODcyQzk3LjYxMzEgMS4xMjg3MiA5Ny42NjU2IDEuMTE5NDEgOTcuNzA2NiAxLjEwMDc5Qzk3Ljc0NzcgMS4wODIxNyA5Ny43NjgyIDEuMDM3OTQgOTcuNzY4MiAwLjk3MDQ0N0M5Ny43NjgyIDAuOTQwMTg5IDk3Ljc2MTQgMC45MTQ1ODYgOTcuNzQ3NyAwLjg5NTk2NUM5Ny43MzQgMC44NzczNDUgOTcuNzE1OCAwLjg2MzM4IDk3LjY5MjkgMC44NTQwNjlDOTcuNjcwMSAwLjg0NDc1OSA5Ny42NDUgMC44Mzc3NzYgOTcuNjE3NyAwLjgzMzEyMUM5Ny41OTAzIDAuODI4NDY2IDk3LjU2MjkgMC44Mjg0NjYgOTcuNTM3OCAwLjgyODQ2Nkg5Ny4zNTA3VjEuMTI4NzJIOTcuNTQ5MloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfM18yIj4KPHJlY3Qgd2lkdGg9Ijk5IiBoZWlnaHQ9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "p2-eyebrow",
+        "kind": "text",
+        "body": "<span style=\"color:#C8C8C8;font-family:Helvetica;font-size:10px\">NUTRITION PROGRAM PERFORMANCE</span>",
+        "verticalAlign": "end"
+      },
+      {
+        "id": "p2-label",
+        "kind": "text",
+        "body": "**<span style=\"color:#FFFFFF;font-family:Helvetica;font-size:20px\">EXECUTIVE SUMMARY</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p2-frule",
+        "kind": "divider",
+        "style": {
+          "color": "#E8E8E8"
+        }
+      },
+      {
+        "id": "p2-footl",
+        "kind": "text",
+        "body": "<span style=\"color:#8A8A8A;font-family:Helvetica;font-size:9px\">BODi \u00b7 Nutrition Program Performance \u2014 Demonstration Data</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p2-footr",
+        "kind": "text",
+        "body": "<p style=\"text-align:right\"><span style=\"color:#8A8A8A;font-family:Helvetica;font-size:9px\">Page 2 of 6</span></p>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p2-h1",
+        "kind": "text",
+        "body": "## **<span style=\"color:#161819;font-family:Helvetica;font-size:22px\">Subscriber growth is decelerating as the base matures</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p2-body",
+        "kind": "text",
+        "body": "<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">Nutrition subscriptions have grown for six straight quarters, but the pace has cooled sharply \u2014 quarter-over-quarter growth ran from +38% down to roughly flat (+0.5% last quarter) as the earliest cohorts finish their programs faster than new members join. Revenue per subscriber has moved much less than subscriber counts over the same window \u2014 down about 7% from its peak, not eroded away \u2014 so the deceleration reads as a maturing base, not a monetization problem.</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p2-k1",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "p2-k1v",
+          "color": "#FFFFFF",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "ACTIVE SUBSCRIBERS",
+          "fontSize": 9,
+          "color": "#C8C8C8"
+        },
+        "style": {
+          "backgroundColor": "#161819",
+          "borderRadius": "square"
+        },
+        "comparisonColumn": {
+          "columnId": "p2-k1c"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#5FBE9A",
+          "colorBad": "#EB001B",
+          "fontSize": 11
+        },
+        "columns": [
+          {
+            "id": "p2-k1v",
+            "formula": "CountDistinct(If([Fact/Is Current Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))",
+            "name": "ACTIVE SUBSCRIBERS",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          },
+          {
+            "id": "p2-k1c",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))",
+            "name": "Prior Month",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          }
+        ]
+      },
+      {
+        "id": "p2-k2",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "p2-k2v",
+          "color": "#FFFFFF",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "PRODUCT REVENUE",
+          "fontSize": 9,
+          "color": "#C8C8C8"
+        },
+        "style": {
+          "backgroundColor": "#161819",
+          "borderRadius": "square"
+        },
+        "comparisonColumn": {
+          "columnId": "p2-k2c"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#5FBE9A",
+          "colorBad": "#EB001B",
+          "fontSize": 11
+        },
+        "columns": [
+          {
+            "id": "p2-k2v",
+            "formula": "SumIf([Fact/Product Revenue],[Fact/Is Current Month])",
+            "name": "PRODUCT REVENUE",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "p2-k2c",
+            "formula": "SumIf([Fact/Product Revenue],[Fact/Is Prior Month])",
+            "name": "Prior Month",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "p2-k3",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "p2-k3v",
+          "color": "#FFFFFF",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "ATTACH RATE",
+          "fontSize": 9,
+          "color": "#C8C8C8"
+        },
+        "style": {
+          "backgroundColor": "#161819",
+          "borderRadius": "square"
+        },
+        "comparisonColumn": {
+          "columnId": "p2-k3c"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#5FBE9A",
+          "colorBad": "#EB001B",
+          "fontSize": 11
+        },
+        "columns": [
+          {
+            "id": "p2-k3v",
+            "formula": "CountDistinct(If([Fact/Is Current Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Is Current Month],[Fact/Member Id],Null))",
+            "name": "ATTACH RATE",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "p2-k3c",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Is Prior Month],[Fact/Member Id],Null))",
+            "name": "Prior Month",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "p2-k4",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "p2-k4v",
+          "color": "#FFFFFF",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "BLENDED RETENTION",
+          "fontSize": 9,
+          "color": "#C8C8C8"
+        },
+        "style": {
+          "backgroundColor": "#161819",
+          "borderRadius": "square"
+        },
+        "comparisonColumn": {
+          "columnId": "p2-k4c"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#5FBE9A",
+          "colorBad": "#EB001B",
+          "fontSize": 11
+        },
+        "columns": [
+          {
+            "id": "p2-k4v",
+            "formula": "CountDistinct(If([Fact/Is Current Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Nutrition Subscriber],[Fact/Member Id],Null))",
+            "name": "BLENDED RETENTION",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "p2-k4c",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Nutrition Subscriber],[Fact/Member Id],Null))",
+            "name": "Prior Month",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "p2-h2",
+        "kind": "text",
+        "body": "### **<span style=\"color:#161819;font-family:Helvetica;font-size:14px\">What the data shows</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p2-body2",
+        "kind": "text",
+        "body": "<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">Coach-attached members convert to a nutrition subscription at nearly a 15-point higher rate than members without a coach (see page 5) \u2014 the single biggest lever on attach in this dataset. Program choice matters even more for retention: 80 Day Obsession members are still active on their nutrition subscription at 12 months at more than 3x the rate of Barre Blend or 9 Week Control Freak members, and Insanity Max:30 members churn out of their nutrition subscription almost entirely by 12 months. Neither pattern is visible from a blended, all-programs KPI \u2014 both only show up once cohorts are split by the dimension that actually drives the behavior.</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p2-rule",
+        "kind": "divider",
+        "style": {
+          "color": "#E8E8E8"
+        }
+      },
+      {
+        "id": "p2-body3",
+        "kind": "text",
+        "body": "<span style=\"color:#8A8A8A;font-family:Helvetica;font-size:11px\">The next four pages walk through subscriber growth and mix, revenue per subscriber, and retention by program and coach attachment \u2014 the same live figures behind the BODi \u2014 Nutrition Business workbook this report is paired with.</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p3-hdrbg",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MTYiIGhlaWdodD0iODQiPjxyZWN0IHdpZHRoPSI4MTYiIGhlaWdodD0iODQiIGZpbGw9IiMwMDAwMDAiLz48cmVjdCB5PSI4MCIgd2lkdGg9IjgxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjMjA4NDY4Ii8+PC9zdmc+"
+        },
+        "style": {
+          "fit": "stretch"
+        }
+      },
+      {
+        "id": "p3-logo",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTkiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCA5OSAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzNfMikiPgo8cGF0aCBkPSJNMCAwLjIwNzIzSDE3LjE4NTFDMTkuMzgyNSAwLjIwNzIzIDIwLjU4MjggMC40MTIwNzQgMjEuNTggMC45MDU1NjJDMjMuMTIwMyAxLjcyMDI4IDIzLjc1MDEgMy4wMzA4MSAyMy43NTAxIDUuNTA1MjRDMjMuNzUwMSA3Ljk3OTY2IDIyLjg5NDQgOS4zNDgzOSAyMS4wOTYzIDkuNjk3NTVDMjMuNjY1NyAxMC4xOTM0IDI0LjUyMTQgMTEuMzI3IDI0LjUyMTQgMTQuMTUyOUMyNC41MjE0IDE2LjU5OTQgMjMuODM2OCAxOC4xNDI3IDIyLjMyMzkgMTguOTU3NEMyMS40Mzg1IDE5LjQyMyAyMC4xODM1IDE5LjYyNzggMTcuOTg2IDE5LjYyNzhIMFYwLjIwNzIzWk0xNS4zODQ2IDcuOTUxNzNDMTYuNDk4MiA3Ljk1MTczIDE2Ljg5NzUgNy44OTM1MyAxNy4yNjk1IDcuNzE4OTVDMTcuNzI1OSA3LjQ1NTkxIDE4LjAxMTEgNi45MzIxNiAxOC4wMTExIDYuMjY0MDlDMTguMDExMSA1LjQ3NzMgMTcuNjM5MiA0Ljg5NTM2IDE3LjAxMTYgNC42NjI1OEMxNi42Mzk3IDQuNTQ2MTkgMTYuMzU0NCA0LjUxNTkzIDE1LjI0MDkgNC41MTU5M0g1LjY1MjI5VjcuOTUxNzNIMTUuMzg2OUgxNS4zODQ2Wk0xNi4wMTQ0IDE1LjMxOTFDMTcuMTg1MSAxNS4zMTkxIDE3LjQxMzMgMTUuMjkxMiAxNy43ODUyIDE1LjE3NDhDMTguMzU1NyAxNC45NyAxOC42OTggMTQuMzg4IDE4LjY5OCAxMy41NzMzQzE4LjY5OCAxMi43NTg2IDE4LjM1NTcgMTIuMTQ2NCAxNy43MjgyIDExLjkxMzZDMTcuMzg1OSAxMS43OTcyIDE3LjE1NzcgMTEuNzY5MyAxNS44NzMgMTEuNzY5M0g1LjY1MjI5VjE1LjMyMTVIMTYuMDE0NFYxNS4zMTkxWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ5LjIzOSAwLjI5MzI5OUM1Mi4xNzgxIDAuODQ3MzA5IDUzLjYwNjYgMi4zOTA2MiA1NC4wMDU5IDUuNTA1MThDNTQuMTIgNi4yOTE5NyA1NC4xNzcxIDcuODYzMjIgNTQuMTc3MSAxMC4yMjEyQzU0LjE3NzEgMTQuOTA5NCA1My42OTEgMTYuODAxOSA1Mi4wNjQgMTguMTcwNkM1MC45MjMxIDE5LjE1OTkgNDkuMzIzNSAxOS42MjU1IDQ2LjU1NTUgMTkuNzQxOEM0NS41Mjg3IDE5LjggNDIuOTg2NiAxOS44MzAzIDQxLjEzMTQgMTkuODMwM0MzNi41OTI3IDE5LjgzMDMgMzQuMjgxMSAxOS43NDE4IDMzLjEzNzkgMTkuNTA5MUMzMS4wMjQ4IDE5LjEyOTYgMjkuNzk3MiAxOC4zMTQ5IDI5LjA4NTIgMTYuODg4QzI4LjM0MzYgMTUuNDYxMSAyOC4xNzI1IDE0LjAzNDEgMjguMTcyNSA5Ljc4MzYzQzI4LjE3MjUgNi41MjI0MiAyOC4yMjk1IDUuNzA3NyAyOC41NzE4IDQuMzk3MTZDMjkuMTE0OSAyLjMzMDEgMzAuMjI4NSAxLjIyNDQxIDMyLjM2ODkgMC41ODE5NDNDMzMuOTY4NSAwLjExNjM4OSAzNS43MDk2IDAgNDAuNzMyMSAwQzQ2LjIxMzIgMCA0Ny44OTczIDAuMDU4MTk0MyA0OS4yMzkgMC4yOTA5NzJWMC4yOTMyOTlaTTM1LjAyMjcgNS40NDY5OUMzNC4yNTE1IDYuMDU5MTkgMzQuMDIzMyA3LjAxODIzIDM0LjAyMzMgOS44MTM4OUMzNC4wMjMzIDEyLjYwOTUgMzQuMjUxNSAxMy43MTUyIDM0Ljk2NTcgMTQuMzI3NEMzNS43MzcgMTQuOTY3NiAzNi42Nzk0IDE1LjA4NCA0MS4wNDQ3IDE1LjA4NEM0Ni4wMzk4IDE1LjA4NCA0Ny4wNjY3IDE0LjkwOTQgNDcuNzIzOSAxMy45NzgzQzQ4LjI2NjkgMTMuMjc5OSA0OC40MDg0IDEyLjI4ODMgNDguNDA4NCA5LjY5NzVDNDguNDA4NCA0LjgwNDUyIDQ4LjMyMTcgNC43NDYzMyA0MS4xODYyIDQuNzQ2MzNDMzYuOTMyNyA0Ljc0NjMzIDM1Ljc2MjEgNC44OTI5OCAzNS4wMjA1IDUuNDQ0NjZMMzUuMDIyNyA1LjQ0Njk5WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTU4Ljc0MzIgMC4yMDcyM0g3NS4xODQ0Qzc5LjIwOTcgMC4yMDcyMyA4MS4wOTIyIDAuNjcyNzg1IDgyLjQwNjYgMi4wMTM1OEM4My40NjMyIDMuMDYxMDggODMuODg5OSA0LjI4NTQ4IDg0LjA5MDcgNi43NTk5MUM4NC4xNDc3IDcuNjYzMDggODQuMjA0OCA5LjAwMTU1IDg0LjIwNDggOS45MzQ5OUM4NC4yMDQ4IDExLjY4MDggODQuMDkwNyAxMy42OTIgODMuOTE5NSAxNC43OTc3QzgzLjYwNDYgMTcuMTI3OCA4Mi4wMDczIDE4LjkzMTggNzkuOTIzOSAxOS4zMzkyQzc4Ljg0IDE5LjU3MiA3Ny45ODIgMTkuNjMwMiA3NS45NTU3IDE5LjYzMDJINTguNzQzMlYwLjIwNzIzWk03NC4yNDIgMTQuOTk3OUM3NS44MTE5IDE0Ljk5NzkgNzUuOTI2IDE0Ljk5NzkgNzYuNjEwNiAxNC43NjUxQzc4LjAwOTQgMTQuMzI3NSA3OC4zODEzIDEzLjMxMDMgNzguMzgxMyA5Ljk2MDU5Qzc4LjM4MTMgNS44ODQ2NiA3Ny42OTY4IDUuMDM5NjggNzQuMzU2IDUuMDM5NjhINjQuNTM3VjE0Ljk5NzlINzQuMjQyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTk0LjMyOTYgMTUuNzY4MUM5NC43MDE1IDE2LjI2NjMgOTQuNTA5OCAxNi44NDEzIDk0LjAyMTUgMTcuMzEzOEM5MS44MTI2IDE5LjQzNjcgODkuNjY3NiAxOS42MzIyIDg4LjMwNzYgMTkuNjMyMkM4Ny4wNjE3IDE5LjYzMjIgODYuMzgxNyAxOC44MDU5IDg2Ljk4NDEgMTYuODY5MkM4Ny43MDI5IDE0LjY1NTUgODguNTc2OSAxMi4yODM1IDg5LjE0MDUgMTAuNDM3NUM4OS4zOTgzIDkuNjI1MTYgODkuMzU5NiA5LjM5MDA1IDg5LjAyNDEgOS4zOTAwNUM4OC42Mzg1IDkuMzkwMDUgODcuNzc4MiA5Ljc4MzQ0IDg2Ljk1NjcgMTAuMjkzMkM4Ni42MDk5IDkuNzU1NTEgODcuMDM0MyA5LjE0MDk4IDg4LjExMTMgOC40MTkzN0M5MC4yNjc4IDcuMDA0MDggOTEuNzgyOSA2LjY4OTgzIDkzLjAwMzggNi42ODk4M0M5NC4yODg1IDYuNjg5ODMgOTQuNTk2NSA3LjU0MTggOTMuNzYxNCAxMC4xMDkzQzkzLjE5NTQgMTEuODI0OSA5Mi4zNjI1IDE0LjE5NjkgOTEuNzk2NiAxNS45MTI1QzkxLjUzODggMTYuNjA2MSA5MS41Mzg4IDE2Ljk5OTUgOTEuODM1NCAxNi45OTk1QzkyLjEzMjEgMTYuOTk5NSA5My4wODE0IDE2LjYwNjEgOTQuMjg4NSAxNS43MDNMOTQuMzI3MyAxNS43NjgxSDk0LjMyOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTUuMDUwNyAyLjI2MjU4Qzk1LjA1MDcgMy42NjM5IDkzLjgwNDcgNC45ODg0IDkxLjk2NzggNC45ODg0QzkwLjQ2NjMgNC45ODg0IDg5LjQyNTggNC4xNzYwMSA4OS40MjU4IDIuODI1OUM4OS40MjU4IDEuNjQ4MDQgOTAuNTQzOSAwLjEzOTY0OCA5Mi42NzUyIDAuMTM5NjQ4Qzk0LjMxODIgMC4xMzk2NDggOTUuMDUwNyAxLjEwOCA5NS4wNTA3IDIuMjYyNThaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTYuNTg2MyAwLjgwMjg2M0M5Ni42NDM0IDAuNjc3MTc1IDk2LjcxODcgMC41NzAxMDcgOTYuODEyMiAwLjQ4MTY2Qzk2LjkwNTggMC4zOTMyMTMgOTcuMDE1MyAwLjMyNTcxNCA5Ny4xNDA4IDAuMjc2ODM1Qzk3LjI2NCAwLjIyNzk1NyA5Ny4zOTQxIDAuMjA0NjgxIDk3LjUzMSAwLjIwNDY4MUM5Ny42Njc5IDAuMjA0NjgxIDk3Ljc5NTYgMC4yMjc5NTcgOTcuOTIxMSAwLjI3NjgzNUM5OC4wNDY2IDAuMzI1NzE0IDk4LjE1MzkgMC4zOTMyMTMgOTguMjQ5NyAwLjQ4MTY2Qzk4LjM0MzIgMC41NzAxMDcgOTguNDE4NSAwLjY3NzE3NSA5OC40NzU2IDAuODAyODYzQzk4LjUzMjYgMC45Mjg1NTEgOTguNTYgMS4wNjgyIDk4LjU2IDEuMjI0MTVDOTguNTYgMS4zODAwOSA5OC41MzI2IDEuNTIyMDcgOTguNDc1NiAxLjY0Nzc2Qzk4LjQxODUgMS43NzM0NSA5OC4zNDMyIDEuODgwNTIgOTguMjQ5NyAxLjk2ODk2Qzk4LjE1NjEgMi4wNTc0MSA5OC4wNDY2IDIuMTI3MjQgOTcuOTIxMSAyLjE3Mzc5Qzk3Ljc5NTYgMi4yMjAzNCA5Ny42Njc5IDIuMjQzNjIgOTcuNTMxIDIuMjQzNjJDOTcuMzk0MSAyLjI0MzYyIDk3LjI2NjMgMi4yMjAzNCA5Ny4xNDA4IDIuMTczNzlDOTcuMDE3NiAyLjEyNzI0IDk2LjkwODEgMi4wNTc0MSA5Ni44MTIyIDEuOTY4OTZDOTYuNzE4NyAxLjg4MDUyIDk2LjY0MzQgMS43NzM0NSA5Ni41ODYzIDEuNjQ3NzZDOTYuNTI5MyAxLjUyMjA3IDk2LjUwMTkgMS4zODI0MiA5Ni41MDE5IDEuMjI0MTVDOTYuNTAxOSAxLjA2NTg3IDk2LjUyOTMgMC45Mjg1NTEgOTYuNTg2MyAwLjgwMjg2M1pNOTYuODMyNyAxLjU0NTM1Qzk2Ljg3MTUgMS42NDMxMSA5Ni45MjYzIDEuNzI5MjMgOTYuOTkyNSAxLjgwMTM4Qzk3LjA2MDkgMS44NzM1MyA5Ny4xNDA4IDEuOTI5NCA5Ny4yMzIxIDEuOTY4OTZDOTcuMzIzMyAyLjAwODUzIDk3LjQyMTQgMi4wMjk0OCA5Ny41Mjg3IDIuMDI5NDhDOTcuNjM1OSAyLjAyOTQ4IDk3LjcyOTUgMi4wMDg1MyA5Ny44MjA3IDEuOTY4OTZDOTcuOTEyIDEuOTI5NCA5Ny45OTE5IDEuODczNTMgOTguMDYwMyAxLjgwMTM4Qzk4LjEyODggMS43MjkyMyA5OC4xODEyIDEuNjQ1NDMgOTguMjIyMyAxLjU0NTM1Qzk4LjI2MzQgMS40NDc1OSA5OC4yODE2IDEuMzQwNTIgOTguMjgxNiAxLjIyNDE1Qzk4LjI4MTYgMS4xMDc3NyA5OC4yNjExIDEuMDAwNyA5OC4yMjIzIDAuOTAyOTQ4Qzk4LjE4MzUgMC44MDUxOTEgOTguMTI4OCAwLjcyMTM5OSA5OC4wNjAzIDAuNjUxNTcyQzk3Ljk5MTkgMC41ODE3NDUgOTcuOTEyIDAuNTI1ODg0IDk3LjgyMDcgMC40ODYzMTVDOTcuNzI5NSAwLjQ0Njc0NyA5Ny42MzEzIDAuNDI1Nzk5IDk3LjUyODcgMC40MjU3OTlDOTcuNDI2IDAuNDI1Nzk5IDk3LjMyNTYgMC40NDY3NDcgOTcuMjMyMSAwLjQ4NjMxNUM5Ny4xNDA4IDAuNTI1ODg0IDk3LjA2MDkgMC41ODE3NDUgOTYuOTkyNSAwLjY1MTU3MkM5Ni45MjQgMC43MjM3MjYgOTYuODcxNSAwLjgwNzUxOCA5Ni44MzI3IDAuOTAyOTQ4Qzk2Ljc5NCAwLjk5ODM3OCA5Ni43NzM0IDEuMTA3NzcgOTYuNzczNCAxLjIyNDE1Qzk2Ljc3MzQgMS4zNDA1MiA5Ni43OTQgMS40NDc1OSA5Ni44MzI3IDEuNTQ1MzVaTTk3LjU1MTUgMC42NTE1NzJDOTcuNjkyOSAwLjY1MTU3MiA5Ny44MDAyIDAuNjc3MTc1IDk3Ljg3NTUgMC43MjgzODFDOTcuOTUwOCAwLjc3OTU4NyA5Ny45ODk2IDAuODY1NzA3IDk3Ljk4OTYgMC45OTEzOTVDOTcuOTg5NiAxLjA0NDkyIDk3Ljk4MjcgMS4wODkxNSA5Ny45NjY4IDEuMTI2MzlDOTcuOTUwOCAxLjE2MzYzIDk3LjkzMDMgMS4xOTM4OSA5Ny45MDI5IDEuMjE3MTZDOTcuODc1NSAxLjI0MDQ0IDk3Ljg0NTggMS4yNTkwNiA5Ny44MDkzIDEuMjcwN0M5Ny43NzI4IDEuMjgyMzQgOTcuNzM2MyAxLjI5MTY1IDk3LjY5NTIgMS4yOTM5N0w5Ny45OTQxIDEuNzkyMDdIOTcuNzYxNEw5Ny40ODc2IDEuMzAzMjhIOTcuMzQ4NFYxLjc5MjA3SDk3LjEyNzFWMC42NTE1NzJIOTcuNTUxNVpNOTcuNTQ5MiAxLjEyODcyQzk3LjYxMzEgMS4xMjg3MiA5Ny42NjU2IDEuMTE5NDEgOTcuNzA2NiAxLjEwMDc5Qzk3Ljc0NzcgMS4wODIxNyA5Ny43NjgyIDEuMDM3OTQgOTcuNzY4MiAwLjk3MDQ0N0M5Ny43NjgyIDAuOTQwMTg5IDk3Ljc2MTQgMC45MTQ1ODYgOTcuNzQ3NyAwLjg5NTk2NUM5Ny43MzQgMC44NzczNDUgOTcuNzE1OCAwLjg2MzM4IDk3LjY5MjkgMC44NTQwNjlDOTcuNjcwMSAwLjg0NDc1OSA5Ny42NDUgMC44Mzc3NzYgOTcuNjE3NyAwLjgzMzEyMUM5Ny41OTAzIDAuODI4NDY2IDk3LjU2MjkgMC44Mjg0NjYgOTcuNTM3OCAwLjgyODQ2Nkg5Ny4zNTA3VjEuMTI4NzJIOTcuNTQ5MloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfM18yIj4KPHJlY3Qgd2lkdGg9Ijk5IiBoZWlnaHQ9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "p3-eyebrow",
+        "kind": "text",
+        "body": "<span style=\"color:#C8C8C8;font-family:Helvetica;font-size:10px\">NUTRITION PROGRAM PERFORMANCE</span>",
+        "verticalAlign": "end"
+      },
+      {
+        "id": "p3-label",
+        "kind": "text",
+        "body": "**<span style=\"color:#FFFFFF;font-family:Helvetica;font-size:20px\">SUBSCRIBER GROWTH & MIX</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p3-frule",
+        "kind": "divider",
+        "style": {
+          "color": "#E8E8E8"
+        }
+      },
+      {
+        "id": "p3-footl",
+        "kind": "text",
+        "body": "<span style=\"color:#8A8A8A;font-family:Helvetica;font-size:9px\">BODi \u00b7 Nutrition Program Performance \u2014 Demonstration Data</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p3-footr",
+        "kind": "text",
+        "body": "<p style=\"text-align:right\"><span style=\"color:#8A8A8A;font-family:Helvetica;font-size:9px\">Page 3 of 6</span></p>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p3-h1",
+        "kind": "text",
+        "body": "## **<span style=\"color:#161819;font-family:Helvetica;font-size:20px\">Six straight quarters of growth, at a steadily slower pace</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p3-body",
+        "kind": "text",
+        "body": "<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">Active nutrition subscribers have grown every quarter for the past six quarters, but quarter-over-quarter growth has cooled from +38% to roughly flat (+0.5% last quarter) as the earliest cohorts complete their programs faster than new members are joining. The mix across programs has stayed broadly stable \u2014 no single program is driving or dragging the trend.</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p3-bar1",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "rp-qtrtotal",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "p3b-q",
+            "formula": "[Quarterly Total/Qtr Label]",
+            "name": "Quarter"
+          },
+          {
+            "id": "p3b-subs",
+            "formula": "Sum([Quarterly Total/Active Subs])",
+            "name": "Active Subscribers",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          },
+          {
+            "id": "p3b-cat",
+            "formula": "\"Active Subscribers\"",
+            "name": "Series"
+          }
+        ],
+        "xAxis": {
+          "columnId": "p3b-q"
+        },
+        "yAxis": {
+          "columnIds": [
+            "p3b-subs"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "p3b-cat",
+          "scheme": [
+            "#108474"
+          ]
+        },
+        "legend": {
+          "visibility": "hidden"
+        },
+        "name": {
+          "text": "Active subscribers by quarter",
+          "fontWeight": "bold",
+          "fontSize": 12,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "square"
+        }
+      },
+      {
+        "id": "p3-tbl1",
+        "kind": "table",
+        "source": {
+          "elementId": "rp-qtrtotal",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "p3t-q",
+            "formula": "[Quarterly Total/Qtr Label]",
+            "name": "Quarter"
+          },
+          {
+            "id": "p3t-subs",
+            "formula": "[Quarterly Total/Active Subs]",
+            "name": "Active Subscribers",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          },
+          {
+            "id": "p3t-growth",
+            "formula": "[Quarterly Total/Growth Pct]",
+            "name": "QoQ Growth",
+            "format": {
+              "kind": "number",
+              "formatString": "+,.1%"
+            }
+          }
+        ],
+        "order": [
+          "p3t-q",
+          "p3t-subs",
+          "p3t-growth"
+        ],
+        "tableComponents": {
+          "summaryBar": "hidden"
+        },
+        "tableStyle": {
+          "preset": "presentation",
+          "cellSpacing": "small"
+        },
+        "name": {
+          "text": "Quarter-over-quarter growth",
+          "fontWeight": "bold",
+          "fontSize": 12,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "square"
+        }
+      },
+      {
+        "id": "p3-bar2",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "rp-qtr",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "p3c-q",
+            "formula": "[Quarterly By Program/Qtr]",
+            "name": "Quarter",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "p3c-prog",
+            "formula": "[Quarterly By Program/Nutrition Program]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "p3c-subs",
+            "formula": "Sum([Quarterly By Program/Active Subs])",
+            "name": "Active Subscribers",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "p3c-q"
+        },
+        "yAxis": {
+          "columnIds": [
+            "p3c-subs"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "p3c-prog",
+          "scheme": [
+            "#108474",
+            "#5FBE9A",
+            "#8A8A8A"
+          ]
+        },
+        "stacking": "stacked",
+        "legend": {
+          "visibility": "visible"
+        },
+        "name": {
+          "text": "Active subscriber mix by nutrition program",
+          "fontWeight": "bold",
+          "fontSize": 12,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "square"
+        }
+      },
+      {
+        "id": "p4-hdrbg",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MTYiIGhlaWdodD0iODQiPjxyZWN0IHdpZHRoPSI4MTYiIGhlaWdodD0iODQiIGZpbGw9IiMwMDAwMDAiLz48cmVjdCB5PSI4MCIgd2lkdGg9IjgxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjMjA4NDY4Ii8+PC9zdmc+"
+        },
+        "style": {
+          "fit": "stretch"
+        }
+      },
+      {
+        "id": "p4-logo",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTkiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCA5OSAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzNfMikiPgo8cGF0aCBkPSJNMCAwLjIwNzIzSDE3LjE4NTFDMTkuMzgyNSAwLjIwNzIzIDIwLjU4MjggMC40MTIwNzQgMjEuNTggMC45MDU1NjJDMjMuMTIwMyAxLjcyMDI4IDIzLjc1MDEgMy4wMzA4MSAyMy43NTAxIDUuNTA1MjRDMjMuNzUwMSA3Ljk3OTY2IDIyLjg5NDQgOS4zNDgzOSAyMS4wOTYzIDkuNjk3NTVDMjMuNjY1NyAxMC4xOTM0IDI0LjUyMTQgMTEuMzI3IDI0LjUyMTQgMTQuMTUyOUMyNC41MjE0IDE2LjU5OTQgMjMuODM2OCAxOC4xNDI3IDIyLjMyMzkgMTguOTU3NEMyMS40Mzg1IDE5LjQyMyAyMC4xODM1IDE5LjYyNzggMTcuOTg2IDE5LjYyNzhIMFYwLjIwNzIzWk0xNS4zODQ2IDcuOTUxNzNDMTYuNDk4MiA3Ljk1MTczIDE2Ljg5NzUgNy44OTM1MyAxNy4yNjk1IDcuNzE4OTVDMTcuNzI1OSA3LjQ1NTkxIDE4LjAxMTEgNi45MzIxNiAxOC4wMTExIDYuMjY0MDlDMTguMDExMSA1LjQ3NzMgMTcuNjM5MiA0Ljg5NTM2IDE3LjAxMTYgNC42NjI1OEMxNi42Mzk3IDQuNTQ2MTkgMTYuMzU0NCA0LjUxNTkzIDE1LjI0MDkgNC41MTU5M0g1LjY1MjI5VjcuOTUxNzNIMTUuMzg2OUgxNS4zODQ2Wk0xNi4wMTQ0IDE1LjMxOTFDMTcuMTg1MSAxNS4zMTkxIDE3LjQxMzMgMTUuMjkxMiAxNy43ODUyIDE1LjE3NDhDMTguMzU1NyAxNC45NyAxOC42OTggMTQuMzg4IDE4LjY5OCAxMy41NzMzQzE4LjY5OCAxMi43NTg2IDE4LjM1NTcgMTIuMTQ2NCAxNy43MjgyIDExLjkxMzZDMTcuMzg1OSAxMS43OTcyIDE3LjE1NzcgMTEuNzY5MyAxNS44NzMgMTEuNzY5M0g1LjY1MjI5VjE1LjMyMTVIMTYuMDE0NFYxNS4zMTkxWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ5LjIzOSAwLjI5MzI5OUM1Mi4xNzgxIDAuODQ3MzA5IDUzLjYwNjYgMi4zOTA2MiA1NC4wMDU5IDUuNTA1MThDNTQuMTIgNi4yOTE5NyA1NC4xNzcxIDcuODYzMjIgNTQuMTc3MSAxMC4yMjEyQzU0LjE3NzEgMTQuOTA5NCA1My42OTEgMTYuODAxOSA1Mi4wNjQgMTguMTcwNkM1MC45MjMxIDE5LjE1OTkgNDkuMzIzNSAxOS42MjU1IDQ2LjU1NTUgMTkuNzQxOEM0NS41Mjg3IDE5LjggNDIuOTg2NiAxOS44MzAzIDQxLjEzMTQgMTkuODMwM0MzNi41OTI3IDE5LjgzMDMgMzQuMjgxMSAxOS43NDE4IDMzLjEzNzkgMTkuNTA5MUMzMS4wMjQ4IDE5LjEyOTYgMjkuNzk3MiAxOC4zMTQ5IDI5LjA4NTIgMTYuODg4QzI4LjM0MzYgMTUuNDYxMSAyOC4xNzI1IDE0LjAzNDEgMjguMTcyNSA5Ljc4MzYzQzI4LjE3MjUgNi41MjI0MiAyOC4yMjk1IDUuNzA3NyAyOC41NzE4IDQuMzk3MTZDMjkuMTE0OSAyLjMzMDEgMzAuMjI4NSAxLjIyNDQxIDMyLjM2ODkgMC41ODE5NDNDMzMuOTY4NSAwLjExNjM4OSAzNS43MDk2IDAgNDAuNzMyMSAwQzQ2LjIxMzIgMCA0Ny44OTczIDAuMDU4MTk0MyA0OS4yMzkgMC4yOTA5NzJWMC4yOTMyOTlaTTM1LjAyMjcgNS40NDY5OUMzNC4yNTE1IDYuMDU5MTkgMzQuMDIzMyA3LjAxODIzIDM0LjAyMzMgOS44MTM4OUMzNC4wMjMzIDEyLjYwOTUgMzQuMjUxNSAxMy43MTUyIDM0Ljk2NTcgMTQuMzI3NEMzNS43MzcgMTQuOTY3NiAzNi42Nzk0IDE1LjA4NCA0MS4wNDQ3IDE1LjA4NEM0Ni4wMzk4IDE1LjA4NCA0Ny4wNjY3IDE0LjkwOTQgNDcuNzIzOSAxMy45NzgzQzQ4LjI2NjkgMTMuMjc5OSA0OC40MDg0IDEyLjI4ODMgNDguNDA4NCA5LjY5NzVDNDguNDA4NCA0LjgwNDUyIDQ4LjMyMTcgNC43NDYzMyA0MS4xODYyIDQuNzQ2MzNDMzYuOTMyNyA0Ljc0NjMzIDM1Ljc2MjEgNC44OTI5OCAzNS4wMjA1IDUuNDQ0NjZMMzUuMDIyNyA1LjQ0Njk5WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTU4Ljc0MzIgMC4yMDcyM0g3NS4xODQ0Qzc5LjIwOTcgMC4yMDcyMyA4MS4wOTIyIDAuNjcyNzg1IDgyLjQwNjYgMi4wMTM1OEM4My40NjMyIDMuMDYxMDggODMuODg5OSA0LjI4NTQ4IDg0LjA5MDcgNi43NTk5MUM4NC4xNDc3IDcuNjYzMDggODQuMjA0OCA5LjAwMTU1IDg0LjIwNDggOS45MzQ5OUM4NC4yMDQ4IDExLjY4MDggODQuMDkwNyAxMy42OTIgODMuOTE5NSAxNC43OTc3QzgzLjYwNDYgMTcuMTI3OCA4Mi4wMDczIDE4LjkzMTggNzkuOTIzOSAxOS4zMzkyQzc4Ljg0IDE5LjU3MiA3Ny45ODIgMTkuNjMwMiA3NS45NTU3IDE5LjYzMDJINTguNzQzMlYwLjIwNzIzWk03NC4yNDIgMTQuOTk3OUM3NS44MTE5IDE0Ljk5NzkgNzUuOTI2IDE0Ljk5NzkgNzYuNjEwNiAxNC43NjUxQzc4LjAwOTQgMTQuMzI3NSA3OC4zODEzIDEzLjMxMDMgNzguMzgxMyA5Ljk2MDU5Qzc4LjM4MTMgNS44ODQ2NiA3Ny42OTY4IDUuMDM5NjggNzQuMzU2IDUuMDM5NjhINjQuNTM3VjE0Ljk5NzlINzQuMjQyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTk0LjMyOTYgMTUuNzY4MUM5NC43MDE1IDE2LjI2NjMgOTQuNTA5OCAxNi44NDEzIDk0LjAyMTUgMTcuMzEzOEM5MS44MTI2IDE5LjQzNjcgODkuNjY3NiAxOS42MzIyIDg4LjMwNzYgMTkuNjMyMkM4Ny4wNjE3IDE5LjYzMjIgODYuMzgxNyAxOC44MDU5IDg2Ljk4NDEgMTYuODY5MkM4Ny43MDI5IDE0LjY1NTUgODguNTc2OSAxMi4yODM1IDg5LjE0MDUgMTAuNDM3NUM4OS4zOTgzIDkuNjI1MTYgODkuMzU5NiA5LjM5MDA1IDg5LjAyNDEgOS4zOTAwNUM4OC42Mzg1IDkuMzkwMDUgODcuNzc4MiA5Ljc4MzQ0IDg2Ljk1NjcgMTAuMjkzMkM4Ni42MDk5IDkuNzU1NTEgODcuMDM0MyA5LjE0MDk4IDg4LjExMTMgOC40MTkzN0M5MC4yNjc4IDcuMDA0MDggOTEuNzgyOSA2LjY4OTgzIDkzLjAwMzggNi42ODk4M0M5NC4yODg1IDYuNjg5ODMgOTQuNTk2NSA3LjU0MTggOTMuNzYxNCAxMC4xMDkzQzkzLjE5NTQgMTEuODI0OSA5Mi4zNjI1IDE0LjE5NjkgOTEuNzk2NiAxNS45MTI1QzkxLjUzODggMTYuNjA2MSA5MS41Mzg4IDE2Ljk5OTUgOTEuODM1NCAxNi45OTk1QzkyLjEzMjEgMTYuOTk5NSA5My4wODE0IDE2LjYwNjEgOTQuMjg4NSAxNS43MDNMOTQuMzI3MyAxNS43NjgxSDk0LjMyOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTUuMDUwNyAyLjI2MjU4Qzk1LjA1MDcgMy42NjM5IDkzLjgwNDcgNC45ODg0IDkxLjk2NzggNC45ODg0QzkwLjQ2NjMgNC45ODg0IDg5LjQyNTggNC4xNzYwMSA4OS40MjU4IDIuODI1OUM4OS40MjU4IDEuNjQ4MDQgOTAuNTQzOSAwLjEzOTY0OCA5Mi42NzUyIDAuMTM5NjQ4Qzk0LjMxODIgMC4xMzk2NDggOTUuMDUwNyAxLjEwOCA5NS4wNTA3IDIuMjYyNThaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTYuNTg2MyAwLjgwMjg2M0M5Ni42NDM0IDAuNjc3MTc1IDk2LjcxODcgMC41NzAxMDcgOTYuODEyMiAwLjQ4MTY2Qzk2LjkwNTggMC4zOTMyMTMgOTcuMDE1MyAwLjMyNTcxNCA5Ny4xNDA4IDAuMjc2ODM1Qzk3LjI2NCAwLjIyNzk1NyA5Ny4zOTQxIDAuMjA0NjgxIDk3LjUzMSAwLjIwNDY4MUM5Ny42Njc5IDAuMjA0NjgxIDk3Ljc5NTYgMC4yMjc5NTcgOTcuOTIxMSAwLjI3NjgzNUM5OC4wNDY2IDAuMzI1NzE0IDk4LjE1MzkgMC4zOTMyMTMgOTguMjQ5NyAwLjQ4MTY2Qzk4LjM0MzIgMC41NzAxMDcgOTguNDE4NSAwLjY3NzE3NSA5OC40NzU2IDAuODAyODYzQzk4LjUzMjYgMC45Mjg1NTEgOTguNTYgMS4wNjgyIDk4LjU2IDEuMjI0MTVDOTguNTYgMS4zODAwOSA5OC41MzI2IDEuNTIyMDcgOTguNDc1NiAxLjY0Nzc2Qzk4LjQxODUgMS43NzM0NSA5OC4zNDMyIDEuODgwNTIgOTguMjQ5NyAxLjk2ODk2Qzk4LjE1NjEgMi4wNTc0MSA5OC4wNDY2IDIuMTI3MjQgOTcuOTIxMSAyLjE3Mzc5Qzk3Ljc5NTYgMi4yMjAzNCA5Ny42Njc5IDIuMjQzNjIgOTcuNTMxIDIuMjQzNjJDOTcuMzk0MSAyLjI0MzYyIDk3LjI2NjMgMi4yMjAzNCA5Ny4xNDA4IDIuMTczNzlDOTcuMDE3NiAyLjEyNzI0IDk2LjkwODEgMi4wNTc0MSA5Ni44MTIyIDEuOTY4OTZDOTYuNzE4NyAxLjg4MDUyIDk2LjY0MzQgMS43NzM0NSA5Ni41ODYzIDEuNjQ3NzZDOTYuNTI5MyAxLjUyMjA3IDk2LjUwMTkgMS4zODI0MiA5Ni41MDE5IDEuMjI0MTVDOTYuNTAxOSAxLjA2NTg3IDk2LjUyOTMgMC45Mjg1NTEgOTYuNTg2MyAwLjgwMjg2M1pNOTYuODMyNyAxLjU0NTM1Qzk2Ljg3MTUgMS42NDMxMSA5Ni45MjYzIDEuNzI5MjMgOTYuOTkyNSAxLjgwMTM4Qzk3LjA2MDkgMS44NzM1MyA5Ny4xNDA4IDEuOTI5NCA5Ny4yMzIxIDEuOTY4OTZDOTcuMzIzMyAyLjAwODUzIDk3LjQyMTQgMi4wMjk0OCA5Ny41Mjg3IDIuMDI5NDhDOTcuNjM1OSAyLjAyOTQ4IDk3LjcyOTUgMi4wMDg1MyA5Ny44MjA3IDEuOTY4OTZDOTcuOTEyIDEuOTI5NCA5Ny45OTE5IDEuODczNTMgOTguMDYwMyAxLjgwMTM4Qzk4LjEyODggMS43MjkyMyA5OC4xODEyIDEuNjQ1NDMgOTguMjIyMyAxLjU0NTM1Qzk4LjI2MzQgMS40NDc1OSA5OC4yODE2IDEuMzQwNTIgOTguMjgxNiAxLjIyNDE1Qzk4LjI4MTYgMS4xMDc3NyA5OC4yNjExIDEuMDAwNyA5OC4yMjIzIDAuOTAyOTQ4Qzk4LjE4MzUgMC44MDUxOTEgOTguMTI4OCAwLjcyMTM5OSA5OC4wNjAzIDAuNjUxNTcyQzk3Ljk5MTkgMC41ODE3NDUgOTcuOTEyIDAuNTI1ODg0IDk3LjgyMDcgMC40ODYzMTVDOTcuNzI5NSAwLjQ0Njc0NyA5Ny42MzEzIDAuNDI1Nzk5IDk3LjUyODcgMC40MjU3OTlDOTcuNDI2IDAuNDI1Nzk5IDk3LjMyNTYgMC40NDY3NDcgOTcuMjMyMSAwLjQ4NjMxNUM5Ny4xNDA4IDAuNTI1ODg0IDk3LjA2MDkgMC41ODE3NDUgOTYuOTkyNSAwLjY1MTU3MkM5Ni45MjQgMC43MjM3MjYgOTYuODcxNSAwLjgwNzUxOCA5Ni44MzI3IDAuOTAyOTQ4Qzk2Ljc5NCAwLjk5ODM3OCA5Ni43NzM0IDEuMTA3NzcgOTYuNzczNCAxLjIyNDE1Qzk2Ljc3MzQgMS4zNDA1MiA5Ni43OTQgMS40NDc1OSA5Ni44MzI3IDEuNTQ1MzVaTTk3LjU1MTUgMC42NTE1NzJDOTcuNjkyOSAwLjY1MTU3MiA5Ny44MDAyIDAuNjc3MTc1IDk3Ljg3NTUgMC43MjgzODFDOTcuOTUwOCAwLjc3OTU4NyA5Ny45ODk2IDAuODY1NzA3IDk3Ljk4OTYgMC45OTEzOTVDOTcuOTg5NiAxLjA0NDkyIDk3Ljk4MjcgMS4wODkxNSA5Ny45NjY4IDEuMTI2MzlDOTcuOTUwOCAxLjE2MzYzIDk3LjkzMDMgMS4xOTM4OSA5Ny45MDI5IDEuMjE3MTZDOTcuODc1NSAxLjI0MDQ0IDk3Ljg0NTggMS4yNTkwNiA5Ny44MDkzIDEuMjcwN0M5Ny43NzI4IDEuMjgyMzQgOTcuNzM2MyAxLjI5MTY1IDk3LjY5NTIgMS4yOTM5N0w5Ny45OTQxIDEuNzkyMDdIOTcuNzYxNEw5Ny40ODc2IDEuMzAzMjhIOTcuMzQ4NFYxLjc5MjA3SDk3LjEyNzFWMC42NTE1NzJIOTcuNTUxNVpNOTcuNTQ5MiAxLjEyODcyQzk3LjYxMzEgMS4xMjg3MiA5Ny42NjU2IDEuMTE5NDEgOTcuNzA2NiAxLjEwMDc5Qzk3Ljc0NzcgMS4wODIxNyA5Ny43NjgyIDEuMDM3OTQgOTcuNzY4MiAwLjk3MDQ0N0M5Ny43NjgyIDAuOTQwMTg5IDk3Ljc2MTQgMC45MTQ1ODYgOTcuNzQ3NyAwLjg5NTk2NUM5Ny43MzQgMC44NzczNDUgOTcuNzE1OCAwLjg2MzM4IDk3LjY5MjkgMC44NTQwNjlDOTcuNjcwMSAwLjg0NDc1OSA5Ny42NDUgMC44Mzc3NzYgOTcuNjE3NyAwLjgzMzEyMUM5Ny41OTAzIDAuODI4NDY2IDk3LjU2MjkgMC44Mjg0NjYgOTcuNTM3OCAwLjgyODQ2Nkg5Ny4zNTA3VjEuMTI4NzJIOTcuNTQ5MloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfM18yIj4KPHJlY3Qgd2lkdGg9Ijk5IiBoZWlnaHQ9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "p4-eyebrow",
+        "kind": "text",
+        "body": "<span style=\"color:#C8C8C8;font-family:Helvetica;font-size:10px\">NUTRITION PROGRAM PERFORMANCE</span>",
+        "verticalAlign": "end"
+      },
+      {
+        "id": "p4-label",
+        "kind": "text",
+        "body": "**<span style=\"color:#FFFFFF;font-family:Helvetica;font-size:20px\">REVENUE PER SUBSCRIBER</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p4-frule",
+        "kind": "divider",
+        "style": {
+          "color": "#E8E8E8"
+        }
+      },
+      {
+        "id": "p4-footl",
+        "kind": "text",
+        "body": "<span style=\"color:#8A8A8A;font-family:Helvetica;font-size:9px\">BODi \u00b7 Nutrition Program Performance \u2014 Demonstration Data</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p4-footr",
+        "kind": "text",
+        "body": "<p style=\"text-align:right\"><span style=\"color:#8A8A8A;font-family:Helvetica;font-size:9px\">Page 4 of 6</span></p>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p4-h1",
+        "kind": "text",
+        "body": "## **<span style=\"color:#161819;font-family:Helvetica;font-size:20px\">Revenue per subscriber has moved far less than subscriber growth</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p4-body",
+        "kind": "text",
+        "body": "<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">Monthly revenue per active subscriber peaked at $120 two quarters into the window, drifted down to $112 by the most recent full quarter, and has ticked back up to $114 since \u2014 a swing of roughly 7%, against a subscriber count that grew nearly 80% over the same six quarters. That gap is the clearest sign the growth slowdown is a base-maturity effect, not a pricing or demand problem.</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p4-line1",
+        "kind": "line-chart",
+        "source": {
+          "elementId": "rp-qtrtotal",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "p4l-q",
+            "formula": "[Quarterly Total/Qtr Label]",
+            "name": "Quarter"
+          },
+          {
+            "id": "p4l-rpsm",
+            "formula": "Sum([Quarterly Total/Revenue Per Sub Mo])",
+            "name": "Revenue per Subscriber / Mo",
+            "format": {
+              "kind": "number",
+              "formatString": "$,.2f",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "p4l-q"
+        },
+        "yAxis": {
+          "columnIds": [
+            "p4l-rpsm"
+          ],
+          "format": {
+            "scale": {
+              "type": "linear",
+              "zero": false
+            }
+          }
+        },
+        "name": {
+          "text": "Revenue per active subscriber, per month",
+          "fontWeight": "bold",
+          "fontSize": 12,
+          "color": "#161819"
+        },
+        "legend": {
+          "visibility": "hidden"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "square"
+        }
+      },
+      {
+        "id": "p4-bar1",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "rp-qtr",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "p4b-q",
+            "formula": "[Quarterly By Program/Qtr]",
+            "name": "Quarter",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "p4b-prog",
+            "formula": "[Quarterly By Program/Nutrition Program]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "p4b-rev",
+            "formula": "Sum([Quarterly By Program/Revenue])",
+            "name": "Revenue",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "p4b-q"
+        },
+        "yAxis": {
+          "columnIds": [
+            "p4b-rev"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "p4b-prog",
+          "scheme": [
+            "#108474",
+            "#5FBE9A",
+            "#8A8A8A"
+          ]
+        },
+        "stacking": "stacked",
+        "legend": {
+          "visibility": "visible"
+        },
+        "name": {
+          "text": "Nutrition product revenue by program",
+          "fontWeight": "bold",
+          "fontSize": 12,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "square"
+        }
+      },
+      {
+        "id": "p5-hdrbg",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MTYiIGhlaWdodD0iODQiPjxyZWN0IHdpZHRoPSI4MTYiIGhlaWdodD0iODQiIGZpbGw9IiMwMDAwMDAiLz48cmVjdCB5PSI4MCIgd2lkdGg9IjgxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjMjA4NDY4Ii8+PC9zdmc+"
+        },
+        "style": {
+          "fit": "stretch"
+        }
+      },
+      {
+        "id": "p5-logo",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTkiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCA5OSAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzNfMikiPgo8cGF0aCBkPSJNMCAwLjIwNzIzSDE3LjE4NTFDMTkuMzgyNSAwLjIwNzIzIDIwLjU4MjggMC40MTIwNzQgMjEuNTggMC45MDU1NjJDMjMuMTIwMyAxLjcyMDI4IDIzLjc1MDEgMy4wMzA4MSAyMy43NTAxIDUuNTA1MjRDMjMuNzUwMSA3Ljk3OTY2IDIyLjg5NDQgOS4zNDgzOSAyMS4wOTYzIDkuNjk3NTVDMjMuNjY1NyAxMC4xOTM0IDI0LjUyMTQgMTEuMzI3IDI0LjUyMTQgMTQuMTUyOUMyNC41MjE0IDE2LjU5OTQgMjMuODM2OCAxOC4xNDI3IDIyLjMyMzkgMTguOTU3NEMyMS40Mzg1IDE5LjQyMyAyMC4xODM1IDE5LjYyNzggMTcuOTg2IDE5LjYyNzhIMFYwLjIwNzIzWk0xNS4zODQ2IDcuOTUxNzNDMTYuNDk4MiA3Ljk1MTczIDE2Ljg5NzUgNy44OTM1MyAxNy4yNjk1IDcuNzE4OTVDMTcuNzI1OSA3LjQ1NTkxIDE4LjAxMTEgNi45MzIxNiAxOC4wMTExIDYuMjY0MDlDMTguMDExMSA1LjQ3NzMgMTcuNjM5MiA0Ljg5NTM2IDE3LjAxMTYgNC42NjI1OEMxNi42Mzk3IDQuNTQ2MTkgMTYuMzU0NCA0LjUxNTkzIDE1LjI0MDkgNC41MTU5M0g1LjY1MjI5VjcuOTUxNzNIMTUuMzg2OUgxNS4zODQ2Wk0xNi4wMTQ0IDE1LjMxOTFDMTcuMTg1MSAxNS4zMTkxIDE3LjQxMzMgMTUuMjkxMiAxNy43ODUyIDE1LjE3NDhDMTguMzU1NyAxNC45NyAxOC42OTggMTQuMzg4IDE4LjY5OCAxMy41NzMzQzE4LjY5OCAxMi43NTg2IDE4LjM1NTcgMTIuMTQ2NCAxNy43MjgyIDExLjkxMzZDMTcuMzg1OSAxMS43OTcyIDE3LjE1NzcgMTEuNzY5MyAxNS44NzMgMTEuNzY5M0g1LjY1MjI5VjE1LjMyMTVIMTYuMDE0NFYxNS4zMTkxWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ5LjIzOSAwLjI5MzI5OUM1Mi4xNzgxIDAuODQ3MzA5IDUzLjYwNjYgMi4zOTA2MiA1NC4wMDU5IDUuNTA1MThDNTQuMTIgNi4yOTE5NyA1NC4xNzcxIDcuODYzMjIgNTQuMTc3MSAxMC4yMjEyQzU0LjE3NzEgMTQuOTA5NCA1My42OTEgMTYuODAxOSA1Mi4wNjQgMTguMTcwNkM1MC45MjMxIDE5LjE1OTkgNDkuMzIzNSAxOS42MjU1IDQ2LjU1NTUgMTkuNzQxOEM0NS41Mjg3IDE5LjggNDIuOTg2NiAxOS44MzAzIDQxLjEzMTQgMTkuODMwM0MzNi41OTI3IDE5LjgzMDMgMzQuMjgxMSAxOS43NDE4IDMzLjEzNzkgMTkuNTA5MUMzMS4wMjQ4IDE5LjEyOTYgMjkuNzk3MiAxOC4zMTQ5IDI5LjA4NTIgMTYuODg4QzI4LjM0MzYgMTUuNDYxMSAyOC4xNzI1IDE0LjAzNDEgMjguMTcyNSA5Ljc4MzYzQzI4LjE3MjUgNi41MjI0MiAyOC4yMjk1IDUuNzA3NyAyOC41NzE4IDQuMzk3MTZDMjkuMTE0OSAyLjMzMDEgMzAuMjI4NSAxLjIyNDQxIDMyLjM2ODkgMC41ODE5NDNDMzMuOTY4NSAwLjExNjM4OSAzNS43MDk2IDAgNDAuNzMyMSAwQzQ2LjIxMzIgMCA0Ny44OTczIDAuMDU4MTk0MyA0OS4yMzkgMC4yOTA5NzJWMC4yOTMyOTlaTTM1LjAyMjcgNS40NDY5OUMzNC4yNTE1IDYuMDU5MTkgMzQuMDIzMyA3LjAxODIzIDM0LjAyMzMgOS44MTM4OUMzNC4wMjMzIDEyLjYwOTUgMzQuMjUxNSAxMy43MTUyIDM0Ljk2NTcgMTQuMzI3NEMzNS43MzcgMTQuOTY3NiAzNi42Nzk0IDE1LjA4NCA0MS4wNDQ3IDE1LjA4NEM0Ni4wMzk4IDE1LjA4NCA0Ny4wNjY3IDE0LjkwOTQgNDcuNzIzOSAxMy45NzgzQzQ4LjI2NjkgMTMuMjc5OSA0OC40MDg0IDEyLjI4ODMgNDguNDA4NCA5LjY5NzVDNDguNDA4NCA0LjgwNDUyIDQ4LjMyMTcgNC43NDYzMyA0MS4xODYyIDQuNzQ2MzNDMzYuOTMyNyA0Ljc0NjMzIDM1Ljc2MjEgNC44OTI5OCAzNS4wMjA1IDUuNDQ0NjZMMzUuMDIyNyA1LjQ0Njk5WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTU4Ljc0MzIgMC4yMDcyM0g3NS4xODQ0Qzc5LjIwOTcgMC4yMDcyMyA4MS4wOTIyIDAuNjcyNzg1IDgyLjQwNjYgMi4wMTM1OEM4My40NjMyIDMuMDYxMDggODMuODg5OSA0LjI4NTQ4IDg0LjA5MDcgNi43NTk5MUM4NC4xNDc3IDcuNjYzMDggODQuMjA0OCA5LjAwMTU1IDg0LjIwNDggOS45MzQ5OUM4NC4yMDQ4IDExLjY4MDggODQuMDkwNyAxMy42OTIgODMuOTE5NSAxNC43OTc3QzgzLjYwNDYgMTcuMTI3OCA4Mi4wMDczIDE4LjkzMTggNzkuOTIzOSAxOS4zMzkyQzc4Ljg0IDE5LjU3MiA3Ny45ODIgMTkuNjMwMiA3NS45NTU3IDE5LjYzMDJINTguNzQzMlYwLjIwNzIzWk03NC4yNDIgMTQuOTk3OUM3NS44MTE5IDE0Ljk5NzkgNzUuOTI2IDE0Ljk5NzkgNzYuNjEwNiAxNC43NjUxQzc4LjAwOTQgMTQuMzI3NSA3OC4zODEzIDEzLjMxMDMgNzguMzgxMyA5Ljk2MDU5Qzc4LjM4MTMgNS44ODQ2NiA3Ny42OTY4IDUuMDM5NjggNzQuMzU2IDUuMDM5NjhINjQuNTM3VjE0Ljk5NzlINzQuMjQyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTk0LjMyOTYgMTUuNzY4MUM5NC43MDE1IDE2LjI2NjMgOTQuNTA5OCAxNi44NDEzIDk0LjAyMTUgMTcuMzEzOEM5MS44MTI2IDE5LjQzNjcgODkuNjY3NiAxOS42MzIyIDg4LjMwNzYgMTkuNjMyMkM4Ny4wNjE3IDE5LjYzMjIgODYuMzgxNyAxOC44MDU5IDg2Ljk4NDEgMTYuODY5MkM4Ny43MDI5IDE0LjY1NTUgODguNTc2OSAxMi4yODM1IDg5LjE0MDUgMTAuNDM3NUM4OS4zOTgzIDkuNjI1MTYgODkuMzU5NiA5LjM5MDA1IDg5LjAyNDEgOS4zOTAwNUM4OC42Mzg1IDkuMzkwMDUgODcuNzc4MiA5Ljc4MzQ0IDg2Ljk1NjcgMTAuMjkzMkM4Ni42MDk5IDkuNzU1NTEgODcuMDM0MyA5LjE0MDk4IDg4LjExMTMgOC40MTkzN0M5MC4yNjc4IDcuMDA0MDggOTEuNzgyOSA2LjY4OTgzIDkzLjAwMzggNi42ODk4M0M5NC4yODg1IDYuNjg5ODMgOTQuNTk2NSA3LjU0MTggOTMuNzYxNCAxMC4xMDkzQzkzLjE5NTQgMTEuODI0OSA5Mi4zNjI1IDE0LjE5NjkgOTEuNzk2NiAxNS45MTI1QzkxLjUzODggMTYuNjA2MSA5MS41Mzg4IDE2Ljk5OTUgOTEuODM1NCAxNi45OTk1QzkyLjEzMjEgMTYuOTk5NSA5My4wODE0IDE2LjYwNjEgOTQuMjg4NSAxNS43MDNMOTQuMzI3MyAxNS43NjgxSDk0LjMyOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTUuMDUwNyAyLjI2MjU4Qzk1LjA1MDcgMy42NjM5IDkzLjgwNDcgNC45ODg0IDkxLjk2NzggNC45ODg0QzkwLjQ2NjMgNC45ODg0IDg5LjQyNTggNC4xNzYwMSA4OS40MjU4IDIuODI1OUM4OS40MjU4IDEuNjQ4MDQgOTAuNTQzOSAwLjEzOTY0OCA5Mi42NzUyIDAuMTM5NjQ4Qzk0LjMxODIgMC4xMzk2NDggOTUuMDUwNyAxLjEwOCA5NS4wNTA3IDIuMjYyNThaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTYuNTg2MyAwLjgwMjg2M0M5Ni42NDM0IDAuNjc3MTc1IDk2LjcxODcgMC41NzAxMDcgOTYuODEyMiAwLjQ4MTY2Qzk2LjkwNTggMC4zOTMyMTMgOTcuMDE1MyAwLjMyNTcxNCA5Ny4xNDA4IDAuMjc2ODM1Qzk3LjI2NCAwLjIyNzk1NyA5Ny4zOTQxIDAuMjA0NjgxIDk3LjUzMSAwLjIwNDY4MUM5Ny42Njc5IDAuMjA0NjgxIDk3Ljc5NTYgMC4yMjc5NTcgOTcuOTIxMSAwLjI3NjgzNUM5OC4wNDY2IDAuMzI1NzE0IDk4LjE1MzkgMC4zOTMyMTMgOTguMjQ5NyAwLjQ4MTY2Qzk4LjM0MzIgMC41NzAxMDcgOTguNDE4NSAwLjY3NzE3NSA5OC40NzU2IDAuODAyODYzQzk4LjUzMjYgMC45Mjg1NTEgOTguNTYgMS4wNjgyIDk4LjU2IDEuMjI0MTVDOTguNTYgMS4zODAwOSA5OC41MzI2IDEuNTIyMDcgOTguNDc1NiAxLjY0Nzc2Qzk4LjQxODUgMS43NzM0NSA5OC4zNDMyIDEuODgwNTIgOTguMjQ5NyAxLjk2ODk2Qzk4LjE1NjEgMi4wNTc0MSA5OC4wNDY2IDIuMTI3MjQgOTcuOTIxMSAyLjE3Mzc5Qzk3Ljc5NTYgMi4yMjAzNCA5Ny42Njc5IDIuMjQzNjIgOTcuNTMxIDIuMjQzNjJDOTcuMzk0MSAyLjI0MzYyIDk3LjI2NjMgMi4yMjAzNCA5Ny4xNDA4IDIuMTczNzlDOTcuMDE3NiAyLjEyNzI0IDk2LjkwODEgMi4wNTc0MSA5Ni44MTIyIDEuOTY4OTZDOTYuNzE4NyAxLjg4MDUyIDk2LjY0MzQgMS43NzM0NSA5Ni41ODYzIDEuNjQ3NzZDOTYuNTI5MyAxLjUyMjA3IDk2LjUwMTkgMS4zODI0MiA5Ni41MDE5IDEuMjI0MTVDOTYuNTAxOSAxLjA2NTg3IDk2LjUyOTMgMC45Mjg1NTEgOTYuNTg2MyAwLjgwMjg2M1pNOTYuODMyNyAxLjU0NTM1Qzk2Ljg3MTUgMS42NDMxMSA5Ni45MjYzIDEuNzI5MjMgOTYuOTkyNSAxLjgwMTM4Qzk3LjA2MDkgMS44NzM1MyA5Ny4xNDA4IDEuOTI5NCA5Ny4yMzIxIDEuOTY4OTZDOTcuMzIzMyAyLjAwODUzIDk3LjQyMTQgMi4wMjk0OCA5Ny41Mjg3IDIuMDI5NDhDOTcuNjM1OSAyLjAyOTQ4IDk3LjcyOTUgMi4wMDg1MyA5Ny44MjA3IDEuOTY4OTZDOTcuOTEyIDEuOTI5NCA5Ny45OTE5IDEuODczNTMgOTguMDYwMyAxLjgwMTM4Qzk4LjEyODggMS43MjkyMyA5OC4xODEyIDEuNjQ1NDMgOTguMjIyMyAxLjU0NTM1Qzk4LjI2MzQgMS40NDc1OSA5OC4yODE2IDEuMzQwNTIgOTguMjgxNiAxLjIyNDE1Qzk4LjI4MTYgMS4xMDc3NyA5OC4yNjExIDEuMDAwNyA5OC4yMjIzIDAuOTAyOTQ4Qzk4LjE4MzUgMC44MDUxOTEgOTguMTI4OCAwLjcyMTM5OSA5OC4wNjAzIDAuNjUxNTcyQzk3Ljk5MTkgMC41ODE3NDUgOTcuOTEyIDAuNTI1ODg0IDk3LjgyMDcgMC40ODYzMTVDOTcuNzI5NSAwLjQ0Njc0NyA5Ny42MzEzIDAuNDI1Nzk5IDk3LjUyODcgMC40MjU3OTlDOTcuNDI2IDAuNDI1Nzk5IDk3LjMyNTYgMC40NDY3NDcgOTcuMjMyMSAwLjQ4NjMxNUM5Ny4xNDA4IDAuNTI1ODg0IDk3LjA2MDkgMC41ODE3NDUgOTYuOTkyNSAwLjY1MTU3MkM5Ni45MjQgMC43MjM3MjYgOTYuODcxNSAwLjgwNzUxOCA5Ni44MzI3IDAuOTAyOTQ4Qzk2Ljc5NCAwLjk5ODM3OCA5Ni43NzM0IDEuMTA3NzcgOTYuNzczNCAxLjIyNDE1Qzk2Ljc3MzQgMS4zNDA1MiA5Ni43OTQgMS40NDc1OSA5Ni44MzI3IDEuNTQ1MzVaTTk3LjU1MTUgMC42NTE1NzJDOTcuNjkyOSAwLjY1MTU3MiA5Ny44MDAyIDAuNjc3MTc1IDk3Ljg3NTUgMC43MjgzODFDOTcuOTUwOCAwLjc3OTU4NyA5Ny45ODk2IDAuODY1NzA3IDk3Ljk4OTYgMC45OTEzOTVDOTcuOTg5NiAxLjA0NDkyIDk3Ljk4MjcgMS4wODkxNSA5Ny45NjY4IDEuMTI2MzlDOTcuOTUwOCAxLjE2MzYzIDk3LjkzMDMgMS4xOTM4OSA5Ny45MDI5IDEuMjE3MTZDOTcuODc1NSAxLjI0MDQ0IDk3Ljg0NTggMS4yNTkwNiA5Ny44MDkzIDEuMjcwN0M5Ny43NzI4IDEuMjgyMzQgOTcuNzM2MyAxLjI5MTY1IDk3LjY5NTIgMS4yOTM5N0w5Ny45OTQxIDEuNzkyMDdIOTcuNzYxNEw5Ny40ODc2IDEuMzAzMjhIOTcuMzQ4NFYxLjc5MjA3SDk3LjEyNzFWMC42NTE1NzJIOTcuNTUxNVpNOTcuNTQ5MiAxLjEyODcyQzk3LjYxMzEgMS4xMjg3MiA5Ny42NjU2IDEuMTE5NDEgOTcuNzA2NiAxLjEwMDc5Qzk3Ljc0NzcgMS4wODIxNyA5Ny43NjgyIDEuMDM3OTQgOTcuNzY4MiAwLjk3MDQ0N0M5Ny43NjgyIDAuOTQwMTg5IDk3Ljc2MTQgMC45MTQ1ODYgOTcuNzQ3NyAwLjg5NTk2NUM5Ny43MzQgMC44NzczNDUgOTcuNzE1OCAwLjg2MzM4IDk3LjY5MjkgMC44NTQwNjlDOTcuNjcwMSAwLjg0NDc1OSA5Ny42NDUgMC44Mzc3NzYgOTcuNjE3NyAwLjgzMzEyMUM5Ny41OTAzIDAuODI4NDY2IDk3LjU2MjkgMC44Mjg0NjYgOTcuNTM3OCAwLjgyODQ2Nkg5Ny4zNTA3VjEuMTI4NzJIOTcuNTQ5MloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfM18yIj4KPHJlY3Qgd2lkdGg9Ijk5IiBoZWlnaHQ9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "p5-eyebrow",
+        "kind": "text",
+        "body": "<span style=\"color:#C8C8C8;font-family:Helvetica;font-size:10px\">NUTRITION PROGRAM PERFORMANCE</span>",
+        "verticalAlign": "end"
+      },
+      {
+        "id": "p5-label",
+        "kind": "text",
+        "body": "**<span style=\"color:#FFFFFF;font-family:Helvetica;font-size:20px\">RETENTION & COACH ATTACH</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p5-frule",
+        "kind": "divider",
+        "style": {
+          "color": "#E8E8E8"
+        }
+      },
+      {
+        "id": "p5-footl",
+        "kind": "text",
+        "body": "<span style=\"color:#8A8A8A;font-family:Helvetica;font-size:9px\">BODi \u00b7 Nutrition Program Performance \u2014 Demonstration Data</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p5-footr",
+        "kind": "text",
+        "body": "<p style=\"text-align:right\"><span style=\"color:#8A8A8A;font-family:Helvetica;font-size:9px\">Page 5 of 6</span></p>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p5-h1",
+        "kind": "text",
+        "body": "## **<span style=\"color:#161819;font-family:Helvetica;font-size:20px\">Program choice and coach attachment are the two biggest levers</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p5-body",
+        "kind": "text",
+        "body": "<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">Twelve-month retention on a nutrition subscription varies sharply by fitness program \u2014 80 Day Obsession members are still active at more than 3x the rate of Barre Blend or 9 Week Control Freak members, and Insanity Max:30 members have almost entirely churned off their nutrition subscription by 12 months. Coach attachment tells a similar story on the front end: members with a coach convert to a nutrition subscription at nearly a 15-point higher rate than members without one.</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p5-bar1",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "rp-retention",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "p5b-prog",
+            "formula": "[Retention By Program/Fitness Program]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "p5b-mo",
+            "formula": "[Retention By Program/Months Since Signup]",
+            "name": "Months Since Signup"
+          },
+          {
+            "id": "p5b-rate",
+            "formula": "Avg([Retention By Program/Retention Rate])",
+            "name": "Retention Rate",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "p5b-prog",
+          "sort": {
+            "by": "p5b-rate",
+            "direction": "descending"
+          },
+          "format": {
+            "labels": {
+              "labelAngle": -30
+            }
+          }
+        },
+        "yAxis": {
+          "columnIds": [
+            "p5b-rate"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "p5b-mo",
+          "scheme": [
+            "#5FBE9A",
+            "#208468",
+            "#108474"
+          ]
+        },
+        "stacking": "none",
+        "legend": {
+          "visibility": "visible"
+        },
+        "name": {
+          "text": "Nutrition retention rate by fitness program (3 / 6 / 12 months)",
+          "fontWeight": "bold",
+          "fontSize": 12,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "square"
+        }
+      },
+      {
+        "id": "p5-bar2",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "rp-coach",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "p5c-coach",
+            "formula": "If([Coach Attach/Coach Attached],\"Coach Attached\",\"No Coach\")",
+            "name": "Coach Attached"
+          },
+          {
+            "id": "p5c-coach2",
+            "formula": "If([Coach Attach/Coach Attached],\"Coach Attached\",\"No Coach\")",
+            "name": "Series"
+          },
+          {
+            "id": "p5c-rate",
+            "formula": "Avg([Coach Attach/Attach Rate])",
+            "name": "Nutrition Attach Rate",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "p5c-coach",
+          "sort": {
+            "by": "p5c-rate",
+            "direction": "descending"
+          }
+        },
+        "yAxis": {
+          "columnIds": [
+            "p5c-rate"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "p5c-coach2",
+          "scheme": [
+            "#108474",
+            "#8A8A8A"
+          ]
+        },
+        "legend": {
+          "visibility": "hidden"
+        },
+        "name": {
+          "text": "Nutrition attach rate \u2014 coached vs. uncoached members",
+          "fontWeight": "bold",
+          "fontSize": 12,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "square"
+        }
+      },
+      {
+        "id": "p6-hdrbg",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MTYiIGhlaWdodD0iODQiPjxyZWN0IHdpZHRoPSI4MTYiIGhlaWdodD0iODQiIGZpbGw9IiMwMDAwMDAiLz48cmVjdCB5PSI4MCIgd2lkdGg9IjgxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjMjA4NDY4Ii8+PC9zdmc+"
+        },
+        "style": {
+          "fit": "stretch"
+        }
+      },
+      {
+        "id": "p6-logo",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTkiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCA5OSAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzNfMikiPgo8cGF0aCBkPSJNMCAwLjIwNzIzSDE3LjE4NTFDMTkuMzgyNSAwLjIwNzIzIDIwLjU4MjggMC40MTIwNzQgMjEuNTggMC45MDU1NjJDMjMuMTIwMyAxLjcyMDI4IDIzLjc1MDEgMy4wMzA4MSAyMy43NTAxIDUuNTA1MjRDMjMuNzUwMSA3Ljk3OTY2IDIyLjg5NDQgOS4zNDgzOSAyMS4wOTYzIDkuNjk3NTVDMjMuNjY1NyAxMC4xOTM0IDI0LjUyMTQgMTEuMzI3IDI0LjUyMTQgMTQuMTUyOUMyNC41MjE0IDE2LjU5OTQgMjMuODM2OCAxOC4xNDI3IDIyLjMyMzkgMTguOTU3NEMyMS40Mzg1IDE5LjQyMyAyMC4xODM1IDE5LjYyNzggMTcuOTg2IDE5LjYyNzhIMFYwLjIwNzIzWk0xNS4zODQ2IDcuOTUxNzNDMTYuNDk4MiA3Ljk1MTczIDE2Ljg5NzUgNy44OTM1MyAxNy4yNjk1IDcuNzE4OTVDMTcuNzI1OSA3LjQ1NTkxIDE4LjAxMTEgNi45MzIxNiAxOC4wMTExIDYuMjY0MDlDMTguMDExMSA1LjQ3NzMgMTcuNjM5MiA0Ljg5NTM2IDE3LjAxMTYgNC42NjI1OEMxNi42Mzk3IDQuNTQ2MTkgMTYuMzU0NCA0LjUxNTkzIDE1LjI0MDkgNC41MTU5M0g1LjY1MjI5VjcuOTUxNzNIMTUuMzg2OUgxNS4zODQ2Wk0xNi4wMTQ0IDE1LjMxOTFDMTcuMTg1MSAxNS4zMTkxIDE3LjQxMzMgMTUuMjkxMiAxNy43ODUyIDE1LjE3NDhDMTguMzU1NyAxNC45NyAxOC42OTggMTQuMzg4IDE4LjY5OCAxMy41NzMzQzE4LjY5OCAxMi43NTg2IDE4LjM1NTcgMTIuMTQ2NCAxNy43MjgyIDExLjkxMzZDMTcuMzg1OSAxMS43OTcyIDE3LjE1NzcgMTEuNzY5MyAxNS44NzMgMTEuNzY5M0g1LjY1MjI5VjE1LjMyMTVIMTYuMDE0NFYxNS4zMTkxWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ5LjIzOSAwLjI5MzI5OUM1Mi4xNzgxIDAuODQ3MzA5IDUzLjYwNjYgMi4zOTA2MiA1NC4wMDU5IDUuNTA1MThDNTQuMTIgNi4yOTE5NyA1NC4xNzcxIDcuODYzMjIgNTQuMTc3MSAxMC4yMjEyQzU0LjE3NzEgMTQuOTA5NCA1My42OTEgMTYuODAxOSA1Mi4wNjQgMTguMTcwNkM1MC45MjMxIDE5LjE1OTkgNDkuMzIzNSAxOS42MjU1IDQ2LjU1NTUgMTkuNzQxOEM0NS41Mjg3IDE5LjggNDIuOTg2NiAxOS44MzAzIDQxLjEzMTQgMTkuODMwM0MzNi41OTI3IDE5LjgzMDMgMzQuMjgxMSAxOS43NDE4IDMzLjEzNzkgMTkuNTA5MUMzMS4wMjQ4IDE5LjEyOTYgMjkuNzk3MiAxOC4zMTQ5IDI5LjA4NTIgMTYuODg4QzI4LjM0MzYgMTUuNDYxMSAyOC4xNzI1IDE0LjAzNDEgMjguMTcyNSA5Ljc4MzYzQzI4LjE3MjUgNi41MjI0MiAyOC4yMjk1IDUuNzA3NyAyOC41NzE4IDQuMzk3MTZDMjkuMTE0OSAyLjMzMDEgMzAuMjI4NSAxLjIyNDQxIDMyLjM2ODkgMC41ODE5NDNDMzMuOTY4NSAwLjExNjM4OSAzNS43MDk2IDAgNDAuNzMyMSAwQzQ2LjIxMzIgMCA0Ny44OTczIDAuMDU4MTk0MyA0OS4yMzkgMC4yOTA5NzJWMC4yOTMyOTlaTTM1LjAyMjcgNS40NDY5OUMzNC4yNTE1IDYuMDU5MTkgMzQuMDIzMyA3LjAxODIzIDM0LjAyMzMgOS44MTM4OUMzNC4wMjMzIDEyLjYwOTUgMzQuMjUxNSAxMy43MTUyIDM0Ljk2NTcgMTQuMzI3NEMzNS43MzcgMTQuOTY3NiAzNi42Nzk0IDE1LjA4NCA0MS4wNDQ3IDE1LjA4NEM0Ni4wMzk4IDE1LjA4NCA0Ny4wNjY3IDE0LjkwOTQgNDcuNzIzOSAxMy45NzgzQzQ4LjI2NjkgMTMuMjc5OSA0OC40MDg0IDEyLjI4ODMgNDguNDA4NCA5LjY5NzVDNDguNDA4NCA0LjgwNDUyIDQ4LjMyMTcgNC43NDYzMyA0MS4xODYyIDQuNzQ2MzNDMzYuOTMyNyA0Ljc0NjMzIDM1Ljc2MjEgNC44OTI5OCAzNS4wMjA1IDUuNDQ0NjZMMzUuMDIyNyA1LjQ0Njk5WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTU4Ljc0MzIgMC4yMDcyM0g3NS4xODQ0Qzc5LjIwOTcgMC4yMDcyMyA4MS4wOTIyIDAuNjcyNzg1IDgyLjQwNjYgMi4wMTM1OEM4My40NjMyIDMuMDYxMDggODMuODg5OSA0LjI4NTQ4IDg0LjA5MDcgNi43NTk5MUM4NC4xNDc3IDcuNjYzMDggODQuMjA0OCA5LjAwMTU1IDg0LjIwNDggOS45MzQ5OUM4NC4yMDQ4IDExLjY4MDggODQuMDkwNyAxMy42OTIgODMuOTE5NSAxNC43OTc3QzgzLjYwNDYgMTcuMTI3OCA4Mi4wMDczIDE4LjkzMTggNzkuOTIzOSAxOS4zMzkyQzc4Ljg0IDE5LjU3MiA3Ny45ODIgMTkuNjMwMiA3NS45NTU3IDE5LjYzMDJINTguNzQzMlYwLjIwNzIzWk03NC4yNDIgMTQuOTk3OUM3NS44MTE5IDE0Ljk5NzkgNzUuOTI2IDE0Ljk5NzkgNzYuNjEwNiAxNC43NjUxQzc4LjAwOTQgMTQuMzI3NSA3OC4zODEzIDEzLjMxMDMgNzguMzgxMyA5Ljk2MDU5Qzc4LjM4MTMgNS44ODQ2NiA3Ny42OTY4IDUuMDM5NjggNzQuMzU2IDUuMDM5NjhINjQuNTM3VjE0Ljk5NzlINzQuMjQyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTk0LjMyOTYgMTUuNzY4MUM5NC43MDE1IDE2LjI2NjMgOTQuNTA5OCAxNi44NDEzIDk0LjAyMTUgMTcuMzEzOEM5MS44MTI2IDE5LjQzNjcgODkuNjY3NiAxOS42MzIyIDg4LjMwNzYgMTkuNjMyMkM4Ny4wNjE3IDE5LjYzMjIgODYuMzgxNyAxOC44MDU5IDg2Ljk4NDEgMTYuODY5MkM4Ny43MDI5IDE0LjY1NTUgODguNTc2OSAxMi4yODM1IDg5LjE0MDUgMTAuNDM3NUM4OS4zOTgzIDkuNjI1MTYgODkuMzU5NiA5LjM5MDA1IDg5LjAyNDEgOS4zOTAwNUM4OC42Mzg1IDkuMzkwMDUgODcuNzc4MiA5Ljc4MzQ0IDg2Ljk1NjcgMTAuMjkzMkM4Ni42MDk5IDkuNzU1NTEgODcuMDM0MyA5LjE0MDk4IDg4LjExMTMgOC40MTkzN0M5MC4yNjc4IDcuMDA0MDggOTEuNzgyOSA2LjY4OTgzIDkzLjAwMzggNi42ODk4M0M5NC4yODg1IDYuNjg5ODMgOTQuNTk2NSA3LjU0MTggOTMuNzYxNCAxMC4xMDkzQzkzLjE5NTQgMTEuODI0OSA5Mi4zNjI1IDE0LjE5NjkgOTEuNzk2NiAxNS45MTI1QzkxLjUzODggMTYuNjA2MSA5MS41Mzg4IDE2Ljk5OTUgOTEuODM1NCAxNi45OTk1QzkyLjEzMjEgMTYuOTk5NSA5My4wODE0IDE2LjYwNjEgOTQuMjg4NSAxNS43MDNMOTQuMzI3MyAxNS43NjgxSDk0LjMyOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTUuMDUwNyAyLjI2MjU4Qzk1LjA1MDcgMy42NjM5IDkzLjgwNDcgNC45ODg0IDkxLjk2NzggNC45ODg0QzkwLjQ2NjMgNC45ODg0IDg5LjQyNTggNC4xNzYwMSA4OS40MjU4IDIuODI1OUM4OS40MjU4IDEuNjQ4MDQgOTAuNTQzOSAwLjEzOTY0OCA5Mi42NzUyIDAuMTM5NjQ4Qzk0LjMxODIgMC4xMzk2NDggOTUuMDUwNyAxLjEwOCA5NS4wNTA3IDIuMjYyNThaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTYuNTg2MyAwLjgwMjg2M0M5Ni42NDM0IDAuNjc3MTc1IDk2LjcxODcgMC41NzAxMDcgOTYuODEyMiAwLjQ4MTY2Qzk2LjkwNTggMC4zOTMyMTMgOTcuMDE1MyAwLjMyNTcxNCA5Ny4xNDA4IDAuMjc2ODM1Qzk3LjI2NCAwLjIyNzk1NyA5Ny4zOTQxIDAuMjA0NjgxIDk3LjUzMSAwLjIwNDY4MUM5Ny42Njc5IDAuMjA0NjgxIDk3Ljc5NTYgMC4yMjc5NTcgOTcuOTIxMSAwLjI3NjgzNUM5OC4wNDY2IDAuMzI1NzE0IDk4LjE1MzkgMC4zOTMyMTMgOTguMjQ5NyAwLjQ4MTY2Qzk4LjM0MzIgMC41NzAxMDcgOTguNDE4NSAwLjY3NzE3NSA5OC40NzU2IDAuODAyODYzQzk4LjUzMjYgMC45Mjg1NTEgOTguNTYgMS4wNjgyIDk4LjU2IDEuMjI0MTVDOTguNTYgMS4zODAwOSA5OC41MzI2IDEuNTIyMDcgOTguNDc1NiAxLjY0Nzc2Qzk4LjQxODUgMS43NzM0NSA5OC4zNDMyIDEuODgwNTIgOTguMjQ5NyAxLjk2ODk2Qzk4LjE1NjEgMi4wNTc0MSA5OC4wNDY2IDIuMTI3MjQgOTcuOTIxMSAyLjE3Mzc5Qzk3Ljc5NTYgMi4yMjAzNCA5Ny42Njc5IDIuMjQzNjIgOTcuNTMxIDIuMjQzNjJDOTcuMzk0MSAyLjI0MzYyIDk3LjI2NjMgMi4yMjAzNCA5Ny4xNDA4IDIuMTczNzlDOTcuMDE3NiAyLjEyNzI0IDk2LjkwODEgMi4wNTc0MSA5Ni44MTIyIDEuOTY4OTZDOTYuNzE4NyAxLjg4MDUyIDk2LjY0MzQgMS43NzM0NSA5Ni41ODYzIDEuNjQ3NzZDOTYuNTI5MyAxLjUyMjA3IDk2LjUwMTkgMS4zODI0MiA5Ni41MDE5IDEuMjI0MTVDOTYuNTAxOSAxLjA2NTg3IDk2LjUyOTMgMC45Mjg1NTEgOTYuNTg2MyAwLjgwMjg2M1pNOTYuODMyNyAxLjU0NTM1Qzk2Ljg3MTUgMS42NDMxMSA5Ni45MjYzIDEuNzI5MjMgOTYuOTkyNSAxLjgwMTM4Qzk3LjA2MDkgMS44NzM1MyA5Ny4xNDA4IDEuOTI5NCA5Ny4yMzIxIDEuOTY4OTZDOTcuMzIzMyAyLjAwODUzIDk3LjQyMTQgMi4wMjk0OCA5Ny41Mjg3IDIuMDI5NDhDOTcuNjM1OSAyLjAyOTQ4IDk3LjcyOTUgMi4wMDg1MyA5Ny44MjA3IDEuOTY4OTZDOTcuOTEyIDEuOTI5NCA5Ny45OTE5IDEuODczNTMgOTguMDYwMyAxLjgwMTM4Qzk4LjEyODggMS43MjkyMyA5OC4xODEyIDEuNjQ1NDMgOTguMjIyMyAxLjU0NTM1Qzk4LjI2MzQgMS40NDc1OSA5OC4yODE2IDEuMzQwNTIgOTguMjgxNiAxLjIyNDE1Qzk4LjI4MTYgMS4xMDc3NyA5OC4yNjExIDEuMDAwNyA5OC4yMjIzIDAuOTAyOTQ4Qzk4LjE4MzUgMC44MDUxOTEgOTguMTI4OCAwLjcyMTM5OSA5OC4wNjAzIDAuNjUxNTcyQzk3Ljk5MTkgMC41ODE3NDUgOTcuOTEyIDAuNTI1ODg0IDk3LjgyMDcgMC40ODYzMTVDOTcuNzI5NSAwLjQ0Njc0NyA5Ny42MzEzIDAuNDI1Nzk5IDk3LjUyODcgMC40MjU3OTlDOTcuNDI2IDAuNDI1Nzk5IDk3LjMyNTYgMC40NDY3NDcgOTcuMjMyMSAwLjQ4NjMxNUM5Ny4xNDA4IDAuNTI1ODg0IDk3LjA2MDkgMC41ODE3NDUgOTYuOTkyNSAwLjY1MTU3MkM5Ni45MjQgMC43MjM3MjYgOTYuODcxNSAwLjgwNzUxOCA5Ni44MzI3IDAuOTAyOTQ4Qzk2Ljc5NCAwLjk5ODM3OCA5Ni43NzM0IDEuMTA3NzcgOTYuNzczNCAxLjIyNDE1Qzk2Ljc3MzQgMS4zNDA1MiA5Ni43OTQgMS40NDc1OSA5Ni44MzI3IDEuNTQ1MzVaTTk3LjU1MTUgMC42NTE1NzJDOTcuNjkyOSAwLjY1MTU3MiA5Ny44MDAyIDAuNjc3MTc1IDk3Ljg3NTUgMC43MjgzODFDOTcuOTUwOCAwLjc3OTU4NyA5Ny45ODk2IDAuODY1NzA3IDk3Ljk4OTYgMC45OTEzOTVDOTcuOTg5NiAxLjA0NDkyIDk3Ljk4MjcgMS4wODkxNSA5Ny45NjY4IDEuMTI2MzlDOTcuOTUwOCAxLjE2MzYzIDk3LjkzMDMgMS4xOTM4OSA5Ny45MDI5IDEuMjE3MTZDOTcuODc1NSAxLjI0MDQ0IDk3Ljg0NTggMS4yNTkwNiA5Ny44MDkzIDEuMjcwN0M5Ny43NzI4IDEuMjgyMzQgOTcuNzM2MyAxLjI5MTY1IDk3LjY5NTIgMS4yOTM5N0w5Ny45OTQxIDEuNzkyMDdIOTcuNzYxNEw5Ny40ODc2IDEuMzAzMjhIOTcuMzQ4NFYxLjc5MjA3SDk3LjEyNzFWMC42NTE1NzJIOTcuNTUxNVpNOTcuNTQ5MiAxLjEyODcyQzk3LjYxMzEgMS4xMjg3MiA5Ny42NjU2IDEuMTE5NDEgOTcuNzA2NiAxLjEwMDc5Qzk3Ljc0NzcgMS4wODIxNyA5Ny43NjgyIDEuMDM3OTQgOTcuNzY4MiAwLjk3MDQ0N0M5Ny43NjgyIDAuOTQwMTg5IDk3Ljc2MTQgMC45MTQ1ODYgOTcuNzQ3NyAwLjg5NTk2NUM5Ny43MzQgMC44NzczNDUgOTcuNzE1OCAwLjg2MzM4IDk3LjY5MjkgMC44NTQwNjlDOTcuNjcwMSAwLjg0NDc1OSA5Ny42NDUgMC44Mzc3NzYgOTcuNjE3NyAwLjgzMzEyMUM5Ny41OTAzIDAuODI4NDY2IDk3LjU2MjkgMC44Mjg0NjYgOTcuNTM3OCAwLjgyODQ2Nkg5Ny4zNTA3VjEuMTI4NzJIOTcuNTQ5MloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfM18yIj4KPHJlY3Qgd2lkdGg9Ijk5IiBoZWlnaHQ9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "p6-eyebrow",
+        "kind": "text",
+        "body": "<span style=\"color:#C8C8C8;font-family:Helvetica;font-size:10px\">NUTRITION PROGRAM PERFORMANCE</span>",
+        "verticalAlign": "end"
+      },
+      {
+        "id": "p6-label",
+        "kind": "text",
+        "body": "**<span style=\"color:#FFFFFF;font-family:Helvetica;font-size:20px\">METHODOLOGY & SOURCES</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p6-frule",
+        "kind": "divider",
+        "style": {
+          "color": "#E8E8E8"
+        }
+      },
+      {
+        "id": "p6-footl",
+        "kind": "text",
+        "body": "<span style=\"color:#8A8A8A;font-family:Helvetica;font-size:9px\">BODi \u00b7 Nutrition Program Performance \u2014 Demonstration Data</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p6-footr",
+        "kind": "text",
+        "body": "<p style=\"text-align:right\"><span style=\"color:#8A8A8A;font-family:Helvetica;font-size:9px\">Page 6 of 6</span></p>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p6-h1",
+        "kind": "text",
+        "body": "## **<span style=\"color:#161819;font-family:Helvetica;font-size:20px\">About this report</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p6-body1",
+        "kind": "text",
+        "body": "<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">This report is built entirely in Sigma as a reports-as-code document \u2014 every table, chart, KPI and page is declared in a JSON specification and rendered by Sigma's report engine, with no manual layout. It is paired with the \"BODi \u2014 Nutrition Business\" Sigma workbook, which shares the same underlying data model and exposes these figures for interactive drill-down.</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p6-rule1",
+        "kind": "divider",
+        "style": {
+          "color": "#E8E8E8"
+        }
+      },
+      {
+        "id": "p6-h2",
+        "kind": "text",
+        "body": "## **<span style=\"color:#161819;font-family:Helvetica;font-size:20px\">Data & disclosure</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p6-body2",
+        "kind": "text",
+        "body": "<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">All figures in this report are drawn from a synthetic, deterministically generated dataset built for demonstration purposes and do not represent BODi's actual financial or operating results. The dataset models a cohort of members joining over a 24-month window, with signup channel, fitness program, coach attachment, and nutrition-program adoption assigned by seeded hash functions so results are reproducible from the same source SQL. Figures are queried live from Snowflake through Sigma at report-build time.</span>",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p6-rule2",
+        "kind": "divider",
+        "style": {
+          "color": "#E8E8E8"
+        }
+      },
+      {
+        "id": "p6-h3",
+        "kind": "text",
+        "body": "## **<span style=\"color:#161819;font-family:Helvetica;font-size:20px\">Definitions</span>**",
+        "verticalAlign": "start"
+      },
+      {
+        "id": "p6-body3",
+        "kind": "text",
+        "body": "**<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">Active subscriber</span>** \u2014 <span style=\"color:#8A8A8A;font-family:Helvetica;font-size:12px\">A member with an active nutrition-product subscription in the given month.</span>\n\n**<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">Attach rate</span>** \u2014 <span style=\"color:#8A8A8A;font-family:Helvetica;font-size:12px\">Share of all members in a period who are subscribed to a nutrition product.</span>\n\n**<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">Retention rate</span>** \u2014 <span style=\"color:#8A8A8A;font-family:Helvetica;font-size:12px\">Share of nutrition subscribers still active N months after their nutrition signup month.</span>\n\n**<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">Revenue per subscriber</span>** \u2014 <span style=\"color:#8A8A8A;font-family:Helvetica;font-size:12px\">Total nutrition product revenue in a month divided by active subscribers, per month.</span>\n\n**<span style=\"color:#161819;font-family:Helvetica;font-size:12px\">Coach attached</span>** \u2014 <span style=\"color:#8A8A8A;font-family:Helvetica;font-size:12px\">Member has an assigned BODi coach as of the current month.</span>",
+        "verticalAlign": "start"
+      }
+    ],
+    "pages": [
+      {
+        "id": "p1",
+        "name": "Cover"
+      },
+      {
+        "id": "p2",
+        "name": "Executive Summary"
+      },
+      {
+        "id": "p3",
+        "name": "Subscriber Growth & Mix"
+      },
+      {
+        "id": "p4",
+        "name": "Revenue per Subscriber"
+      },
+      {
+        "id": "p5",
+        "name": "Retention & Coach Attach"
+      },
+      {
+        "id": "p6",
+        "name": "Methodology & Sources"
+      },
+      {
+        "id": "pdata",
+        "name": "Data",
+        "visibility": "hidden"
+      }
+    ],
+    "settings": {
+      "theme": {
+        "overrides": {
+          "categoricalScheme": [
+            "#108474",
+            "#208468",
+            "#5FBE9A",
+            "#161819",
+            "#8A8A8A"
+          ]
+        }
+      }
+    },
+    "config": {
+      "margin": 0,
+      "pageHeight": 1056,
+      "pageWidth": 816
+    },
+    "layout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Page id=\"p1\">\n  <Element elementId=\"cv-bg\" x=\"0\" y=\"0\" width=\"816\" height=\"1056\"/>\n  <Element elementId=\"cv-logo\" x=\"56\" y=\"80\" width=\"160\" height=\"32\"/>\n  <Element elementId=\"cv-tag\" x=\"56\" y=\"420\" width=\"500\" height=\"18\"/>\n  <Element elementId=\"cv-title1\" x=\"56\" y=\"448\" width=\"620\" height=\"60\"/>\n  <Element elementId=\"cv-title2\" x=\"56\" y=\"508\" width=\"620\" height=\"60\"/>\n  <Element elementId=\"cv-rule\" x=\"56\" y=\"610\" width=\"80\" height=\"4\"/>\n  <Element elementId=\"cv-sub\" x=\"56\" y=\"634\" width=\"600\" height=\"70\"/>\n  <Element elementId=\"cv-foot\" x=\"56\" y=\"960\" width=\"600\" height=\"20\"/>\n</Page>\n<Page id=\"p2\">\n  <Element elementId=\"p2-hdrbg\" x=\"0\" y=\"0\" width=\"816\" height=\"84\"/>\n  <Element elementId=\"p2-logo\" x=\"56\" y=\"16\" width=\"90\" height=\"18\"/>\n  <Element elementId=\"p2-eyebrow\" x=\"340\" y=\"14\" width=\"420\" height=\"14\"/>\n  <Element elementId=\"p2-label\" x=\"340\" y=\"30\" width=\"420\" height=\"30\"/>\n  <Element elementId=\"p2-frule\" x=\"56\" y=\"1000\" width=\"704\" height=\"1\"/>\n  <Element elementId=\"p2-footl\" x=\"56\" y=\"1008\" width=\"420\" height=\"16\"/>\n  <Element elementId=\"p2-footr\" x=\"356\" y=\"1008\" width=\"404\" height=\"16\"/>\n  <Element elementId=\"p2-h1\" x=\"56\" y=\"104\" width=\"704\" height=\"44\"/>\n  <Element elementId=\"p2-body\" x=\"56\" y=\"154\" width=\"704\" height=\"90\"/>\n  <Element elementId=\"p2-k1\" x=\"56.0\" y=\"258\" width=\"167.0\" height=\"112\"/>\n  <Element elementId=\"p2-k2\" x=\"235.0\" y=\"258\" width=\"167.0\" height=\"112\"/>\n  <Element elementId=\"p2-k3\" x=\"414.0\" y=\"258\" width=\"167.0\" height=\"112\"/>\n  <Element elementId=\"p2-k4\" x=\"593.0\" y=\"258\" width=\"167.0\" height=\"112\"/>\n  <Element elementId=\"p2-h2\" x=\"56\" y=\"392\" width=\"704\" height=\"26\"/>\n  <Element elementId=\"p2-body2\" x=\"56\" y=\"422\" width=\"704\" height=\"130\"/>\n  <Element elementId=\"p2-rule\" x=\"56\" y=\"566\" width=\"704\" height=\"1\"/>\n  <Element elementId=\"p2-body3\" x=\"56\" y=\"582\" width=\"704\" height=\"50\"/>\n</Page>\n<Page id=\"p3\">\n  <Element elementId=\"p3-hdrbg\" x=\"0\" y=\"0\" width=\"816\" height=\"84\"/>\n  <Element elementId=\"p3-logo\" x=\"56\" y=\"16\" width=\"90\" height=\"18\"/>\n  <Element elementId=\"p3-eyebrow\" x=\"340\" y=\"14\" width=\"420\" height=\"14\"/>\n  <Element elementId=\"p3-label\" x=\"340\" y=\"30\" width=\"420\" height=\"30\"/>\n  <Element elementId=\"p3-frule\" x=\"56\" y=\"1000\" width=\"704\" height=\"1\"/>\n  <Element elementId=\"p3-footl\" x=\"56\" y=\"1008\" width=\"420\" height=\"16\"/>\n  <Element elementId=\"p3-footr\" x=\"356\" y=\"1008\" width=\"404\" height=\"16\"/>\n  <Element elementId=\"p3-h1\" x=\"56\" y=\"106\" width=\"704\" height=\"44\"/>\n  <Element elementId=\"p3-body\" x=\"56\" y=\"156\" width=\"704\" height=\"90\"/>\n  <Element elementId=\"p3-bar1\" x=\"56\" y=\"262\" width=\"704\" height=\"180\"/>\n  <Element elementId=\"p3-tbl1\" x=\"56\" y=\"458\" width=\"704\" height=\"234\"/>\n  <Element elementId=\"p3-bar2\" x=\"56\" y=\"708\" width=\"704\" height=\"200\"/>\n</Page>\n<Page id=\"p4\">\n  <Element elementId=\"p4-hdrbg\" x=\"0\" y=\"0\" width=\"816\" height=\"84\"/>\n  <Element elementId=\"p4-logo\" x=\"56\" y=\"16\" width=\"90\" height=\"18\"/>\n  <Element elementId=\"p4-eyebrow\" x=\"340\" y=\"14\" width=\"420\" height=\"14\"/>\n  <Element elementId=\"p4-label\" x=\"340\" y=\"30\" width=\"420\" height=\"30\"/>\n  <Element elementId=\"p4-frule\" x=\"56\" y=\"1000\" width=\"704\" height=\"1\"/>\n  <Element elementId=\"p4-footl\" x=\"56\" y=\"1008\" width=\"420\" height=\"16\"/>\n  <Element elementId=\"p4-footr\" x=\"356\" y=\"1008\" width=\"404\" height=\"16\"/>\n  <Element elementId=\"p4-h1\" x=\"56\" y=\"106\" width=\"704\" height=\"44\"/>\n  <Element elementId=\"p4-body\" x=\"56\" y=\"156\" width=\"704\" height=\"90\"/>\n  <Element elementId=\"p4-line1\" x=\"56\" y=\"262\" width=\"704\" height=\"200\"/>\n  <Element elementId=\"p4-bar1\" x=\"56\" y=\"478\" width=\"704\" height=\"200\"/>\n</Page>\n<Page id=\"p5\">\n  <Element elementId=\"p5-hdrbg\" x=\"0\" y=\"0\" width=\"816\" height=\"84\"/>\n  <Element elementId=\"p5-logo\" x=\"56\" y=\"16\" width=\"90\" height=\"18\"/>\n  <Element elementId=\"p5-eyebrow\" x=\"340\" y=\"14\" width=\"420\" height=\"14\"/>\n  <Element elementId=\"p5-label\" x=\"340\" y=\"30\" width=\"420\" height=\"30\"/>\n  <Element elementId=\"p5-frule\" x=\"56\" y=\"1000\" width=\"704\" height=\"1\"/>\n  <Element elementId=\"p5-footl\" x=\"56\" y=\"1008\" width=\"420\" height=\"16\"/>\n  <Element elementId=\"p5-footr\" x=\"356\" y=\"1008\" width=\"404\" height=\"16\"/>\n  <Element elementId=\"p5-h1\" x=\"56\" y=\"106\" width=\"704\" height=\"44\"/>\n  <Element elementId=\"p5-body\" x=\"56\" y=\"156\" width=\"704\" height=\"90\"/>\n  <Element elementId=\"p5-bar1\" x=\"56\" y=\"262\" width=\"704\" height=\"240\"/>\n  <Element elementId=\"p5-bar2\" x=\"56\" y=\"518\" width=\"704\" height=\"170\"/>\n</Page>\n<Page id=\"p6\">\n  <Element elementId=\"p6-hdrbg\" x=\"0\" y=\"0\" width=\"816\" height=\"84\"/>\n  <Element elementId=\"p6-logo\" x=\"56\" y=\"16\" width=\"90\" height=\"18\"/>\n  <Element elementId=\"p6-eyebrow\" x=\"340\" y=\"14\" width=\"420\" height=\"14\"/>\n  <Element elementId=\"p6-label\" x=\"340\" y=\"30\" width=\"420\" height=\"30\"/>\n  <Element elementId=\"p6-frule\" x=\"56\" y=\"1000\" width=\"704\" height=\"1\"/>\n  <Element elementId=\"p6-footl\" x=\"56\" y=\"1008\" width=\"420\" height=\"16\"/>\n  <Element elementId=\"p6-footr\" x=\"356\" y=\"1008\" width=\"404\" height=\"16\"/>\n  <Element elementId=\"p6-h1\" x=\"56\" y=\"106\" width=\"704\" height=\"40\"/>\n  <Element elementId=\"p6-body1\" x=\"56\" y=\"154\" width=\"704\" height=\"80\"/>\n  <Element elementId=\"p6-rule1\" x=\"56\" y=\"250\" width=\"704\" height=\"1\"/>\n  <Element elementId=\"p6-h2\" x=\"56\" y=\"270\" width=\"704\" height=\"40\"/>\n  <Element elementId=\"p6-body2\" x=\"56\" y=\"318\" width=\"704\" height=\"106\"/>\n  <Element elementId=\"p6-rule2\" x=\"56\" y=\"440\" width=\"704\" height=\"1\"/>\n  <Element elementId=\"p6-h3\" x=\"56\" y=\"460\" width=\"704\" height=\"40\"/>\n  <Element elementId=\"p6-body3\" x=\"56\" y=\"508\" width=\"704\" height=\"170\"/>\n</Page>\n<Page id=\"pdata\">\n  <Element elementId=\"fact\" x=\"0\" y=\"0\" width=\"100\" height=\"20\"/>\n  <Element elementId=\"rp-qtr\" x=\"0\" y=\"20\" width=\"100\" height=\"20\"/>\n  <Element elementId=\"rp-qtrtotal\" x=\"0\" y=\"40\" width=\"100\" height=\"20\"/>\n  <Element elementId=\"rp-retention\" x=\"0\" y=\"60\" width=\"100\" height=\"20\"/>\n  <Element elementId=\"rp-coach\" x=\"0\" y=\"80\" width=\"100\" height=\"20\"/>\n</Page>"
+  }
+}

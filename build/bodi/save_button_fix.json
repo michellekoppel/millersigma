@@ -1,0 +1,2648 @@
+{
+  "name": "BODi \u2014 Nutrition Business",
+  "folderId": "004d8497-18ea-4cf6-a8c5-deca403c22d9",
+  "document": {
+    "schemaVersion": 1,
+    "elements": [
+      {
+        "id": "c-header",
+        "kind": "container",
+        "style": {
+          "backgroundColor": "#000000"
+        }
+      },
+      {
+        "id": "logo",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTkiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCA5OSAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzNfMikiPgo8cGF0aCBkPSJNMCAwLjIwNzIzSDE3LjE4NTFDMTkuMzgyNSAwLjIwNzIzIDIwLjU4MjggMC40MTIwNzQgMjEuNTggMC45MDU1NjJDMjMuMTIwMyAxLjcyMDI4IDIzLjc1MDEgMy4wMzA4MSAyMy43NTAxIDUuNTA1MjRDMjMuNzUwMSA3Ljk3OTY2IDIyLjg5NDQgOS4zNDgzOSAyMS4wOTYzIDkuNjk3NTVDMjMuNjY1NyAxMC4xOTM0IDI0LjUyMTQgMTEuMzI3IDI0LjUyMTQgMTQuMTUyOUMyNC41MjE0IDE2LjU5OTQgMjMuODM2OCAxOC4xNDI3IDIyLjMyMzkgMTguOTU3NEMyMS40Mzg1IDE5LjQyMyAyMC4xODM1IDE5LjYyNzggMTcuOTg2IDE5LjYyNzhIMFYwLjIwNzIzWk0xNS4zODQ2IDcuOTUxNzNDMTYuNDk4MiA3Ljk1MTczIDE2Ljg5NzUgNy44OTM1MyAxNy4yNjk1IDcuNzE4OTVDMTcuNzI1OSA3LjQ1NTkxIDE4LjAxMTEgNi45MzIxNiAxOC4wMTExIDYuMjY0MDlDMTguMDExMSA1LjQ3NzMgMTcuNjM5MiA0Ljg5NTM2IDE3LjAxMTYgNC42NjI1OEMxNi42Mzk3IDQuNTQ2MTkgMTYuMzU0NCA0LjUxNTkzIDE1LjI0MDkgNC41MTU5M0g1LjY1MjI5VjcuOTUxNzNIMTUuMzg2OUgxNS4zODQ2Wk0xNi4wMTQ0IDE1LjMxOTFDMTcuMTg1MSAxNS4zMTkxIDE3LjQxMzMgMTUuMjkxMiAxNy43ODUyIDE1LjE3NDhDMTguMzU1NyAxNC45NyAxOC42OTggMTQuMzg4IDE4LjY5OCAxMy41NzMzQzE4LjY5OCAxMi43NTg2IDE4LjM1NTcgMTIuMTQ2NCAxNy43MjgyIDExLjkxMzZDMTcuMzg1OSAxMS43OTcyIDE3LjE1NzcgMTEuNzY5MyAxNS44NzMgMTEuNzY5M0g1LjY1MjI5VjE1LjMyMTVIMTYuMDE0NFYxNS4zMTkxWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ5LjIzOSAwLjI5MzI5OUM1Mi4xNzgxIDAuODQ3MzA5IDUzLjYwNjYgMi4zOTA2MiA1NC4wMDU5IDUuNTA1MThDNTQuMTIgNi4yOTE5NyA1NC4xNzcxIDcuODYzMjIgNTQuMTc3MSAxMC4yMjEyQzU0LjE3NzEgMTQuOTA5NCA1My42OTEgMTYuODAxOSA1Mi4wNjQgMTguMTcwNkM1MC45MjMxIDE5LjE1OTkgNDkuMzIzNSAxOS42MjU1IDQ2LjU1NTUgMTkuNzQxOEM0NS41Mjg3IDE5LjggNDIuOTg2NiAxOS44MzAzIDQxLjEzMTQgMTkuODMwM0MzNi41OTI3IDE5LjgzMDMgMzQuMjgxMSAxOS43NDE4IDMzLjEzNzkgMTkuNTA5MUMzMS4wMjQ4IDE5LjEyOTYgMjkuNzk3MiAxOC4zMTQ5IDI5LjA4NTIgMTYuODg4QzI4LjM0MzYgMTUuNDYxMSAyOC4xNzI1IDE0LjAzNDEgMjguMTcyNSA5Ljc4MzYzQzI4LjE3MjUgNi41MjI0MiAyOC4yMjk1IDUuNzA3NyAyOC41NzE4IDQuMzk3MTZDMjkuMTE0OSAyLjMzMDEgMzAuMjI4NSAxLjIyNDQxIDMyLjM2ODkgMC41ODE5NDNDMzMuOTY4NSAwLjExNjM4OSAzNS43MDk2IDAgNDAuNzMyMSAwQzQ2LjIxMzIgMCA0Ny44OTczIDAuMDU4MTk0MyA0OS4yMzkgMC4yOTA5NzJWMC4yOTMyOTlaTTM1LjAyMjcgNS40NDY5OUMzNC4yNTE1IDYuMDU5MTkgMzQuMDIzMyA3LjAxODIzIDM0LjAyMzMgOS44MTM4OUMzNC4wMjMzIDEyLjYwOTUgMzQuMjUxNSAxMy43MTUyIDM0Ljk2NTcgMTQuMzI3NEMzNS43MzcgMTQuOTY3NiAzNi42Nzk0IDE1LjA4NCA0MS4wNDQ3IDE1LjA4NEM0Ni4wMzk4IDE1LjA4NCA0Ny4wNjY3IDE0LjkwOTQgNDcuNzIzOSAxMy45NzgzQzQ4LjI2NjkgMTMuMjc5OSA0OC40MDg0IDEyLjI4ODMgNDguNDA4NCA5LjY5NzVDNDguNDA4NCA0LjgwNDUyIDQ4LjMyMTcgNC43NDYzMyA0MS4xODYyIDQuNzQ2MzNDMzYuOTMyNyA0Ljc0NjMzIDM1Ljc2MjEgNC44OTI5OCAzNS4wMjA1IDUuNDQ0NjZMMzUuMDIyNyA1LjQ0Njk5WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTU4Ljc0MzIgMC4yMDcyM0g3NS4xODQ0Qzc5LjIwOTcgMC4yMDcyMyA4MS4wOTIyIDAuNjcyNzg1IDgyLjQwNjYgMi4wMTM1OEM4My40NjMyIDMuMDYxMDggODMuODg5OSA0LjI4NTQ4IDg0LjA5MDcgNi43NTk5MUM4NC4xNDc3IDcuNjYzMDggODQuMjA0OCA5LjAwMTU1IDg0LjIwNDggOS45MzQ5OUM4NC4yMDQ4IDExLjY4MDggODQuMDkwNyAxMy42OTIgODMuOTE5NSAxNC43OTc3QzgzLjYwNDYgMTcuMTI3OCA4Mi4wMDczIDE4LjkzMTggNzkuOTIzOSAxOS4zMzkyQzc4Ljg0IDE5LjU3MiA3Ny45ODIgMTkuNjMwMiA3NS45NTU3IDE5LjYzMDJINTguNzQzMlYwLjIwNzIzWk03NC4yNDIgMTQuOTk3OUM3NS44MTE5IDE0Ljk5NzkgNzUuOTI2IDE0Ljk5NzkgNzYuNjEwNiAxNC43NjUxQzc4LjAwOTQgMTQuMzI3NSA3OC4zODEzIDEzLjMxMDMgNzguMzgxMyA5Ljk2MDU5Qzc4LjM4MTMgNS44ODQ2NiA3Ny42OTY4IDUuMDM5NjggNzQuMzU2IDUuMDM5NjhINjQuNTM3VjE0Ljk5NzlINzQuMjQyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTk0LjMyOTYgMTUuNzY4MUM5NC43MDE1IDE2LjI2NjMgOTQuNTA5OCAxNi44NDEzIDk0LjAyMTUgMTcuMzEzOEM5MS44MTI2IDE5LjQzNjcgODkuNjY3NiAxOS42MzIyIDg4LjMwNzYgMTkuNjMyMkM4Ny4wNjE3IDE5LjYzMjIgODYuMzgxNyAxOC44MDU5IDg2Ljk4NDEgMTYuODY5MkM4Ny43MDI5IDE0LjY1NTUgODguNTc2OSAxMi4yODM1IDg5LjE0MDUgMTAuNDM3NUM4OS4zOTgzIDkuNjI1MTYgODkuMzU5NiA5LjM5MDA1IDg5LjAyNDEgOS4zOTAwNUM4OC42Mzg1IDkuMzkwMDUgODcuNzc4MiA5Ljc4MzQ0IDg2Ljk1NjcgMTAuMjkzMkM4Ni42MDk5IDkuNzU1NTEgODcuMDM0MyA5LjE0MDk4IDg4LjExMTMgOC40MTkzN0M5MC4yNjc4IDcuMDA0MDggOTEuNzgyOSA2LjY4OTgzIDkzLjAwMzggNi42ODk4M0M5NC4yODg1IDYuNjg5ODMgOTQuNTk2NSA3LjU0MTggOTMuNzYxNCAxMC4xMDkzQzkzLjE5NTQgMTEuODI0OSA5Mi4zNjI1IDE0LjE5NjkgOTEuNzk2NiAxNS45MTI1QzkxLjUzODggMTYuNjA2MSA5MS41Mzg4IDE2Ljk5OTUgOTEuODM1NCAxNi45OTk1QzkyLjEzMjEgMTYuOTk5NSA5My4wODE0IDE2LjYwNjEgOTQuMjg4NSAxNS43MDNMOTQuMzI3MyAxNS43NjgxSDk0LjMyOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTUuMDUwNyAyLjI2MjU4Qzk1LjA1MDcgMy42NjM5IDkzLjgwNDcgNC45ODg0IDkxLjk2NzggNC45ODg0QzkwLjQ2NjMgNC45ODg0IDg5LjQyNTggNC4xNzYwMSA4OS40MjU4IDIuODI1OUM4OS40MjU4IDEuNjQ4MDQgOTAuNTQzOSAwLjEzOTY0OCA5Mi42NzUyIDAuMTM5NjQ4Qzk0LjMxODIgMC4xMzk2NDggOTUuMDUwNyAxLjEwOCA5NS4wNTA3IDIuMjYyNThaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTYuNTg2MyAwLjgwMjg2M0M5Ni42NDM0IDAuNjc3MTc1IDk2LjcxODcgMC41NzAxMDcgOTYuODEyMiAwLjQ4MTY2Qzk2LjkwNTggMC4zOTMyMTMgOTcuMDE1MyAwLjMyNTcxNCA5Ny4xNDA4IDAuMjc2ODM1Qzk3LjI2NCAwLjIyNzk1NyA5Ny4zOTQxIDAuMjA0NjgxIDk3LjUzMSAwLjIwNDY4MUM5Ny42Njc5IDAuMjA0NjgxIDk3Ljc5NTYgMC4yMjc5NTcgOTcuOTIxMSAwLjI3NjgzNUM5OC4wNDY2IDAuMzI1NzE0IDk4LjE1MzkgMC4zOTMyMTMgOTguMjQ5NyAwLjQ4MTY2Qzk4LjM0MzIgMC41NzAxMDcgOTguNDE4NSAwLjY3NzE3NSA5OC40NzU2IDAuODAyODYzQzk4LjUzMjYgMC45Mjg1NTEgOTguNTYgMS4wNjgyIDk4LjU2IDEuMjI0MTVDOTguNTYgMS4zODAwOSA5OC41MzI2IDEuNTIyMDcgOTguNDc1NiAxLjY0Nzc2Qzk4LjQxODUgMS43NzM0NSA5OC4zNDMyIDEuODgwNTIgOTguMjQ5NyAxLjk2ODk2Qzk4LjE1NjEgMi4wNTc0MSA5OC4wNDY2IDIuMTI3MjQgOTcuOTIxMSAyLjE3Mzc5Qzk3Ljc5NTYgMi4yMjAzNCA5Ny42Njc5IDIuMjQzNjIgOTcuNTMxIDIuMjQzNjJDOTcuMzk0MSAyLjI0MzYyIDk3LjI2NjMgMi4yMjAzNCA5Ny4xNDA4IDIuMTczNzlDOTcuMDE3NiAyLjEyNzI0IDk2LjkwODEgMi4wNTc0MSA5Ni44MTIyIDEuOTY4OTZDOTYuNzE4NyAxLjg4MDUyIDk2LjY0MzQgMS43NzM0NSA5Ni41ODYzIDEuNjQ3NzZDOTYuNTI5MyAxLjUyMjA3IDk2LjUwMTkgMS4zODI0MiA5Ni41MDE5IDEuMjI0MTVDOTYuNTAxOSAxLjA2NTg3IDk2LjUyOTMgMC45Mjg1NTEgOTYuNTg2MyAwLjgwMjg2M1pNOTYuODMyNyAxLjU0NTM1Qzk2Ljg3MTUgMS42NDMxMSA5Ni45MjYzIDEuNzI5MjMgOTYuOTkyNSAxLjgwMTM4Qzk3LjA2MDkgMS44NzM1MyA5Ny4xNDA4IDEuOTI5NCA5Ny4yMzIxIDEuOTY4OTZDOTcuMzIzMyAyLjAwODUzIDk3LjQyMTQgMi4wMjk0OCA5Ny41Mjg3IDIuMDI5NDhDOTcuNjM1OSAyLjAyOTQ4IDk3LjcyOTUgMi4wMDg1MyA5Ny44MjA3IDEuOTY4OTZDOTcuOTEyIDEuOTI5NCA5Ny45OTE5IDEuODczNTMgOTguMDYwMyAxLjgwMTM4Qzk4LjEyODggMS43MjkyMyA5OC4xODEyIDEuNjQ1NDMgOTguMjIyMyAxLjU0NTM1Qzk4LjI2MzQgMS40NDc1OSA5OC4yODE2IDEuMzQwNTIgOTguMjgxNiAxLjIyNDE1Qzk4LjI4MTYgMS4xMDc3NyA5OC4yNjExIDEuMDAwNyA5OC4yMjIzIDAuOTAyOTQ4Qzk4LjE4MzUgMC44MDUxOTEgOTguMTI4OCAwLjcyMTM5OSA5OC4wNjAzIDAuNjUxNTcyQzk3Ljk5MTkgMC41ODE3NDUgOTcuOTEyIDAuNTI1ODg0IDk3LjgyMDcgMC40ODYzMTVDOTcuNzI5NSAwLjQ0Njc0NyA5Ny42MzEzIDAuNDI1Nzk5IDk3LjUyODcgMC40MjU3OTlDOTcuNDI2IDAuNDI1Nzk5IDk3LjMyNTYgMC40NDY3NDcgOTcuMjMyMSAwLjQ4NjMxNUM5Ny4xNDA4IDAuNTI1ODg0IDk3LjA2MDkgMC41ODE3NDUgOTYuOTkyNSAwLjY1MTU3MkM5Ni45MjQgMC43MjM3MjYgOTYuODcxNSAwLjgwNzUxOCA5Ni44MzI3IDAuOTAyOTQ4Qzk2Ljc5NCAwLjk5ODM3OCA5Ni43NzM0IDEuMTA3NzcgOTYuNzczNCAxLjIyNDE1Qzk2Ljc3MzQgMS4zNDA1MiA5Ni43OTQgMS40NDc1OSA5Ni44MzI3IDEuNTQ1MzVaTTk3LjU1MTUgMC42NTE1NzJDOTcuNjkyOSAwLjY1MTU3MiA5Ny44MDAyIDAuNjc3MTc1IDk3Ljg3NTUgMC43MjgzODFDOTcuOTUwOCAwLjc3OTU4NyA5Ny45ODk2IDAuODY1NzA3IDk3Ljk4OTYgMC45OTEzOTVDOTcuOTg5NiAxLjA0NDkyIDk3Ljk4MjcgMS4wODkxNSA5Ny45NjY4IDEuMTI2MzlDOTcuOTUwOCAxLjE2MzYzIDk3LjkzMDMgMS4xOTM4OSA5Ny45MDI5IDEuMjE3MTZDOTcuODc1NSAxLjI0MDQ0IDk3Ljg0NTggMS4yNTkwNiA5Ny44MDkzIDEuMjcwN0M5Ny43NzI4IDEuMjgyMzQgOTcuNzM2MyAxLjI5MTY1IDk3LjY5NTIgMS4yOTM5N0w5Ny45OTQxIDEuNzkyMDdIOTcuNzYxNEw5Ny40ODc2IDEuMzAzMjhIOTcuMzQ4NFYxLjc5MjA3SDk3LjEyNzFWMC42NTE1NzJIOTcuNTUxNVpNOTcuNTQ5MiAxLjEyODcyQzk3LjYxMzEgMS4xMjg3MiA5Ny42NjU2IDEuMTE5NDEgOTcuNzA2NiAxLjEwMDc5Qzk3Ljc0NzcgMS4wODIxNyA5Ny43NjgyIDEuMDM3OTQgOTcuNzY4MiAwLjk3MDQ0N0M5Ny43NjgyIDAuOTQwMTg5IDk3Ljc2MTQgMC45MTQ1ODYgOTcuNzQ3NyAwLjg5NTk2NUM5Ny43MzQgMC44NzczNDUgOTcuNzE1OCAwLjg2MzM4IDk3LjY5MjkgMC44NTQwNjlDOTcuNjcwMSAwLjg0NDc1OSA5Ny42NDUgMC44Mzc3NzYgOTcuNjE3NyAwLjgzMzEyMUM5Ny41OTAzIDAuODI4NDY2IDk3LjU2MjkgMC44Mjg0NjYgOTcuNTM3OCAwLjgyODQ2Nkg5Ny4zNTA3VjEuMTI4NzJIOTcuNTQ5MloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfM18yIj4KPHJlY3Qgd2lkdGg9Ijk5IiBoZWlnaHQ9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "hdr-title",
+        "kind": "text",
+        "body": "# <span style=\"color: #bdf987\">Nutrition Business</span>",
+        "verticalAlign": "middle"
+      },
+      {
+        "id": "hdr-sub",
+        "kind": "text",
+        "body": "<span style=\"color: #bdf987\">*Command Center \u00b7 Cohort Builder \u00b7 Bundle & Promo Scenario Builder*</span>",
+        "verticalAlign": "middle"
+      },
+      {
+        "id": "tc-main",
+        "kind": "tabbed-container",
+        "tabs": [
+          {
+            "name": "Command Center"
+          },
+          {
+            "name": "Cohort Builder"
+          },
+          {
+            "name": "Explore"
+          },
+          {
+            "name": "PDF Report"
+          }
+        ],
+        "tabBar": {
+          "alignment": "start"
+        }
+      },
+      {
+        "id": "k-subs",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-subsv",
+            "formula": "CountDistinct(If([Fact/Is Current Month] and [Fact/Nutrition Active], [Fact/Member Id], Null))",
+            "name": "ACTIVE NUTRITION SUBSCRIBERS",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          },
+          {
+            "id": "k-subsc",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] and [Fact/Nutrition Active], [Fact/Member Id], Null))",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-subsv",
+          "color": "#171717",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "ACTIVE NUTRITION SUBSCRIBERS",
+          "color": {
+            "kind": "theme",
+            "ref": "colors-textNeutral"
+          },
+          "fontSize": 12
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "borderColor": {
+            "kind": "theme",
+            "ref": "colors-border"
+          },
+          "borderWidth": 1
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#d9f2e6",
+          "colorBad": "#e15658",
+          "fontSize": 12,
+          "label": "vs last month",
+          "labelColor": "#171717"
+        },
+        "comparisonColumn": {
+          "columnId": "k-subsc"
+        }
+      },
+      {
+        "id": "k-retention",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-retentionv",
+            "formula": "CountDistinct(If([Fact/Is Current Month] and [Fact/Nutrition Active], [Fact/Member Id], Null)) / CountDistinct(If([Fact/Nutrition Subscriber], [Fact/Member Id], Null))",
+            "name": "BLENDED NUTRITION RETENTION",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "k-retentionc",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] and [Fact/Nutrition Active], [Fact/Member Id], Null)) / CountDistinct(If([Fact/Nutrition Subscriber], [Fact/Member Id], Null))",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-retentionv",
+          "color": "#171717",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "BLENDED NUTRITION RETENTION",
+          "color": {
+            "kind": "theme",
+            "ref": "colors-textNeutral"
+          },
+          "fontSize": 12
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "borderColor": {
+            "kind": "theme",
+            "ref": "colors-border"
+          },
+          "borderWidth": 1
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#d9f2e6",
+          "colorBad": "#e15658",
+          "fontSize": 12,
+          "label": "vs last month",
+          "labelColor": "#171717"
+        },
+        "comparisonColumn": {
+          "columnId": "k-retentionc"
+        }
+      },
+      {
+        "id": "k-attach",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-attachv",
+            "formula": "CountDistinct(If([Fact/Is Current Month] and [Fact/Nutrition Active], [Fact/Member Id], Null)) / CountDistinct(If([Fact/Is Current Month], [Fact/Member Id], Null))",
+            "name": "NUTRITION ATTACH RATE",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "k-attachc",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] and [Fact/Nutrition Active], [Fact/Member Id], Null)) / CountDistinct(If([Fact/Is Prior Month], [Fact/Member Id], Null))",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-attachv",
+          "color": "#171717",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "NUTRITION ATTACH RATE",
+          "color": {
+            "kind": "theme",
+            "ref": "colors-textNeutral"
+          },
+          "fontSize": 12
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "borderColor": {
+            "kind": "theme",
+            "ref": "colors-border"
+          },
+          "borderWidth": 1
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#d9f2e6",
+          "colorBad": "#e15658",
+          "fontSize": 12,
+          "label": "vs last month",
+          "labelColor": "#171717"
+        },
+        "comparisonColumn": {
+          "columnId": "k-attachc"
+        }
+      },
+      {
+        "id": "aFVljva2Qf",
+        "kind": "container",
+        "style": {
+          "borderColor": {
+            "kind": "theme",
+            "ref": "colors-border"
+          },
+          "borderWidth": 1
+        }
+      },
+      {
+        "id": "1SJMh34xLX",
+        "kind": "text",
+        "body": "BODi CoPilot "
+      },
+      {
+        "id": "_VpCRy2vO9",
+        "kind": "chat",
+        "agentId": "uHJJJ3p5ni"
+      },
+      {
+        "id": "k-rev",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-revv",
+            "formula": "SumIf([Fact/Product Revenue], [Fact/Is Current Month])",
+            "name": "NUTRITION PRODUCT REVENUE",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ],
+              "currencySymbol": "$"
+            }
+          },
+          {
+            "id": "k-revc",
+            "formula": "SumIf([Fact/Product Revenue], [Fact/Is Prior Month])",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ],
+              "currencySymbol": "$"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-revv",
+          "color": "#171717",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "NUTRITION PRODUCT REVENUE",
+          "color": {
+            "kind": "theme",
+            "ref": "colors-textNeutral"
+          },
+          "fontSize": 12
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "borderColor": {
+            "kind": "theme",
+            "ref": "colors-border"
+          },
+          "borderWidth": 1
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#d9f2e6",
+          "colorBad": "#e15658",
+          "fontSize": 12,
+          "label": "vs last month",
+          "labelColor": "#171717"
+        },
+        "comparisonColumn": {
+          "columnId": "k-revc"
+        }
+      },
+      {
+        "id": "k-reorderrev",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-reorderrevv",
+            "formula": "SumIf([Fact/Reorder Revenue], [Fact/Is Current Month])",
+            "name": "REORDER REVENUE",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ],
+              "currencySymbol": "$"
+            }
+          },
+          {
+            "id": "k-reorderrevc",
+            "formula": "SumIf([Fact/Reorder Revenue], [Fact/Is Prior Month])",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ],
+              "currencySymbol": "$"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-reorderrevv",
+          "color": "#171717",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "REORDER REVENUE",
+          "color": {
+            "kind": "theme",
+            "ref": "colors-textNeutral"
+          },
+          "fontSize": 12
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "borderColor": {
+            "kind": "theme",
+            "ref": "colors-border"
+          },
+          "borderWidth": 1
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#1a644f",
+          "colorBad": "#e15658",
+          "fontSize": 12,
+          "label": "vs last month",
+          "labelColor": "#171717"
+        },
+        "comparisonColumn": {
+          "columnId": "k-reorderrevc"
+        }
+      },
+      {
+        "id": "k-completion",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-completionv",
+            "formula": "CountDistinct(If([Fact/Is Current Month] and [Fact/Completed Flag], [Fact/Member Id], Null)) / CountDistinct(If([Fact/Is Current Month] and ([Fact/Completed Flag] or [Fact/Dropped Flag]), [Fact/Member Id], Null))",
+            "name": "AVG PROGRAM COMPLETION RATE",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "k-completionc",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] and [Fact/Completed Flag], [Fact/Member Id], Null)) / CountDistinct(If([Fact/Is Prior Month] and ([Fact/Completed Flag] or [Fact/Dropped Flag]), [Fact/Member Id], Null))",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-completionv",
+          "color": "#171717",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "AVG PROGRAM COMPLETION RATE",
+          "color": {
+            "kind": "theme",
+            "ref": "colors-textNeutral"
+          },
+          "fontSize": 12
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "borderColor": {
+            "kind": "theme",
+            "ref": "colors-border"
+          },
+          "borderWidth": 1
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#d9f2e6",
+          "colorBad": "#e15658",
+          "fontSize": 12,
+          "label": "vs last month",
+          "labelColor": "#171717"
+        },
+        "comparisonColumn": {
+          "columnId": "k-completionc"
+        }
+      },
+      {
+        "id": "ibqYbNeXX3",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "AtZpTWINwY",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "EGZDe5WUmv",
+            "formula": "[Custom SQL/Signup Channel]"
+          },
+          {
+            "id": "X9Rb0T5IDk",
+            "formula": "Sum([Amount])"
+          },
+          {
+            "id": "TGf2UVzjil",
+            "formula": "[Custom SQL/Transaction Id]"
+          },
+          {
+            "id": "jWn7TjnYl9",
+            "formula": "[Custom SQL/Member Id]"
+          },
+          {
+            "id": "3J8spTsrc1",
+            "formula": "[Custom SQL/Transaction Date]"
+          },
+          {
+            "id": "Ex1RAhhhgE",
+            "formula": "[Custom SQL/Product Line]"
+          },
+          {
+            "id": "2RUNKngcbK",
+            "formula": "[Custom SQL/Sku]"
+          },
+          {
+            "id": "L6ohuoyvy8",
+            "formula": "[Custom SQL/Is First Purchase]"
+          },
+          {
+            "id": "l0_Ze4RuFA",
+            "formula": "[Custom SQL/Is Reorder]"
+          },
+          {
+            "id": "-J8fN3i1cA",
+            "formula": "[Custom SQL/Is Bundle Purchase]"
+          },
+          {
+            "id": "vBOCOLPU1p",
+            "formula": "[Custom SQL/Promo Discount Pct]"
+          },
+          {
+            "id": "9nlVMRmWW-",
+            "formula": "[Custom SQL/Bundle Name]"
+          },
+          {
+            "id": "8QZnUlJ4dj",
+            "formula": "[Custom SQL/Fitness Program]"
+          },
+          {
+            "id": "Cp90Hdx1Va",
+            "formula": "[Custom SQL/Nutrition Program]"
+          },
+          {
+            "id": "3VGS2JPelt",
+            "formula": "[Custom SQL/Coach Attached]"
+          },
+          {
+            "id": "AWBPtnxowa",
+            "formula": "[Custom SQL/Amount]"
+          }
+        ],
+        "yAxis": {
+          "columnIds": [
+            "X9Rb0T5IDk"
+          ]
+        },
+        "xAxis": {
+          "columnId": "EGZDe5WUmv"
+        },
+        "orientation": "horizontal",
+        "dataLabel": {
+          "labels": "shown"
+        },
+        "name": {
+          "text": "Amount by Signup Channel",
+          "fontWeight": "bold",
+          "fontSize": 14
+        },
+        "style": {
+          "borderColor": {
+            "kind": "theme",
+            "ref": "colors-border"
+          },
+          "borderWidth": 1
+        }
+      },
+      {
+        "id": "area-subs",
+        "kind": "area-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "a1-prog",
+            "formula": "[Fact/Nutrition Program]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "a1-m",
+            "formula": "[Fact/Calendar Month]",
+            "name": "Month",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "a1-v",
+            "formula": "CountDistinct(If([Fact/Nutrition Active], [Fact/Member Id], Null))",
+            "name": "Active Subscribers",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          }
+        ],
+        "yAxis": {
+          "columnIds": [
+            "a1-v"
+          ]
+        },
+        "xAxis": {
+          "columnId": "a1-m"
+        },
+        "color": {
+          "by": "category",
+          "column": "a1-prog",
+          "scheme": [
+            "#108474",
+            "#208468",
+            "#5FBE9A",
+            "#C8C8C8"
+          ],
+          "customColors": [
+            {
+              "value": "Ultimate Portion Fix",
+              "color": "#161819"
+            },
+            {
+              "value": "2B Mindset",
+              "color": "#218468"
+            },
+            {
+              "value": "Portion Fix",
+              "color": "#daf0d6"
+            }
+          ]
+        },
+        "filters": [
+          {
+            "id": "4TTsYbUZT0",
+            "columnId": "a1-prog",
+            "kind": "list",
+            "mode": "include",
+            "values": [
+              null,
+              "2B Mindset",
+              "Portion Fix",
+              "Ultimate Portion Fix"
+            ]
+          }
+        ],
+        "name": {
+          "text": "Subscriber growth & churn by nutrition program (24 mo)",
+          "color": "#161819",
+          "fontWeight": "bold",
+          "fontSize": 14
+        },
+        "legend": {
+          "position": "bottom"
+        },
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderRadius": "round",
+          "borderColor": "#e8e8e8",
+          "borderWidth": 1
+        }
+      },
+      {
+        "id": "rMfRiG72Lw",
+        "kind": "pivot-table",
+        "source": {
+          "elementId": "cmMxaAQoIf",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "gh5MRiOE3v",
+            "formula": "[Transpose of Fact/Replace of Pivoted columns]",
+            "name": "Type"
+          },
+          {
+            "id": "RI7dRE_anu",
+            "formula": "SumIf([Pivoted values], [Is Current Month])",
+            "name": "Current Month Sales",
+            "format": {
+              "kind": "number",
+              "formatString": "$,.2f"
+            }
+          },
+          {
+            "id": "uJte41MgKY",
+            "formula": "SparklineAgg(DateTrunc(\"month\", [Calendar Month]), Sum([Pivoted values]))",
+            "name": "Sales Trend"
+          },
+          {
+            "id": "hnLBJcq8s4",
+            "formula": "(SumIf([Pivoted values], [Is Current Month]) - SumIf([Pivoted values], [Is Prior Month])) / (SumIf([Pivoted values], [Is Prior Month]))",
+            "name": "MoM % Change",
+            "format": {
+              "kind": "number",
+              "formatString": ",.2%"
+            }
+          },
+          {
+            "id": "WvLdtbvr0T",
+            "formula": "[Transpose of Fact/Calendar Month]"
+          },
+          {
+            "id": "jiJENoa9wN",
+            "formula": "[Transpose of Fact/Is Current Month]"
+          },
+          {
+            "id": "0QoREBUqXf",
+            "formula": "[Transpose of Fact/Is Prior Month]"
+          },
+          {
+            "id": "_OF9_pZqWN",
+            "formula": "[Transpose of Fact/Pivoted values]"
+          }
+        ],
+        "values": [
+          "RI7dRE_anu",
+          "uJte41MgKY",
+          "hnLBJcq8s4"
+        ],
+        "rowsBy": [
+          {
+            "id": "gh5MRiOE3v"
+          }
+        ],
+        "name": {
+          "text": "Nutrition Trends",
+          "fontSize": 14
+        },
+        "style": {
+          "borderColor": {
+            "kind": "theme",
+            "ref": "colors-border"
+          },
+          "borderWidth": 1
+        },
+        "sparkline": {
+          "shape": "line",
+          "color": "#208468"
+        },
+        "tableStyle": {
+          "preset": "presentation",
+          "textStyles": {
+            "cell": {
+              "font": "Brilliant Corners",
+              "align": "center"
+            },
+            "columnHeader": {
+              "font": "Brilliant Corners",
+              "align": "center"
+            },
+            "rowHeader": {
+              "font": "Brilliant Corners",
+              "align": "left"
+            }
+          }
+        },
+        "totals": {
+          "showGrandTotals": "hidden"
+        },
+        "display": {
+          "bodyWidths": {
+            "columns": [
+              {
+                "columnId": "PIVOT_COLUMN_ROOT_VAL-1",
+                "width": 279.265625
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "cb-hdr",
+        "kind": "text",
+        "body": "<p class=\"p-small\"><span style=\"color: var(--colors-textNeutralSofter)\">*  Segment the member population, save a named cohort, and hand it to campaign tools.*</span></p>",
+        "verticalAlign": "middle"
+      },
+      {
+        "id": "Lul38Chxlt",
+        "kind": "container",
+        "style": {
+          "borderColor": {
+            "kind": "theme",
+            "ref": "colors-border"
+          },
+          "borderWidth": 1
+        }
+      },
+      {
+        "id": "iIP6mKIcT6",
+        "kind": "text",
+        "body": "<span style=\"color: var(--colors-fillPrimary)\">** SEGMENT FILTERS**</span>"
+      },
+      {
+        "id": "vUA1IGPQy6",
+        "kind": "container"
+      },
+      {
+        "id": "BRRlE5g1qI",
+        "kind": "container"
+      },
+      {
+        "kind": "control",
+        "controlId": "CohortName",
+        "id": "ctrl-cname",
+        "name": "Cohort Name",
+        "case": "insensitive",
+        "controlType": "text",
+        "mode": "equals",
+        "value": "p90+portion fix ",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "kind": "control",
+        "controlId": "CohortDesc",
+        "id": "ctrl-cdesc",
+        "name": "Description",
+        "case": "insensitive",
+        "controlType": "text",
+        "mode": "equals",
+        "value": "test",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "id": "btn-save-cohort",
+        "kind": "button",
+        "text": "Save cohort",
+        "appearance": "filled",
+        "actions": [
+          {
+            "id": "actsave",
+            "trigger": "on-click",
+            "effects": [
+              {
+                "effect": "insert-rows",
+                "tableElementId": "cohort_saves",
+                "values": {
+                  "cs-name": {
+                    "type": "control",
+                    "control": "CohortName"
+                  },
+                  "cs-desc": {
+                    "type": "control",
+                    "control": "CohortDesc"
+                  },
+                  "cs-size": {
+                    "type": "formula",
+                    "formula": "CountDistinct([Member Snapshot Table/Member Id])"
+                  },
+                  "cs-attach": {
+                    "type": "formula",
+                    "formula": "CountDistinct(If([Member Snapshot Table/Nutrition Subscriber], [Member Snapshot Table/Member Id], Null)) / CountDistinct([Member Snapshot Table/Member Id])"
+                  },
+                  "cs-liferev": {
+                    "type": "formula",
+                    "formula": "Avg([Member Snapshot Table/Lifetime Revenue])"
+                  },
+                  "cs-retention": {
+                    "type": "formula",
+                    "formula": "CountDistinct(If([Member Snapshot Table/Nutrition Active Now], [Member Snapshot Table/Member Id], Null)) / CountDistinct(If([Member Snapshot Table/Nutrition Subscriber], [Member Snapshot Table/Member Id], Null))"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "k-cohort-size",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "I_0jZL7Q78",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-cohort-sizev",
+            "formula": "CountDistinct([Member Snapshot Table/Member Id])",
+            "name": "COHORT SIZE",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          },
+          {
+            "id": "lMhUjWyoAn",
+            "formula": "[Member Snapshot Table/Signup Date]"
+          },
+          {
+            "id": "lpKVKwdwZE",
+            "formula": "[Member Snapshot Table/Signup Cohort]"
+          },
+          {
+            "id": "QO5Y2Tk86v",
+            "formula": "[Member Snapshot Table/Signup Channel]"
+          },
+          {
+            "id": "0zht_GmIib",
+            "formula": "[Member Snapshot Table/Coach Attached]"
+          },
+          {
+            "id": "Cr74lazM-P",
+            "formula": "[Member Snapshot Table/Fitness Program]"
+          },
+          {
+            "id": "HLVHQSZ6JU",
+            "formula": "[Member Snapshot Table/Nutrition Subscriber]"
+          },
+          {
+            "id": "Ss0stlwob2",
+            "formula": "[Member Snapshot Table/Nutrition Program]"
+          },
+          {
+            "id": "P0i9xgfJrd",
+            "formula": "[Member Snapshot Table/Bundle Eligible]"
+          },
+          {
+            "id": "g05_XS2rke",
+            "formula": "[Member Snapshot Table/Bundle Name]"
+          },
+          {
+            "id": "aoOFho-rvU",
+            "formula": "[Member Snapshot Table/Bundle Campaign]"
+          },
+          {
+            "id": "FEP_DERgxV",
+            "formula": "[Member Snapshot Table/Bundle Flag]"
+          },
+          {
+            "id": "MWqP_39SKI",
+            "formula": "[Member Snapshot Table/Promo Discount Pct]"
+          },
+          {
+            "id": "y1Jbw-iqob",
+            "formula": "[Member Snapshot Table/Primary Sku]"
+          },
+          {
+            "id": "T1CelyYk0j",
+            "formula": "[Member Snapshot Table/Program Stage Now]"
+          },
+          {
+            "id": "SenUGBmY6l",
+            "formula": "[Member Snapshot Table/Nutrition Active Now]"
+          },
+          {
+            "id": "4R944u305W",
+            "formula": "[Member Snapshot Table/Adherence Pct Now]"
+          },
+          {
+            "id": "yL5roKZgab",
+            "formula": "[Member Snapshot Table/Weight Change Pct Now]"
+          },
+          {
+            "id": "-JBVgZJwZ_",
+            "formula": "[Member Snapshot Table/Initial Purchase Revenue]"
+          },
+          {
+            "id": "6vs488Ezip",
+            "formula": "[Member Snapshot Table/Lifetime Revenue]"
+          },
+          {
+            "id": "GEz9WlUx0D",
+            "formula": "[Member Snapshot Table/Lifetime Reorder Revenue]"
+          },
+          {
+            "id": "5FemA8oGAK",
+            "formula": "[Member Snapshot Table/Time To First Reorder Days]"
+          }
+        ],
+        "value": {
+          "columnId": "k-cohort-sizev",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "COHORT SIZE",
+          "color": "#108474",
+          "fontSize": 12
+        },
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderRadius": "round",
+          "borderColor": "#e8e8e8",
+          "borderWidth": 1
+        }
+      },
+      {
+        "id": "k-cohort-attach",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "I_0jZL7Q78",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-cohort-attachv",
+            "formula": "CountDistinct(If([Member Snapshot Table/Nutrition Subscriber], [Member Snapshot Table/Member Id], Null)) / CountDistinct([Member Snapshot Table/Member Id])",
+            "name": "NUTRITION ATTACH (COHORT)",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "gdx9VAdq9v",
+            "formula": "[Member Snapshot Table/Signup Date]"
+          },
+          {
+            "id": "Ao9P2mvw4a",
+            "formula": "[Member Snapshot Table/Signup Cohort]"
+          },
+          {
+            "id": "80mKJPiyb6",
+            "formula": "[Member Snapshot Table/Signup Channel]"
+          },
+          {
+            "id": "Yxn5eYhhyv",
+            "formula": "[Member Snapshot Table/Coach Attached]"
+          },
+          {
+            "id": "b7xH-MDhiT",
+            "formula": "[Member Snapshot Table/Fitness Program]"
+          },
+          {
+            "id": "yX0DpWbCHu",
+            "formula": "[Member Snapshot Table/Nutrition Program]"
+          },
+          {
+            "id": "GyhAuvuGUR",
+            "formula": "[Member Snapshot Table/Bundle Eligible]"
+          },
+          {
+            "id": "bSp9xMiuxP",
+            "formula": "[Member Snapshot Table/Bundle Name]"
+          },
+          {
+            "id": "9UbalP8-KL",
+            "formula": "[Member Snapshot Table/Bundle Campaign]"
+          },
+          {
+            "id": "RgxQDxNgDx",
+            "formula": "[Member Snapshot Table/Bundle Flag]"
+          },
+          {
+            "id": "mScBUUe4D3",
+            "formula": "[Member Snapshot Table/Promo Discount Pct]"
+          },
+          {
+            "id": "mgu7IuVDm-",
+            "formula": "[Member Snapshot Table/Primary Sku]"
+          },
+          {
+            "id": "O_PBckT8Dy",
+            "formula": "[Member Snapshot Table/Program Stage Now]"
+          },
+          {
+            "id": "ND4uSxXO1K",
+            "formula": "[Member Snapshot Table/Nutrition Active Now]"
+          },
+          {
+            "id": "sdt9L9oyNv",
+            "formula": "[Member Snapshot Table/Adherence Pct Now]"
+          },
+          {
+            "id": "M_79nOwJmj",
+            "formula": "[Member Snapshot Table/Weight Change Pct Now]"
+          },
+          {
+            "id": "AzejzneYXr",
+            "formula": "[Member Snapshot Table/Initial Purchase Revenue]"
+          },
+          {
+            "id": "_fQq1iyuPE",
+            "formula": "[Member Snapshot Table/Lifetime Revenue]"
+          },
+          {
+            "id": "ESSHs7648N",
+            "formula": "[Member Snapshot Table/Lifetime Reorder Revenue]"
+          },
+          {
+            "id": "hxd0JpBj5-",
+            "formula": "[Member Snapshot Table/Time To First Reorder Days]"
+          }
+        ],
+        "value": {
+          "columnId": "k-cohort-attachv",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "NUTRITION ATTACH (COHORT)",
+          "color": "#108474",
+          "fontSize": 12
+        },
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderRadius": "round",
+          "borderColor": "#e8e8e8",
+          "borderWidth": 1
+        }
+      },
+      {
+        "id": "k-cohort-liferev",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "I_0jZL7Q78",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-cohort-liferevv",
+            "formula": "Avg([Member Snapshot Table/Lifetime Revenue])",
+            "name": "AVG LIFETIME REVENUE",
+            "format": {
+              "kind": "number",
+              "formatString": "$,.2f",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ],
+              "currencySymbol": "$"
+            }
+          },
+          {
+            "id": "NV8gQ8ByDg",
+            "formula": "[Member Snapshot Table/Member Id]"
+          },
+          {
+            "id": "8K_Lcwi_lf",
+            "formula": "[Member Snapshot Table/Signup Date]"
+          },
+          {
+            "id": "1sS2ccU0rp",
+            "formula": "[Member Snapshot Table/Signup Cohort]"
+          },
+          {
+            "id": "jIos7oYmrT",
+            "formula": "[Member Snapshot Table/Signup Channel]"
+          },
+          {
+            "id": "h2k1F6YYpt",
+            "formula": "[Member Snapshot Table/Coach Attached]"
+          },
+          {
+            "id": "IoHhtPDTTB",
+            "formula": "[Member Snapshot Table/Fitness Program]"
+          },
+          {
+            "id": "4vPXp3WvbI",
+            "formula": "[Member Snapshot Table/Nutrition Subscriber]"
+          },
+          {
+            "id": "eexeqT1-BC",
+            "formula": "[Member Snapshot Table/Nutrition Program]"
+          },
+          {
+            "id": "kV7moNxy3R",
+            "formula": "[Member Snapshot Table/Bundle Eligible]"
+          },
+          {
+            "id": "qICxPZeff6",
+            "formula": "[Member Snapshot Table/Bundle Name]"
+          },
+          {
+            "id": "WJiVLQdvcf",
+            "formula": "[Member Snapshot Table/Bundle Campaign]"
+          },
+          {
+            "id": "BIAR7qaHi1",
+            "formula": "[Member Snapshot Table/Bundle Flag]"
+          },
+          {
+            "id": "nMhpG71y7u",
+            "formula": "[Member Snapshot Table/Promo Discount Pct]"
+          },
+          {
+            "id": "QScRZhOVDo",
+            "formula": "[Member Snapshot Table/Primary Sku]"
+          },
+          {
+            "id": "hXQZJ2RbAm",
+            "formula": "[Member Snapshot Table/Program Stage Now]"
+          },
+          {
+            "id": "mCGtBxj9Q9",
+            "formula": "[Member Snapshot Table/Nutrition Active Now]"
+          },
+          {
+            "id": "xhVjTT_tXM",
+            "formula": "[Member Snapshot Table/Adherence Pct Now]"
+          },
+          {
+            "id": "-p5enwhU3h",
+            "formula": "[Member Snapshot Table/Weight Change Pct Now]"
+          },
+          {
+            "id": "lcMV2d902Q",
+            "formula": "[Member Snapshot Table/Initial Purchase Revenue]"
+          },
+          {
+            "id": "ffROSEfLsM",
+            "formula": "[Member Snapshot Table/Lifetime Reorder Revenue]"
+          },
+          {
+            "id": "nORcki8vUO",
+            "formula": "[Member Snapshot Table/Time To First Reorder Days]"
+          }
+        ],
+        "value": {
+          "columnId": "k-cohort-liferevv",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "AVG LIFETIME REVENUE (COHORT)",
+          "color": "#108474",
+          "fontSize": 12
+        },
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderRadius": "round",
+          "borderColor": "#e8e8e8",
+          "borderWidth": 1
+        }
+      },
+      {
+        "id": "k-cohort-retention",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "I_0jZL7Q78",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-cohort-retentionv",
+            "formula": "CountDistinct(If([Member Snapshot Table/Nutrition Active Now], [Member Snapshot Table/Member Id], Null)) / CountDistinct(If([Member Snapshot Table/Nutrition Subscriber], [Member Snapshot Table/Member Id], Null))",
+            "name": "BLENDED RETENTION (COHORT)",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "6cCXsxCJDQ",
+            "formula": "[Member Snapshot Table/Signup Date]"
+          },
+          {
+            "id": "qN1LLETI8R",
+            "formula": "[Member Snapshot Table/Signup Cohort]"
+          },
+          {
+            "id": "e2l2-jth2Q",
+            "formula": "[Member Snapshot Table/Signup Channel]"
+          },
+          {
+            "id": "9ILgxP5q99",
+            "formula": "[Member Snapshot Table/Coach Attached]"
+          },
+          {
+            "id": "KfzWapP7ci",
+            "formula": "[Member Snapshot Table/Fitness Program]"
+          },
+          {
+            "id": "3P9XyUZy7G",
+            "formula": "[Member Snapshot Table/Nutrition Program]"
+          },
+          {
+            "id": "wBLbgIJokq",
+            "formula": "[Member Snapshot Table/Bundle Eligible]"
+          },
+          {
+            "id": "J2VTyXmk6D",
+            "formula": "[Member Snapshot Table/Bundle Name]"
+          },
+          {
+            "id": "Hxzftue81T",
+            "formula": "[Member Snapshot Table/Bundle Campaign]"
+          },
+          {
+            "id": "4TFKTUN-_W",
+            "formula": "[Member Snapshot Table/Bundle Flag]"
+          },
+          {
+            "id": "VM8aUSkHLg",
+            "formula": "[Member Snapshot Table/Promo Discount Pct]"
+          },
+          {
+            "id": "9baLEXJzAh",
+            "formula": "[Member Snapshot Table/Primary Sku]"
+          },
+          {
+            "id": "Ec6cIsRdAF",
+            "formula": "[Member Snapshot Table/Program Stage Now]"
+          },
+          {
+            "id": "YrXpdu8PNI",
+            "formula": "[Member Snapshot Table/Adherence Pct Now]"
+          },
+          {
+            "id": "s-sROEKCn3",
+            "formula": "[Member Snapshot Table/Weight Change Pct Now]"
+          },
+          {
+            "id": "drK6fyMBww",
+            "formula": "[Member Snapshot Table/Initial Purchase Revenue]"
+          },
+          {
+            "id": "ycY0VvSD_k",
+            "formula": "[Member Snapshot Table/Lifetime Revenue]"
+          },
+          {
+            "id": "Zon9xn8yZ3",
+            "formula": "[Member Snapshot Table/Lifetime Reorder Revenue]"
+          },
+          {
+            "id": "THErx6wC-X",
+            "formula": "[Member Snapshot Table/Time To First Reorder Days]"
+          }
+        ],
+        "value": {
+          "columnId": "k-cohort-retentionv",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "BLENDED RETENTION (COHORT)",
+          "color": "#108474",
+          "fontSize": 12
+        },
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderRadius": "round",
+          "borderColor": "#e8e8e8",
+          "borderWidth": 1
+        }
+      },
+      {
+        "id": "cohort_saves",
+        "kind": "input-table",
+        "source": {
+          "kind": "empty",
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1"
+        },
+        "inputMode": "edit",
+        "name": "Saved Cohorts",
+        "columns": [
+          {
+            "id": "cs-name",
+            "type": "text",
+            "name": "Cohort Name"
+          },
+          {
+            "id": "cs-desc",
+            "type": "text",
+            "name": "Description"
+          },
+          {
+            "id": "cs-size",
+            "type": "number",
+            "name": "Cohort Size"
+          },
+          {
+            "id": "cs-attach",
+            "type": "number",
+            "name": "Attach Rate"
+          },
+          {
+            "id": "cs-liferev",
+            "type": "number",
+            "name": "Avg Lifetime Revenue"
+          },
+          {
+            "id": "cs-retention",
+            "type": "number",
+            "name": "Retention Rate"
+          },
+          {
+            "id": "CREATED_AT"
+          },
+          {
+            "id": "CREATED_BY"
+          }
+        ]
+      },
+      {
+        "id": "tbl-cohort-detail",
+        "kind": "table",
+        "source": {
+          "elementId": "I_0jZL7Q78",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "dt-id",
+            "formula": "[Member Snapshot Table/Member Id]",
+            "name": "Member Id"
+          },
+          {
+            "id": "dt-fit",
+            "formula": "[Member Snapshot Table/Fitness Program]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "dt-nut",
+            "formula": "[Member Snapshot Table/Nutrition Program]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "dt-chan",
+            "formula": "[Member Snapshot Table/Signup Channel]",
+            "name": "Channel"
+          },
+          {
+            "id": "dt-rev",
+            "formula": "[Member Snapshot Table/Lifetime Revenue]",
+            "name": "Lifetime Revenue",
+            "format": {
+              "kind": "number",
+              "formatString": "$,.2f",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ],
+              "currencySymbol": "$"
+            }
+          },
+          {
+            "id": "oja8HtVZFK",
+            "formula": "[Member Snapshot Table/Signup Date]"
+          },
+          {
+            "id": "5eGPVANtTk",
+            "formula": "[Member Snapshot Table/Signup Cohort]"
+          },
+          {
+            "id": "svzrk1ZEk4",
+            "formula": "[Member Snapshot Table/Coach Attached]"
+          },
+          {
+            "id": "2geHKys4sG",
+            "formula": "[Member Snapshot Table/Nutrition Subscriber]"
+          },
+          {
+            "id": "BdTFTs8tG2",
+            "formula": "[Member Snapshot Table/Bundle Eligible]"
+          },
+          {
+            "id": "xnn_35alD6",
+            "formula": "[Member Snapshot Table/Bundle Name]"
+          },
+          {
+            "id": "tUEYLxaHO2",
+            "formula": "[Member Snapshot Table/Bundle Campaign]"
+          },
+          {
+            "id": "K4zZ1iVOz2",
+            "formula": "[Member Snapshot Table/Bundle Flag]"
+          },
+          {
+            "id": "TELR2t2RPb",
+            "formula": "[Member Snapshot Table/Promo Discount Pct]"
+          },
+          {
+            "id": "OjPxeq5ttM",
+            "formula": "[Member Snapshot Table/Primary Sku]"
+          },
+          {
+            "id": "GJsnF2amvT",
+            "formula": "[Member Snapshot Table/Program Stage Now]"
+          },
+          {
+            "id": "bNey1AToT5",
+            "formula": "[Member Snapshot Table/Nutrition Active Now]"
+          },
+          {
+            "id": "OCVzYSasTI",
+            "formula": "[Member Snapshot Table/Adherence Pct Now]"
+          },
+          {
+            "id": "eJIv5mQsOb",
+            "formula": "[Member Snapshot Table/Weight Change Pct Now]"
+          },
+          {
+            "id": "WZ31ZPxCvT",
+            "formula": "[Member Snapshot Table/Initial Purchase Revenue]"
+          },
+          {
+            "id": "2Wi8XpDMRY",
+            "formula": "[Member Snapshot Table/Lifetime Reorder Revenue]"
+          },
+          {
+            "id": "daDkVQCrrq",
+            "formula": "[Member Snapshot Table/Time To First Reorder Days]"
+          }
+        ],
+        "name": {
+          "text": "Top members in cohort (by lifetime revenue)",
+          "color": "#161819",
+          "fontWeight": "bold",
+          "fontSize": 13
+        },
+        "groupings": [
+          {
+            "id": "grp-detail",
+            "groupBy": [
+              "dt-id",
+              "dt-fit",
+              "dt-nut",
+              "dt-chan",
+              "dt-rev"
+            ],
+            "sort": [
+              {
+                "columnId": "dt-rev",
+                "direction": "descending"
+              }
+            ]
+          }
+        ],
+        "order": [
+          "oja8HtVZFK",
+          "5eGPVANtTk",
+          "svzrk1ZEk4",
+          "2geHKys4sG",
+          "BdTFTs8tG2",
+          "xnn_35alD6",
+          "tUEYLxaHO2",
+          "K4zZ1iVOz2",
+          "TELR2t2RPb",
+          "OjPxeq5ttM",
+          "GJsnF2amvT",
+          "bNey1AToT5",
+          "OCVzYSasTI",
+          "eJIv5mQsOb",
+          "WZ31ZPxCvT",
+          "2Wi8XpDMRY",
+          "daDkVQCrrq"
+        ],
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderRadius": "round",
+          "borderColor": "#e8e8e8",
+          "borderWidth": 1
+        }
+      },
+      {
+        "id": "cb-chat-hdr",
+        "kind": "text",
+        "body": "**Cohort Copilot** \u2014 ask it to build and save a segment for you",
+        "verticalAlign": "middle"
+      },
+      {
+        "id": "chat-cohort",
+        "kind": "chat",
+        "agentId": "ag-cohort"
+      },
+      {
+        "id": "0uSBZUY2Qx",
+        "kind": "table",
+        "source": {
+          "elementId": "AtZpTWINwY",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "l5eQton0EN",
+            "formula": "[Custom SQL/Transaction Id]"
+          },
+          {
+            "id": "A1oWQrVM40",
+            "formula": "[Custom SQL/Member Id]"
+          },
+          {
+            "id": "teOU11Pn_B",
+            "formula": "[Custom SQL/Transaction Date]"
+          },
+          {
+            "id": "b8YJOnVmmr",
+            "formula": "[Custom SQL/Product Line]"
+          },
+          {
+            "id": "j8oJ5dTu7m",
+            "formula": "[Custom SQL/Sku]"
+          },
+          {
+            "id": "JYiX5_ili0",
+            "formula": "[Custom SQL/Amount]"
+          },
+          {
+            "id": "A-h9zKrhgM",
+            "formula": "[Custom SQL/Is First Purchase]"
+          },
+          {
+            "id": "kaCC_eJAW4",
+            "formula": "[Custom SQL/Is Reorder]"
+          },
+          {
+            "id": "zwZN_LZ52T",
+            "formula": "[Custom SQL/Is Bundle Purchase]"
+          },
+          {
+            "id": "KUhj0kuRJu",
+            "formula": "[Custom SQL/Promo Discount Pct]"
+          },
+          {
+            "id": "D694oWQpHP",
+            "formula": "[Custom SQL/Bundle Name]"
+          },
+          {
+            "id": "Wg8exHgvOx",
+            "formula": "[Custom SQL/Fitness Program]"
+          },
+          {
+            "id": "Zh4euqkZNJ",
+            "formula": "[Custom SQL/Nutrition Program]"
+          },
+          {
+            "id": "jYfWNEAkd_",
+            "formula": "[Custom SQL/Signup Channel]"
+          },
+          {
+            "id": "_GfG9HysVF",
+            "formula": "[Custom SQL/Coach Attached]"
+          }
+        ],
+        "name": {
+          "visibility": "hidden"
+        },
+        "order": [
+          "l5eQton0EN",
+          "A1oWQrVM40",
+          "teOU11Pn_B",
+          "b8YJOnVmmr",
+          "j8oJ5dTu7m",
+          "JYiX5_ili0",
+          "A-h9zKrhgM",
+          "kaCC_eJAW4",
+          "zwZN_LZ52T",
+          "KUhj0kuRJu",
+          "D694oWQpHP",
+          "Wg8exHgvOx",
+          "Zh4euqkZNJ",
+          "jYfWNEAkd_",
+          "_GfG9HysVF"
+        ],
+        "visibleAsSource": false,
+        "tableStyle": {
+          "preset": "presentation",
+          "cellSpacing": "medium"
+        }
+      },
+      {
+        "id": "fact",
+        "kind": "table",
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "statement": "\nWITH months AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) - 1 AS month_idx\n  FROM TABLE(GENERATOR(ROWCOUNT => 24))\n),\nmembers0 AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) AS member_id\n  FROM TABLE(GENERATOR(ROWCOUNT => 6000))\n),\nmembers AS (\n  SELECT member_id,\n    MOD(ABS(HASH(member_id, 1)), 10000) / 10000.0 AS r1,\n    MOD(ABS(HASH(member_id, 2)), 10000) / 10000.0 AS r2,\n    MOD(ABS(HASH(member_id, 3)), 10000) / 10000.0 AS r3,\n    MOD(ABS(HASH(member_id, 4)), 10000) / 10000.0 AS r4,\n    MOD(ABS(HASH(member_id, 5)), 10000) / 10000.0 AS r5,\n    MOD(ABS(HASH(member_id, 6)), 10000) / 10000.0 AS r6,\n    MOD(ABS(HASH(member_id, 7)), 10000) / 10000.0 AS r7,\n    MOD(ABS(HASH(member_id, 8)), 10000) / 10000.0 AS r8,\n    MOD(ABS(HASH(member_id, 9)), 10000) / 10000.0 AS r9,\n    MOD(ABS(HASH(member_id, 10)), 10000) / 10000.0 AS r10,\n    MOD(ABS(HASH(member_id, 11)), 10000) / 10000.0 AS r11,\n    MOD(ABS(HASH(member_id, 12)), 10000) / 10000.0 AS r12,\n    MOD(ABS(HASH(member_id, 13)), 10000) / 10000.0 AS r13\n  FROM members0\n),\nmem AS (\n  SELECT\n    member_id, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13,\n    FLOOR(r1 * 24)::INT AS signup_month_idx,\n    CASE WHEN r2 < 0.28 THEN 'Organic'\n         WHEN r2 < 0.52 THEN 'Paid Social'\n         WHEN r2 < 0.62 THEN 'Influencer'\n         WHEN r2 < 0.72 THEN 'Affiliate'\n         WHEN r2 < 0.90 THEN 'Coach Referral'\n         ELSE 'Retail' END AS signup_channel,\n    CASE WHEN r3 < 0.22 THEN '21 Day Fix'\n         WHEN r3 < 0.38 THEN 'LIIFT4'\n         WHEN r3 < 0.48 THEN '80 Day Obsession'\n         WHEN r3 < 0.62 THEN 'P90X'\n         WHEN r3 < 0.74 THEN 'Insanity Max:30'\n         WHEN r3 < 0.87 THEN 'Barre Blend'\n         ELSE '9 Week Control Freak' END AS fitness_program\n  FROM members\n),\nprog_dim AS (\n  SELECT * FROM VALUES\n    ('21 Day Fix', 1, 0.62, 9, 0.70),\n    ('LIIFT4', 2, 0.38, 7, 0.60),\n    ('80 Day Obsession', 3, 0.55, 10, 0.65),\n    ('P90X', 3, 0.30, 6, 0.55),\n    ('Insanity Max:30', 2, 0.28, 5, 0.50),\n    ('Barre Blend', 2, 0.45, 8, 0.68),\n    ('9 Week Control Freak', 3, 0.50, 8, 0.62)\n  AS t(fitness_program, program_length_months, base_attach_prob, avg_tenure_months, completion_prob)\n),\nmem2 AS (\n  SELECT mem.*, pd.program_length_months, pd.base_attach_prob, pd.avg_tenure_months, pd.completion_prob\n  FROM mem JOIN prog_dim pd ON pd.fitness_program = mem.fitness_program\n),\nmem3 AS (\n  SELECT mem2.*,\n    (signup_channel = 'Coach Referral' OR r4 < 0.30) AS coach_attached\n  FROM mem2\n),\nmem4 AS (\n  SELECT mem3.*,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 'Shake & Bar Starter Bundle' WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 'Portion Fix Kickstart Bundle' WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN '2B Mindset + Shakeology Combo' ELSE NULL END AS bundle_name_if_eligible,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.2 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.15 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.25 ELSE 0.0 END AS promo_discount_pct,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.15 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.12 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.18 ELSE 0.0 END AS bundle_attach_boost\n  FROM mem3\n),\nmem5 AS (\n  SELECT mem4.*,\n    (bundle_name_if_eligible IS NOT NULL) AS bundle_eligible,\n    (bundle_name_if_eligible IS NOT NULL AND r5 < 0.5) AS bundle_flag\n  FROM mem4\n),\nmem6 AS (\n  SELECT mem5.*,\n    IFF(bundle_flag, bundle_name_if_eligible, NULL) AS bundle_name_raw,\n    GREATEST(0.03, LEAST(0.95,\n      base_attach_prob\n      + IFF(coach_attached, 0.12, 0)\n      + IFF(signup_channel = 'Coach Referral', 0.05, 0)\n      + IFF(bundle_flag, bundle_attach_boost, 0)\n    )) AS adjusted_attach_prob\n  FROM mem5\n),\nmem7 AS (\n  SELECT mem6.*, (r6 < adjusted_attach_prob) AS nutrition_subscriber\n  FROM mem6\n),\nmem8 AS (\n  SELECT mem7.*,\n    CASE WHEN NOT nutrition_subscriber THEN 'None'\n      WHEN fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN\n        CASE WHEN r7 < 0.55 THEN 'Portion Fix' WHEN r7 < 0.85 THEN 'Ultimate Portion Fix' ELSE '2B Mindset' END\n      WHEN fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN\n        CASE WHEN r7 < 0.65 THEN '2B Mindset' WHEN r7 < 0.85 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n      ELSE\n        CASE WHEN r7 < 0.5 THEN '2B Mindset' WHEN r7 < 0.8 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n    END AS nutrition_program\n  FROM mem7\n),\nmem9 AS (\n  SELECT mem8.*,\n    (nutrition_subscriber AND r8 < 0.68) AS shakeology_flag,\n    (nutrition_program <> 'None') AS mealplan_flag,\n    ((nutrition_subscriber AND r9 < 0.35) OR (NOT nutrition_subscriber AND r9 < 0.04)) AS bars_flag,\n    GREATEST(2, ROUND(avg_tenure_months * (0.4 + r10 * 1.3)))::INT AS nutrition_tenure_months,\n    (r11 < completion_prob) AS will_complete\n  FROM mem8\n),\nmem10 AS (\n  SELECT mem9.*, (signup_month_idx + nutrition_tenure_months) AS churn_month_idx\n  FROM mem9\n),\nfact_rows AS (\n  SELECT\n    mem10.*, months.month_idx,\n    (months.month_idx - mem10.signup_month_idx) AS months_since_signup,\n    (months.month_idx = 23) AS is_current_month,\n    (months.month_idx = 22) AS is_prior_month,\n    (months.month_idx = 11) AS is_year_ago_month,\n    DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS signup_date,\n    TO_CHAR(DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())), 'Mon YYYY') AS signup_cohort,\n    ('Q' || DATE_PART('quarter', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE()))) || ' '\n      || DATE_PART('year', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())))) AS signup_cohort_qtr,\n    DATEADD('month', months.month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS calendar_month\n  FROM mem10\n  CROSS JOIN months\n  WHERE months.month_idx >= mem10.signup_month_idx\n),\nfc1 AS (\n  SELECT fact_rows.*,\n    CASE\n      WHEN months_since_signup = 0 THEN 'Started'\n      WHEN months_since_signup < program_length_months THEN 'Mid-Program'\n      WHEN will_complete THEN 'Completed'\n      ELSE 'Dropped'\n    END AS program_stage,\n    (months_since_signup >= program_length_months AND will_complete) AS completed_flag,\n    (months_since_signup >= program_length_months AND NOT will_complete) AS dropped_flag\n  FROM fact_rows\n),\nfc2 AS (\n  SELECT fc1.*,\n    GREATEST(20, LEAST(100, ROUND(55 + IFF(coach_attached, 15, 0) + IFF(completed_flag, 20, 0) + (r12 * 10 - 5)))) AS adherence_pct\n  FROM fc1\n),\nfc3 AS (\n  SELECT fc2.*,\n    ROUND(-(2 + (adherence_pct / 100.0) * 6 + r13 * 3), 1) AS weight_change_pct\n  FROM fc2\n),\nfc4 AS (\n  SELECT fc3.*,\n    (nutrition_subscriber AND months_since_signup < nutrition_tenure_months) AS nutrition_active,\n    (nutrition_subscriber AND months_since_signup = nutrition_tenure_months - 1) AS nutrition_churned_this_month\n  FROM fc3\n),\nfc5 AS (\n  SELECT fc4.*,\n    ROUND(IFF(nutrition_active AND shakeology_flag, 129 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS shake_revenue,\n    ROUND(IFF(nutrition_active AND mealplan_flag, 44 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS mealplan_revenue,\n    ROUND(IFF(nutrition_active AND bars_flag, 39 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS bars_revenue\n  FROM fc4\n),\nfc6 AS (\n  SELECT fc5.*,\n    ROUND(shake_revenue + mealplan_revenue + bars_revenue, 2) AS product_revenue,\n    ROUND(IFF(months_since_signup > 0 AND nutrition_active, shake_revenue + mealplan_revenue + bars_revenue, 0), 2) AS reorder_revenue,\n    (months_since_signup = 0) AS first_purchase_flag,\n    (months_since_signup > 0) AS reorder_flag,\n    CASE\n      WHEN shakeology_flag THEN GET(ARRAY_CONSTRUCT('Shakeology - Chocolate','Shakeology - Vanilla','Shakeology - Vegan Chocolate'), MOD(member_id, 3))::string\n      WHEN mealplan_flag THEN nutrition_program || ' Program Kit'\n      WHEN bars_flag THEN 'Beachbar & Boost Bundle'\n      ELSE NULL\n    END AS primary_sku,\n    CASE WHEN shakeology_flag THEN 0.62 WHEN mealplan_flag THEN 0.70 WHEN bars_flag THEN 0.55 ELSE NULL END AS sku_margin_pct,\n    GREATEST(7, ROUND(30 * (2 - adherence_pct / 100.0)))::INT AS time_to_first_reorder_days,\n    COALESCE(bundle_name_raw, 'None') AS bundle_name,\n    COALESCE(bundle_name_if_eligible, 'Not Eligible') AS bundle_campaign\n  FROM fc5\n)\n\nSELECT\n  member_id, signup_date, signup_cohort, signup_cohort_qtr, calendar_month, months_since_signup, is_current_month,\n  is_prior_month, is_year_ago_month,\n  signup_channel, coach_attached, fitness_program, program_stage, completed_flag, dropped_flag,\n  adherence_pct, weight_change_pct,\n  nutrition_subscriber, nutrition_program, nutrition_active, nutrition_churned_this_month,\n  shakeology_flag, mealplan_flag, bars_flag,\n  bundle_eligible, bundle_name, bundle_campaign, bundle_flag, promo_discount_pct,\n  first_purchase_flag, reorder_flag,\n  shake_revenue, mealplan_revenue, bars_revenue, product_revenue, reorder_revenue,\n  primary_sku, sku_margin_pct, time_to_first_reorder_days\nFROM fc6\n",
+          "kind": "sql"
+        },
+        "columns": [
+          {
+            "id": "f-member",
+            "formula": "[Custom SQL/MEMBER_ID]",
+            "name": "Member Id"
+          },
+          {
+            "id": "f-signup",
+            "formula": "[Custom SQL/SIGNUP_DATE]",
+            "name": "Signup Date"
+          },
+          {
+            "id": "f-cohort",
+            "formula": "[Custom SQL/SIGNUP_COHORT]",
+            "name": "Signup Cohort"
+          },
+          {
+            "id": "f-cohortq",
+            "formula": "[Custom SQL/SIGNUP_COHORT_QTR]",
+            "name": "Signup Cohort Qtr"
+          },
+          {
+            "id": "f-cal",
+            "formula": "[Custom SQL/CALENDAR_MONTH]",
+            "name": "Calendar Month"
+          },
+          {
+            "id": "f-msince",
+            "formula": "[Custom SQL/MONTHS_SINCE_SIGNUP]",
+            "name": "Months Since Signup"
+          },
+          {
+            "id": "f-iscur",
+            "formula": "[Custom SQL/IS_CURRENT_MONTH]",
+            "name": "Is Current Month"
+          },
+          {
+            "id": "f-isprior",
+            "formula": "[Custom SQL/IS_PRIOR_MONTH]",
+            "name": "Is Prior Month"
+          },
+          {
+            "id": "f-isyearago",
+            "formula": "[Custom SQL/IS_YEAR_AGO_MONTH]",
+            "name": "Is Year Ago Month"
+          },
+          {
+            "id": "f-chan",
+            "formula": "[Custom SQL/SIGNUP_CHANNEL]",
+            "name": "Signup Channel"
+          },
+          {
+            "id": "f-coach",
+            "formula": "[Custom SQL/COACH_ATTACHED]",
+            "name": "Coach Attached"
+          },
+          {
+            "id": "f-fitprog",
+            "formula": "[Custom SQL/FITNESS_PROGRAM]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "f-stage",
+            "formula": "[Custom SQL/PROGRAM_STAGE]",
+            "name": "Program Stage"
+          },
+          {
+            "id": "f-completed",
+            "formula": "[Custom SQL/COMPLETED_FLAG]",
+            "name": "Completed Flag"
+          },
+          {
+            "id": "f-dropped",
+            "formula": "[Custom SQL/DROPPED_FLAG]",
+            "name": "Dropped Flag"
+          },
+          {
+            "id": "f-adherence",
+            "formula": "[Custom SQL/ADHERENCE_PCT]",
+            "name": "Adherence Pct"
+          },
+          {
+            "id": "f-weight",
+            "formula": "[Custom SQL/WEIGHT_CHANGE_PCT]",
+            "name": "Weight Change Pct"
+          },
+          {
+            "id": "f-nutsub",
+            "formula": "[Custom SQL/NUTRITION_SUBSCRIBER]",
+            "name": "Nutrition Subscriber"
+          },
+          {
+            "id": "f-nutprog",
+            "formula": "[Custom SQL/NUTRITION_PROGRAM]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "f-nutactive",
+            "formula": "[Custom SQL/NUTRITION_ACTIVE]",
+            "name": "Nutrition Active"
+          },
+          {
+            "id": "f-nutchurn",
+            "formula": "[Custom SQL/NUTRITION_CHURNED_THIS_MONTH]",
+            "name": "Nutrition Churned This Month"
+          },
+          {
+            "id": "f-shake",
+            "formula": "[Custom SQL/SHAKEOLOGY_FLAG]",
+            "name": "Shakeology Flag"
+          },
+          {
+            "id": "f-meal",
+            "formula": "[Custom SQL/MEALPLAN_FLAG]",
+            "name": "Mealplan Flag"
+          },
+          {
+            "id": "f-bars",
+            "formula": "[Custom SQL/BARS_FLAG]",
+            "name": "Bars Flag"
+          },
+          {
+            "id": "f-bunelig",
+            "formula": "[Custom SQL/BUNDLE_ELIGIBLE]",
+            "name": "Bundle Eligible"
+          },
+          {
+            "id": "f-bunname",
+            "formula": "[Custom SQL/BUNDLE_NAME]",
+            "name": "Bundle Name"
+          },
+          {
+            "id": "f-buncamp",
+            "formula": "[Custom SQL/BUNDLE_CAMPAIGN]",
+            "name": "Bundle Campaign"
+          },
+          {
+            "id": "f-bunflag",
+            "formula": "[Custom SQL/BUNDLE_FLAG]",
+            "name": "Bundle Flag"
+          },
+          {
+            "id": "f-discount",
+            "formula": "[Custom SQL/PROMO_DISCOUNT_PCT]",
+            "name": "Promo Discount Pct"
+          },
+          {
+            "id": "f-firstp",
+            "formula": "[Custom SQL/FIRST_PURCHASE_FLAG]",
+            "name": "First Purchase Flag"
+          },
+          {
+            "id": "f-reorderf",
+            "formula": "[Custom SQL/REORDER_FLAG]",
+            "name": "Reorder Flag"
+          },
+          {
+            "id": "f-shakerev",
+            "formula": "[Custom SQL/SHAKE_REVENUE]",
+            "name": "Shake Revenue"
+          },
+          {
+            "id": "f-mealrev",
+            "formula": "[Custom SQL/MEALPLAN_REVENUE]",
+            "name": "Mealplan Revenue"
+          },
+          {
+            "id": "f-barsrev",
+            "formula": "[Custom SQL/BARS_REVENUE]",
+            "name": "Bars Revenue"
+          },
+          {
+            "id": "f-prodrev",
+            "formula": "[Custom SQL/PRODUCT_REVENUE]",
+            "name": "Product Revenue"
+          },
+          {
+            "id": "f-reorderrev",
+            "formula": "[Custom SQL/REORDER_REVENUE]",
+            "name": "Reorder Revenue"
+          },
+          {
+            "id": "f-sku",
+            "formula": "[Custom SQL/PRIMARY_SKU]",
+            "name": "Primary Sku"
+          },
+          {
+            "id": "f-margin",
+            "formula": "[Custom SQL/SKU_MARGIN_PCT]",
+            "name": "Sku Margin Pct"
+          },
+          {
+            "id": "f-ttfr",
+            "formula": "[Custom SQL/TIME_TO_FIRST_REORDER_DAYS]",
+            "name": "Time To First Reorder Days"
+          }
+        ],
+        "name": "Fact",
+        "order": [
+          "f-member",
+          "f-signup",
+          "f-cohort",
+          "f-cohortq",
+          "f-cal",
+          "f-msince",
+          "f-iscur",
+          "f-isprior",
+          "f-isyearago",
+          "f-chan",
+          "f-coach",
+          "f-fitprog",
+          "f-stage",
+          "f-completed",
+          "f-dropped",
+          "f-adherence",
+          "f-weight",
+          "f-nutsub",
+          "f-nutprog",
+          "f-nutactive",
+          "f-nutchurn",
+          "f-shake",
+          "f-meal",
+          "f-bars",
+          "f-bunelig",
+          "f-bunname",
+          "f-buncamp",
+          "f-bunflag",
+          "f-discount",
+          "f-firstp",
+          "f-reorderf",
+          "f-shakerev",
+          "f-mealrev",
+          "f-barsrev",
+          "f-prodrev",
+          "f-reorderrev",
+          "f-sku",
+          "f-margin",
+          "f-ttfr"
+        ]
+      },
+      {
+        "id": "cmMxaAQoIf",
+        "kind": "table",
+        "source": {
+          "kind": "transpose",
+          "source": {
+            "elementId": "fact",
+            "kind": "table"
+          },
+          "direction": "column-to-row",
+          "columnsToMerge": [
+            "Shake Revenue",
+            "Mealplan Revenue",
+            "Bars Revenue"
+          ],
+          "columnLabelForMergedColumns": "Pivoted columns",
+          "columnLabelForValues": "Pivoted values"
+        },
+        "columns": [
+          {
+            "id": "6jETfnc5Qz",
+            "formula": "[Transpose of Fact/Calendar Month]"
+          },
+          {
+            "id": "sXaPbtK1Io",
+            "formula": "[Transpose of Fact/Is Current Month]"
+          },
+          {
+            "id": "hOJUi_5aHx",
+            "formula": "[Transpose of Fact/Is Prior Month]"
+          },
+          {
+            "id": "rFPZOeWDkv",
+            "formula": "Replace([Transpose of Fact/Pivoted columns], \"Revenue\", \"\")"
+          },
+          {
+            "id": "L6OKZJAlBd",
+            "formula": "[Transpose of Fact/Pivoted values]"
+          }
+        ],
+        "order": [
+          "6jETfnc5Qz",
+          "sXaPbtK1Io",
+          "hOJUi_5aHx",
+          "rFPZOeWDkv",
+          "L6OKZJAlBd"
+        ],
+        "visibleAsSource": false
+      },
+      {
+        "id": "snap",
+        "kind": "table",
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "statement": "WITH months AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) - 1 AS month_idx\n  FROM TABLE(GENERATOR(ROWCOUNT => 24))\n),\nmembers0 AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) AS member_id\n  FROM TABLE(GENERATOR(ROWCOUNT => 6000))\n),\nmembers AS (\n  SELECT member_id,\n    MOD(ABS(HASH(member_id, 1)), 10000) / 10000.0 AS r1,\n    MOD(ABS(HASH(member_id, 2)), 10000) / 10000.0 AS r2,\n    MOD(ABS(HASH(member_id, 3)), 10000) / 10000.0 AS r3,\n    MOD(ABS(HASH(member_id, 4)), 10000) / 10000.0 AS r4,\n    MOD(ABS(HASH(member_id, 5)), 10000) / 10000.0 AS r5,\n    MOD(ABS(HASH(member_id, 6)), 10000) / 10000.0 AS r6,\n    MOD(ABS(HASH(member_id, 7)), 10000) / 10000.0 AS r7,\n    MOD(ABS(HASH(member_id, 8)), 10000) / 10000.0 AS r8,\n    MOD(ABS(HASH(member_id, 9)), 10000) / 10000.0 AS r9,\n    MOD(ABS(HASH(member_id, 10)), 10000) / 10000.0 AS r10,\n    MOD(ABS(HASH(member_id, 11)), 10000) / 10000.0 AS r11,\n    MOD(ABS(HASH(member_id, 12)), 10000) / 10000.0 AS r12,\n    MOD(ABS(HASH(member_id, 13)), 10000) / 10000.0 AS r13\n  FROM members0\n),\nmem AS (\n  SELECT\n    member_id, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13,\n    FLOOR(r1 * 24)::INT AS signup_month_idx,\n    CASE WHEN r2 < 0.28 THEN 'Organic'\n         WHEN r2 < 0.52 THEN 'Paid Social'\n         WHEN r2 < 0.62 THEN 'Influencer'\n         WHEN r2 < 0.72 THEN 'Affiliate'\n         WHEN r2 < 0.90 THEN 'Coach Referral'\n         ELSE 'Retail' END AS signup_channel,\n    CASE WHEN r3 < 0.22 THEN '21 Day Fix'\n         WHEN r3 < 0.38 THEN 'LIIFT4'\n         WHEN r3 < 0.48 THEN '80 Day Obsession'\n         WHEN r3 < 0.62 THEN 'P90X'\n         WHEN r3 < 0.74 THEN 'Insanity Max:30'\n         WHEN r3 < 0.87 THEN 'Barre Blend'\n         ELSE '9 Week Control Freak' END AS fitness_program\n  FROM members\n),\nprog_dim AS (\n  SELECT * FROM VALUES\n    ('21 Day Fix', 1, 0.62, 9, 0.70),\n    ('LIIFT4', 2, 0.38, 7, 0.60),\n    ('80 Day Obsession', 3, 0.55, 10, 0.65),\n    ('P90X', 3, 0.30, 6, 0.55),\n    ('Insanity Max:30', 2, 0.28, 5, 0.50),\n    ('Barre Blend', 2, 0.45, 8, 0.68),\n    ('9 Week Control Freak', 3, 0.50, 8, 0.62)\n  AS t(fitness_program, program_length_months, base_attach_prob, avg_tenure_months, completion_prob)\n),\nmem2 AS (\n  SELECT mem.*, pd.program_length_months, pd.base_attach_prob, pd.avg_tenure_months, pd.completion_prob\n  FROM mem JOIN prog_dim pd ON pd.fitness_program = mem.fitness_program\n),\nmem3 AS (\n  SELECT mem2.*,\n    (signup_channel = 'Coach Referral' OR r4 < 0.30) AS coach_attached\n  FROM mem2\n),\nmem4 AS (\n  SELECT mem3.*,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 'Shake & Bar Starter Bundle' WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 'Portion Fix Kickstart Bundle' WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN '2B Mindset + Shakeology Combo' ELSE NULL END AS bundle_name_if_eligible,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.2 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.15 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.25 ELSE 0.0 END AS promo_discount_pct,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.15 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.12 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.18 ELSE 0.0 END AS bundle_attach_boost\n  FROM mem3\n),\nmem5 AS (\n  SELECT mem4.*,\n    (bundle_name_if_eligible IS NOT NULL) AS bundle_eligible,\n    (bundle_name_if_eligible IS NOT NULL AND r5 < 0.5) AS bundle_flag\n  FROM mem4\n),\nmem6 AS (\n  SELECT mem5.*,\n    IFF(bundle_flag, bundle_name_if_eligible, NULL) AS bundle_name_raw,\n    GREATEST(0.03, LEAST(0.95,\n      base_attach_prob\n      + IFF(coach_attached, 0.12, 0)\n      + IFF(signup_channel = 'Coach Referral', 0.05, 0)\n      + IFF(bundle_flag, bundle_attach_boost, 0)\n    )) AS adjusted_attach_prob\n  FROM mem5\n),\nmem7 AS (\n  SELECT mem6.*, (r6 < adjusted_attach_prob) AS nutrition_subscriber\n  FROM mem6\n),\nmem8 AS (\n  SELECT mem7.*,\n    CASE WHEN NOT nutrition_subscriber THEN 'None'\n      WHEN fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN\n        CASE WHEN r7 < 0.55 THEN 'Portion Fix' WHEN r7 < 0.85 THEN 'Ultimate Portion Fix' ELSE '2B Mindset' END\n      WHEN fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN\n        CASE WHEN r7 < 0.65 THEN '2B Mindset' WHEN r7 < 0.85 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n      ELSE\n        CASE WHEN r7 < 0.5 THEN '2B Mindset' WHEN r7 < 0.8 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n    END AS nutrition_program\n  FROM mem7\n),\nmem9 AS (\n  SELECT mem8.*,\n    (nutrition_subscriber AND r8 < 0.68) AS shakeology_flag,\n    (nutrition_program <> 'None') AS mealplan_flag,\n    ((nutrition_subscriber AND r9 < 0.35) OR (NOT nutrition_subscriber AND r9 < 0.04)) AS bars_flag,\n    GREATEST(2, ROUND(avg_tenure_months * (0.4 + r10 * 1.3)))::INT AS nutrition_tenure_months,\n    (r11 < completion_prob) AS will_complete\n  FROM mem8\n),\nmem10 AS (\n  SELECT mem9.*, (signup_month_idx + nutrition_tenure_months) AS churn_month_idx\n  FROM mem9\n),\nfact_rows AS (\n  SELECT\n    mem10.*, months.month_idx,\n    (months.month_idx - mem10.signup_month_idx) AS months_since_signup,\n    (months.month_idx = 23) AS is_current_month,\n    (months.month_idx = 22) AS is_prior_month,\n    (months.month_idx = 11) AS is_year_ago_month,\n    DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS signup_date,\n    TO_CHAR(DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())), 'Mon YYYY') AS signup_cohort,\n    ('Q' || DATE_PART('quarter', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE()))) || ' '\n      || DATE_PART('year', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())))) AS signup_cohort_qtr,\n    DATEADD('month', months.month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS calendar_month\n  FROM mem10\n  CROSS JOIN months\n  WHERE months.month_idx >= mem10.signup_month_idx\n),\nfc1 AS (\n  SELECT fact_rows.*,\n    CASE\n      WHEN months_since_signup = 0 THEN 'Started'\n      WHEN months_since_signup < program_length_months THEN 'Mid-Program'\n      WHEN will_complete THEN 'Completed'\n      ELSE 'Dropped'\n    END AS program_stage,\n    (months_since_signup >= program_length_months AND will_complete) AS completed_flag,\n    (months_since_signup >= program_length_months AND NOT will_complete) AS dropped_flag\n  FROM fact_rows\n),\nfc2 AS (\n  SELECT fc1.*,\n    GREATEST(20, LEAST(100, ROUND(55 + IFF(coach_attached, 15, 0) + IFF(completed_flag, 20, 0) + (r12 * 10 - 5)))) AS adherence_pct\n  FROM fc1\n),\nfc3 AS (\n  SELECT fc2.*,\n    ROUND(-(2 + (adherence_pct / 100.0) * 6 + r13 * 3), 1) AS weight_change_pct\n  FROM fc2\n),\nfc4 AS (\n  SELECT fc3.*,\n    (nutrition_subscriber AND months_since_signup < nutrition_tenure_months) AS nutrition_active,\n    (nutrition_subscriber AND months_since_signup = nutrition_tenure_months - 1) AS nutrition_churned_this_month\n  FROM fc3\n),\nfc5 AS (\n  SELECT fc4.*,\n    ROUND(IFF(nutrition_active AND shakeology_flag, 129 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS shake_revenue,\n    ROUND(IFF(nutrition_active AND mealplan_flag, 44 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS mealplan_revenue,\n    ROUND(IFF(nutrition_active AND bars_flag, 39 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS bars_revenue\n  FROM fc4\n),\nfc6 AS (\n  SELECT fc5.*,\n    ROUND(shake_revenue + mealplan_revenue + bars_revenue, 2) AS product_revenue,\n    ROUND(IFF(months_since_signup > 0 AND nutrition_active, shake_revenue + mealplan_revenue + bars_revenue, 0), 2) AS reorder_revenue,\n    (months_since_signup = 0) AS first_purchase_flag,\n    (months_since_signup > 0) AS reorder_flag,\n    CASE\n      WHEN shakeology_flag THEN GET(ARRAY_CONSTRUCT('Shakeology - Chocolate','Shakeology - Vanilla','Shakeology - Vegan Chocolate'), MOD(member_id, 3))::string\n      WHEN mealplan_flag THEN nutrition_program || ' Program Kit'\n      WHEN bars_flag THEN 'Beachbar & Boost Bundle'\n      ELSE NULL\n    END AS primary_sku,\n    CASE WHEN shakeology_flag THEN 0.62 WHEN mealplan_flag THEN 0.70 WHEN bars_flag THEN 0.55 ELSE NULL END AS sku_margin_pct,\n    GREATEST(7, ROUND(30 * (2 - adherence_pct / 100.0)))::INT AS time_to_first_reorder_days,\n    COALESCE(bundle_name_raw, 'None') AS bundle_name,\n    COALESCE(bundle_name_if_eligible, 'Not Eligible') AS bundle_campaign\n  FROM fc5\n)\n\nSELECT\n  member_id,\n  MAX(signup_date) AS signup_date,\n  MAX(signup_cohort) AS signup_cohort,\n  MAX(signup_channel) AS signup_channel,\n  (MAX(IFF(coach_attached, 1, 0)) = 1) AS coach_attached,\n  MAX(fitness_program) AS fitness_program,\n  (MAX(IFF(nutrition_subscriber, 1, 0)) = 1) AS nutrition_subscriber,\n  MAX(nutrition_program) AS nutrition_program,\n  (MAX(IFF(bundle_eligible, 1, 0)) = 1) AS bundle_eligible,\n  MAX(bundle_name) AS bundle_name,\n  MAX(bundle_campaign) AS bundle_campaign,\n  (MAX(IFF(bundle_flag, 1, 0)) = 1) AS bundle_flag,\n  MAX(promo_discount_pct) AS promo_discount_pct,\n  MAX(primary_sku) AS primary_sku,\n  MAX(IFF(is_current_month, program_stage, NULL)) AS program_stage_now,\n  (MAX(IFF(is_current_month, IFF(nutrition_active, 1, 0), NULL)) = 1) AS nutrition_active_now,\n  MAX(IFF(is_current_month, adherence_pct, NULL)) AS adherence_pct_now,\n  MAX(IFF(is_current_month, weight_change_pct, NULL)) AS weight_change_pct_now,\n  MAX(IFF(first_purchase_flag, product_revenue, NULL)) AS initial_purchase_revenue,\n  SUM(product_revenue) AS lifetime_revenue,\n  SUM(reorder_revenue) AS lifetime_reorder_revenue,\n  MAX(time_to_first_reorder_days) AS time_to_first_reorder_days\nFROM fc6\nGROUP BY member_id",
+          "kind": "sql"
+        },
+        "columns": [
+          {
+            "id": "s-member",
+            "formula": "[Custom SQL/MEMBER_ID]",
+            "name": "Member Id"
+          },
+          {
+            "id": "s-signup",
+            "formula": "[Custom SQL/SIGNUP_DATE]",
+            "name": "Signup Date"
+          },
+          {
+            "id": "s-cohort",
+            "formula": "[Custom SQL/SIGNUP_COHORT]",
+            "name": "Signup Cohort"
+          },
+          {
+            "id": "s-chan",
+            "formula": "[Custom SQL/SIGNUP_CHANNEL]",
+            "name": "Signup Channel"
+          },
+          {
+            "id": "s-coach",
+            "formula": "[Custom SQL/COACH_ATTACHED]",
+            "name": "Coach Attached"
+          },
+          {
+            "id": "s-fitprog",
+            "formula": "[Custom SQL/FITNESS_PROGRAM]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "s-nutsub",
+            "formula": "[Custom SQL/NUTRITION_SUBSCRIBER]",
+            "name": "Nutrition Subscriber"
+          },
+          {
+            "id": "s-nutprog",
+            "formula": "[Custom SQL/NUTRITION_PROGRAM]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "s-bunelig",
+            "formula": "[Custom SQL/BUNDLE_ELIGIBLE]",
+            "name": "Bundle Eligible"
+          },
+          {
+            "id": "s-bunname",
+            "formula": "[Custom SQL/BUNDLE_NAME]",
+            "name": "Bundle Name"
+          },
+          {
+            "id": "s-buncamp",
+            "formula": "[Custom SQL/BUNDLE_CAMPAIGN]",
+            "name": "Bundle Campaign"
+          },
+          {
+            "id": "s-bunflag",
+            "formula": "[Custom SQL/BUNDLE_FLAG]",
+            "name": "Bundle Flag"
+          },
+          {
+            "id": "s-discount",
+            "formula": "[Custom SQL/PROMO_DISCOUNT_PCT]",
+            "name": "Promo Discount Pct"
+          },
+          {
+            "id": "s-sku",
+            "formula": "[Custom SQL/PRIMARY_SKU]",
+            "name": "Primary Sku"
+          },
+          {
+            "id": "s-stagenow",
+            "formula": "[Custom SQL/PROGRAM_STAGE_NOW]",
+            "name": "Program Stage Now"
+          },
+          {
+            "id": "s-activenow",
+            "formula": "[Custom SQL/NUTRITION_ACTIVE_NOW]",
+            "name": "Nutrition Active Now"
+          },
+          {
+            "id": "s-adherencenow",
+            "formula": "[Custom SQL/ADHERENCE_PCT_NOW]",
+            "name": "Adherence Pct Now"
+          },
+          {
+            "id": "s-weightnow",
+            "formula": "[Custom SQL/WEIGHT_CHANGE_PCT_NOW]",
+            "name": "Weight Change Pct Now"
+          },
+          {
+            "id": "s-initrev",
+            "formula": "[Custom SQL/INITIAL_PURCHASE_REVENUE]",
+            "name": "Initial Purchase Revenue"
+          },
+          {
+            "id": "s-liferev",
+            "formula": "[Custom SQL/LIFETIME_REVENUE]",
+            "name": "Lifetime Revenue"
+          },
+          {
+            "id": "s-lifereorder",
+            "formula": "[Custom SQL/LIFETIME_REORDER_REVENUE]",
+            "name": "Lifetime Reorder Revenue"
+          },
+          {
+            "id": "s-ttfr",
+            "formula": "[Custom SQL/TIME_TO_FIRST_REORDER_DAYS]",
+            "name": "Time To First Reorder Days"
+          }
+        ],
+        "name": "Member Snapshot",
+        "order": [
+          "s-member",
+          "s-signup",
+          "s-cohort",
+          "s-chan",
+          "s-coach",
+          "s-fitprog",
+          "s-nutsub",
+          "s-nutprog",
+          "s-bunelig",
+          "s-bunname",
+          "s-buncamp",
+          "s-bunflag",
+          "s-discount",
+          "s-sku",
+          "s-stagenow",
+          "s-activenow",
+          "s-adherencenow",
+          "s-weightnow",
+          "s-initrev",
+          "s-liferev",
+          "s-lifereorder",
+          "s-ttfr"
+        ]
+      },
+      {
+        "id": "I_0jZL7Q78",
+        "kind": "table",
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "kind": "csv-table",
+          "inodeId": "5565dae0-8f71-4a1c-9a27-cd337bd72348"
+        },
+        "columns": [
+          {
+            "id": "C1Miw4EJRU",
+            "formula": "[Member Snapshot.csv/Member Id]"
+          },
+          {
+            "id": "CLDVy12WFP",
+            "formula": "[Member Snapshot.csv/Signup Date]"
+          },
+          {
+            "id": "CmEEZEk6LF",
+            "formula": "[Member Snapshot.csv/Signup Cohort]"
+          },
+          {
+            "id": "qY1P0kphfV",
+            "formula": "[Member Snapshot.csv/Signup Channel]"
+          },
+          {
+            "id": "I7DDfnouGG",
+            "formula": "[Member Snapshot.csv/Coach Attached]"
+          },
+          {
+            "id": "YZX4iph5hw",
+            "formula": "[Member Snapshot.csv/Fitness Program]"
+          },
+          {
+            "id": "xo3iIy8oJj",
+            "formula": "[Member Snapshot.csv/Nutrition Subscriber]"
+          },
+          {
+            "id": "2DUodxosJa",
+            "formula": "[Member Snapshot.csv/Nutrition Program]"
+          },
+          {
+            "id": "-M4-TO1Nu6",
+            "formula": "[Member Snapshot.csv/Bundle Eligible]"
+          },
+          {
+            "id": "a0w40yteLV",
+            "formula": "[Member Snapshot.csv/Bundle Name]"
+          },
+          {
+            "id": "2wEXTDgvc9",
+            "formula": "[Member Snapshot.csv/Bundle Campaign]"
+          },
+          {
+            "id": "Dat31u6hAl",
+            "formula": "[Member Snapshot.csv/Bundle Flag]"
+          },
+          {
+            "id": "DeLy-3yVtb",
+            "formula": "[Member Snapshot.csv/Promo Discount Pct]"
+          },
+          {
+            "id": "3Ibugp7_lU",
+            "formula": "[Member Snapshot.csv/Primary Sku]"
+          },
+          {
+            "id": "TucoSAUJHB",
+            "formula": "[Member Snapshot.csv/Program Stage Now]"
+          },
+          {
+            "id": "wUvmmDvwOv",
+            "formula": "[Member Snapshot.csv/Nutrition Active Now]"
+          },
+          {
+            "id": "tYanQ5hHFh",
+            "formula": "[Member Snapshot.csv/Adherence Pct Now]"
+          },
+          {
+            "id": "_6Wichzs6x",
+            "formula": "[Member Snapshot.csv/Weight Change Pct Now]"
+          },
+          {
+            "id": "shmzeNbdvB",
+            "formula": "[Member Snapshot.csv/Initial Purchase Revenue]"
+          },
+          {
+            "id": "PSqAgKCri5",
+            "formula": "[Member Snapshot.csv/Lifetime Revenue]"
+          },
+          {
+            "id": "WZjtAxnETv",
+            "formula": "[Member Snapshot.csv/Lifetime Reorder Revenue]"
+          },
+          {
+            "id": "7KQt0MlUux",
+            "formula": "[Member Snapshot.csv/Time To First Reorder Days]"
+          }
+        ],
+        "name": "Member Snapshot Table",
+        "order": [
+          "C1Miw4EJRU",
+          "CLDVy12WFP",
+          "CmEEZEk6LF",
+          "qY1P0kphfV",
+          "I7DDfnouGG",
+          "YZX4iph5hw",
+          "xo3iIy8oJj",
+          "2DUodxosJa",
+          "-M4-TO1Nu6",
+          "a0w40yteLV",
+          "2wEXTDgvc9",
+          "Dat31u6hAl",
+          "DeLy-3yVtb",
+          "3Ibugp7_lU",
+          "TucoSAUJHB",
+          "wUvmmDvwOv",
+          "tYanQ5hHFh",
+          "_6Wichzs6x",
+          "shmzeNbdvB",
+          "PSqAgKCri5",
+          "WZjtAxnETv",
+          "7KQt0MlUux"
+        ],
+        "visibleAsSource": false
+      },
+      {
+        "id": "6TtzLEJ_U3",
+        "kind": "table",
+        "source": {
+          "elementId": "AtZpTWINwY",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "xYTdZwn-JO",
+            "formula": "[Custom SQL/Product Line]"
+          },
+          {
+            "id": "7k7xImYoA3",
+            "formula": "DateTrunc(\"month\", [Custom SQL/Transaction Date])"
+          },
+          {
+            "id": "8n6rLmlVDy",
+            "formula": "Sum([Amount])"
+          },
+          {
+            "id": "YEWRsRwwsB",
+            "formula": "(Sum([Amount]) - DateLookback(Sum([Amount]), [Month of Transaction Date], 1, \"month\")) / Abs(DateLookback(Sum([Amount]), [Month of Transaction Date], 1, \"month\"))",
+            "name": "1 month delta %",
+            "format": {
+              "kind": "number",
+              "formatString": ",.2%"
+            }
+          },
+          {
+            "id": "no5fWVhBEV",
+            "formula": "[Custom SQL/Transaction Id]"
+          },
+          {
+            "id": "UNoW2ylgsN",
+            "formula": "[Custom SQL/Member Id]"
+          },
+          {
+            "id": "e157LCbPxB",
+            "formula": "[Custom SQL/Transaction Date]"
+          },
+          {
+            "id": "LElhZLssx-",
+            "formula": "[Custom SQL/Sku]"
+          },
+          {
+            "id": "t1B3Bd-sDW",
+            "formula": "[Custom SQL/Amount]"
+          },
+          {
+            "id": "nUPGPVZdzZ",
+            "formula": "[Custom SQL/Is First Purchase]"
+          },
+          {
+            "id": "heQPqW3dIr",
+            "formula": "[Custom SQL/Is Reorder]"
+          },
+          {
+            "id": "kXbwsnTbr6",
+            "formula": "[Custom SQL/Is Bundle Purchase]"
+          },
+          {
+            "id": "PiKqU4solu",
+            "formula": "[Custom SQL/Promo Discount Pct]"
+          },
+          {
+            "id": "VbZePo-1-G",
+            "formula": "[Custom SQL/Bundle Name]"
+          },
+          {
+            "id": "79OzaQxAuC",
+            "formula": "[Custom SQL/Fitness Program]"
+          },
+          {
+            "id": "CwTzRForzX",
+            "formula": "[Custom SQL/Nutrition Program]"
+          },
+          {
+            "id": "Vc6eTXCcS1",
+            "formula": "[Custom SQL/Signup Channel]"
+          },
+          {
+            "id": "205DGSFDr1",
+            "formula": "[Custom SQL/Coach Attached]"
+          }
+        ],
+        "groupings": [
+          {
+            "id": "BoAYKi2jwx",
+            "groupBy": [
+              "xYTdZwn-JO"
+            ]
+          },
+          {
+            "id": "x6MPG205we",
+            "groupBy": [
+              "7k7xImYoA3"
+            ],
+            "calculations": [
+              "8n6rLmlVDy",
+              "YEWRsRwwsB"
+            ],
+            "sort": [
+              {
+                "columnId": "7k7xImYoA3",
+                "direction": "descending"
+              }
+            ]
+          }
+        ],
+        "order": [
+          "no5fWVhBEV",
+          "UNoW2ylgsN",
+          "e157LCbPxB",
+          "LElhZLssx-",
+          "t1B3Bd-sDW",
+          "nUPGPVZdzZ",
+          "heQPqW3dIr",
+          "kXbwsnTbr6",
+          "PiKqU4solu",
+          "VbZePo-1-G",
+          "79OzaQxAuC",
+          "CwTzRForzX",
+          "Vc6eTXCcS1",
+          "205DGSFDr1"
+        ],
+        "visibleAsSource": false
+      },
+      {
+        "id": "AtZpTWINwY",
+        "kind": "table",
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "statement": "WITH months AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) - 1 AS month_idx\n  FROM TABLE(GENERATOR(ROWCOUNT => 24))\n),\nmembers0 AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) AS member_id\n  FROM TABLE(GENERATOR(ROWCOUNT => 6000))\n),\nmembers AS (\n  SELECT member_id,\n    MOD(ABS(HASH(member_id, 1)), 10000) / 10000.0 AS r1,\n    MOD(ABS(HASH(member_id, 2)), 10000) / 10000.0 AS r2,\n    MOD(ABS(HASH(member_id, 3)), 10000) / 10000.0 AS r3,\n    MOD(ABS(HASH(member_id, 4)), 10000) / 10000.0 AS r4,\n    MOD(ABS(HASH(member_id, 5)), 10000) / 10000.0 AS r5,\n    MOD(ABS(HASH(member_id, 6)), 10000) / 10000.0 AS r6,\n    MOD(ABS(HASH(member_id, 7)), 10000) / 10000.0 AS r7,\n    MOD(ABS(HASH(member_id, 8)), 10000) / 10000.0 AS r8,\n    MOD(ABS(HASH(member_id, 9)), 10000) / 10000.0 AS r9,\n    MOD(ABS(HASH(member_id, 10)), 10000) / 10000.0 AS r10,\n    MOD(ABS(HASH(member_id, 11)), 10000) / 10000.0 AS r11,\n    MOD(ABS(HASH(member_id, 12)), 10000) / 10000.0 AS r12,\n    MOD(ABS(HASH(member_id, 13)), 10000) / 10000.0 AS r13\n  FROM members0\n),\nmem AS (\n  SELECT\n    member_id, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13,\n    FLOOR(r1 * 24)::INT AS signup_month_idx,\n    CASE WHEN r2 < 0.28 THEN 'Organic'\n         WHEN r2 < 0.52 THEN 'Paid Social'\n         WHEN r2 < 0.62 THEN 'Influencer'\n         WHEN r2 < 0.72 THEN 'Affiliate'\n         WHEN r2 < 0.90 THEN 'Coach Referral'\n         ELSE 'Retail' END AS signup_channel,\n    CASE WHEN r3 < 0.22 THEN '21 Day Fix'\n         WHEN r3 < 0.38 THEN 'LIIFT4'\n         WHEN r3 < 0.48 THEN '80 Day Obsession'\n         WHEN r3 < 0.62 THEN 'P90X'\n         WHEN r3 < 0.74 THEN 'Insanity Max:30'\n         WHEN r3 < 0.87 THEN 'Barre Blend'\n         ELSE '9 Week Control Freak' END AS fitness_program\n  FROM members\n),\nprog_dim AS (\n  SELECT * FROM VALUES\n    ('21 Day Fix', 1, 0.62, 9, 0.70),\n    ('LIIFT4', 2, 0.38, 7, 0.60),\n    ('80 Day Obsession', 3, 0.55, 10, 0.65),\n    ('P90X', 3, 0.30, 6, 0.55),\n    ('Insanity Max:30', 2, 0.28, 5, 0.50),\n    ('Barre Blend', 2, 0.45, 8, 0.68),\n    ('9 Week Control Freak', 3, 0.50, 8, 0.62)\n  AS t(fitness_program, program_length_months, base_attach_prob, avg_tenure_months, completion_prob)\n),\nmem2 AS (\n  SELECT mem.*, pd.program_length_months, pd.base_attach_prob, pd.avg_tenure_months, pd.completion_prob\n  FROM mem JOIN prog_dim pd ON pd.fitness_program = mem.fitness_program\n),\nmem3 AS (\n  SELECT mem2.*,\n    (signup_channel = 'Coach Referral' OR r4 < 0.30) AS coach_attached\n  FROM mem2\n),\nmem4 AS (\n  SELECT mem3.*,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 'Shake & Bar Starter Bundle'\n         WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 'Portion Fix Kickstart Bundle'\n         WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN '2B Mindset + Shakeology Combo'\n         ELSE NULL END AS bundle_name_if_eligible,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.20\n         WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.15\n         WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.25\n         ELSE 0.0 END AS promo_discount_pct,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.15\n         WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.12\n         WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.18\n         ELSE 0.0 END AS bundle_attach_boost\n  FROM mem3\n),\nmem5 AS (\n  SELECT mem4.*,\n    (bundle_name_if_eligible IS NOT NULL) AS bundle_eligible,\n    (bundle_name_if_eligible IS NOT NULL AND r5 < 0.5) AS bundle_flag\n  FROM mem4\n),\nmem6 AS (\n  SELECT mem5.*,\n    IFF(bundle_flag, bundle_name_if_eligible, NULL) AS bundle_name_raw,\n    GREATEST(0.03, LEAST(0.95,\n      base_attach_prob\n      + IFF(coach_attached, 0.12, 0)\n      + IFF(signup_channel = 'Coach Referral', 0.05, 0)\n      + IFF(bundle_flag, bundle_attach_boost, 0)\n    )) AS adjusted_attach_prob\n  FROM mem5\n),\nmem7 AS (\n  SELECT mem6.*, (r6 < adjusted_attach_prob) AS nutrition_subscriber\n  FROM mem6\n),\nmem8 AS (\n  SELECT mem7.*,\n    CASE WHEN NOT nutrition_subscriber THEN 'None'\n      WHEN fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN\n        CASE WHEN r7 < 0.55 THEN 'Portion Fix' WHEN r7 < 0.85 THEN 'Ultimate Portion Fix' ELSE '2B Mindset' END\n      WHEN fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN\n        CASE WHEN r7 < 0.65 THEN '2B Mindset' WHEN r7 < 0.85 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n      ELSE\n        CASE WHEN r7 < 0.5 THEN '2B Mindset' WHEN r7 < 0.8 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n    END AS nutrition_program\n  FROM mem7\n),\nmem9 AS (\n  SELECT mem8.*,\n    (nutrition_subscriber AND r8 < 0.68) AS shakeology_flag,\n    (nutrition_program <> 'None') AS mealplan_flag,\n    ((nutrition_subscriber AND r9 < 0.35) OR (NOT nutrition_subscriber AND r9 < 0.04)) AS bars_flag,\n    GREATEST(2, ROUND(avg_tenure_months * (0.4 + r10 * 1.3)))::INT AS nutrition_tenure_months,\n    (r11 < completion_prob) AS will_complete\n  FROM mem8\n),\nmem10 AS (\n  SELECT mem9.*, (signup_month_idx + nutrition_tenure_months) AS churn_month_idx\n  FROM mem9\n),\nfact_rows AS (\n  SELECT\n    mem10.*, months.month_idx,\n    (months.month_idx - mem10.signup_month_idx) AS months_since_signup,\n    (months.month_idx = 23) AS is_current_month,\n    (months.month_idx = 22) AS is_prior_month,\n    (months.month_idx = 11) AS is_year_ago_month,\n    DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS signup_date,\n    TO_CHAR(DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())), 'Mon YYYY') AS signup_cohort,\n    ('Q' || DATE_PART('quarter', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE()))) || ' '\n      || DATE_PART('year', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())))) AS signup_cohort_qtr,\n    DATEADD('month', months.month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS calendar_month\n  FROM mem10\n  CROSS JOIN months\n  WHERE months.month_idx >= mem10.signup_month_idx\n),\nfc1 AS (\n  SELECT fact_rows.*,\n    CASE\n      WHEN months_since_signup = 0 THEN 'Started'\n      WHEN months_since_signup < program_length_months THEN 'Mid-Program'\n      WHEN will_complete THEN 'Completed'\n      ELSE 'Dropped'\n    END AS program_stage,\n    (months_since_signup >= program_length_months AND will_complete) AS completed_flag,\n    (months_since_signup >= program_length_months AND NOT will_complete) AS dropped_flag\n  FROM fact_rows\n),\nfc2 AS (\n  SELECT fc1.*,\n    GREATEST(20, LEAST(100, ROUND(55 + IFF(coach_attached, 15, 0) + IFF(completed_flag, 20, 0) + (r12 * 10 - 5)))) AS adherence_pct\n  FROM fc1\n),\nfc3 AS (\n  SELECT fc2.*,\n    ROUND(-(2 + (adherence_pct / 100.0) * 6 + r13 * 3), 1) AS weight_change_pct\n  FROM fc2\n),\nfc4 AS (\n  SELECT fc3.*,\n    (nutrition_subscriber AND months_since_signup < nutrition_tenure_months) AS nutrition_active,\n    (nutrition_subscriber AND months_since_signup = nutrition_tenure_months - 1) AS nutrition_churned_this_month\n  FROM fc3\n),\nfc5 AS (\n  SELECT fc4.*,\n    ROUND(IFF(nutrition_active AND shakeology_flag, 129 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS shake_revenue,\n    ROUND(IFF(nutrition_active AND mealplan_flag, 44 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS mealplan_revenue,\n    ROUND(IFF(nutrition_active AND bars_flag, 39 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS bars_revenue\n  FROM fc4\n),\nfc6 AS (\n  SELECT fc5.*,\n    ROUND(shake_revenue + mealplan_revenue + bars_revenue, 2) AS product_revenue,\n    ROUND(IFF(months_since_signup > 0 AND nutrition_active, shake_revenue + mealplan_revenue + bars_revenue, 0), 2) AS reorder_revenue,\n    (months_since_signup = 0) AS first_purchase_flag,\n    (months_since_signup > 0) AS reorder_flag,\n    COALESCE(bundle_name_raw, 'None') AS bundle_name,\n    COALESCE(bundle_name_if_eligible, 'Not Eligible') AS bundle_campaign\n  FROM fc5\n),\ntxns AS (\n  SELECT member_id, calendar_month, signup_channel, coach_attached, fitness_program, nutrition_program,\n         bundle_name, first_purchase_flag, reorder_flag, bundle_flag, promo_discount_pct,\n         'Shakeology' AS product_line,\n         GET(ARRAY_CONSTRUCT('Shakeology - Chocolate','Shakeology - Vanilla','Shakeology - Vegan Chocolate'), MOD(member_id, 3))::string AS sku,\n         shake_revenue AS amount\n  FROM fc6\n  WHERE shake_revenue > 0\n\n  UNION ALL\n\n  SELECT member_id, calendar_month, signup_channel, coach_attached, fitness_program, nutrition_program,\n         bundle_name, first_purchase_flag, reorder_flag, bundle_flag, promo_discount_pct,\n         'Meal Plan' AS product_line,\n         (nutrition_program || ' Program Kit') AS sku,\n         mealplan_revenue AS amount\n  FROM fc6\n  WHERE mealplan_revenue > 0\n\n  UNION ALL\n\n  SELECT member_id, calendar_month, signup_channel, coach_attached, fitness_program, nutrition_program,\n         bundle_name, first_purchase_flag, reorder_flag, bundle_flag, promo_discount_pct,\n         'Bars & Supplements' AS product_line,\n         'Beachbar & Boost Bundle' AS sku,\n         bars_revenue AS amount\n  FROM fc6\n  WHERE bars_revenue > 0\n)\nSELECT\n  MD5(member_id || '|' || calendar_month::string || '|' || product_line) AS transaction_id,\n  member_id,\n  DATEADD('day', MOD(ABS(HASH(member_id, calendar_month, product_line)), 28), calendar_month) AS transaction_date,\n  product_line,\n  sku,\n  amount,\n  first_purchase_flag AS is_first_purchase,\n  reorder_flag AS is_reorder,\n  (bundle_flag AND first_purchase_flag) AS is_bundle_purchase,\n  IFF(bundle_flag AND first_purchase_flag, promo_discount_pct, 0.0) AS promo_discount_pct,\n  IFF(bundle_flag AND first_purchase_flag, bundle_name, 'None') AS bundle_name,\n  fitness_program,\n  nutrition_program,\n  signup_channel,\n  coach_attached\nFROM txns\nORDER BY member_id, transaction_date",
+          "kind": "sql"
+        },
+        "columns": [
+          {
+            "id": "TRANSACTION_ID",
+            "formula": "[Custom SQL/TRANSACTION_ID]"
+          },
+          {
+            "id": "MEMBER_ID",
+            "formula": "[Custom SQL/MEMBER_ID]"
+          },
+          {
+            "id": "TRANSACTION_DATE",
+            "formula": "[Custom SQL/TRANSACTION_DATE]"
+          },
+          {
+            "id": "PRODUCT_LINE",
+            "formula": "[Custom SQL/PRODUCT_LINE]"
+          },
+          {
+            "id": "SKU",
+            "formula": "[Custom SQL/SKU]"
+          },
+          {
+            "id": "AMOUNT",
+            "formula": "[Custom SQL/AMOUNT]"
+          },
+          {
+            "id": "IS_FIRST_PURCHASE",
+            "formula": "[Custom SQL/IS_FIRST_PURCHASE]"
+          },
+          {
+            "id": "IS_REORDER",
+            "formula": "[Custom SQL/IS_REORDER]"
+          },
+          {
+            "id": "IS_BUNDLE_PURCHASE",
+            "formula": "[Custom SQL/IS_BUNDLE_PURCHASE]"
+          },
+          {
+            "id": "PROMO_DISCOUNT_PCT",
+            "formula": "[Custom SQL/PROMO_DISCOUNT_PCT]"
+          },
+          {
+            "id": "BUNDLE_NAME",
+            "formula": "[Custom SQL/BUNDLE_NAME]"
+          },
+          {
+            "id": "FITNESS_PROGRAM",
+            "formula": "[Custom SQL/FITNESS_PROGRAM]"
+          },
+          {
+            "id": "NUTRITION_PROGRAM",
+            "formula": "[Custom SQL/NUTRITION_PROGRAM]"
+          },
+          {
+            "id": "SIGNUP_CHANNEL",
+            "formula": "[Custom SQL/SIGNUP_CHANNEL]"
+          },
+          {
+            "id": "COACH_ATTACHED",
+            "formula": "[Custom SQL/COACH_ATTACHED]"
+          }
+        ],
+        "order": [
+          "TRANSACTION_ID",
+          "MEMBER_ID",
+          "TRANSACTION_DATE",
+          "PRODUCT_LINE",
+          "SKU",
+          "AMOUNT",
+          "IS_FIRST_PURCHASE",
+          "IS_REORDER",
+          "IS_BUNDLE_PURCHASE",
+          "PROMO_DISCOUNT_PCT",
+          "BUNDLE_NAME",
+          "FITNESS_PROGRAM",
+          "NUTRITION_PROGRAM",
+          "SIGNUP_CHANNEL",
+          "COACH_ATTACHED"
+        ],
+        "visibleAsSource": false
+      },
+      {
+        "id": "modal-run-title",
+        "kind": "text",
+        "body": "### Log a scenario run\n\nName this what-if (e.g. \"Portion Fix retest \u2014 15% adoption / 10% discount\") for future reference.",
+        "verticalAlign": "middle"
+      },
+      {
+        "kind": "control",
+        "controlId": "ScenarioRunName",
+        "id": "ctrl-runname",
+        "name": "Run Name",
+        "case": "insensitive",
+        "controlType": "text",
+        "mode": "equals",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "kind": "control",
+        "controlId": "ScenarioRunNotes",
+        "id": "ctrl-runnotes",
+        "name": "Notes",
+        "case": "insensitive",
+        "controlType": "text",
+        "mode": "equals",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "id": "btn-cancel-run",
+        "kind": "button",
+        "text": "Cancel",
+        "appearance": "outline",
+        "actions": [
+          {
+            "id": "actcancelrun",
+            "trigger": "on-click",
+            "effects": [
+              {
+                "effect": "close-overlay"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "btn-save-run",
+        "kind": "button",
+        "text": "Save",
+        "appearance": "filled"
+      }
+    ],
+    "pages": [
+      {
+        "id": "main",
+        "name": "Nutrition Business"
+      },
+      {
+        "id": "pgdata",
+        "name": "Data",
+        "visibility": "hidden"
+      }
+    ],
+    "settings": {
+      "theme": {
+        "overrides": {
+          "colors": {
+            "text": "#161819",
+            "highlight": "#208468",
+            "success": "#208468",
+            "warning": "#ee9441",
+            "danger": "#eb001b"
+          },
+          "categoricalScheme": [
+            "#208468",
+            "#108474",
+            "#5fbe9a",
+            "#161819",
+            "#8a8a8a",
+            "#0b5c47"
+          ],
+          "fonts": {
+            "textFont": "Brilliant Corners"
+          },
+          "titleFont": {
+            "fontWeight": "normal"
+          },
+          "pageWidth": "full"
+        }
+      }
+    },
+    "overlays": [
+      {
+        "id": "modalRun",
+        "type": "modal",
+        "name": "Log a scenario run",
+        "modal": {
+          "width": "small",
+          "header": {
+            "title": "Log a scenario run",
+            "showCloseIcon": "shown"
+          },
+          "footer": {
+            "primaryCta": {
+              "visible": "hidden"
+            },
+            "secondaryCta": {
+              "visible": "hidden"
+            }
+          }
+        }
+      }
+    ],
+    "agents": [
+      {
+        "id": "ag-cohort",
+        "instructions": "You help a marketing user build a member cohort for campaign targeting. Members are BODi fitness-program subscribers (21 Day Fix, LIIFT4, 80 Day Obsession, P90X, Insanity Max:30, Barre Blend, 9 Week Control Freak) who may or may not also subscribe to a nutrition program (2B Mindset, Portion Fix, Ultimate Portion Fix). Use the filter tools to narrow the population, then set a name/description and save. Report the resulting cohort size and attach rate.",
+        "name": "Cohort Copilot",
+        "description": "Builds and saves marketing cohorts of BODi members.",
+        "dataSources": [
+          {
+            "kind": "table",
+            "elementId": "snap"
+          }
+        ],
+        "tools": [
+          {
+            "toolId": "t-name",
+            "kind": "action",
+            "name": "Set cohort name and description",
+            "description": "Set the name and description for the cohort about to be saved.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "CohortName",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Cohort name"
+                }
+              },
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "CohortDesc",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Cohort description"
+                }
+              }
+            ]
+          },
+          {
+            "toolId": "t-save",
+            "kind": "action",
+            "name": "Save the cohort",
+            "description": "Save the currently filtered cohort as a named, reusable segment.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "insert-rows",
+                "tableElementId": "cohort_saves",
+                "values": {
+                  "cs-name": {
+                    "type": "control",
+                    "control": "CohortName"
+                  },
+                  "cs-desc": {
+                    "type": "control",
+                    "control": "CohortDesc"
+                  },
+                  "cs-size": {
+                    "type": "formula",
+                    "formula": "CountDistinct([Member Snapshot/Member Id])"
+                  },
+                  "cs-attach": {
+                    "type": "formula",
+                    "formula": "CountDistinct(If([Member Snapshot/Nutrition Subscriber], [Member Snapshot/Member Id], Null)) / CountDistinct([Member Snapshot/Member Id])"
+                  },
+                  "cs-liferev": {
+                    "type": "formula",
+                    "formula": "Avg([Member Snapshot/Lifetime Revenue])"
+                  },
+                  "cs-retention": {
+                    "type": "formula",
+                    "formula": "CountDistinct(If([Member Snapshot/Nutrition Active Now], [Member Snapshot/Member Id], Null)) / CountDistinct(If([Member Snapshot/Nutrition Subscriber], [Member Snapshot/Member Id], Null))"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ag-scenario",
+        "instructions": "You help analyze BODi's nutrition bundle/promo campaigns: Shake & Bar Starter Bundle, Portion Fix Kickstart Bundle, and 2B Mindset + Shakeology Combo. `Bundle Baseline` compares adopters vs. eligible members who declined (standalone) for each campaign \u2014 pool size, adopter counts, average revenue, discount, and nutrition retention. `Assumptions` is the live what-if grid (edit New Adoption Rate % / New Discount % per campaign to project impact). Explain whether a bundle lifted attach/retention or mainly cannibalized standalone revenue, and log notable what-if runs on request.",
+        "name": "Scenario Copilot",
+        "description": "Analyzes bundle/promo baseline vs. projected performance.",
+        "dataSources": []
+      },
+      {
+        "id": "uHJJJ3p5ni",
+        "instructions": "You are the Command Center Assistant for the Nutrition Business workbook.## Your RoleHelp users explore the Command Center tab, which tracks key nutrition business metrics like subscriber growth, retention, attach rates, revenue, and program completion.## How to Respond- Keep it casual and conversational\n- When users first arrive, welcome them and suggest 3 questions they might ask about the data\n- Reference specific KPIs and charts by name when relevant\n- Explain what metrics measure and why they matter\n- Suggest related metrics or views they might want to explore## Key Metrics Available- **ACTIVE NUTRITION SUBSCRIBERS**: Current subscriber count\n- **BLENDED NUTRITION RETENTION**: Overall retention rate across programs\n- **NUTRITION ATTACH RATE**: % of fitness members who add nutrition\n- **NUTRITION PRODUCT REVENUE**: Total revenue from nutrition products\n- **REORDER REVENUE**: Revenue from repeat purchases\n- **AVG PROGRAM COMPLETION RATE**: How many members finish their programsPlus visualizations showing subscriber growth & churn trends, revenue by signup channel, and nutrition trends over time.## Example GreetingHey! I'm here to help you explore the Command Center data. Here are a few questions you might want to ask:- How are our active nutrition subscribers trending?\n- Which signup channels are driving the most revenue?\n- What's our current retention rate and how does it compare to completion rates?What would you like to know?## Boundaries- Focus on the Command Center tab content\n- If asked about other tabs, acknowledge they exist but keep focus on Command Center insights\n- Query @dataSource(\"fact\") to answer data questions",
+        "name": "Command Center Assistant",
+        "dataSources": [
+          {
+            "kind": "table",
+            "elementId": "fact"
+          }
+        ]
+      }
+    ],
+    "kind": "workbook",
+    "layout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"main\">\n  <Container elementId=\"c-header\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 5\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"logo\" gridColumn=\"1 / 4\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"hdr-title\" gridColumn=\"5 / 14\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"hdr-sub\" gridColumn=\"5 / 16\" gridRow=\"3 / 5\"/>\n  </Container>\n  <TabbedContainer elementId=\"tc-main\" type=\"tabbed-container\" gridColumn=\"1 / 25\" gridRow=\"5 / 72\">\n    <Tab gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n      <Element elementId=\"k-subs\" gridColumn=\"1 / 6\" gridRow=\"1 / 6\"/>\n      <Element elementId=\"k-retention\" gridColumn=\"6 / 11\" gridRow=\"1 / 6\"/>\n      <Element elementId=\"k-attach\" gridColumn=\"11 / 16\" gridRow=\"1 / 6\"/>\n      <Container elementId=\"aFVljva2Qf\" type=\"grid\" gridColumn=\"16 / 25\" gridRow=\"1 / 36\" gridTemplateColumns=\"repeat(12, 1fr)\" gridTemplateRows=\"auto\">\n        <Element elementId=\"1SJMh34xLX\" gridColumn=\"1 / 13\" gridRow=\"1 / 3\"/>\n        <Element elementId=\"_VpCRy2vO9\" gridColumn=\"1 / 13\" gridRow=\"3 / 36\"/>\n      </Container>\n      <Element elementId=\"k-rev\" gridColumn=\"1 / 6\" gridRow=\"6 / 11\"/>\n      <Element elementId=\"k-reorderrev\" gridColumn=\"6 / 11\" gridRow=\"6 / 11\"/>\n      <Element elementId=\"k-completion\" gridColumn=\"11 / 16\" gridRow=\"6 / 11\"/>\n      <Element elementId=\"ibqYbNeXX3\" gridColumn=\"1 / 8\" gridRow=\"11 / 25\"/>\n      <Element elementId=\"area-subs\" gridColumn=\"8 / 16\" gridRow=\"11 / 25\"/>\n      <Element elementId=\"rMfRiG72Lw\" gridColumn=\"1 / 16\" gridRow=\"25 / 36\"/>\n    </Tab>\n    <Tab gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n      <Element elementId=\"cb-hdr\" gridColumn=\"1 / 25\" gridRow=\"1 / 3\"/>\n      <Container elementId=\"Lul38Chxlt\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"3 / 9\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n        <Element elementId=\"iIP6mKIcT6\" gridColumn=\"1 / 5\" gridRow=\"1 / 3\"/>\n        <Element elementId=\"vUA1IGPQy6\" type=\"stack\" gridColumn=\"1 / 25\" gridRow=\"3 / 5\"/>\n        <Element elementId=\"BRRlE5g1qI\" type=\"stack\" gridColumn=\"1 / 19\" gridRow=\"5 / 7\"/>\n      </Container>\n      <Element elementId=\"k-cohort-size\" gridColumn=\"1 / 7\" gridRow=\"9 / 17\"/>\n      <Element elementId=\"k-cohort-attach\" gridColumn=\"7 / 13\" gridRow=\"9 / 17\"/>\n      <Element elementId=\"k-cohort-liferev\" gridColumn=\"13 / 19\" gridRow=\"9 / 17\"/>\n      <Element elementId=\"k-cohort-retention\" gridColumn=\"19 / 25\" gridRow=\"9 / 17\"/>\n      <Element elementId=\"cohort_saves\" gridColumn=\"1 / 13\" gridRow=\"17 / 31\"/>\n      <Element elementId=\"tbl-cohort-detail\" gridColumn=\"13 / 25\" gridRow=\"18 / 33\"/>\n      <Element elementId=\"ctrl-cname\" gridColumn=\"1 / 10\" gridRow=\"34 / 36\"/>\n      <Element elementId=\"ctrl-cdesc\" gridColumn=\"10 / 19\" gridRow=\"34 / 36\"/>\n      <Element elementId=\"btn-save-cohort\" gridColumn=\"19 / 25\" gridRow=\"34 / 36\"/>\n      <Element elementId=\"cb-chat-hdr\" gridColumn=\"1 / 25\" gridRow=\"47 / 48\"/>\n      <Element elementId=\"chat-cohort\" gridColumn=\"1 / 25\" gridRow=\"48 / 62\"/>\n    </Tab>\n    <Tab gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n      <Element elementId=\"0uSBZUY2Qx\" gridColumn=\"1 / 25\" gridRow=\"1 / 38\"/>\n    </Tab>\n    <Tab gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\"/>\n  </TabbedContainer>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgdata\">\n  <Element elementId=\"fact\" gridColumn=\"1 / 25\" gridRow=\"1 / 20\"/>\n  <Element elementId=\"cmMxaAQoIf\" gridColumn=\"1 / 25\" gridRow=\"20 / 40\"/>\n  <Element elementId=\"snap\" gridColumn=\"1 / 25\" gridRow=\"40 / 57\"/>\n  <Element elementId=\"I_0jZL7Q78\" gridColumn=\"1 / 25\" gridRow=\"57 / 77\"/>\n  <Element elementId=\"6TtzLEJ_U3\" gridColumn=\"1 / 25\" gridRow=\"77 / 97\"/>\n  <Element elementId=\"AtZpTWINwY\" gridColumn=\"1 / 25\" gridRow=\"97 / 124\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(12, 1fr)\" gridTemplateRows=\"auto\" id=\"modalRun\">\n  <Element elementId=\"modal-run-title\" gridColumn=\"1 / 25\" gridRow=\"1 / 3\"/>\n  <Element elementId=\"ctrl-runname\" gridColumn=\"1 / 25\" gridRow=\"3 / 5\"/>\n  <Element elementId=\"ctrl-runnotes\" gridColumn=\"1 / 25\" gridRow=\"5 / 8\"/>\n  <Element elementId=\"btn-cancel-run\" gridColumn=\"13 / 19\" gridRow=\"8 / 10\"/>\n  <Element elementId=\"btn-save-run\" gridColumn=\"19 / 25\" gridRow=\"8 / 10\"/>\n</Page>\n"
+  }
+}

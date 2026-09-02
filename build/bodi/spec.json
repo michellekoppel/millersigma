@@ -1,0 +1,3175 @@
+{
+  "name": "BODi \u2014 Nutrition Business",
+  "folderId": "004d8497-18ea-4cf6-a8c5-deca403c22d9",
+  "document": {
+    "schemaVersion": 1,
+    "kind": "workbook",
+    "elements": [
+      {
+        "id": "fact",
+        "kind": "table",
+        "name": "Fact",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "kind": "sql",
+          "statement": "\nWITH months AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) - 1 AS month_idx\n  FROM TABLE(GENERATOR(ROWCOUNT => 24))\n),\nmembers0 AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) AS member_id\n  FROM TABLE(GENERATOR(ROWCOUNT => 6000))\n),\nmembers AS (\n  SELECT member_id,\n    MOD(ABS(HASH(member_id, 1)), 10000) / 10000.0 AS r1,\n    MOD(ABS(HASH(member_id, 2)), 10000) / 10000.0 AS r2,\n    MOD(ABS(HASH(member_id, 3)), 10000) / 10000.0 AS r3,\n    MOD(ABS(HASH(member_id, 4)), 10000) / 10000.0 AS r4,\n    MOD(ABS(HASH(member_id, 5)), 10000) / 10000.0 AS r5,\n    MOD(ABS(HASH(member_id, 6)), 10000) / 10000.0 AS r6,\n    MOD(ABS(HASH(member_id, 7)), 10000) / 10000.0 AS r7,\n    MOD(ABS(HASH(member_id, 8)), 10000) / 10000.0 AS r8,\n    MOD(ABS(HASH(member_id, 9)), 10000) / 10000.0 AS r9,\n    MOD(ABS(HASH(member_id, 10)), 10000) / 10000.0 AS r10,\n    MOD(ABS(HASH(member_id, 11)), 10000) / 10000.0 AS r11,\n    MOD(ABS(HASH(member_id, 12)), 10000) / 10000.0 AS r12,\n    MOD(ABS(HASH(member_id, 13)), 10000) / 10000.0 AS r13\n  FROM members0\n),\nmem AS (\n  SELECT\n    member_id, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13,\n    FLOOR(r1 * 24)::INT AS signup_month_idx,\n    CASE WHEN r2 < 0.28 THEN 'Organic'\n         WHEN r2 < 0.52 THEN 'Paid Social'\n         WHEN r2 < 0.62 THEN 'Influencer'\n         WHEN r2 < 0.72 THEN 'Affiliate'\n         WHEN r2 < 0.90 THEN 'Coach Referral'\n         ELSE 'Retail' END AS signup_channel,\n    CASE WHEN r3 < 0.22 THEN '21 Day Fix'\n         WHEN r3 < 0.38 THEN 'LIIFT4'\n         WHEN r3 < 0.48 THEN '80 Day Obsession'\n         WHEN r3 < 0.62 THEN 'P90X'\n         WHEN r3 < 0.74 THEN 'Insanity Max:30'\n         WHEN r3 < 0.87 THEN 'Barre Blend'\n         ELSE '9 Week Control Freak' END AS fitness_program\n  FROM members\n),\nprog_dim AS (\n  SELECT * FROM VALUES\n    ('21 Day Fix', 1, 0.62, 9, 0.70),\n    ('LIIFT4', 2, 0.38, 7, 0.60),\n    ('80 Day Obsession', 3, 0.55, 10, 0.65),\n    ('P90X', 3, 0.30, 6, 0.55),\n    ('Insanity Max:30', 2, 0.28, 5, 0.50),\n    ('Barre Blend', 2, 0.45, 8, 0.68),\n    ('9 Week Control Freak', 3, 0.50, 8, 0.62)\n  AS t(fitness_program, program_length_months, base_attach_prob, avg_tenure_months, completion_prob)\n),\nmem2 AS (\n  SELECT mem.*, pd.program_length_months, pd.base_attach_prob, pd.avg_tenure_months, pd.completion_prob\n  FROM mem JOIN prog_dim pd ON pd.fitness_program = mem.fitness_program\n),\nmem3 AS (\n  SELECT mem2.*,\n    (signup_channel = 'Coach Referral' OR r4 < 0.30) AS coach_attached\n  FROM mem2\n),\nmem4 AS (\n  SELECT mem3.*,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 'Shake & Bar Starter Bundle' WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 'Portion Fix Kickstart Bundle' WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN '2B Mindset + Shakeology Combo' ELSE NULL END AS bundle_name_if_eligible,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.2 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.15 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.25 ELSE 0.0 END AS promo_discount_pct,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.15 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.12 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.18 ELSE 0.0 END AS bundle_attach_boost\n  FROM mem3\n),\nmem5 AS (\n  SELECT mem4.*,\n    (bundle_name_if_eligible IS NOT NULL) AS bundle_eligible,\n    (bundle_name_if_eligible IS NOT NULL AND r5 < 0.5) AS bundle_flag\n  FROM mem4\n),\nmem6 AS (\n  SELECT mem5.*,\n    IFF(bundle_flag, bundle_name_if_eligible, NULL) AS bundle_name_raw,\n    GREATEST(0.03, LEAST(0.95,\n      base_attach_prob\n      + IFF(coach_attached, 0.12, 0)\n      + IFF(signup_channel = 'Coach Referral', 0.05, 0)\n      + IFF(bundle_flag, bundle_attach_boost, 0)\n    )) AS adjusted_attach_prob\n  FROM mem5\n),\nmem7 AS (\n  SELECT mem6.*, (r6 < adjusted_attach_prob) AS nutrition_subscriber\n  FROM mem6\n),\nmem8 AS (\n  SELECT mem7.*,\n    CASE WHEN NOT nutrition_subscriber THEN 'None'\n      WHEN fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN\n        CASE WHEN r7 < 0.55 THEN 'Portion Fix' WHEN r7 < 0.85 THEN 'Ultimate Portion Fix' ELSE '2B Mindset' END\n      WHEN fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN\n        CASE WHEN r7 < 0.65 THEN '2B Mindset' WHEN r7 < 0.85 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n      ELSE\n        CASE WHEN r7 < 0.5 THEN '2B Mindset' WHEN r7 < 0.8 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n    END AS nutrition_program\n  FROM mem7\n),\nmem9 AS (\n  SELECT mem8.*,\n    (nutrition_subscriber AND r8 < 0.68) AS shakeology_flag,\n    (nutrition_program <> 'None') AS mealplan_flag,\n    ((nutrition_subscriber AND r9 < 0.35) OR (NOT nutrition_subscriber AND r9 < 0.04)) AS bars_flag,\n    GREATEST(2, ROUND(avg_tenure_months * (0.4 + r10 * 1.3)))::INT AS nutrition_tenure_months,\n    (r11 < completion_prob) AS will_complete\n  FROM mem8\n),\nmem10 AS (\n  SELECT mem9.*, (signup_month_idx + nutrition_tenure_months) AS churn_month_idx\n  FROM mem9\n),\nfact_rows AS (\n  SELECT\n    mem10.*, months.month_idx,\n    (months.month_idx - mem10.signup_month_idx) AS months_since_signup,\n    (months.month_idx = 23) AS is_current_month,\n    (months.month_idx = 22) AS is_prior_month,\n    (months.month_idx = 11) AS is_year_ago_month,\n    DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS signup_date,\n    TO_CHAR(DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())), 'Mon YYYY') AS signup_cohort,\n    ('Q' || DATE_PART('quarter', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE()))) || ' '\n      || DATE_PART('year', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())))) AS signup_cohort_qtr,\n    DATEADD('month', months.month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS calendar_month\n  FROM mem10\n  CROSS JOIN months\n  WHERE months.month_idx >= mem10.signup_month_idx\n),\nfc1 AS (\n  SELECT fact_rows.*,\n    CASE\n      WHEN months_since_signup = 0 THEN 'Started'\n      WHEN months_since_signup < program_length_months THEN 'Mid-Program'\n      WHEN will_complete THEN 'Completed'\n      ELSE 'Dropped'\n    END AS program_stage,\n    (months_since_signup >= program_length_months AND will_complete) AS completed_flag,\n    (months_since_signup >= program_length_months AND NOT will_complete) AS dropped_flag\n  FROM fact_rows\n),\nfc2 AS (\n  SELECT fc1.*,\n    GREATEST(20, LEAST(100, ROUND(55 + IFF(coach_attached, 15, 0) + IFF(completed_flag, 20, 0) + (r12 * 10 - 5)))) AS adherence_pct\n  FROM fc1\n),\nfc3 AS (\n  SELECT fc2.*,\n    ROUND(-(2 + (adherence_pct / 100.0) * 6 + r13 * 3), 1) AS weight_change_pct\n  FROM fc2\n),\nfc4 AS (\n  SELECT fc3.*,\n    (nutrition_subscriber AND months_since_signup < nutrition_tenure_months) AS nutrition_active,\n    (nutrition_subscriber AND months_since_signup = nutrition_tenure_months - 1) AS nutrition_churned_this_month\n  FROM fc3\n),\nfc5 AS (\n  SELECT fc4.*,\n    ROUND(IFF(nutrition_active AND shakeology_flag, 129 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS shake_revenue,\n    ROUND(IFF(nutrition_active AND mealplan_flag, 44 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS mealplan_revenue,\n    ROUND(IFF(nutrition_active AND bars_flag, 39 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS bars_revenue\n  FROM fc4\n),\nfc6 AS (\n  SELECT fc5.*,\n    ROUND(shake_revenue + mealplan_revenue + bars_revenue, 2) AS product_revenue,\n    ROUND(IFF(months_since_signup > 0 AND nutrition_active, shake_revenue + mealplan_revenue + bars_revenue, 0), 2) AS reorder_revenue,\n    (months_since_signup = 0) AS first_purchase_flag,\n    (months_since_signup > 0) AS reorder_flag,\n    CASE\n      WHEN shakeology_flag THEN GET(ARRAY_CONSTRUCT('Shakeology - Chocolate','Shakeology - Vanilla','Shakeology - Vegan Chocolate'), MOD(member_id, 3))::string\n      WHEN mealplan_flag THEN nutrition_program || ' Program Kit'\n      WHEN bars_flag THEN 'Beachbar & Boost Bundle'\n      ELSE NULL\n    END AS primary_sku,\n    CASE WHEN shakeology_flag THEN 0.62 WHEN mealplan_flag THEN 0.70 WHEN bars_flag THEN 0.55 ELSE NULL END AS sku_margin_pct,\n    GREATEST(7, ROUND(30 * (2 - adherence_pct / 100.0)))::INT AS time_to_first_reorder_days,\n    COALESCE(bundle_name_raw, 'None') AS bundle_name,\n    COALESCE(bundle_name_if_eligible, 'Not Eligible') AS bundle_campaign\n  FROM fc5\n)\n\nSELECT\n  member_id, signup_date, signup_cohort, signup_cohort_qtr, calendar_month, months_since_signup, is_current_month,\n  is_prior_month, is_year_ago_month,\n  signup_channel, coach_attached, fitness_program, program_stage, completed_flag, dropped_flag,\n  adherence_pct, weight_change_pct,\n  nutrition_subscriber, nutrition_program, nutrition_active, nutrition_churned_this_month,\n  shakeology_flag, mealplan_flag, bars_flag,\n  bundle_eligible, bundle_name, bundle_campaign, bundle_flag, promo_discount_pct,\n  first_purchase_flag, reorder_flag,\n  shake_revenue, mealplan_revenue, bars_revenue, product_revenue, reorder_revenue,\n  primary_sku, sku_margin_pct, time_to_first_reorder_days\nFROM fc6\n"
+        },
+        "columns": [
+          {
+            "id": "f-member",
+            "formula": "[Custom SQL/MEMBER_ID]",
+            "name": "Member Id"
+          },
+          {
+            "id": "f-signup",
+            "formula": "[Custom SQL/SIGNUP_DATE]",
+            "name": "Signup Date"
+          },
+          {
+            "id": "f-cohort",
+            "formula": "[Custom SQL/SIGNUP_COHORT]",
+            "name": "Signup Cohort"
+          },
+          {
+            "id": "f-cohortq",
+            "formula": "[Custom SQL/SIGNUP_COHORT_QTR]",
+            "name": "Signup Cohort Qtr"
+          },
+          {
+            "id": "f-cal",
+            "formula": "[Custom SQL/CALENDAR_MONTH]",
+            "name": "Calendar Month"
+          },
+          {
+            "id": "f-msince",
+            "formula": "[Custom SQL/MONTHS_SINCE_SIGNUP]",
+            "name": "Months Since Signup"
+          },
+          {
+            "id": "f-iscur",
+            "formula": "[Custom SQL/IS_CURRENT_MONTH]",
+            "name": "Is Current Month"
+          },
+          {
+            "id": "f-isprior",
+            "formula": "[Custom SQL/IS_PRIOR_MONTH]",
+            "name": "Is Prior Month"
+          },
+          {
+            "id": "f-isyearago",
+            "formula": "[Custom SQL/IS_YEAR_AGO_MONTH]",
+            "name": "Is Year Ago Month"
+          },
+          {
+            "id": "f-chan",
+            "formula": "[Custom SQL/SIGNUP_CHANNEL]",
+            "name": "Signup Channel"
+          },
+          {
+            "id": "f-coach",
+            "formula": "[Custom SQL/COACH_ATTACHED]",
+            "name": "Coach Attached"
+          },
+          {
+            "id": "f-fitprog",
+            "formula": "[Custom SQL/FITNESS_PROGRAM]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "f-stage",
+            "formula": "[Custom SQL/PROGRAM_STAGE]",
+            "name": "Program Stage"
+          },
+          {
+            "id": "f-completed",
+            "formula": "[Custom SQL/COMPLETED_FLAG]",
+            "name": "Completed Flag"
+          },
+          {
+            "id": "f-dropped",
+            "formula": "[Custom SQL/DROPPED_FLAG]",
+            "name": "Dropped Flag"
+          },
+          {
+            "id": "f-adherence",
+            "formula": "[Custom SQL/ADHERENCE_PCT]",
+            "name": "Adherence Pct"
+          },
+          {
+            "id": "f-weight",
+            "formula": "[Custom SQL/WEIGHT_CHANGE_PCT]",
+            "name": "Weight Change Pct"
+          },
+          {
+            "id": "f-nutsub",
+            "formula": "[Custom SQL/NUTRITION_SUBSCRIBER]",
+            "name": "Nutrition Subscriber"
+          },
+          {
+            "id": "f-nutprog",
+            "formula": "[Custom SQL/NUTRITION_PROGRAM]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "f-nutactive",
+            "formula": "[Custom SQL/NUTRITION_ACTIVE]",
+            "name": "Nutrition Active"
+          },
+          {
+            "id": "f-nutchurn",
+            "formula": "[Custom SQL/NUTRITION_CHURNED_THIS_MONTH]",
+            "name": "Nutrition Churned This Month"
+          },
+          {
+            "id": "f-shake",
+            "formula": "[Custom SQL/SHAKEOLOGY_FLAG]",
+            "name": "Shakeology Flag"
+          },
+          {
+            "id": "f-meal",
+            "formula": "[Custom SQL/MEALPLAN_FLAG]",
+            "name": "Mealplan Flag"
+          },
+          {
+            "id": "f-bars",
+            "formula": "[Custom SQL/BARS_FLAG]",
+            "name": "Bars Flag"
+          },
+          {
+            "id": "f-bunelig",
+            "formula": "[Custom SQL/BUNDLE_ELIGIBLE]",
+            "name": "Bundle Eligible"
+          },
+          {
+            "id": "f-bunname",
+            "formula": "[Custom SQL/BUNDLE_NAME]",
+            "name": "Bundle Name"
+          },
+          {
+            "id": "f-buncamp",
+            "formula": "[Custom SQL/BUNDLE_CAMPAIGN]",
+            "name": "Bundle Campaign"
+          },
+          {
+            "id": "f-bunflag",
+            "formula": "[Custom SQL/BUNDLE_FLAG]",
+            "name": "Bundle Flag"
+          },
+          {
+            "id": "f-discount",
+            "formula": "[Custom SQL/PROMO_DISCOUNT_PCT]",
+            "name": "Promo Discount Pct"
+          },
+          {
+            "id": "f-firstp",
+            "formula": "[Custom SQL/FIRST_PURCHASE_FLAG]",
+            "name": "First Purchase Flag"
+          },
+          {
+            "id": "f-reorderf",
+            "formula": "[Custom SQL/REORDER_FLAG]",
+            "name": "Reorder Flag"
+          },
+          {
+            "id": "f-shakerev",
+            "formula": "[Custom SQL/SHAKE_REVENUE]",
+            "name": "Shake Revenue"
+          },
+          {
+            "id": "f-mealrev",
+            "formula": "[Custom SQL/MEALPLAN_REVENUE]",
+            "name": "Mealplan Revenue"
+          },
+          {
+            "id": "f-barsrev",
+            "formula": "[Custom SQL/BARS_REVENUE]",
+            "name": "Bars Revenue"
+          },
+          {
+            "id": "f-prodrev",
+            "formula": "[Custom SQL/PRODUCT_REVENUE]",
+            "name": "Product Revenue"
+          },
+          {
+            "id": "f-reorderrev",
+            "formula": "[Custom SQL/REORDER_REVENUE]",
+            "name": "Reorder Revenue"
+          },
+          {
+            "id": "f-sku",
+            "formula": "[Custom SQL/PRIMARY_SKU]",
+            "name": "Primary Sku"
+          },
+          {
+            "id": "f-margin",
+            "formula": "[Custom SQL/SKU_MARGIN_PCT]",
+            "name": "Sku Margin Pct"
+          },
+          {
+            "id": "f-ttfr",
+            "formula": "[Custom SQL/TIME_TO_FIRST_REORDER_DAYS]",
+            "name": "Time To First Reorder Days"
+          }
+        ],
+        "order": [
+          "f-member",
+          "f-signup",
+          "f-cohort",
+          "f-cohortq",
+          "f-cal",
+          "f-msince",
+          "f-iscur",
+          "f-isprior",
+          "f-isyearago",
+          "f-chan",
+          "f-coach",
+          "f-fitprog",
+          "f-stage",
+          "f-completed",
+          "f-dropped",
+          "f-adherence",
+          "f-weight",
+          "f-nutsub",
+          "f-nutprog",
+          "f-nutactive",
+          "f-nutchurn",
+          "f-shake",
+          "f-meal",
+          "f-bars",
+          "f-bunelig",
+          "f-bunname",
+          "f-buncamp",
+          "f-bunflag",
+          "f-discount",
+          "f-firstp",
+          "f-reorderf",
+          "f-shakerev",
+          "f-mealrev",
+          "f-barsrev",
+          "f-prodrev",
+          "f-reorderrev",
+          "f-sku",
+          "f-margin",
+          "f-ttfr"
+        ]
+      },
+      {
+        "id": "snap",
+        "kind": "table",
+        "name": "Member Snapshot",
+        "visibleAsSource": true,
+        "source": {
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+          "kind": "sql",
+          "statement": "\nWITH months AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) - 1 AS month_idx\n  FROM TABLE(GENERATOR(ROWCOUNT => 24))\n),\nmembers0 AS (\n  SELECT (ROW_NUMBER() OVER (ORDER BY SEQ4())) AS member_id\n  FROM TABLE(GENERATOR(ROWCOUNT => 6000))\n),\nmembers AS (\n  SELECT member_id,\n    MOD(ABS(HASH(member_id, 1)), 10000) / 10000.0 AS r1,\n    MOD(ABS(HASH(member_id, 2)), 10000) / 10000.0 AS r2,\n    MOD(ABS(HASH(member_id, 3)), 10000) / 10000.0 AS r3,\n    MOD(ABS(HASH(member_id, 4)), 10000) / 10000.0 AS r4,\n    MOD(ABS(HASH(member_id, 5)), 10000) / 10000.0 AS r5,\n    MOD(ABS(HASH(member_id, 6)), 10000) / 10000.0 AS r6,\n    MOD(ABS(HASH(member_id, 7)), 10000) / 10000.0 AS r7,\n    MOD(ABS(HASH(member_id, 8)), 10000) / 10000.0 AS r8,\n    MOD(ABS(HASH(member_id, 9)), 10000) / 10000.0 AS r9,\n    MOD(ABS(HASH(member_id, 10)), 10000) / 10000.0 AS r10,\n    MOD(ABS(HASH(member_id, 11)), 10000) / 10000.0 AS r11,\n    MOD(ABS(HASH(member_id, 12)), 10000) / 10000.0 AS r12,\n    MOD(ABS(HASH(member_id, 13)), 10000) / 10000.0 AS r13\n  FROM members0\n),\nmem AS (\n  SELECT\n    member_id, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13,\n    FLOOR(r1 * 24)::INT AS signup_month_idx,\n    CASE WHEN r2 < 0.28 THEN 'Organic'\n         WHEN r2 < 0.52 THEN 'Paid Social'\n         WHEN r2 < 0.62 THEN 'Influencer'\n         WHEN r2 < 0.72 THEN 'Affiliate'\n         WHEN r2 < 0.90 THEN 'Coach Referral'\n         ELSE 'Retail' END AS signup_channel,\n    CASE WHEN r3 < 0.22 THEN '21 Day Fix'\n         WHEN r3 < 0.38 THEN 'LIIFT4'\n         WHEN r3 < 0.48 THEN '80 Day Obsession'\n         WHEN r3 < 0.62 THEN 'P90X'\n         WHEN r3 < 0.74 THEN 'Insanity Max:30'\n         WHEN r3 < 0.87 THEN 'Barre Blend'\n         ELSE '9 Week Control Freak' END AS fitness_program\n  FROM members\n),\nprog_dim AS (\n  SELECT * FROM VALUES\n    ('21 Day Fix', 1, 0.62, 9, 0.70),\n    ('LIIFT4', 2, 0.38, 7, 0.60),\n    ('80 Day Obsession', 3, 0.55, 10, 0.65),\n    ('P90X', 3, 0.30, 6, 0.55),\n    ('Insanity Max:30', 2, 0.28, 5, 0.50),\n    ('Barre Blend', 2, 0.45, 8, 0.68),\n    ('9 Week Control Freak', 3, 0.50, 8, 0.62)\n  AS t(fitness_program, program_length_months, base_attach_prob, avg_tenure_months, completion_prob)\n),\nmem2 AS (\n  SELECT mem.*, pd.program_length_months, pd.base_attach_prob, pd.avg_tenure_months, pd.completion_prob\n  FROM mem JOIN prog_dim pd ON pd.fitness_program = mem.fitness_program\n),\nmem3 AS (\n  SELECT mem2.*,\n    (signup_channel = 'Coach Referral' OR r4 < 0.30) AS coach_attached\n  FROM mem2\n),\nmem4 AS (\n  SELECT mem3.*,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 'Shake & Bar Starter Bundle' WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 'Portion Fix Kickstart Bundle' WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN '2B Mindset + Shakeology Combo' ELSE NULL END AS bundle_name_if_eligible,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.2 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.15 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.25 ELSE 0.0 END AS promo_discount_pct,\n    CASE WHEN signup_month_idx IN (6,7) AND fitness_program IN ('21 Day Fix','Barre Blend') THEN 0.15 WHEN signup_month_idx IN (14,15) AND fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN 0.12 WHEN signup_month_idx IN (20,21) AND fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN 0.18 ELSE 0.0 END AS bundle_attach_boost\n  FROM mem3\n),\nmem5 AS (\n  SELECT mem4.*,\n    (bundle_name_if_eligible IS NOT NULL) AS bundle_eligible,\n    (bundle_name_if_eligible IS NOT NULL AND r5 < 0.5) AS bundle_flag\n  FROM mem4\n),\nmem6 AS (\n  SELECT mem5.*,\n    IFF(bundle_flag, bundle_name_if_eligible, NULL) AS bundle_name_raw,\n    GREATEST(0.03, LEAST(0.95,\n      base_attach_prob\n      + IFF(coach_attached, 0.12, 0)\n      + IFF(signup_channel = 'Coach Referral', 0.05, 0)\n      + IFF(bundle_flag, bundle_attach_boost, 0)\n    )) AS adjusted_attach_prob\n  FROM mem5\n),\nmem7 AS (\n  SELECT mem6.*, (r6 < adjusted_attach_prob) AS nutrition_subscriber\n  FROM mem6\n),\nmem8 AS (\n  SELECT mem7.*,\n    CASE WHEN NOT nutrition_subscriber THEN 'None'\n      WHEN fitness_program IN ('21 Day Fix','9 Week Control Freak') THEN\n        CASE WHEN r7 < 0.55 THEN 'Portion Fix' WHEN r7 < 0.85 THEN 'Ultimate Portion Fix' ELSE '2B Mindset' END\n      WHEN fitness_program IN ('LIIFT4','P90X','Insanity Max:30') THEN\n        CASE WHEN r7 < 0.65 THEN '2B Mindset' WHEN r7 < 0.85 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n      ELSE\n        CASE WHEN r7 < 0.5 THEN '2B Mindset' WHEN r7 < 0.8 THEN 'Portion Fix' ELSE 'Ultimate Portion Fix' END\n    END AS nutrition_program\n  FROM mem7\n),\nmem9 AS (\n  SELECT mem8.*,\n    (nutrition_subscriber AND r8 < 0.68) AS shakeology_flag,\n    (nutrition_program <> 'None') AS mealplan_flag,\n    ((nutrition_subscriber AND r9 < 0.35) OR (NOT nutrition_subscriber AND r9 < 0.04)) AS bars_flag,\n    GREATEST(2, ROUND(avg_tenure_months * (0.4 + r10 * 1.3)))::INT AS nutrition_tenure_months,\n    (r11 < completion_prob) AS will_complete\n  FROM mem8\n),\nmem10 AS (\n  SELECT mem9.*, (signup_month_idx + nutrition_tenure_months) AS churn_month_idx\n  FROM mem9\n),\nfact_rows AS (\n  SELECT\n    mem10.*, months.month_idx,\n    (months.month_idx - mem10.signup_month_idx) AS months_since_signup,\n    (months.month_idx = 23) AS is_current_month,\n    (months.month_idx = 22) AS is_prior_month,\n    (months.month_idx = 11) AS is_year_ago_month,\n    DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS signup_date,\n    TO_CHAR(DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())), 'Mon YYYY') AS signup_cohort,\n    ('Q' || DATE_PART('quarter', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE()))) || ' '\n      || DATE_PART('year', DATEADD('month', mem10.signup_month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())))) AS signup_cohort_qtr,\n    DATEADD('month', months.month_idx - 23, DATE_TRUNC('month', CURRENT_DATE())) AS calendar_month\n  FROM mem10\n  CROSS JOIN months\n  WHERE months.month_idx >= mem10.signup_month_idx\n),\nfc1 AS (\n  SELECT fact_rows.*,\n    CASE\n      WHEN months_since_signup = 0 THEN 'Started'\n      WHEN months_since_signup < program_length_months THEN 'Mid-Program'\n      WHEN will_complete THEN 'Completed'\n      ELSE 'Dropped'\n    END AS program_stage,\n    (months_since_signup >= program_length_months AND will_complete) AS completed_flag,\n    (months_since_signup >= program_length_months AND NOT will_complete) AS dropped_flag\n  FROM fact_rows\n),\nfc2 AS (\n  SELECT fc1.*,\n    GREATEST(20, LEAST(100, ROUND(55 + IFF(coach_attached, 15, 0) + IFF(completed_flag, 20, 0) + (r12 * 10 - 5)))) AS adherence_pct\n  FROM fc1\n),\nfc3 AS (\n  SELECT fc2.*,\n    ROUND(-(2 + (adherence_pct / 100.0) * 6 + r13 * 3), 1) AS weight_change_pct\n  FROM fc2\n),\nfc4 AS (\n  SELECT fc3.*,\n    (nutrition_subscriber AND months_since_signup < nutrition_tenure_months) AS nutrition_active,\n    (nutrition_subscriber AND months_since_signup = nutrition_tenure_months - 1) AS nutrition_churned_this_month\n  FROM fc3\n),\nfc5 AS (\n  SELECT fc4.*,\n    ROUND(IFF(nutrition_active AND shakeology_flag, 129 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS shake_revenue,\n    ROUND(IFF(nutrition_active AND mealplan_flag, 44 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS mealplan_revenue,\n    ROUND(IFF(nutrition_active AND bars_flag, 39 * IFF(months_since_signup = 0 AND bundle_flag, 1 - promo_discount_pct, 1), 0), 2) AS bars_revenue\n  FROM fc4\n),\nfc6 AS (\n  SELECT fc5.*,\n    ROUND(shake_revenue + mealplan_revenue + bars_revenue, 2) AS product_revenue,\n    ROUND(IFF(months_since_signup > 0 AND nutrition_active, shake_revenue + mealplan_revenue + bars_revenue, 0), 2) AS reorder_revenue,\n    (months_since_signup = 0) AS first_purchase_flag,\n    (months_since_signup > 0) AS reorder_flag,\n    CASE\n      WHEN shakeology_flag THEN GET(ARRAY_CONSTRUCT('Shakeology - Chocolate','Shakeology - Vanilla','Shakeology - Vegan Chocolate'), MOD(member_id, 3))::string\n      WHEN mealplan_flag THEN nutrition_program || ' Program Kit'\n      WHEN bars_flag THEN 'Beachbar & Boost Bundle'\n      ELSE NULL\n    END AS primary_sku,\n    CASE WHEN shakeology_flag THEN 0.62 WHEN mealplan_flag THEN 0.70 WHEN bars_flag THEN 0.55 ELSE NULL END AS sku_margin_pct,\n    GREATEST(7, ROUND(30 * (2 - adherence_pct / 100.0)))::INT AS time_to_first_reorder_days,\n    COALESCE(bundle_name_raw, 'None') AS bundle_name,\n    COALESCE(bundle_name_if_eligible, 'Not Eligible') AS bundle_campaign\n  FROM fc5\n)\n\nSELECT\n  member_id,\n  MAX(signup_date) AS signup_date,\n  MAX(signup_cohort) AS signup_cohort,\n  MAX(signup_channel) AS signup_channel,\n  (MAX(IFF(coach_attached, 1, 0)) = 1) AS coach_attached,\n  MAX(fitness_program) AS fitness_program,\n  (MAX(IFF(nutrition_subscriber, 1, 0)) = 1) AS nutrition_subscriber,\n  MAX(nutrition_program) AS nutrition_program,\n  (MAX(IFF(bundle_eligible, 1, 0)) = 1) AS bundle_eligible,\n  MAX(bundle_name) AS bundle_name,\n  MAX(bundle_campaign) AS bundle_campaign,\n  (MAX(IFF(bundle_flag, 1, 0)) = 1) AS bundle_flag,\n  MAX(promo_discount_pct) AS promo_discount_pct,\n  MAX(primary_sku) AS primary_sku,\n  MAX(IFF(is_current_month, program_stage, NULL)) AS program_stage_now,\n  (MAX(IFF(is_current_month, IFF(nutrition_active, 1, 0), NULL)) = 1) AS nutrition_active_now,\n  MAX(IFF(is_current_month, adherence_pct, NULL)) AS adherence_pct_now,\n  MAX(IFF(is_current_month, weight_change_pct, NULL)) AS weight_change_pct_now,\n  MAX(IFF(first_purchase_flag, product_revenue, NULL)) AS initial_purchase_revenue,\n  SUM(product_revenue) AS lifetime_revenue,\n  SUM(reorder_revenue) AS lifetime_reorder_revenue,\n  MAX(time_to_first_reorder_days) AS time_to_first_reorder_days\nFROM fc6\nGROUP BY member_id\n"
+        },
+        "columns": [
+          {
+            "id": "s-member",
+            "formula": "[Custom SQL/MEMBER_ID]",
+            "name": "Member Id"
+          },
+          {
+            "id": "s-signup",
+            "formula": "[Custom SQL/SIGNUP_DATE]",
+            "name": "Signup Date"
+          },
+          {
+            "id": "s-cohort",
+            "formula": "[Custom SQL/SIGNUP_COHORT]",
+            "name": "Signup Cohort"
+          },
+          {
+            "id": "s-chan",
+            "formula": "[Custom SQL/SIGNUP_CHANNEL]",
+            "name": "Signup Channel"
+          },
+          {
+            "id": "s-coach",
+            "formula": "[Custom SQL/COACH_ATTACHED]",
+            "name": "Coach Attached"
+          },
+          {
+            "id": "s-fitprog",
+            "formula": "[Custom SQL/FITNESS_PROGRAM]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "s-nutsub",
+            "formula": "[Custom SQL/NUTRITION_SUBSCRIBER]",
+            "name": "Nutrition Subscriber"
+          },
+          {
+            "id": "s-nutprog",
+            "formula": "[Custom SQL/NUTRITION_PROGRAM]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "s-bunelig",
+            "formula": "[Custom SQL/BUNDLE_ELIGIBLE]",
+            "name": "Bundle Eligible"
+          },
+          {
+            "id": "s-bunname",
+            "formula": "[Custom SQL/BUNDLE_NAME]",
+            "name": "Bundle Name"
+          },
+          {
+            "id": "s-buncamp",
+            "formula": "[Custom SQL/BUNDLE_CAMPAIGN]",
+            "name": "Bundle Campaign"
+          },
+          {
+            "id": "s-bunflag",
+            "formula": "[Custom SQL/BUNDLE_FLAG]",
+            "name": "Bundle Flag"
+          },
+          {
+            "id": "s-discount",
+            "formula": "[Custom SQL/PROMO_DISCOUNT_PCT]",
+            "name": "Promo Discount Pct"
+          },
+          {
+            "id": "s-sku",
+            "formula": "[Custom SQL/PRIMARY_SKU]",
+            "name": "Primary Sku"
+          },
+          {
+            "id": "s-stagenow",
+            "formula": "[Custom SQL/PROGRAM_STAGE_NOW]",
+            "name": "Program Stage Now"
+          },
+          {
+            "id": "s-activenow",
+            "formula": "[Custom SQL/NUTRITION_ACTIVE_NOW]",
+            "name": "Nutrition Active Now"
+          },
+          {
+            "id": "s-adherencenow",
+            "formula": "[Custom SQL/ADHERENCE_PCT_NOW]",
+            "name": "Adherence Pct Now"
+          },
+          {
+            "id": "s-weightnow",
+            "formula": "[Custom SQL/WEIGHT_CHANGE_PCT_NOW]",
+            "name": "Weight Change Pct Now"
+          },
+          {
+            "id": "s-initrev",
+            "formula": "[Custom SQL/INITIAL_PURCHASE_REVENUE]",
+            "name": "Initial Purchase Revenue"
+          },
+          {
+            "id": "s-liferev",
+            "formula": "[Custom SQL/LIFETIME_REVENUE]",
+            "name": "Lifetime Revenue"
+          },
+          {
+            "id": "s-lifereorder",
+            "formula": "[Custom SQL/LIFETIME_REORDER_REVENUE]",
+            "name": "Lifetime Reorder Revenue"
+          },
+          {
+            "id": "s-ttfr",
+            "formula": "[Custom SQL/TIME_TO_FIRST_REORDER_DAYS]",
+            "name": "Time To First Reorder Days"
+          }
+        ],
+        "order": [
+          "s-member",
+          "s-signup",
+          "s-cohort",
+          "s-chan",
+          "s-coach",
+          "s-fitprog",
+          "s-nutsub",
+          "s-nutprog",
+          "s-bunelig",
+          "s-bunname",
+          "s-buncamp",
+          "s-bunflag",
+          "s-discount",
+          "s-sku",
+          "s-stagenow",
+          "s-activenow",
+          "s-adherencenow",
+          "s-weightnow",
+          "s-initrev",
+          "s-liferev",
+          "s-lifereorder",
+          "s-ttfr"
+        ]
+      },
+      {
+        "id": "c-header",
+        "kind": "container",
+        "style": {
+          "backgroundColor": "#000000"
+        }
+      },
+      {
+        "id": "logo",
+        "kind": "image",
+        "source": {
+          "kind": "url",
+          "url": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTkiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCA5OSAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzNfMikiPgo8cGF0aCBkPSJNMCAwLjIwNzIzSDE3LjE4NTFDMTkuMzgyNSAwLjIwNzIzIDIwLjU4MjggMC40MTIwNzQgMjEuNTggMC45MDU1NjJDMjMuMTIwMyAxLjcyMDI4IDIzLjc1MDEgMy4wMzA4MSAyMy43NTAxIDUuNTA1MjRDMjMuNzUwMSA3Ljk3OTY2IDIyLjg5NDQgOS4zNDgzOSAyMS4wOTYzIDkuNjk3NTVDMjMuNjY1NyAxMC4xOTM0IDI0LjUyMTQgMTEuMzI3IDI0LjUyMTQgMTQuMTUyOUMyNC41MjE0IDE2LjU5OTQgMjMuODM2OCAxOC4xNDI3IDIyLjMyMzkgMTguOTU3NEMyMS40Mzg1IDE5LjQyMyAyMC4xODM1IDE5LjYyNzggMTcuOTg2IDE5LjYyNzhIMFYwLjIwNzIzWk0xNS4zODQ2IDcuOTUxNzNDMTYuNDk4MiA3Ljk1MTczIDE2Ljg5NzUgNy44OTM1MyAxNy4yNjk1IDcuNzE4OTVDMTcuNzI1OSA3LjQ1NTkxIDE4LjAxMTEgNi45MzIxNiAxOC4wMTExIDYuMjY0MDlDMTguMDExMSA1LjQ3NzMgMTcuNjM5MiA0Ljg5NTM2IDE3LjAxMTYgNC42NjI1OEMxNi42Mzk3IDQuNTQ2MTkgMTYuMzU0NCA0LjUxNTkzIDE1LjI0MDkgNC41MTU5M0g1LjY1MjI5VjcuOTUxNzNIMTUuMzg2OUgxNS4zODQ2Wk0xNi4wMTQ0IDE1LjMxOTFDMTcuMTg1MSAxNS4zMTkxIDE3LjQxMzMgMTUuMjkxMiAxNy43ODUyIDE1LjE3NDhDMTguMzU1NyAxNC45NyAxOC42OTggMTQuMzg4IDE4LjY5OCAxMy41NzMzQzE4LjY5OCAxMi43NTg2IDE4LjM1NTcgMTIuMTQ2NCAxNy43MjgyIDExLjkxMzZDMTcuMzg1OSAxMS43OTcyIDE3LjE1NzcgMTEuNzY5MyAxNS44NzMgMTEuNzY5M0g1LjY1MjI5VjE1LjMyMTVIMTYuMDE0NFYxNS4zMTkxWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ5LjIzOSAwLjI5MzI5OUM1Mi4xNzgxIDAuODQ3MzA5IDUzLjYwNjYgMi4zOTA2MiA1NC4wMDU5IDUuNTA1MThDNTQuMTIgNi4yOTE5NyA1NC4xNzcxIDcuODYzMjIgNTQuMTc3MSAxMC4yMjEyQzU0LjE3NzEgMTQuOTA5NCA1My42OTEgMTYuODAxOSA1Mi4wNjQgMTguMTcwNkM1MC45MjMxIDE5LjE1OTkgNDkuMzIzNSAxOS42MjU1IDQ2LjU1NTUgMTkuNzQxOEM0NS41Mjg3IDE5LjggNDIuOTg2NiAxOS44MzAzIDQxLjEzMTQgMTkuODMwM0MzNi41OTI3IDE5LjgzMDMgMzQuMjgxMSAxOS43NDE4IDMzLjEzNzkgMTkuNTA5MUMzMS4wMjQ4IDE5LjEyOTYgMjkuNzk3MiAxOC4zMTQ5IDI5LjA4NTIgMTYuODg4QzI4LjM0MzYgMTUuNDYxMSAyOC4xNzI1IDE0LjAzNDEgMjguMTcyNSA5Ljc4MzYzQzI4LjE3MjUgNi41MjI0MiAyOC4yMjk1IDUuNzA3NyAyOC41NzE4IDQuMzk3MTZDMjkuMTE0OSAyLjMzMDEgMzAuMjI4NSAxLjIyNDQxIDMyLjM2ODkgMC41ODE5NDNDMzMuOTY4NSAwLjExNjM4OSAzNS43MDk2IDAgNDAuNzMyMSAwQzQ2LjIxMzIgMCA0Ny44OTczIDAuMDU4MTk0MyA0OS4yMzkgMC4yOTA5NzJWMC4yOTMyOTlaTTM1LjAyMjcgNS40NDY5OUMzNC4yNTE1IDYuMDU5MTkgMzQuMDIzMyA3LjAxODIzIDM0LjAyMzMgOS44MTM4OUMzNC4wMjMzIDEyLjYwOTUgMzQuMjUxNSAxMy43MTUyIDM0Ljk2NTcgMTQuMzI3NEMzNS43MzcgMTQuOTY3NiAzNi42Nzk0IDE1LjA4NCA0MS4wNDQ3IDE1LjA4NEM0Ni4wMzk4IDE1LjA4NCA0Ny4wNjY3IDE0LjkwOTQgNDcuNzIzOSAxMy45NzgzQzQ4LjI2NjkgMTMuMjc5OSA0OC40MDg0IDEyLjI4ODMgNDguNDA4NCA5LjY5NzVDNDguNDA4NCA0LjgwNDUyIDQ4LjMyMTcgNC43NDYzMyA0MS4xODYyIDQuNzQ2MzNDMzYuOTMyNyA0Ljc0NjMzIDM1Ljc2MjEgNC44OTI5OCAzNS4wMjA1IDUuNDQ0NjZMMzUuMDIyNyA1LjQ0Njk5WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTU4Ljc0MzIgMC4yMDcyM0g3NS4xODQ0Qzc5LjIwOTcgMC4yMDcyMyA4MS4wOTIyIDAuNjcyNzg1IDgyLjQwNjYgMi4wMTM1OEM4My40NjMyIDMuMDYxMDggODMuODg5OSA0LjI4NTQ4IDg0LjA5MDcgNi43NTk5MUM4NC4xNDc3IDcuNjYzMDggODQuMjA0OCA5LjAwMTU1IDg0LjIwNDggOS45MzQ5OUM4NC4yMDQ4IDExLjY4MDggODQuMDkwNyAxMy42OTIgODMuOTE5NSAxNC43OTc3QzgzLjYwNDYgMTcuMTI3OCA4Mi4wMDczIDE4LjkzMTggNzkuOTIzOSAxOS4zMzkyQzc4Ljg0IDE5LjU3MiA3Ny45ODIgMTkuNjMwMiA3NS45NTU3IDE5LjYzMDJINTguNzQzMlYwLjIwNzIzWk03NC4yNDIgMTQuOTk3OUM3NS44MTE5IDE0Ljk5NzkgNzUuOTI2IDE0Ljk5NzkgNzYuNjEwNiAxNC43NjUxQzc4LjAwOTQgMTQuMzI3NSA3OC4zODEzIDEzLjMxMDMgNzguMzgxMyA5Ljk2MDU5Qzc4LjM4MTMgNS44ODQ2NiA3Ny42OTY4IDUuMDM5NjggNzQuMzU2IDUuMDM5NjhINjQuNTM3VjE0Ljk5NzlINzQuMjQyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTk0LjMyOTYgMTUuNzY4MUM5NC43MDE1IDE2LjI2NjMgOTQuNTA5OCAxNi44NDEzIDk0LjAyMTUgMTcuMzEzOEM5MS44MTI2IDE5LjQzNjcgODkuNjY3NiAxOS42MzIyIDg4LjMwNzYgMTkuNjMyMkM4Ny4wNjE3IDE5LjYzMjIgODYuMzgxNyAxOC44MDU5IDg2Ljk4NDEgMTYuODY5MkM4Ny43MDI5IDE0LjY1NTUgODguNTc2OSAxMi4yODM1IDg5LjE0MDUgMTAuNDM3NUM4OS4zOTgzIDkuNjI1MTYgODkuMzU5NiA5LjM5MDA1IDg5LjAyNDEgOS4zOTAwNUM4OC42Mzg1IDkuMzkwMDUgODcuNzc4MiA5Ljc4MzQ0IDg2Ljk1NjcgMTAuMjkzMkM4Ni42MDk5IDkuNzU1NTEgODcuMDM0MyA5LjE0MDk4IDg4LjExMTMgOC40MTkzN0M5MC4yNjc4IDcuMDA0MDggOTEuNzgyOSA2LjY4OTgzIDkzLjAwMzggNi42ODk4M0M5NC4yODg1IDYuNjg5ODMgOTQuNTk2NSA3LjU0MTggOTMuNzYxNCAxMC4xMDkzQzkzLjE5NTQgMTEuODI0OSA5Mi4zNjI1IDE0LjE5NjkgOTEuNzk2NiAxNS45MTI1QzkxLjUzODggMTYuNjA2MSA5MS41Mzg4IDE2Ljk5OTUgOTEuODM1NCAxNi45OTk1QzkyLjEzMjEgMTYuOTk5NSA5My4wODE0IDE2LjYwNjEgOTQuMjg4NSAxNS43MDNMOTQuMzI3MyAxNS43NjgxSDk0LjMyOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTUuMDUwNyAyLjI2MjU4Qzk1LjA1MDcgMy42NjM5IDkzLjgwNDcgNC45ODg0IDkxLjk2NzggNC45ODg0QzkwLjQ2NjMgNC45ODg0IDg5LjQyNTggNC4xNzYwMSA4OS40MjU4IDIuODI1OUM4OS40MjU4IDEuNjQ4MDQgOTAuNTQzOSAwLjEzOTY0OCA5Mi42NzUyIDAuMTM5NjQ4Qzk0LjMxODIgMC4xMzk2NDggOTUuMDUwNyAxLjEwOCA5NS4wNTA3IDIuMjYyNThaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTYuNTg2MyAwLjgwMjg2M0M5Ni42NDM0IDAuNjc3MTc1IDk2LjcxODcgMC41NzAxMDcgOTYuODEyMiAwLjQ4MTY2Qzk2LjkwNTggMC4zOTMyMTMgOTcuMDE1MyAwLjMyNTcxNCA5Ny4xNDA4IDAuMjc2ODM1Qzk3LjI2NCAwLjIyNzk1NyA5Ny4zOTQxIDAuMjA0NjgxIDk3LjUzMSAwLjIwNDY4MUM5Ny42Njc5IDAuMjA0NjgxIDk3Ljc5NTYgMC4yMjc5NTcgOTcuOTIxMSAwLjI3NjgzNUM5OC4wNDY2IDAuMzI1NzE0IDk4LjE1MzkgMC4zOTMyMTMgOTguMjQ5NyAwLjQ4MTY2Qzk4LjM0MzIgMC41NzAxMDcgOTguNDE4NSAwLjY3NzE3NSA5OC40NzU2IDAuODAyODYzQzk4LjUzMjYgMC45Mjg1NTEgOTguNTYgMS4wNjgyIDk4LjU2IDEuMjI0MTVDOTguNTYgMS4zODAwOSA5OC41MzI2IDEuNTIyMDcgOTguNDc1NiAxLjY0Nzc2Qzk4LjQxODUgMS43NzM0NSA5OC4zNDMyIDEuODgwNTIgOTguMjQ5NyAxLjk2ODk2Qzk4LjE1NjEgMi4wNTc0MSA5OC4wNDY2IDIuMTI3MjQgOTcuOTIxMSAyLjE3Mzc5Qzk3Ljc5NTYgMi4yMjAzNCA5Ny42Njc5IDIuMjQzNjIgOTcuNTMxIDIuMjQzNjJDOTcuMzk0MSAyLjI0MzYyIDk3LjI2NjMgMi4yMjAzNCA5Ny4xNDA4IDIuMTczNzlDOTcuMDE3NiAyLjEyNzI0IDk2LjkwODEgMi4wNTc0MSA5Ni44MTIyIDEuOTY4OTZDOTYuNzE4NyAxLjg4MDUyIDk2LjY0MzQgMS43NzM0NSA5Ni41ODYzIDEuNjQ3NzZDOTYuNTI5MyAxLjUyMjA3IDk2LjUwMTkgMS4zODI0MiA5Ni41MDE5IDEuMjI0MTVDOTYuNTAxOSAxLjA2NTg3IDk2LjUyOTMgMC45Mjg1NTEgOTYuNTg2MyAwLjgwMjg2M1pNOTYuODMyNyAxLjU0NTM1Qzk2Ljg3MTUgMS42NDMxMSA5Ni45MjYzIDEuNzI5MjMgOTYuOTkyNSAxLjgwMTM4Qzk3LjA2MDkgMS44NzM1MyA5Ny4xNDA4IDEuOTI5NCA5Ny4yMzIxIDEuOTY4OTZDOTcuMzIzMyAyLjAwODUzIDk3LjQyMTQgMi4wMjk0OCA5Ny41Mjg3IDIuMDI5NDhDOTcuNjM1OSAyLjAyOTQ4IDk3LjcyOTUgMi4wMDg1MyA5Ny44MjA3IDEuOTY4OTZDOTcuOTEyIDEuOTI5NCA5Ny45OTE5IDEuODczNTMgOTguMDYwMyAxLjgwMTM4Qzk4LjEyODggMS43MjkyMyA5OC4xODEyIDEuNjQ1NDMgOTguMjIyMyAxLjU0NTM1Qzk4LjI2MzQgMS40NDc1OSA5OC4yODE2IDEuMzQwNTIgOTguMjgxNiAxLjIyNDE1Qzk4LjI4MTYgMS4xMDc3NyA5OC4yNjExIDEuMDAwNyA5OC4yMjIzIDAuOTAyOTQ4Qzk4LjE4MzUgMC44MDUxOTEgOTguMTI4OCAwLjcyMTM5OSA5OC4wNjAzIDAuNjUxNTcyQzk3Ljk5MTkgMC41ODE3NDUgOTcuOTEyIDAuNTI1ODg0IDk3LjgyMDcgMC40ODYzMTVDOTcuNzI5NSAwLjQ0Njc0NyA5Ny42MzEzIDAuNDI1Nzk5IDk3LjUyODcgMC40MjU3OTlDOTcuNDI2IDAuNDI1Nzk5IDk3LjMyNTYgMC40NDY3NDcgOTcuMjMyMSAwLjQ4NjMxNUM5Ny4xNDA4IDAuNTI1ODg0IDk3LjA2MDkgMC41ODE3NDUgOTYuOTkyNSAwLjY1MTU3MkM5Ni45MjQgMC43MjM3MjYgOTYuODcxNSAwLjgwNzUxOCA5Ni44MzI3IDAuOTAyOTQ4Qzk2Ljc5NCAwLjk5ODM3OCA5Ni43NzM0IDEuMTA3NzcgOTYuNzczNCAxLjIyNDE1Qzk2Ljc3MzQgMS4zNDA1MiA5Ni43OTQgMS40NDc1OSA5Ni44MzI3IDEuNTQ1MzVaTTk3LjU1MTUgMC42NTE1NzJDOTcuNjkyOSAwLjY1MTU3MiA5Ny44MDAyIDAuNjc3MTc1IDk3Ljg3NTUgMC43MjgzODFDOTcuOTUwOCAwLjc3OTU4NyA5Ny45ODk2IDAuODY1NzA3IDk3Ljk4OTYgMC45OTEzOTVDOTcuOTg5NiAxLjA0NDkyIDk3Ljk4MjcgMS4wODkxNSA5Ny45NjY4IDEuMTI2MzlDOTcuOTUwOCAxLjE2MzYzIDk3LjkzMDMgMS4xOTM4OSA5Ny45MDI5IDEuMjE3MTZDOTcuODc1NSAxLjI0MDQ0IDk3Ljg0NTggMS4yNTkwNiA5Ny44MDkzIDEuMjcwN0M5Ny43NzI4IDEuMjgyMzQgOTcuNzM2MyAxLjI5MTY1IDk3LjY5NTIgMS4yOTM5N0w5Ny45OTQxIDEuNzkyMDdIOTcuNzYxNEw5Ny40ODc2IDEuMzAzMjhIOTcuMzQ4NFYxLjc5MjA3SDk3LjEyNzFWMC42NTE1NzJIOTcuNTUxNVpNOTcuNTQ5MiAxLjEyODcyQzk3LjYxMzEgMS4xMjg3MiA5Ny42NjU2IDEuMTE5NDEgOTcuNzA2NiAxLjEwMDc5Qzk3Ljc0NzcgMS4wODIxNyA5Ny43NjgyIDEuMDM3OTQgOTcuNzY4MiAwLjk3MDQ0N0M5Ny43NjgyIDAuOTQwMTg5IDk3Ljc2MTQgMC45MTQ1ODYgOTcuNzQ3NyAwLjg5NTk2NUM5Ny43MzQgMC44NzczNDUgOTcuNzE1OCAwLjg2MzM4IDk3LjY5MjkgMC44NTQwNjlDOTcuNjcwMSAwLjg0NDc1OSA5Ny42NDUgMC44Mzc3NzYgOTcuNjE3NyAwLjgzMzEyMUM5Ny41OTAzIDAuODI4NDY2IDk3LjU2MjkgMC44Mjg0NjYgOTcuNTM3OCAwLjgyODQ2Nkg5Ny4zNTA3VjEuMTI4NzJIOTcuNTQ5MloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfM18yIj4KPHJlY3Qgd2lkdGg9Ijk5IiBoZWlnaHQ9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo="
+        },
+        "style": {
+          "fit": "contain"
+        }
+      },
+      {
+        "id": "hdr-title",
+        "kind": "text",
+        "body": "# Nutrition Business",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#FFFFFF"
+        }
+      },
+      {
+        "id": "hdr-sub",
+        "kind": "text",
+        "body": "Command Center \u00b7 Cohort Builder \u00b7 Bundle & Promo Scenario Builder",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#C8C8C8"
+        }
+      },
+      {
+        "id": "tc-main",
+        "kind": "tabbed-container",
+        "tabs": [
+          {
+            "name": "Command Center"
+          },
+          {
+            "name": "Cohort Builder"
+          },
+          {
+            "name": "Bundle & Promo Scenario Builder"
+          }
+        ],
+        "tabBar": {
+          "alignment": "start"
+        }
+      },
+      {
+        "id": "c-subs",
+        "kind": "container",
+        "style": {
+          "borderRadius": "round"
+        },
+        "backgroundImage": {
+          "source": {
+            "kind": "url",
+            "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjQwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCBzbGljZSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMjA4NDY4Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZykiLz48L3N2Zz4="
+          },
+          "style": {
+            "fit": "cover"
+          }
+        }
+      },
+      {
+        "id": "k-subs",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-subsv",
+          "color": "#FFFFFF",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "ACTIVE NUTRITION SUBSCRIBERS",
+          "fontSize": 12,
+          "color": "#FFFFFF"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        },
+        "comparisonColumn": {
+          "columnId": "k-subsc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#D9F2E6",
+          "colorBad": "#FFDCD3",
+          "fontSize": 12
+        },
+        "columns": [
+          {
+            "id": "k-subsv",
+            "formula": "CountDistinct(If([Fact/Is Current Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))",
+            "name": "ACTIVE NUTRITION SUBSCRIBERS",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          },
+          {
+            "id": "k-subsc",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ln-subs",
+        "kind": "line-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "ln-subsm",
+            "formula": "[Fact/Calendar Month]",
+            "name": "Month",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "ln-subsv",
+            "formula": "CountDistinct(If([Fact/Nutrition Active],[Fact/Member Id],Null))",
+            "name": "Trend"
+          }
+        ],
+        "xAxis": {
+          "columnId": "ln-subsm",
+          "format": {
+            "marks": "none",
+            "labels": "hidden"
+          }
+        },
+        "yAxis": {
+          "columnIds": [
+            "ln-subsv"
+          ],
+          "format": {
+            "labels": "hidden",
+            "marks": "none",
+            "scale": {
+              "type": "linear",
+              "zero": false
+            }
+          }
+        },
+        "name": {
+          "visibility": "hidden"
+        },
+        "legend": {
+          "visibility": "hidden"
+        },
+        "lineAreaStyle": {
+          "interpolation": "monotone"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        }
+      },
+      {
+        "id": "c-retention",
+        "kind": "container",
+        "style": {
+          "borderRadius": "round"
+        },
+        "backgroundImage": {
+          "source": {
+            "kind": "url",
+            "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjQwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCBzbGljZSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMTYxODE5Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMTA4NDc0Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZykiLz48L3N2Zz4="
+          },
+          "style": {
+            "fit": "cover"
+          }
+        }
+      },
+      {
+        "id": "k-retention",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-retentionv",
+          "color": "#FFFFFF",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "BLENDED NUTRITION RETENTION",
+          "fontSize": 12,
+          "color": "#FFFFFF"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        },
+        "comparisonColumn": {
+          "columnId": "k-retentionc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#D9F2E6",
+          "colorBad": "#FFDCD3",
+          "fontSize": 12
+        },
+        "columns": [
+          {
+            "id": "k-retentionv",
+            "formula": "CountDistinct(If([Fact/Is Current Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Nutrition Subscriber],[Fact/Member Id],Null))",
+            "name": "BLENDED NUTRITION RETENTION",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "k-retentionc",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Nutrition Subscriber],[Fact/Member Id],Null))",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ln-retention",
+        "kind": "line-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "ln-retentionm",
+            "formula": "[Fact/Calendar Month]",
+            "name": "Month",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "ln-retentionv",
+            "formula": "CountDistinct(If([Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Nutrition Subscriber],[Fact/Member Id],Null))",
+            "name": "Trend"
+          }
+        ],
+        "xAxis": {
+          "columnId": "ln-retentionm",
+          "format": {
+            "marks": "none",
+            "labels": "hidden"
+          }
+        },
+        "yAxis": {
+          "columnIds": [
+            "ln-retentionv"
+          ],
+          "format": {
+            "labels": "hidden",
+            "marks": "none",
+            "scale": {
+              "type": "linear",
+              "zero": false
+            }
+          }
+        },
+        "name": {
+          "visibility": "hidden"
+        },
+        "legend": {
+          "visibility": "hidden"
+        },
+        "lineAreaStyle": {
+          "interpolation": "monotone"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        }
+      },
+      {
+        "id": "c-attach",
+        "kind": "container",
+        "style": {
+          "borderRadius": "round"
+        },
+        "backgroundImage": {
+          "source": {
+            "kind": "url",
+            "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjQwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCBzbGljZSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMTA4NDc0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMjA4NDY4Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZykiLz48L3N2Zz4="
+          },
+          "style": {
+            "fit": "cover"
+          }
+        }
+      },
+      {
+        "id": "k-attach",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-attachv",
+          "color": "#FFFFFF",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "NUTRITION ATTACH RATE",
+          "fontSize": 12,
+          "color": "#FFFFFF"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        },
+        "comparisonColumn": {
+          "columnId": "k-attachc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#D9F2E6",
+          "colorBad": "#FFDCD3",
+          "fontSize": 12
+        },
+        "columns": [
+          {
+            "id": "k-attachv",
+            "formula": "CountDistinct(If([Fact/Is Current Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Is Current Month],[Fact/Member Id],Null))",
+            "name": "NUTRITION ATTACH RATE",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "k-attachc",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Is Prior Month],[Fact/Member Id],Null))",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ln-attach",
+        "kind": "line-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "ln-attachm",
+            "formula": "[Fact/Calendar Month]",
+            "name": "Month",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "ln-attachv",
+            "formula": "CountDistinct(If([Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct([Fact/Member Id])",
+            "name": "Trend"
+          }
+        ],
+        "xAxis": {
+          "columnId": "ln-attachm",
+          "format": {
+            "marks": "none",
+            "labels": "hidden"
+          }
+        },
+        "yAxis": {
+          "columnIds": [
+            "ln-attachv"
+          ],
+          "format": {
+            "labels": "hidden",
+            "marks": "none",
+            "scale": {
+              "type": "linear",
+              "zero": false
+            }
+          }
+        },
+        "name": {
+          "visibility": "hidden"
+        },
+        "legend": {
+          "visibility": "hidden"
+        },
+        "lineAreaStyle": {
+          "interpolation": "monotone"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        }
+      },
+      {
+        "id": "c-rev",
+        "kind": "container",
+        "style": {
+          "borderRadius": "round"
+        },
+        "backgroundImage": {
+          "source": {
+            "kind": "url",
+            "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjQwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCBzbGljZSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNUZCRTlBIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZykiLz48L3N2Zz4="
+          },
+          "style": {
+            "fit": "cover"
+          }
+        }
+      },
+      {
+        "id": "k-rev",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-revv",
+          "color": "#FFFFFF",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "NUTRITION PRODUCT REVENUE",
+          "fontSize": 12,
+          "color": "#FFFFFF"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        },
+        "comparisonColumn": {
+          "columnId": "k-revc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#D9F2E6",
+          "colorBad": "#FFDCD3",
+          "fontSize": 12
+        },
+        "columns": [
+          {
+            "id": "k-revv",
+            "formula": "SumIf([Fact/Product Revenue],[Fact/Is Current Month])",
+            "name": "NUTRITION PRODUCT REVENUE",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "k-revc",
+            "formula": "SumIf([Fact/Product Revenue],[Fact/Is Prior Month])",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "ln-rev",
+        "kind": "line-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "ln-revm",
+            "formula": "[Fact/Calendar Month]",
+            "name": "Month",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "ln-revv",
+            "formula": "Sum([Fact/Product Revenue])",
+            "name": "Trend"
+          }
+        ],
+        "xAxis": {
+          "columnId": "ln-revm",
+          "format": {
+            "marks": "none",
+            "labels": "hidden"
+          }
+        },
+        "yAxis": {
+          "columnIds": [
+            "ln-revv"
+          ],
+          "format": {
+            "labels": "hidden",
+            "marks": "none",
+            "scale": {
+              "type": "linear",
+              "zero": false
+            }
+          }
+        },
+        "name": {
+          "visibility": "hidden"
+        },
+        "legend": {
+          "visibility": "hidden"
+        },
+        "lineAreaStyle": {
+          "interpolation": "monotone"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        }
+      },
+      {
+        "id": "c-reorderrev",
+        "kind": "container",
+        "style": {
+          "borderRadius": "round"
+        },
+        "backgroundImage": {
+          "source": {
+            "kind": "url",
+            "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjQwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCBzbGljZSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMTYxODE5Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMjA4NDY4Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZykiLz48L3N2Zz4="
+          },
+          "style": {
+            "fit": "cover"
+          }
+        }
+      },
+      {
+        "id": "k-reorderrev",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-reorderrevv",
+          "color": "#FFFFFF",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "REORDER REVENUE",
+          "fontSize": 12,
+          "color": "#FFFFFF"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        },
+        "comparisonColumn": {
+          "columnId": "k-reorderrevc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#D9F2E6",
+          "colorBad": "#FFDCD3",
+          "fontSize": 12
+        },
+        "columns": [
+          {
+            "id": "k-reorderrevv",
+            "formula": "SumIf([Fact/Reorder Revenue],[Fact/Is Current Month])",
+            "name": "REORDER REVENUE",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "k-reorderrevc",
+            "formula": "SumIf([Fact/Reorder Revenue],[Fact/Is Prior Month])",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "ln-reorderrev",
+        "kind": "line-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "ln-reorderrevm",
+            "formula": "[Fact/Calendar Month]",
+            "name": "Month",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "ln-reorderrevv",
+            "formula": "Sum([Fact/Reorder Revenue])",
+            "name": "Trend"
+          }
+        ],
+        "xAxis": {
+          "columnId": "ln-reorderrevm",
+          "format": {
+            "marks": "none",
+            "labels": "hidden"
+          }
+        },
+        "yAxis": {
+          "columnIds": [
+            "ln-reorderrevv"
+          ],
+          "format": {
+            "labels": "hidden",
+            "marks": "none",
+            "scale": {
+              "type": "linear",
+              "zero": false
+            }
+          }
+        },
+        "name": {
+          "visibility": "hidden"
+        },
+        "legend": {
+          "visibility": "hidden"
+        },
+        "lineAreaStyle": {
+          "interpolation": "monotone"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        }
+      },
+      {
+        "id": "c-completion",
+        "kind": "container",
+        "style": {
+          "borderRadius": "round"
+        },
+        "backgroundImage": {
+          "source": {
+            "kind": "url",
+            "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjQwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCBzbGljZSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMDAwMDAwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMjA4NDY4Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyNDAiIGZpbGw9InVybCgjZykiLz48L3N2Zz4="
+          },
+          "style": {
+            "fit": "cover"
+          }
+        }
+      },
+      {
+        "id": "k-completion",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-completionv",
+          "color": "#FFFFFF",
+          "fontSize": 24
+        },
+        "name": {
+          "text": "AVG PROGRAM COMPLETION RATE",
+          "fontSize": 12,
+          "color": "#FFFFFF"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        },
+        "comparisonColumn": {
+          "columnId": "k-completionc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#D9F2E6",
+          "colorBad": "#FFDCD3",
+          "fontSize": 12
+        },
+        "columns": [
+          {
+            "id": "k-completionv",
+            "formula": "CountDistinct(If([Fact/Is Current Month] And [Fact/Completed Flag],[Fact/Member Id],Null))/CountDistinct(If([Fact/Is Current Month] And ([Fact/Completed Flag] Or [Fact/Dropped Flag]),[Fact/Member Id],Null))",
+            "name": "AVG PROGRAM COMPLETION RATE",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "k-completionc",
+            "formula": "CountDistinct(If([Fact/Is Prior Month] And [Fact/Completed Flag],[Fact/Member Id],Null))/CountDistinct(If([Fact/Is Prior Month] And ([Fact/Completed Flag] Or [Fact/Dropped Flag]),[Fact/Member Id],Null))",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ln-completion",
+        "kind": "line-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "ln-completionm",
+            "formula": "[Fact/Calendar Month]",
+            "name": "Month",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "ln-completionv",
+            "formula": "CountDistinct(If([Fact/Completed Flag],[Fact/Member Id],Null))/CountDistinct(If([Fact/Completed Flag] Or [Fact/Dropped Flag],[Fact/Member Id],Null))",
+            "name": "Trend"
+          }
+        ],
+        "xAxis": {
+          "columnId": "ln-completionm",
+          "format": {
+            "marks": "none",
+            "labels": "hidden"
+          }
+        },
+        "yAxis": {
+          "columnIds": [
+            "ln-completionv"
+          ],
+          "format": {
+            "labels": "hidden",
+            "marks": "none",
+            "scale": {
+              "type": "linear",
+              "zero": false
+            }
+          }
+        },
+        "name": {
+          "visibility": "hidden"
+        },
+        "legend": {
+          "visibility": "hidden"
+        },
+        "lineAreaStyle": {
+          "interpolation": "monotone"
+        },
+        "style": {
+          "backgroundColor": "transparent"
+        }
+      },
+      {
+        "id": "cc-hdr",
+        "kind": "text",
+        "body": "## Command Center\nHow's the nutrition business doing?",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#161819"
+        }
+      },
+      {
+        "id": "area-subs",
+        "kind": "area-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "a1-m",
+            "formula": "[Fact/Calendar Month]",
+            "name": "Month",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "a1-prog",
+            "formula": "[Fact/Nutrition Program]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "a1-v",
+            "formula": "CountDistinct(If([Fact/Nutrition Active],[Fact/Member Id],Null))",
+            "name": "Active Subscribers",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "a1-m"
+        },
+        "yAxis": {
+          "columnIds": [
+            "a1-v"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "a1-prog",
+          "scheme": [
+            "#108474",
+            "#208468",
+            "#5FBE9A",
+            "#C8C8C8"
+          ]
+        },
+        "stacking": "stacked",
+        "legend": {
+          "visibility": "visible"
+        },
+        "name": {
+          "text": "Subscriber growth & churn by nutrition program (24 mo)",
+          "fontWeight": "bold",
+          "fontSize": 14,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "bar-rev",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "b2-m",
+            "formula": "[Fact/Calendar Month]",
+            "name": "Month",
+            "format": {
+              "kind": "datetime",
+              "formatString": "%b %Y"
+            }
+          },
+          {
+            "id": "b2-shake",
+            "formula": "Sum([Fact/Shake Revenue])",
+            "name": "Shakeology",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "b2-meal",
+            "formula": "Sum([Fact/Mealplan Revenue])",
+            "name": "Meal Plans",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "b2-bars",
+            "formula": "Sum([Fact/Bars Revenue])",
+            "name": "Bars & Supplements",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "b2-m"
+        },
+        "yAxis": {
+          "columnIds": [
+            "b2-shake",
+            "b2-meal",
+            "b2-bars"
+          ]
+        },
+        "stacking": "stacked",
+        "legend": {
+          "visibility": "visible"
+        },
+        "name": {
+          "text": "Revenue by product line \u2014 Shakeology vs meal plans vs bars/supplements",
+          "fontWeight": "bold",
+          "fontSize": 14,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "line-retention",
+        "kind": "line-chart",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "l3-x",
+            "formula": "[Fact/Months Since Signup]",
+            "name": "Months Since Signup"
+          },
+          {
+            "id": "l3-cohort",
+            "formula": "[Fact/Signup Cohort Qtr]",
+            "name": "Launch Cohort"
+          },
+          {
+            "id": "l3-v",
+            "formula": "CountDistinct(If([Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Nutrition Subscriber],[Fact/Member Id],Null))",
+            "name": "Retention Rate",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "l3-x"
+        },
+        "yAxis": {
+          "columnIds": [
+            "l3-v"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "l3-cohort",
+          "scheme": [
+            "#108474",
+            "#208468",
+            "#5FBE9A",
+            "#161819",
+            "#4A4A4A",
+            "#8A8A8A",
+            "#0B5C47",
+            "#9FDBC0"
+          ]
+        },
+        "legend": {
+          "visibility": "visible"
+        },
+        "lineAreaStyle": {
+          "interpolation": "monotone"
+        },
+        "name": {
+          "text": "Cohort retention curves \u2014 overlaid by program launch cohort",
+          "fontWeight": "bold",
+          "fontSize": 14,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "cc-alerts-hdr",
+        "kind": "text",
+        "body": "**Alerts \u2014 programs outside normal attach/retention range**",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#EB001B"
+        }
+      },
+      {
+        "id": "tbl-alerts",
+        "kind": "table",
+        "source": {
+          "elementId": "fact",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "al-prog",
+            "formula": "[Fact/Fitness Program]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "al-attach",
+            "formula": "CountDistinct(If([Fact/Is Current Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Is Current Month],[Fact/Member Id],Null))",
+            "name": "Attach Rate",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "al-ret",
+            "formula": "CountDistinct(If([Fact/Is Current Month] And [Fact/Nutrition Active],[Fact/Member Id],Null))/CountDistinct(If([Fact/Nutrition Subscriber],[Fact/Member Id],Null))",
+            "name": "Retention Rate",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "al-comp",
+            "formula": "CountDistinct(If([Fact/Is Current Month] And [Fact/Completed Flag],[Fact/Member Id],Null))/CountDistinct(If([Fact/Is Current Month] And ([Fact/Completed Flag] Or [Fact/Dropped Flag]),[Fact/Member Id],Null))",
+            "name": "Completion Rate",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ],
+        "groupings": [
+          {
+            "id": "grp-alerts",
+            "groupBy": [
+              "al-prog"
+            ],
+            "calculations": [
+              "al-attach",
+              "al-ret",
+              "al-comp"
+            ],
+            "sort": [
+              {
+                "columnId": "al-attach",
+                "direction": "ascending"
+              }
+            ]
+          }
+        ],
+        "conditionalFormats": [
+          {
+            "type": "single",
+            "columnIds": [
+              "al-attach"
+            ],
+            "condition": "<",
+            "value": 0.35,
+            "style": {
+              "backgroundColor": "#FDE1DB",
+              "textColor": "#EB001B"
+            }
+          },
+          {
+            "type": "single",
+            "columnIds": [
+              "al-ret"
+            ],
+            "condition": "<",
+            "value": 0.45,
+            "style": {
+              "backgroundColor": "#FDE1DB",
+              "textColor": "#EB001B"
+            }
+          },
+          {
+            "type": "single",
+            "columnIds": [
+              "al-comp"
+            ],
+            "condition": "<",
+            "value": 0.45,
+            "style": {
+              "backgroundColor": "#FDE1DB",
+              "textColor": "#EB001B"
+            }
+          }
+        ],
+        "name": {
+          "text": "By fitness program \u2014 lowest attach first",
+          "fontWeight": "bold",
+          "fontSize": 13,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "btn-to-cohort",
+        "kind": "button",
+        "text": "Open Cohort Builder \u2192",
+        "appearance": "outline",
+        "actions": [
+          {
+            "id": "act1",
+            "trigger": "on-click",
+            "effects": [
+              {
+                "effect": "select-tab",
+                "tabbedContainerElementId": "tc-main",
+                "selectedTab": {
+                  "type": "tab",
+                  "index": 1
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "btn-to-promo",
+        "kind": "button",
+        "text": "Open Bundle/Promo Scenario Builder \u2192",
+        "appearance": "outline",
+        "actions": [
+          {
+            "id": "act2",
+            "trigger": "on-click",
+            "effects": [
+              {
+                "effect": "select-tab",
+                "tabbedContainerElementId": "tc-main",
+                "selectedTab": {
+                  "type": "tab",
+                  "index": 2
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cb-hdr",
+        "kind": "text",
+        "body": "## Cohort Builder \u2014 Marketing\nSegment the member population, save a named cohort, and hand it to campaign tools.",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#161819"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "FitnessProgramF",
+        "id": "ctrl-fitprog",
+        "name": "Fitness Program",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "multiple",
+        "values": [
+          "21 Day Fix",
+          "LIIFT4",
+          "80 Day Obsession",
+          "P90X",
+          "Insanity Max:30",
+          "Barre Blend",
+          "9 Week Control Freak"
+        ],
+        "filters": [
+          {
+            "source": {
+              "kind": "table",
+              "elementId": "snap"
+            },
+            "columnId": "s-fitprog"
+          }
+        ],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "snap"
+          },
+          "columnId": "s-fitprog"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "NutritionProgramF",
+        "id": "ctrl-nutprog",
+        "name": "Nutrition Program",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "multiple",
+        "values": [
+          "2B Mindset",
+          "Portion Fix",
+          "Ultimate Portion Fix",
+          "None"
+        ],
+        "filters": [
+          {
+            "source": {
+              "kind": "table",
+              "elementId": "snap"
+            },
+            "columnId": "s-nutprog"
+          }
+        ],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "snap"
+          },
+          "columnId": "s-nutprog"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "ChannelF",
+        "id": "ctrl-chan",
+        "name": "Signup Channel",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "multiple",
+        "values": [
+          "Organic",
+          "Paid Social",
+          "Influencer",
+          "Affiliate",
+          "Coach Referral",
+          "Retail"
+        ],
+        "filters": [
+          {
+            "source": {
+              "kind": "table",
+              "elementId": "snap"
+            },
+            "columnId": "s-chan"
+          }
+        ],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "snap"
+          },
+          "columnId": "s-chan"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "CoachF",
+        "id": "ctrl-coach",
+        "name": "Coach Attached",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "multiple",
+        "values": [
+          true,
+          false
+        ],
+        "filters": [
+          {
+            "source": {
+              "kind": "table",
+              "elementId": "snap"
+            },
+            "columnId": "s-coach"
+          }
+        ],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "snap"
+          },
+          "columnId": "s-coach"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "BundleF",
+        "id": "ctrl-bundle",
+        "name": "Bundle Name",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "multiple",
+        "values": [
+          "Shake & Bar Starter Bundle",
+          "Portion Fix Kickstart Bundle",
+          "2B Mindset + Shakeology Combo",
+          "None"
+        ],
+        "filters": [
+          {
+            "source": {
+              "kind": "table",
+              "elementId": "snap"
+            },
+            "columnId": "s-bunname"
+          }
+        ],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "snap"
+          },
+          "columnId": "s-bunname"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "StageF",
+        "id": "ctrl-stage",
+        "name": "Program Stage",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "multiple",
+        "values": [
+          "Started",
+          "Mid-Program",
+          "Completed",
+          "Dropped"
+        ],
+        "filters": [
+          {
+            "source": {
+              "kind": "table",
+              "elementId": "snap"
+            },
+            "columnId": "s-stagenow"
+          }
+        ],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "snap"
+          },
+          "columnId": "s-stagenow"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "AdherenceRange",
+        "id": "ctrl-adh",
+        "name": "Min Adherence %",
+        "controlType": "number-range",
+        "filters": [
+          {
+            "source": {
+              "kind": "table",
+              "elementId": "snap"
+            },
+            "columnId": "s-adherencenow"
+          }
+        ]
+      },
+      {
+        "kind": "control",
+        "controlId": "CohortName",
+        "id": "ctrl-cname",
+        "name": "Cohort Name",
+        "controlType": "text",
+        "mode": "equals",
+        "case": "insensitive",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "kind": "control",
+        "controlId": "CohortDesc",
+        "id": "ctrl-cdesc",
+        "name": "Description",
+        "controlType": "text",
+        "mode": "equals",
+        "case": "insensitive",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "id": "btn-save-cohort",
+        "kind": "button",
+        "text": "Save cohort",
+        "appearance": "filled",
+        "actions": [
+          {
+            "id": "actsave",
+            "trigger": "on-click",
+            "effects": [
+              {
+                "effect": "insert-rows",
+                "tableElementId": "cohort_saves",
+                "values": {
+                  "cs-name": {
+                    "type": "control",
+                    "control": "CohortName"
+                  },
+                  "cs-desc": {
+                    "type": "control",
+                    "control": "CohortDesc"
+                  },
+                  "cs-size": {
+                    "type": "formula",
+                    "formula": "CountDistinct([Member Snapshot/Member Id])"
+                  },
+                  "cs-attach": {
+                    "type": "formula",
+                    "formula": "CountDistinct(If([Member Snapshot/Nutrition Subscriber],[Member Snapshot/Member Id],Null))/CountDistinct([Member Snapshot/Member Id])"
+                  },
+                  "cs-liferev": {
+                    "type": "formula",
+                    "formula": "Avg([Member Snapshot/Lifetime Revenue])"
+                  },
+                  "cs-retention": {
+                    "type": "formula",
+                    "formula": "CountDistinct(If([Member Snapshot/Nutrition Active Now],[Member Snapshot/Member Id],Null))/CountDistinct(If([Member Snapshot/Nutrition Subscriber],[Member Snapshot/Member Id],Null))"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "k-cohort-size",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "snap",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-cohort-sizev",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "COHORT SIZE",
+          "fontSize": 12,
+          "color": "#108474"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        },
+        "columns": [
+          {
+            "id": "k-cohort-sizev",
+            "formula": "CountDistinct([Member Snapshot/Member Id])",
+            "name": "COHORT SIZE",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          }
+        ]
+      },
+      {
+        "id": "k-cohort-attach",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "snap",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-cohort-attachv",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "NUTRITION ATTACH (COHORT)",
+          "fontSize": 12,
+          "color": "#108474"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        },
+        "columns": [
+          {
+            "id": "k-cohort-attachv",
+            "formula": "CountDistinct(If([Member Snapshot/Nutrition Subscriber],[Member Snapshot/Member Id],Null))/CountDistinct([Member Snapshot/Member Id])",
+            "name": "NUTRITION ATTACH (COHORT)",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "k-cohort-liferev",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "snap",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-cohort-liferevv",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "AVG LIFETIME REVENUE",
+          "fontSize": 12,
+          "color": "#108474"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        },
+        "columns": [
+          {
+            "id": "k-cohort-liferevv",
+            "formula": "Avg([Member Snapshot/Lifetime Revenue])",
+            "name": "AVG LIFETIME REVENUE",
+            "format": {
+              "kind": "number",
+              "formatString": "$,.2f",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "k-cohort-retention",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "snap",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-cohort-retentionv",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "BLENDED RETENTION (COHORT)",
+          "fontSize": 12,
+          "color": "#108474"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        },
+        "columns": [
+          {
+            "id": "k-cohort-retentionv",
+            "formula": "CountDistinct(If([Member Snapshot/Nutrition Active Now],[Member Snapshot/Member Id],Null))/CountDistinct(If([Member Snapshot/Nutrition Subscriber],[Member Snapshot/Member Id],Null))",
+            "name": "BLENDED RETENTION (COHORT)",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "bar-cohort-dist",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "snap",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "cd-prog",
+            "formula": "[Member Snapshot/Fitness Program]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "cd-cat",
+            "formula": "\"Members\"",
+            "name": "Series"
+          },
+          {
+            "id": "cd-v",
+            "formula": "CountDistinct([Member Snapshot/Member Id])",
+            "name": "Members",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "cd-prog",
+          "sort": {
+            "by": "cd-v",
+            "direction": "descending"
+          }
+        },
+        "yAxis": {
+          "columnIds": [
+            "cd-v"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "cd-cat",
+          "scheme": [
+            "#208468"
+          ]
+        },
+        "legend": {
+          "visibility": "hidden"
+        },
+        "name": {
+          "text": "Cohort by fitness program",
+          "fontWeight": "bold",
+          "fontSize": 13,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "tbl-cohort-detail",
+        "kind": "table",
+        "source": {
+          "elementId": "snap",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "dt-id",
+            "formula": "[Member Snapshot/Member Id]",
+            "name": "Member Id"
+          },
+          {
+            "id": "dt-fit",
+            "formula": "[Member Snapshot/Fitness Program]",
+            "name": "Fitness Program"
+          },
+          {
+            "id": "dt-nut",
+            "formula": "[Member Snapshot/Nutrition Program]",
+            "name": "Nutrition Program"
+          },
+          {
+            "id": "dt-chan",
+            "formula": "[Member Snapshot/Signup Channel]",
+            "name": "Channel"
+          },
+          {
+            "id": "dt-rev",
+            "formula": "[Member Snapshot/Lifetime Revenue]",
+            "name": "Lifetime Revenue",
+            "format": {
+              "kind": "number",
+              "formatString": "$,.2f",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "groupings": [
+          {
+            "id": "grp-detail",
+            "groupBy": [
+              "dt-id",
+              "dt-fit",
+              "dt-nut",
+              "dt-chan",
+              "dt-rev"
+            ],
+            "calculations": [],
+            "sort": [
+              {
+                "columnId": "dt-rev",
+                "direction": "descending"
+              }
+            ]
+          }
+        ],
+        "name": {
+          "text": "Top members in cohort (by lifetime revenue)",
+          "fontWeight": "bold",
+          "fontSize": 13,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "cb-saved-hdr",
+        "kind": "text",
+        "body": "**Saved cohorts**",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#161819"
+        }
+      },
+      {
+        "id": "cohort_saves",
+        "kind": "input-table",
+        "source": {
+          "kind": "empty",
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1"
+        },
+        "inputMode": "explore",
+        "name": "Saved Cohorts",
+        "columns": [
+          {
+            "id": "cs-name",
+            "type": "text",
+            "name": "Cohort Name"
+          },
+          {
+            "id": "cs-desc",
+            "type": "text",
+            "name": "Description"
+          },
+          {
+            "id": "cs-size",
+            "type": "number",
+            "name": "Cohort Size"
+          },
+          {
+            "id": "cs-attach",
+            "type": "number",
+            "name": "Attach Rate"
+          },
+          {
+            "id": "cs-liferev",
+            "type": "number",
+            "name": "Avg Lifetime Revenue"
+          },
+          {
+            "id": "cs-retention",
+            "type": "number",
+            "name": "Retention Rate"
+          },
+          {
+            "id": "CREATED_AT"
+          },
+          {
+            "id": "CREATED_BY"
+          }
+        ]
+      },
+      {
+        "id": "cb-chat-hdr",
+        "kind": "text",
+        "body": "**Cohort Copilot** \u2014 ask it to build and save a segment for you",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#108474"
+        }
+      },
+      {
+        "id": "chat-cohort",
+        "kind": "chat",
+        "agentId": "ag-cohort"
+      },
+      {
+        "id": "sb-hdr",
+        "kind": "text",
+        "body": "## Bundle & Promo Scenario Builder\nBaseline performance for each bundle campaign (adopters vs. eligible members who declined), plus a live what-if model.",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#161819"
+        }
+      },
+      {
+        "id": "bundle_baseline",
+        "kind": "pivot-table",
+        "name": {
+          "text": "Baseline \u2014 adopters vs. standalone, by campaign",
+          "fontWeight": "bold",
+          "fontSize": 13,
+          "color": "#161819"
+        },
+        "visibleAsSource": true,
+        "source": {
+          "elementId": "snap",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "pv-camp",
+            "formula": "[Member Snapshot/Bundle Campaign]",
+            "name": "Campaign"
+          },
+          {
+            "id": "pv-pool",
+            "formula": "CountDistinct([Member Snapshot/Member Id])",
+            "name": "Eligible Pool",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          },
+          {
+            "id": "pv-adopters",
+            "formula": "CountDistinct(If([Member Snapshot/Bundle Flag],[Member Snapshot/Member Id],Null))",
+            "name": "Adopters",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          },
+          {
+            "id": "pv-revadopt",
+            "formula": "Avg(If([Member Snapshot/Bundle Flag],[Member Snapshot/Initial Purchase Revenue],Null))",
+            "name": "Avg Rev \u2014 Adopter",
+            "format": {
+              "kind": "number",
+              "formatString": "$,.2f",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "pv-revstand",
+            "formula": "Avg(If(Not [Member Snapshot/Bundle Flag],[Member Snapshot/Initial Purchase Revenue],Null))",
+            "name": "Avg Rev \u2014 Standalone",
+            "format": {
+              "kind": "number",
+              "formatString": "$,.2f",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "pv-disc",
+            "formula": "Avg(If([Member Snapshot/Bundle Flag],[Member Snapshot/Promo Discount Pct],Null))",
+            "name": "Baseline Discount",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "pv-retadopt",
+            "formula": "Avg(If([Member Snapshot/Bundle Flag],If([Member Snapshot/Nutrition Active Now],1,0),Null))",
+            "name": "Retention \u2014 Adopter",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          },
+          {
+            "id": "pv-retstand",
+            "formula": "Avg(If(Not [Member Snapshot/Bundle Flag],If([Member Snapshot/Nutrition Active Now],1,0),Null))",
+            "name": "Retention \u2014 Standalone",
+            "format": {
+              "kind": "number",
+              "formatString": ".1%"
+            }
+          }
+        ],
+        "rowsBy": [
+          {
+            "id": "pv-camp"
+          }
+        ],
+        "values": [
+          "pv-pool",
+          "pv-adopters",
+          "pv-revadopt",
+          "pv-revstand",
+          "pv-disc",
+          "pv-retadopt",
+          "pv-retstand"
+        ],
+        "conditionalFormats": [
+          {
+            "type": "single",
+            "columnIds": [
+              "pv-pool"
+            ],
+            "condition": "IsNotNull",
+            "style": {
+              "backgroundColor": "#EDF5F5"
+            }
+          }
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "bundle_assum",
+        "kind": "input-table",
+        "source": {
+          "kind": "linked",
+          "from": "bundle_baseline"
+        },
+        "inputMode": "explore",
+        "name": "Assumptions",
+        "columns": [
+          {
+            "id": "ia-camp",
+            "key": "pv-camp"
+          },
+          {
+            "id": "ia-pool",
+            "key": "pv-pool"
+          },
+          {
+            "id": "ia-adopters",
+            "key": "pv-adopters"
+          },
+          {
+            "id": "ia-revadopt",
+            "key": "pv-revadopt"
+          },
+          {
+            "id": "ia-revstand",
+            "key": "pv-revstand"
+          },
+          {
+            "id": "ia-disc",
+            "key": "pv-disc"
+          },
+          {
+            "id": "ia-retadopt",
+            "key": "pv-retadopt"
+          },
+          {
+            "id": "ia-retstand",
+            "key": "pv-retstand"
+          },
+          {
+            "id": "ia-newadopt",
+            "type": "number",
+            "name": "New Adoption Rate %"
+          },
+          {
+            "id": "ia-newdisc",
+            "type": "number",
+            "name": "New Discount %"
+          },
+          {
+            "id": "ia-baseadopt",
+            "formula": "([Adopters]/[Eligible Pool])*100",
+            "name": "Base Case Adoption %"
+          },
+          {
+            "id": "ia-basedisc",
+            "formula": "[Baseline Discount]*100",
+            "name": "Base Case Discount %"
+          },
+          {
+            "id": "ia-effadopt",
+            "formula": "Coalesce([New Adoption Rate %],[Base Case Adoption %])",
+            "name": "Effective Adoption %"
+          },
+          {
+            "id": "ia-effdisc",
+            "formula": "Coalesce([New Discount %],[Base Case Discount %])",
+            "name": "Effective Discount %"
+          },
+          {
+            "id": "ia-projadopters",
+            "formula": "[Eligible Pool]*([Effective Adoption %]/100)",
+            "name": "Projected Adopters"
+          },
+          {
+            "id": "ia-baserev",
+            "formula": "[Adopters]*[Avg Rev \u2014 Adopter]*(1-[Baseline Discount]) + ([Eligible Pool]-[Adopters])*[Avg Rev \u2014 Standalone]",
+            "name": "Baseline Revenue"
+          },
+          {
+            "id": "ia-projrev",
+            "formula": "[Projected Adopters]*[Avg Rev \u2014 Adopter]*(1-[Effective Discount %]/100) + ([Eligible Pool]-[Projected Adopters])*[Avg Rev \u2014 Standalone]",
+            "name": "Projected Revenue"
+          },
+          {
+            "id": "ia-delta",
+            "formula": "[Projected Revenue]-[Baseline Revenue]",
+            "name": "Revenue \u0394 vs Baseline"
+          }
+        ],
+        "order": [
+          "ia-camp",
+          "ia-pool",
+          "ia-adopters",
+          "ia-baseadopt",
+          "ia-newadopt",
+          "ia-effadopt",
+          "ia-basedisc",
+          "ia-newdisc",
+          "ia-effdisc",
+          "ia-projadopters",
+          "ia-baserev",
+          "ia-projrev",
+          "ia-delta"
+        ]
+      },
+      {
+        "id": "sb-instr",
+        "kind": "text",
+        "body": "Type a **New Adoption Rate %** and/or **New Discount %** per campaign \u2014 the projection updates live. Leave blank to hold the observed baseline.",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#108474"
+        }
+      },
+      {
+        "id": "k-proj-rev",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "bundle_assum",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-proj-revv",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "PROJECTED REVENUE",
+          "fontSize": 12,
+          "color": "#108474"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        },
+        "comparisonColumn": {
+          "columnId": "k-proj-revc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#208468",
+          "colorBad": "#EB001B",
+          "fontSize": 12
+        },
+        "columns": [
+          {
+            "id": "k-proj-revv",
+            "formula": "Sum([Assumptions/Projected Revenue])",
+            "name": "PROJECTED REVENUE",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "k-proj-revc",
+            "formula": "Sum([Assumptions/Baseline Revenue])",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "k-uplift",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "bundle_assum",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-upliftv",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "UPLIFT VS BASELINE",
+          "fontSize": 12,
+          "color": "#108474"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        },
+        "columns": [
+          {
+            "id": "k-upliftv",
+            "formula": "Sum([Assumptions/Projected Revenue])/Sum([Assumptions/Baseline Revenue])-1",
+            "name": "UPLIFT VS BASELINE",
+            "format": {
+              "kind": "number",
+              "formatString": "+,.1%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "k-proj-adopt",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "bundle_assum",
+          "kind": "table"
+        },
+        "value": {
+          "columnId": "k-proj-adoptv",
+          "color": "#161819",
+          "fontSize": 26
+        },
+        "name": {
+          "text": "PROJECTED ADOPTERS",
+          "fontSize": 12,
+          "color": "#108474"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        },
+        "comparisonColumn": {
+          "columnId": "k-proj-adoptc"
+        },
+        "comparison": {
+          "display": "delta",
+          "colorGood": "#208468",
+          "colorBad": "#EB001B",
+          "fontSize": 12
+        },
+        "columns": [
+          {
+            "id": "k-proj-adoptv",
+            "formula": "Sum([Assumptions/Projected Adopters])",
+            "name": "PROJECTED ADOPTERS",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          },
+          {
+            "id": "k-proj-adoptc",
+            "formula": "Sum([Assumptions/Adopters])",
+            "name": "Comparison",
+            "format": {
+              "kind": "number",
+              "formatString": ",d"
+            }
+          }
+        ]
+      },
+      {
+        "id": "bar-scenario",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "bundle_assum",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "sc-camp",
+            "formula": "[Assumptions/Campaign]",
+            "name": "Campaign"
+          },
+          {
+            "id": "sc-base",
+            "formula": "Sum([Assumptions/Baseline Revenue])",
+            "name": "Baseline Revenue",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "sc-proj",
+            "formula": "Sum([Assumptions/Projected Revenue])",
+            "name": "Projected Revenue",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "sc-camp"
+        },
+        "yAxis": {
+          "columnIds": [
+            "sc-base",
+            "sc-proj"
+          ]
+        },
+        "stacking": "none",
+        "legend": {
+          "visibility": "visible"
+        },
+        "name": {
+          "text": "Baseline vs. projected revenue by campaign",
+          "fontWeight": "bold",
+          "fontSize": 13,
+          "color": "#161819"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E8E8E8",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "btn-open-run",
+        "kind": "button",
+        "text": "Log this scenario run",
+        "appearance": "filled",
+        "actions": [
+          {
+            "id": "actopen",
+            "trigger": "on-click",
+            "effects": [
+              {
+                "effect": "open-overlay",
+                "overlayId": "modalRun"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "scenario_log",
+        "kind": "input-table",
+        "source": {
+          "kind": "empty",
+          "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1"
+        },
+        "inputMode": "explore",
+        "name": "Scenario Log",
+        "columns": [
+          {
+            "id": "sl-name",
+            "type": "text",
+            "name": "Run Name"
+          },
+          {
+            "id": "sl-notes",
+            "type": "text",
+            "name": "Notes"
+          },
+          {
+            "id": "CREATED_AT"
+          },
+          {
+            "id": "CREATED_BY"
+          }
+        ]
+      },
+      {
+        "id": "sb-chat-hdr",
+        "kind": "text",
+        "body": "**Scenario Copilot** \u2014 ask about baseline vs. projected performance, or log a run",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#108474"
+        }
+      },
+      {
+        "id": "chat-scenario",
+        "kind": "chat",
+        "agentId": "ag-scenario"
+      },
+      {
+        "id": "modal-run-title",
+        "kind": "text",
+        "body": "### Log a scenario run\nName this what-if (e.g. \"Portion Fix retest \u2014 15% adoption / 10% discount\") for future reference.",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#161819"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "ScenarioRunName",
+        "id": "ctrl-runname",
+        "name": "Run Name",
+        "controlType": "text",
+        "mode": "equals",
+        "case": "insensitive",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "kind": "control",
+        "controlId": "ScenarioRunNotes",
+        "id": "ctrl-runnotes",
+        "name": "Notes",
+        "controlType": "text",
+        "mode": "equals",
+        "case": "insensitive",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "id": "btn-save-run",
+        "kind": "button",
+        "text": "Save",
+        "appearance": "filled",
+        "actions": [
+          {
+            "id": "actsaverun",
+            "trigger": "on-click",
+            "effects": [
+              {
+                "effect": "insert-rows",
+                "tableElementId": "scenario_log",
+                "values": {
+                  "sl-name": {
+                    "type": "control",
+                    "control": "ScenarioRunName"
+                  },
+                  "sl-notes": {
+                    "type": "control",
+                    "control": "ScenarioRunNotes"
+                  }
+                }
+              },
+              {
+                "effect": "clear-control",
+                "scope": {
+                  "type": "control",
+                  "controlId": "ScenarioRunName"
+                }
+              },
+              {
+                "effect": "clear-control",
+                "scope": {
+                  "type": "control",
+                  "controlId": "ScenarioRunNotes"
+                }
+              },
+              {
+                "effect": "close-overlay"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "btn-cancel-run",
+        "kind": "button",
+        "text": "Cancel",
+        "appearance": "outline",
+        "actions": [
+          {
+            "id": "actcancelrun",
+            "trigger": "on-click",
+            "effects": [
+              {
+                "effect": "close-overlay"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "pages": [
+      {
+        "id": "main",
+        "name": "Nutrition Business"
+      },
+      {
+        "id": "pgdata",
+        "name": "Data",
+        "visibility": "hidden"
+      }
+    ],
+    "overlays": [
+      {
+        "id": "modalRun",
+        "type": "modal",
+        "name": "Log a scenario run",
+        "modal": {
+          "width": "small",
+          "header": {
+            "title": "Log a scenario run",
+            "showCloseIcon": "shown"
+          },
+          "footer": {
+            "primaryCta": {
+              "visible": "hidden"
+            },
+            "secondaryCta": {
+              "visible": "hidden"
+            }
+          }
+        }
+      }
+    ],
+    "agents": [
+      {
+        "id": "ag-cohort",
+        "name": "Cohort Copilot",
+        "description": "Builds and saves marketing cohorts of BODi members.",
+        "instructions": "You help a marketing user build a member cohort for campaign targeting. Members are BODi fitness-program subscribers (21 Day Fix, LIIFT4, 80 Day Obsession, P90X, Insanity Max:30, Barre Blend, 9 Week Control Freak) who may or may not also subscribe to a nutrition program (2B Mindset, Portion Fix, Ultimate Portion Fix). Use the filter tools to narrow the population, then set a name/description and save. Report the resulting cohort size and attach rate.",
+        "dataSources": [
+          {
+            "kind": "table",
+            "elementId": "snap"
+          }
+        ],
+        "tools": [
+          {
+            "toolId": "t-fitprog",
+            "kind": "action",
+            "name": "Filter by fitness program",
+            "description": "Add a fitness program value to the cohort filter.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "FitnessProgramF",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Which fitness program"
+                },
+                "selectionMode": "add"
+              }
+            ]
+          },
+          {
+            "toolId": "t-nutprog",
+            "kind": "action",
+            "name": "Filter by nutrition program",
+            "description": "Add a nutrition program value to the cohort filter.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "NutritionProgramF",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Which nutrition program"
+                },
+                "selectionMode": "add"
+              }
+            ]
+          },
+          {
+            "toolId": "t-chan",
+            "kind": "action",
+            "name": "Filter by signup channel",
+            "description": "Add a signup channel value to the cohort filter.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "ChannelF",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Which signup channel"
+                },
+                "selectionMode": "add"
+              }
+            ]
+          },
+          {
+            "toolId": "t-coach",
+            "kind": "action",
+            "name": "Filter by coach-attached status",
+            "description": "Add a coach-attached status value to the cohort filter.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "CoachF",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Which coach-attached status"
+                },
+                "selectionMode": "add"
+              }
+            ]
+          },
+          {
+            "toolId": "t-bundle",
+            "kind": "action",
+            "name": "Filter by bundle name",
+            "description": "Add a bundle name value to the cohort filter.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "BundleF",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Which bundle name"
+                },
+                "selectionMode": "add"
+              }
+            ]
+          },
+          {
+            "toolId": "t-stage",
+            "kind": "action",
+            "name": "Filter by program stage",
+            "description": "Add a program stage value to the cohort filter.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "StageF",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Which program stage"
+                },
+                "selectionMode": "add"
+              }
+            ]
+          },
+          {
+            "toolId": "t-name",
+            "kind": "action",
+            "name": "Set cohort name and description",
+            "description": "Set the name and description for the cohort about to be saved.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "CohortName",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Cohort name"
+                }
+              },
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "CohortDesc",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Cohort description"
+                }
+              }
+            ]
+          },
+          {
+            "toolId": "t-save",
+            "kind": "action",
+            "name": "Save the cohort",
+            "description": "Save the currently filtered cohort as a named, reusable segment.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "insert-rows",
+                "tableElementId": "cohort_saves",
+                "values": {
+                  "cs-name": {
+                    "type": "control",
+                    "control": "CohortName"
+                  },
+                  "cs-desc": {
+                    "type": "control",
+                    "control": "CohortDesc"
+                  },
+                  "cs-size": {
+                    "type": "formula",
+                    "formula": "CountDistinct([Member Snapshot/Member Id])"
+                  },
+                  "cs-attach": {
+                    "type": "formula",
+                    "formula": "CountDistinct(If([Member Snapshot/Nutrition Subscriber],[Member Snapshot/Member Id],Null))/CountDistinct([Member Snapshot/Member Id])"
+                  },
+                  "cs-liferev": {
+                    "type": "formula",
+                    "formula": "Avg([Member Snapshot/Lifetime Revenue])"
+                  },
+                  "cs-retention": {
+                    "type": "formula",
+                    "formula": "CountDistinct(If([Member Snapshot/Nutrition Active Now],[Member Snapshot/Member Id],Null))/CountDistinct(If([Member Snapshot/Nutrition Subscriber],[Member Snapshot/Member Id],Null))"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ag-scenario",
+        "name": "Scenario Copilot",
+        "description": "Analyzes bundle/promo baseline vs. projected performance.",
+        "instructions": "You help analyze BODi's nutrition bundle/promo campaigns: Shake & Bar Starter Bundle, Portion Fix Kickstart Bundle, and 2B Mindset + Shakeology Combo. `Bundle Baseline` compares adopters vs. eligible members who declined (standalone) for each campaign \u2014 pool size, adopter counts, average revenue, discount, and nutrition retention. `Assumptions` is the live what-if grid (edit New Adoption Rate % / New Discount % per campaign to project impact). Explain whether a bundle lifted attach/retention or mainly cannibalized standalone revenue, and log notable what-if runs on request.",
+        "dataSources": [
+          {
+            "kind": "table",
+            "elementId": "bundle_baseline"
+          },
+          {
+            "kind": "table",
+            "elementId": "bundle_assum"
+          }
+        ],
+        "tools": [
+          {
+            "toolId": "t-log-run",
+            "kind": "action",
+            "name": "Log a scenario run",
+            "description": "Record a named what-if scenario run with notes for later reference.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "insert-rows",
+                "tableElementId": "scenario_log",
+                "values": {
+                  "sl-name": {
+                    "type": "agent-input",
+                    "inputName": "Run name"
+                  },
+                  "sl-notes": {
+                    "type": "agent-input",
+                    "inputName": "Notes"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "settings": {
+      "theme": {
+        "overrides": {
+          "pageWidth": "full",
+          "colors": {
+            "text": "#161819",
+            "highlight": "#208468",
+            "success": "#208468",
+            "warning": "#EE9441",
+            "danger": "#EB001B"
+          },
+          "categoricalScheme": [
+            "#208468",
+            "#108474",
+            "#5FBE9A",
+            "#161819",
+            "#8A8A8A",
+            "#0B5C47"
+          ]
+        }
+      }
+    },
+    "layout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"main\">\n  <Container elementId=\"c-header\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 5\" gridTemplateColumns=\"repeat(24,1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"logo\" gridColumn=\"1 / 5\" gridRow=\"1 / 5\"/>\n    <Element elementId=\"hdr-title\" gridColumn=\"5 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"hdr-sub\" gridColumn=\"5 / 20\" gridRow=\"3 / 5\"/>\n  </Container>\n  <TabbedContainer elementId=\"tc-main\" type=\"tabbed-container\" gridColumn=\"1 / 25\" gridRow=\"5 / 92\">\n    <Tab gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n  <Container elementId=\"c-subs\" type=\"grid\" gridColumn=\"1 / 5\" gridRow=\"1 / 12\" gridTemplateColumns=\"repeat(12,1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"k-subs\" gridColumn=\"1 / 13\" gridRow=\"1 / 6\"/>\n    <Element elementId=\"ln-subs\" gridColumn=\"1 / 13\" gridRow=\"7 / 10\"/>\n  </Container>\n  <Container elementId=\"c-retention\" type=\"grid\" gridColumn=\"5 / 9\" gridRow=\"1 / 12\" gridTemplateColumns=\"repeat(12,1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"k-retention\" gridColumn=\"1 / 13\" gridRow=\"1 / 6\"/>\n    <Element elementId=\"ln-retention\" gridColumn=\"1 / 13\" gridRow=\"7 / 10\"/>\n  </Container>\n  <Container elementId=\"c-attach\" type=\"grid\" gridColumn=\"9 / 13\" gridRow=\"1 / 12\" gridTemplateColumns=\"repeat(12,1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"k-attach\" gridColumn=\"1 / 13\" gridRow=\"1 / 6\"/>\n    <Element elementId=\"ln-attach\" gridColumn=\"1 / 13\" gridRow=\"7 / 10\"/>\n  </Container>\n  <Container elementId=\"c-rev\" type=\"grid\" gridColumn=\"13 / 17\" gridRow=\"1 / 12\" gridTemplateColumns=\"repeat(12,1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"k-rev\" gridColumn=\"1 / 13\" gridRow=\"1 / 6\"/>\n    <Element elementId=\"ln-rev\" gridColumn=\"1 / 13\" gridRow=\"7 / 10\"/>\n  </Container>\n  <Container elementId=\"c-reorderrev\" type=\"grid\" gridColumn=\"17 / 21\" gridRow=\"1 / 12\" gridTemplateColumns=\"repeat(12,1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"k-reorderrev\" gridColumn=\"1 / 13\" gridRow=\"1 / 6\"/>\n    <Element elementId=\"ln-reorderrev\" gridColumn=\"1 / 13\" gridRow=\"7 / 10\"/>\n  </Container>\n  <Container elementId=\"c-completion\" type=\"grid\" gridColumn=\"21 / 25\" gridRow=\"1 / 12\" gridTemplateColumns=\"repeat(12,1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"k-completion\" gridColumn=\"1 / 13\" gridRow=\"1 / 6\"/>\n    <Element elementId=\"ln-completion\" gridColumn=\"1 / 13\" gridRow=\"7 / 10\"/>\n  </Container>\n    <Element elementId=\"cc-hdr\" gridColumn=\"1 / 25\" gridRow=\"13 / 15\"/>\n    <Element elementId=\"area-subs\" gridColumn=\"1 / 9\" gridRow=\"16 / 42\"/>\n    <Element elementId=\"bar-rev\" gridColumn=\"9 / 17\" gridRow=\"16 / 42\"/>\n    <Element elementId=\"line-retention\" gridColumn=\"17 / 25\" gridRow=\"16 / 42\"/>\n    <Element elementId=\"cc-alerts-hdr\" gridColumn=\"1 / 25\" gridRow=\"43 / 45\"/>\n    <Element elementId=\"tbl-alerts\" gridColumn=\"1 / 13\" gridRow=\"45 / 58\"/>\n    <Element elementId=\"btn-to-cohort\" gridColumn=\"13 / 19\" gridRow=\"45 / 47\"/>\n    <Element elementId=\"btn-to-promo\" gridColumn=\"19 / 25\" gridRow=\"45 / 47\"/>\n    </Tab>\n    <Tab gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"cb-hdr\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\"/>\n    <Element elementId=\"ctrl-fitprog\" gridColumn=\"1 / 9\" gridRow=\"5 / 7\"/>\n    <Element elementId=\"ctrl-nutprog\" gridColumn=\"9 / 17\" gridRow=\"5 / 7\"/>\n    <Element elementId=\"ctrl-chan\" gridColumn=\"17 / 25\" gridRow=\"5 / 7\"/>\n    <Element elementId=\"ctrl-coach\" gridColumn=\"1 / 9\" gridRow=\"8 / 10\"/>\n    <Element elementId=\"ctrl-bundle\" gridColumn=\"9 / 17\" gridRow=\"8 / 10\"/>\n    <Element elementId=\"ctrl-stage\" gridColumn=\"17 / 25\" gridRow=\"8 / 10\"/>\n    <Element elementId=\"ctrl-adh\" gridColumn=\"1 / 9\" gridRow=\"11 / 13\"/>\n    <Element elementId=\"ctrl-cname\" gridColumn=\"9 / 18\" gridRow=\"11 / 13\"/>\n    <Element elementId=\"ctrl-cdesc\" gridColumn=\"18 / 25\" gridRow=\"11 / 13\"/>\n    <Element elementId=\"btn-save-cohort\" gridColumn=\"1 / 9\" gridRow=\"14 / 16\"/>\n  <Element elementId=\"k-cohort-size\" gridColumn=\"1 / 7\" gridRow=\"17 / 25\"/>\n  <Element elementId=\"k-cohort-attach\" gridColumn=\"7 / 13\" gridRow=\"17 / 25\"/>\n  <Element elementId=\"k-cohort-liferev\" gridColumn=\"13 / 19\" gridRow=\"17 / 25\"/>\n  <Element elementId=\"k-cohort-retention\" gridColumn=\"19 / 25\" gridRow=\"17 / 25\"/>\n    <Element elementId=\"bar-cohort-dist\" gridColumn=\"1 / 13\" gridRow=\"26 / 41\"/>\n    <Element elementId=\"tbl-cohort-detail\" gridColumn=\"13 / 25\" gridRow=\"26 / 41\"/>\n    <Element elementId=\"cb-saved-hdr\" gridColumn=\"1 / 25\" gridRow=\"42 / 43\"/>\n    <Element elementId=\"cohort_saves\" gridColumn=\"1 / 25\" gridRow=\"43 / 54\"/>\n    <Element elementId=\"cb-chat-hdr\" gridColumn=\"1 / 25\" gridRow=\"55 / 56\"/>\n    <Element elementId=\"chat-cohort\" gridColumn=\"1 / 25\" gridRow=\"56 / 70\"/>\n    </Tab>\n    <Tab gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"sb-hdr\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\"/>\n    <Element elementId=\"bundle_baseline\" gridColumn=\"1 / 25\" gridRow=\"5 / 15\"/>\n    <Element elementId=\"bundle_assum\" gridColumn=\"1 / 25\" gridRow=\"16 / 30\"/>\n    <Element elementId=\"sb-instr\" gridColumn=\"1 / 25\" gridRow=\"31 / 33\"/>\n  <Element elementId=\"k-proj-rev\" gridColumn=\"1 / 9\" gridRow=\"34 / 42\"/>\n  <Element elementId=\"k-uplift\" gridColumn=\"9 / 17\" gridRow=\"34 / 42\"/>\n  <Element elementId=\"k-proj-adopt\" gridColumn=\"17 / 25\" gridRow=\"34 / 42\"/>\n    <Element elementId=\"bar-scenario\" gridColumn=\"1 / 25\" gridRow=\"43 / 58\"/>\n    <Element elementId=\"btn-open-run\" gridColumn=\"1 / 9\" gridRow=\"59 / 61\"/>\n    <Element elementId=\"scenario_log\" gridColumn=\"10 / 25\" gridRow=\"59 / 65\"/>\n    <Element elementId=\"sb-chat-hdr\" gridColumn=\"1 / 25\" gridRow=\"66 / 67\"/>\n    <Element elementId=\"chat-scenario\" gridColumn=\"1 / 25\" gridRow=\"67 / 81\"/>\n    </Tab>\n  </TabbedContainer>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"pgdata\">\n  <Element elementId=\"fact\" gridColumn=\"1 / 25\" gridRow=\"1 / 5\"/>\n  <Element elementId=\"snap\" gridColumn=\"1 / 25\" gridRow=\"5 / 10\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24,1fr)\" gridTemplateRows=\"auto\" id=\"modalRun\">\n    <Element elementId=\"modal-run-title\" gridColumn=\"1 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"ctrl-runname\" gridColumn=\"1 / 25\" gridRow=\"3 / 5\"/>\n    <Element elementId=\"ctrl-runnotes\" gridColumn=\"1 / 25\" gridRow=\"5 / 8\"/>\n    <Element elementId=\"btn-cancel-run\" gridColumn=\"13 / 19\" gridRow=\"8 / 10\"/>\n    <Element elementId=\"btn-save-run\" gridColumn=\"19 / 25\" gridRow=\"8 / 10\"/>\n</Page>"
+  }
+}
