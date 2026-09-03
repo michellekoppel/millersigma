@@ -19,3 +19,6 @@ __pycache__/
 
 # Local Netlify folder
 .netlify
+
+# Per-build QA render scratch (PNG screenshots), not permanent repo content
+skills/*/shots/

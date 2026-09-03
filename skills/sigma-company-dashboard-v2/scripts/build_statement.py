@@ -376,7 +376,9 @@ DOCUMENT = {
     "settings": {"theme": {"overrides": {
         "colors": {"text": B.TEXT_DARK, "highlight": B.SOFI_BRIGHT, "success": B.GOOD,
                    "warning": B.WARN, "danger": B.BAD, "darkMode": "hidden"},
-        "colorOverrides": {"backgroundCanvas": "#FFFFFF"},
+        # array of {name, color}, not a dict -- same fix as build_sofi.py,
+        # confirmed against the live OpenAPI spec, papercrane production
+        "colorOverrides": [{"name": "backgroundCanvas", "color": "#FFFFFF"}],
         "categoricalScheme": B.CATEGORICAL,
         "space": {"unit": "small", "showElementPadding": "shown"},
     }}},

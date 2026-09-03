@@ -587,7 +587,12 @@ add({"id": "map-geo",
          {"id": "gm-vol", "formula": "Sum([%s/Net Revenue])" % LB, "name": CO.lab(CFG, "kpi_revenue").split(" (")[0],
           "format": MONEY_M},
          {"id": "gm-perf", "formula": "Avg([%s/Performance Index])" % LB,
-          "name": "Performance vs plan", "format": PCT1}],
+          "name": "Performance vs plan", "format": PCT1},
+         # a column can only be on one chart channel at a time (create-time
+         # rejection, confirmed papercrane production 2026-09-03) -- gm-perf
+         # drives the bar height, so colour needs its own copy of the formula
+         {"id": "gm-perfc", "formula": "Avg([%s/Performance Index])" % LB,
+          "name": "Performance vs plan ", "format": PCT1}],
      "xAxis": {"columnId": "gm-st",
                "sort": {"by": "gm-perf", "direction": "descending"}},
      "yAxis": {"columnIds": ["gm-perf"]},
@@ -595,7 +600,7 @@ add({"id": "map-geo",
      # news, a big state that is UNDERPERFORMING is
      # continuous scale centred on 1.0 = exactly on plan, so under-plan states
      # read red and over-plan read green without any manual banding
-     "color": {"by": "scale", "column": "gm-perf",
+     "color": {"by": "scale", "column": "gm-perfc",
                "scheme": [B.BAD, "#F3F6FA", B.SOFI_MINT],
                "domain": {"min": 0.85, "mid": 1.0, "max": 1.15}},
      "name": title("Performance vs plan by state"),

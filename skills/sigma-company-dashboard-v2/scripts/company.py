@@ -1383,6 +1383,42 @@ STATEMENTS = {
                    "Illustrative invoice generated from a Sigma report "
                    "specification — synthetic data, not a real account."),
     },
+    "pacificlife": {
+        "spec_name": "Pacific Life — Annuity Contract Statement (July 2026)",
+        "page_name": "Contract Statement Summary",
+        "manage_url": "www.pacificlife.com/account",
+        "service_label": "Contract Services",
+        "service_phone": "1-800-347-7787",
+        "period": "07/01 – 07/31/2026",
+        "sect_rewards": "INTEREST CREDITED SUMMARY",
+        "sect_summary": "CONTRACT SUMMARY",
+        "sect_category": "ACTIVITY BY TRANSACTION TYPE",
+        "sect_activity": "TRANSACTION ACTIVITY",
+        "sect_messages": "YOUR CONTRACT MESSAGES",
+        "headline": [("Account Value", None), ("Interest Credited This Period", None),
+                     ("Next Statement Date", "10/01/2026")],
+        "button_label": "Contract statement ↗",
+        "rewards_total": "Total interest credited this period",
+        "h_formulas": [
+            ("src-rw", 'SumIf([Rewards Summary/Points], '
+             '[Rewards Summary/Description] = "Balance carried forward")', "MONEY"),
+            ("src", 'SumIf([Statement Activity/Amount], '
+             '[Statement Activity/Category] = "Interest Credited")', "MONEY")],
+        "msg_body": ("Starting 10/01/2026, online beneficiary updates for eligible "
+                     "annuity and life contracts no longer require a notarized form -- "
+                     "verify your identity through your online account instead. No "
+                     "action is required unless you want to make a change."),
+        "warn1": ("**Surrender Charge Notice:** Withdrawals in excess of your "
+                  "contract's free withdrawal amount may be subject to a surrender "
+                  "charge and, if taken before age 59½, a 10% IRS penalty tax on the "
+                  "taxable portion."),
+        "warn2": ("**Guaranteed Minimum Notice:** Crediting rates and index-linked "
+                  "returns can fall to, but not below, your contract's guaranteed "
+                  "minimum interest rate shown in the Contract Summary above."),
+        "footer": ("Pacific Life Insurance Company. Illustrative statement generated "
+                   "from a Sigma report specification — synthetic data, not a real "
+                   "account."),
+    },
 }
 
 
@@ -1491,7 +1527,52 @@ _VR_CONTRACT = [
 ]
 
 
+# --- Pacific Life: one policyholder's Fixed Indexed Annuity contract -------
+# Represents ONE contract's monthly activity, not Pacific Life's whole in-force
+# book (same scale convention as Delta's report being one flyer's SkyMiles
+# statement). "Points Earned" holds dollars of interest credited on that line
+# (0 where not applicable); the Interest Summary's "Points" column holds
+# dollars throughout, same repurposing Delta used for miles.
+_PL_ACTIVITY = [
+    ("07/01", "07/02", "Purchase Payment — Additional Premium", "Premium Payment", 25000.00, 0),
+    ("07/03", "07/03", "Free Withdrawal — Required Minimum Distribution", "Withdrawal", -4200.00, 0),
+    ("07/10", "07/10", "GLWB Rider Fee (0.95% annualized)", "Rider Fee", -142.00, 0),
+    ("07/15", "07/15", "Indexed Strategy Interest Credited — S&P 500 1-Yr Point-to-Point", "Interest Credited", 3180.00, 3180),
+    ("07/15", "07/15", "Fixed Account Interest Credited", "Interest Credited", 640.00, 640),
+    ("07/20", "07/21", "Withdrawal — Systematic Income Payment", "Withdrawal", -1500.00, 0),
+    ("07/25", "07/25", "Death Benefit Rider Fee", "Rider Fee", -58.00, 0),
+]
+
+_PL_INTEREST = [
+    (1, "Indexed strategy interest credited", 3180),
+    (2, "Fixed account interest credited", 640),
+    (3, "Premium bonus credited this period", 1250),
+    (4, "Rider fees deducted", -200),
+    (5, "Withdrawals this period", -5700),
+    (6, "Balance carried forward", 187340),
+]
+
+_PL_CONTRACT = [
+    (1, "Contract type", "Fixed Indexed Annuity"),
+    (2, "Surrender charge schedule", "7-year, 8% initial"),
+    (3, "Current surrender charge", "3%"),
+    (4, "Free withdrawal amount", "10% annually"),
+    (5, "Guaranteed minimum interest rate", "1.00%"),
+    (6, "GLWB rider status", "Active, 8% annual rollup"),
+    (7, "Contract anniversary", "01/15"),
+    (8, "Contract owner since", "2019"),
+]
+
+
 def statement_activity_sql(cfg):
+    if cfg["key"] == "pacificlife":
+        cols = ["Transaction Date", "Post Date",
+                "Merchant Name or Transaction Description", "Category", "Amount",
+                "Points Earned"]
+        rows = [("'%s/2026'" % t, "'%s/2026'" % pd, "'%s'" % d.replace("'", "''"),
+                 "'%s'" % c, "%.2f" % amt, str(pts))
+                for t, pd, d, c, amt, pts in _PL_ACTIVITY]
+        return _union(rows, cols)
     if cfg["key"] == "veraset":
         cols = ["Transaction Date", "Post Date",
                 "Merchant Name or Transaction Description", "Category", "Amount",
@@ -1512,6 +1593,9 @@ def statement_activity_sql(cfg):
 
 
 def rewards_summary_sql(cfg):
+    if cfg["key"] == "pacificlife":
+        rows = [(str(o), "'%s'" % d, str(p)) for o, d, p in _PL_INTEREST]
+        return _union(rows, ["Line Order", "Description", "Points"])
     if cfg["key"] == "veraset":
         rows = [(str(o), "'%s'" % d, str(p)) for o, d, p in _VR_USAGE]
         return _union(rows, ["Line Order", "Description", "Points"])
@@ -1522,6 +1606,9 @@ def rewards_summary_sql(cfg):
 
 
 def account_summary_sql(cfg):
+    if cfg["key"] == "pacificlife":
+        rows = [(str(o), "'%s'" % m, "'%s'" % v) for o, m, v in _PL_CONTRACT]
+        return _union(rows, ["Line Order", "Metric", "Value"])
     if cfg["key"] == "veraset":
         rows = [(str(o), "'%s'" % m, "'%s'" % v) for o, m, v in _VR_CONTRACT]
         return _union(rows, ["Line Order", "Metric", "Value"])
