@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Reserve Strength — Sigma Plugin</title>
+<script src="https://unpkg.com/@sigmacomputing/plugin"></script>
+<style>
+  :root{ --navy:#0D284A; --navy-deep:#071629; --primary:#1D58A4; --gold:#C9A227; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:Inter,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:transparent;overflow:hidden}
+  #card{
+    height:100%;width:100%;border-radius:18px;padding:18px 20px;color:#fff;position:relative;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:space-between;gap:10px;
+    background:linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 55%, var(--primary) 100%);
+  }
+  #title{font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;opacity:.92}
+  #body{flex:1;display:flex;align-items:center;justify-content:center;gap:18px;min-height:0}
+  #gaugeWrap{position:relative;width:132px;height:132px;flex:0 0 auto}
+  svg{display:block;overflow:visible}
+  #gaugeNum{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  #gaugeVal{font-size:28px;font-weight:800;line-height:1}
+  #gaugeLbl{font-size:9.5px;font-weight:600;letter-spacing:.03em;opacity:.85;text-align:center;margin-top:2px;max-width:88px}
+  #chips{display:flex;flex-direction:column;gap:10px}
+  .chip{display:flex;align-items:baseline;gap:7px}
+  .chip .n{font-size:22px;font-weight:800;color:var(--gold)}
+  .chip .l{font-size:10.5px;font-weight:600;opacity:.85;letter-spacing:.02em}
+  #foot{font-size:9.5px;opacity:.55;letter-spacing:.03em;text-align:right}
+</style>
+</head>
+<body>
+<div id="card">
+  <div id="title">Financial Strength</div>
+  <div id="body">
+    <div id="gaugeWrap">
+      <svg id="gaugeSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 132 132" width="132" height="132">
+        <circle cx="66" cy="66" r="54" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="12"/>
+        <circle id="gaugeArc" cx="66" cy="66" r="54" fill="none" stroke="#C9A227" stroke-width="12"
+                stroke-linecap="round" transform="rotate(-90 66 66)"/>
+      </svg>
+      <div id="gaugeNum">
+        <div id="gaugeVal">—</div>
+        <div id="gaugeLbl">Reserve Coverage</div>
+      </div>
+    </div>
+    <div id="chips">
+      <div class="chip"><span class="n" id="ratedYears">—</span><span class="l">consecutive years<br/>rated "A" or higher</span></div>
+      <div class="chip"><span class="n" id="heritageYears">—</span><span class="l">years in<br/>business</span></div>
+    </div>
+  </div>
+  <div id="foot">Reserve Strength · Sigma plugin</div>
+</div>
+<script>
+(function(){
+  var client = (window.sigmaComputing && window.sigmaComputing.plugin && window.sigmaComputing.plugin.client) || null;
+
+  var cfgDefs = [
+    { name:'source', type:'element' },
+    { name:'metric',  type:'column', source:'source', allowedTypes:['text'],   label:'Metric name' },
+    { name:'value',   type:'column', source:'source', allowedTypes:['number'], label:'Value' },
+    { name:'coverageKey', type:'text', label:'Coverage metric label', defaultValue:'Reserve Coverage Ratio' },
+    { name:'ratedKey',    type:'text', label:'Rated-years metric label', defaultValue:'Consecutive A-Rated Years' },
+    { name:'heritageKey', type:'text', label:'Heritage-years metric label', defaultValue:'Years in Business' }
+  ];
+  if (client) client.config.configureEditorPanel(cfgDefs);
+
+  function synth(){
+    return { metric: ['Reserve Coverage Ratio', 'Consecutive A-Rated Years', 'Years in Business'],
+             value:  [108.4, 50, 160] };
+  }
+
+  function lookup(data, metricCol, valueCol, key){
+    if (!data || !data[metricCol] || !data[valueCol]) return null;
+    var names = data[metricCol], vals = data[valueCol];
+    for (var i=0;i<names.length;i++){ if (names[i] === key) return Number(vals[i]); }
+    return null;
+  }
+
+  // Gauge arc: maps a coverage ratio (80%-130% range) onto a 270-degree sweep.
+  var R = 54, CIRC = 2*Math.PI*R, SWEEP = 0.75; // 270/360
+  function paintGauge(pct){
+    var lo=80, hi=130, t=Math.max(0, Math.min(1, (pct-lo)/(hi-lo)));
+    var arcLen = CIRC * SWEEP * t;
+    var gap = CIRC * (1-SWEEP);
+    var el = document.getElementById('gaugeArc');
+    el.setAttribute('stroke-dasharray', arcLen.toFixed(1) + ' ' + (CIRC-arcLen).toFixed(1));
+    el.setAttribute('stroke-dashoffset', (gap/2).toFixed(1));
+    document.getElementById('gaugeVal').textContent = (isFinite(pct) ? pct.toFixed(0) : '—') + '%';
+  }
+
+  function render(cfg, data){
+    cfg = cfg || {};
+    var metricCol = cfg.metric, valueCol = cfg.value;
+    var coverage = lookup(data, metricCol, valueCol, cfg.coverageKey || 'Reserve Coverage Ratio');
+    var rated    = lookup(data, metricCol, valueCol, cfg.ratedKey || 'Consecutive A-Rated Years');
+    var heritage = lookup(data, metricCol, valueCol, cfg.heritageKey || 'Years in Business');
+    paintGauge(coverage == null ? 108.4 : coverage);
+    document.getElementById('ratedYears').textContent = (rated == null ? 50 : rated).toFixed(0);
+    document.getElementById('heritageYears').textContent = (heritage == null ? 160 : heritage).toFixed(0);
+  }
+
+  var state = {cfg:{}, data:null, unsub:null};
+  function recompute(){ render(state.cfg, state.data || synth()); }
+
+  if (client){
+    client.config.subscribe(function(config){
+      state.cfg = config || {};
+      if (state.unsub){ state.unsub(); state.unsub = null; }
+      if (config && config.source){
+        state.unsub = client.elements.subscribeToElementData(config.source, function(d){ state.data = d; recompute(); });
+      }
+      recompute();
+    });
+  } else {
+    render({}, synth());
+  }
+
+  // Keep the gauge crisp if the container is resized; no animation loop.
+  var ro = new ResizeObserver(function(){ /* SVG viewBox scales automatically */ });
+  ro.observe(document.getElementById('card'));
+})();
+</script>
+</body>
+</html>
