@@ -2912,3 +2912,219 @@ POP["pura"] = {"bases": (80, 180, 350, 750), "rev_rate": 0.65, "fee_per_product"
 PLUGINS["pura"] = {"hero": None, "hero_label": None, "ticker": None}
 
 COMPANIES["pura"] = PURA
+
+
+# ---------------------------------------------------------------------------
+# Life insurance & annuities. Closest to the ORIGINAL banking template, not a
+# stretch like the payer/QSR/airline cold-run tests: a spread-based insurer
+# manages a general account the same way a bank manages a balance sheet.
+#
+#   products      -> lines of business (Fixed Indexed Annuities, Variable
+#                    Annuities & RILA, Income Annuities, Indexed & Variable
+#                    Universal Life, Term & Universal Life, Institutional &
+#                    Workplace Solutions) -- real product names straight off
+#                    pacificlife.com/home/individuals.html
+#   bal_base      -> in-force reserves / account value, in $MM (the general
+#                    or separate account assets backing the line)
+#   yield_rate    -> general-account investment portfolio earned rate
+#   funding_rate  -> crediting rate paid to policyholders -- the spread
+#                    between the two is the investment margin that funds
+#                    expenses and profit, same mechanic as a bank's NIM
+#   fee_base      -> fee/COI-based lines (Variable Annuities & RILA, Term &
+#                    UL) carry yield_rate = funding_rate = 0 and the whole
+#                    economics through fee_base, same pattern as SoFi Money /
+#                    SoFi Invest
+#   delinq_rate   -> lapse/surrender rate (the risk metric) -- deliberately
+#                    near-zero for Income Annuities (irrevocable once
+#                    annuitized) and elevated for Term (post level-term
+#                    lapse), both real persistency patterns, not filler
+#   units_base    -> policies/contracts in force, K
+# ---------------------------------------------------------------------------
+
+PACIFICLIFE = {
+    "key": "pacificlife",
+    "name": "Pacific Life",
+    "title": "In-Force Book & Guaranteed Income Command Center",
+    "domain": "life insurance & annuities",
+    "unit_noun": "policyholder",
+    "volume_noun": "in-force reserves",
+    "logo_domain": "pacificlife.com",
+    "base_table": "Policy & Contract Book",
+    # sampled from the real wordmark (PL-Logo-Desktop.svg, single fill #1d58a4);
+    # navy/navy_deep/accent are derived shades of that one real hex, mint is a
+    # deliberate gold complement for the "confidence for generations" heritage
+    # story (same pattern as SoFi's added mint -- not in the sampled gradient).
+    "palette": {
+        "navy": "#0D284A", "navy_deep": "#071629",
+        "primary": "#1D58A4", "secondary": "#16427B",
+        "accent": "#779BC8", "mint": "#C9A227",
+    },
+    "products": [
+        # name, order, balance_type, bal_base, yield, funding, fee_base,
+        # provision, delinq(lapse), opex_ratio, growth, units_base, phase,
+        # tagline, rate_label, goal_pct, status
+        ("Fixed Indexed Annuities", 1, "Annuities", 61000, .0560, .0325, 8.0,
+         .0015, .0410, .220, .068, 410, 1.1,
+         "Principal-protected growth linked to market index performance",
+         "Avg Crediting Rate", 1.112, "Ahead"),
+        ("Indexed & Variable Universal Life", 2, "Life Insurance", 52000,
+         .0535, .0355, 145.0, .0045, .0580, .340, .042, 620, 0.0,
+         "Indexed & variable universal life protection",
+         "Avg Crediting Rate", 1.038, "Ahead"),
+        ("Variable Annuities & RILA", 3, "Annuities", 24000, 0.0, 0.0, 54.0,
+         .0010, .0650, .290, .031, 145, 2.2,
+         "Market-linked growth with buffered downside protection",
+         "Avg Buffer/Cap Rate", .934, "Behind"),
+        ("Institutional & Workplace Solutions", 4, "Institutional", 18000,
+         .0520, .0435, 22.0, .0020, .0150, .260, .095, 310, 1.7,
+         "Pension risk transfer, structured settlements & group benefits",
+         "Avg Spread", 1.138, "Ahead"),
+        ("Term & Universal Life", 5, "Life Insurance", 9500, 0.0, 0.0, 58.0,
+         .0038, .0720, .410, .018, 890, 2.8,
+         "Level premium term & traditional universal life protection",
+         "Avg COI Rate", .893, "Behind"),
+        ("Income Annuities", 6, "Annuities", 8500, .0545, .0460, 0.0,
+         .0055, .0080, .310, .024, 38, 0.6,
+         "Guaranteed lifetime income, immediate or deferred",
+         "Avg Payout Rate", 1.021, "On plan"),
+    ],
+    "alerts": [
+        ("critical", "Post level-term lapse spike",
+         "Term life 30-day lapse rate up 180 bps as the 2011 issue-year "
+         "level-term period rolls off",
+         "1h ago", "Actuarial", 180, "bps WoW"),
+        ("critical", "FIA option budget compression",
+         "Equity volatility spike compressed the Fixed Indexed Annuity option "
+         "budget 45 bps below the crediting-rate plan",
+         "3h ago", "Investments", 45, "bps below plan"),
+        ("warning", "GLWB rider utilization drift",
+         "Guaranteed lifetime withdrawal utilization on the 2019-2021 "
+         "RILA/VA issue cohort trending above reserve assumption",
+         "6h ago", "Actuarial", 14, "% above assumption"),
+        ("warning", "PRT pipeline backlog",
+         "214 pension risk transfer RFPs queued past the 45-day quoting SLA",
+         "1d ago", "Institutional Solutions", 214, "RFPs past SLA"),
+        ("info", "A.M. Best affirms rating",
+         "A.M. Best affirmed Pacific Life's A+ (Superior) financial strength "
+         "rating with a stable outlook, extending an unbroken run at A or "
+         "higher",
+         "2d ago", "Enterprise Risk", 50, "consecutive years A-rated"),
+    ],
+    "agent": ("You are an actuarial analyst covering Pacific Life's annuity, "
+              "life insurance and institutional lines -- Fixed Indexed and "
+              "Variable/RILA Annuities, Income Annuities, Indexed/Variable "
+              "Universal Life, Term & Universal Life, and Institutional & "
+              "Workplace Solutions. Answer with numbers from the workbook."),
+}
+
+PACIFICLIFE["subs"] = {
+    "Fixed Indexed Annuities": [
+        ("Single Premium FIA", .52, -20, 7.2, "Ahead"),
+        ("Flexible Premium FIA", .24, 15, 5.4, "On plan"),
+        ("FIA with Income Rider (GLWB)", .18, 30, 9.8, "Ahead"),
+        ("Multi-Year Guarantee blend", .06, -35, 2.1, "On plan")],
+    "Indexed & Variable Universal Life": [
+        ("Indexed Universal Life", .58, -15, 6.1, "Ahead"),
+        ("Variable Universal Life", .26, 20, 2.4, "On plan"),
+        ("Survivorship IUL", .11, 10, 4.8, "Ahead"),
+        ("VUL with LTC Rider", .05, 45, -1.6, "Behind")],
+    "Variable Annuities & RILA": [
+        ("Traditional Variable Annuity", .46, -30, -4.8, "Behind"),
+        ("Registered Index-Linked Annuity", .34, 55, 14.2, "Ahead"),
+        ("VA with Living Benefit Rider", .14, 20, -2.1, "Behind"),
+        ("Structured VA", .06, 15, 5.6, "On plan")],
+    "Institutional & Workplace Solutions": [
+        ("Pension Risk Transfer", .44, 40, 22.4, "Ahead"),
+        ("Structured Settlements", .26, -10, 3.8, "On plan"),
+        ("Group Employee Benefits", .20, -25, 1.2, "Behind"),
+        ("Executive & Business Protection", .10, 15, 6.4, "On plan")],
+    "Term & Universal Life": [
+        ("Level Term Life", .62, -20, -3.4, "Behind"),
+        ("Traditional Universal Life", .22, 10, 0.8, "On plan"),
+        ("Return of Premium Term", .11, 30, 2.6, "On plan"),
+        ("Guaranteed UL (no-lapse)", .05, -15, -1.1, "Behind")],
+    "Income Annuities": [
+        ("Single Premium Immediate Annuity", .54, -10, 1.8, "On plan"),
+        ("Deferred Income Annuity", .32, 25, 4.2, "Ahead"),
+        ("Qualified Longevity Annuity Contract", .10, 15, 6.8, "Ahead"),
+        ("Structured Payout blend", .04, -5, 0.4, "On plan")],
+}
+
+FOOTPRINTS["pacificlife"] = [
+    ("CA", .142), ("TX", .086), ("FL", .072), ("NY", .068), ("IL", .052),
+    ("PA", .044), ("OH", .038), ("MI", .034), ("NC", .032), ("AZ", .030),
+    ("WA", .028), ("NJ", .026), ("GA", .024), ("CO", .022), ("VA", .020),
+]
+
+LABELS["pacificlife"] = {
+    "personas": ["Executive", "Actuarial"],
+    "modeler_page": "Crediting Strategy",
+    "cohort_page": "Policyholder Segments",
+    "modeler_title": "Crediting Rate & Growth Scenario Modeler",
+    "shock_label": "Crediting rate shock (bps)",
+    # kpi_revenue binds to "Net Revenue" (yield - funding + fee), i.e. the
+    # investment spread plus fee income -- labelled honestly as spread
+    # revenue, not gross premium or account value (the same "Net Revenue is a
+    # spread, not income" trap HANDOFF.md documents for Delta/NVIDIA).
+    "kpi_revenue": "Net Spread Revenue ($M)",
+    "kpi_margin": "Contribution ($M)",
+    "kpi_volume": "In-Force Reserves ($M)",
+    "kpi_units": "Policies & Contracts in Force (K)",
+    "driver_nim": "Investment Spread %",
+    "driver_risk": "Lapse & Surrender Rate",
+    "driver_cost": "Crediting Rate",
+    "driver_eff": "Expense Ratio",
+    "seg_product": "Product Line",
+    "seg_credit": "Risk Class",
+    "seg_type": "Product Type",
+    "seg_dd": "Premium Auto-Pay",
+    "seg_engage": "Engagement Tier",
+    "seg_held": "Products Held",
+    "seg_age": "Policy Duration",
+    "cohort_name": "Segment name",
+    "kpi_cohort_size": "Policyholders in Segment",
+    "kpi_cohort_vol": "Segment Reserves",
+    "kpi_cohort_rev": "Revenue per Policyholder",
+    "kpi_cohort_risk": "Avg Lapse Risk",
+    "col_volume": "Baseline Reserves",
+    "col_growth": "Reserve Growth %",
+    "col_yield": "Crediting Δ bps",
+    "col_cost": "Cost of Guarantees Δ bps",
+}
+
+SEGMENTS["pacificlife"] = {"Near Prime": "Standard", "Prime": "Preferred",
+                          "Super Prime": "Preferred Plus", "Exceptional": "Preferred Elite",
+                          "Daily": "Highly Engaged", "Weekly": "Engaged",
+                          "Monthly": "Occasional", "Dormant": "Inactive"}
+
+VOCAB["pacificlife"] = {
+    "econ": ("Fixed Indexed Annuities and Indexed/Variable Universal Life carry a "
+             "general-account investment yield against a crediting rate paid to "
+             "policyholders -- the spread funds expenses and profit, the same "
+             "mechanic as a bank's net interest margin. Variable Annuities & RILA "
+             "and Term & Universal Life earn fee and cost-of-insurance revenue "
+             "instead, carrying little to no investment spread."),
+    "metrics": "net spread revenue, contribution, reserve provisioning and lapse/surrender rate",
+    "bands": ("Risk classes: Standard, Preferred, Preferred Plus, Preferred Elite. "
+              "Engagement: Highly Engaged, Engaged, Occasional, Inactive."),
+    "cohort_report": "segment size, in-force reserves and average lapse risk",
+}
+
+POP["pacificlife"] = {"bases": (45000, 95000, 210000, 480000), "rev_rate": 0.021,
+                      "fee_per_product": 380}
+
+# Registered 2026-09-03 on the org's Sigma workspace via POST /v2/plugins,
+# GitHub-content host via jsDelivr pinned to a commit SHA (not a branch --
+# this branch name contains a slash, which jsDelivr's @version segment can't
+# parse; a commit pin is also immutable, so it never hits jsDelivr's ~12h
+# cache-staleness window on edit). See plugins/pacificlife-reserve-strength/.
+PLUGINS["pacificlife"] = {
+    "hero": "03d3d313-584a-4c75-afbc-fe5c47dbc16a",
+    "hero_label": "RESERVE STRENGTH",
+    "ticker": None,
+    "hero_table": {"name": "Reserve Strength", "file": "reserve_strength.sql",
+                   "prefix": "h", "cols": ["Metric", "Value"]},
+    "hero_config": {"metric": "h0", "value": "h1"},
+}
+
+COMPANIES["pacificlife"] = PACIFICLIFE

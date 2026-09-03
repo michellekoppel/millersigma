@@ -1,9 +1,15 @@
-"""Sigma staging API helper for the JPMC code-rep build.
+"""Sigma API helper, retargeted from Connor's papercranestaging laptop setup to
+this session's real org: **papercrane on production** (api.sigmacomputing.com).
 
-Reads credentials from ~/.sigma-portals/staging.env and caches the bearer token
-in /tmp/.tok_staging (55-minute TTL, same convention as the other toolkits).
+Everything below was originally hardcoded to papercranestaging -- BASE, the
+client-credential source, the connection id and the target folder are all
+per-environment, not per-company, so they're fixed here rather than in
+company.py. Reads SIGMA_BASE_URL / SIGMA_CLIENT_ID / SIGMA_CLIENT_SECRET from
+the process environment (already provisioned in this session) and caches the
+bearer token in /tmp/.tok_papercrane (55-minute TTL, same convention as the
+other toolkits).
 
-Verified 2026-08-07 against papercranestaging (org 8c99818a-90b3-4cae-bdb7-cf69a741171a):
+Verified 2026-09-03 against papercrane (production):
   * Workbook spec bodies wrap everything except `name`/`folderId` in `document`.
   * Report spec bodies do the same, with `document.kind: report`.
 """
@@ -17,21 +23,22 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-ENV_FILE = pathlib.Path.home() / ".sigma-portals" / "staging.env"
-TOKEN_CACHE = pathlib.Path("/tmp/.tok_staging")
+TOKEN_CACHE = pathlib.Path("/tmp/.tok_papercrane")
 TOKEN_TTL = 55 * 60
 
-BASE = "https://api.staging.sigmacomputing.io"
-ORG_ID = "8c99818a-90b3-4cae-bdb7-cf69a741171a"
+BASE = os.environ.get("SIGMA_BASE_URL", "https://api.sigmacomputing.com")
 
-# Discovered 2026-08-07 on papercranestaging.
-FOLDER_CLAUDE_BUILDER = "a758d7ee-8c23-423d-9d60-5b635d9e9b58"
+# Michelle Koppel's homeFolderId on papercrane (GET /v2/members, this session,
+# 2026-09-03) -- "put it in my documents folder" resolves here, not to a
+# shared Claude-builder scratch folder.
+FOLDER_CLAUDE_BUILDER = "004d8497-18ea-4cf6-a8c5-deca403c22d9"
 
-# Most staging connections have disabled warehouse credentials. This one resolves
-# SQL at create time (checked 2026-08-07); it is also what the reference
-# "Microsoft — Executive App" workbook uses. `verify` does NOT resolve SQL, so a
-# bad connection only surfaces on create.
-CONN_SNOWFLAKE = "a9d45cfe-ff65-4515-8193-a7072602a1ee"
+# DEMO_ACTUARY on papercrane -- confirmed via GET /v2/connections/{id}/test
+# (read/write SUCCESS) this session, 2026-09-03. Thematically apt for an
+# insurance build; papercranestaging's CONN_SNOWFLAKE does not exist in this
+# org. `verify` does NOT resolve SQL, so a bad connection only surfaces on
+# create.
+CONN_SNOWFLAKE = "8b007632-070b-4442-ac69-6abd1a690bd3"
 
 
 class SigmaError(RuntimeError):
@@ -44,23 +51,9 @@ class SigmaError(RuntimeError):
         super().__init__("HTTP %s on %s\n%s" % (status, url, body))
 
 
-def _read_env():
-    if not ENV_FILE.exists():
-        raise SigmaError(0, "missing %s" % ENV_FILE, str(ENV_FILE))
-    env = {}
-    for line in ENV_FILE.read_text().splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        k, v = line.split("=", 1)
-        env[k.strip()] = v.strip().strip('"').strip("'")
-    return env
-
-
 def _fetch_token():
-    env = _read_env()
-    cid = env["SIGMA_STAGING_CLIENT_ID"]
-    csec = env["SIGMA_STAGING_CLIENT_SECRET"]
+    cid = os.environ["SIGMA_CLIENT_ID"]
+    csec = os.environ["SIGMA_CLIENT_SECRET"]
     cred = base64.b64encode(("%s:%s" % (cid, csec)).encode()).decode()
     req = urllib.request.Request(
         BASE + "/v2/auth/token",
