@@ -78,6 +78,19 @@ Fixed column contracts — **do not rename these**:
   Don't mistake "I nudged the margin slider and it looked better" for a fix;
   if columns are overlapping or overflowing, the bug is in the element
   `x`/`width` math in `build_statement.py`, not in this UI setting.
+- **A bare `[Element/Column]` reference in a `kpi-chart` value/comparison
+  formula silently renders `—` (null) when the element also carries a
+  `filters` array narrowing to one row — even though the row genuinely has a
+  value.** No error at create/update time; it just renders blank. Verified
+  fix: wrap the formula in an explicit aggregate, e.g. `Max([Table/Col])`
+  instead of `[Table/Col]` — `Count`/`Sum`/`Avg` all count as "explicit" too.
+  A formula that's already an *expression* combining two columns (e.g. `[A] /
+  [B]`) is unaffected and renders fine unwrapped; it's specifically the
+  single-bare-column case that needs the wrapper. Discovered building a
+  per-event "spotlight" KPI row (6 cards, each filtered to one event out of a
+  14-row scorecard table) — every card was blank until each formula got a
+  `Max(...)` around it, at which point all six (including the ones with a
+  `comparisonColumn`) rendered correctly on the next export.
 
 ---
 
