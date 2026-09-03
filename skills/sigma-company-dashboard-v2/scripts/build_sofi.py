@@ -571,9 +571,16 @@ for _o, _sev, _cap in ALERTS:
 # --- the Cold Provisions overview pair: a map you scan for the outlier, and a
 # ranked list you act on. The bar chart it replaces showed size but not
 # direction, and nothing was clickable.
-add({"id": "map-geo", "kind": "region-map",
-     # element name hidden: it printed on top of the colour legend
-     "name": {"visibility": "hidden"},
+add({"id": "map-geo",
+     # papercrane production's public API (2.0.0+20260902, confirmed against
+     # its live OpenAPI spec) rejects "region-map" -- ranked bar chart in its
+     # place, same source/columns/on-select wiring, so StateFilter
+     # cross-filtering is unaffected. (This build also surfaced several
+     # unrelated field-naming drifts from this skill's papercranestaging
+     # baseline -- effect "table" -> "tableElementId", condition/value
+     # "column" -> "columnId", clear-control "control" -> "controlId" --
+     # fixed at each call site, not just here.)
+     "kind": "bar-chart",
      "source": {"elementId": "tbl-lb", "kind": "table"},
      "columns": [
          {"id": "gm-st", "formula": "[%s/State]" % LB, "name": "State"},
@@ -581,7 +588,9 @@ add({"id": "map-geo", "kind": "region-map",
           "format": MONEY_M},
          {"id": "gm-perf", "formula": "Avg([%s/Performance Index])" % LB,
           "name": "Performance vs plan", "format": PCT1}],
-     "region": {"id": "gm-st", "regionType": "us-state"},
+     "xAxis": {"columnId": "gm-st",
+               "sort": {"by": "gm-perf", "direction": "descending"}},
+     "yAxis": {"columnIds": ["gm-perf"]},
      # shaded by performance against plan, not raw volume: a big state is not
      # news, a big state that is UNDERPERFORMING is
      # continuous scale centred on 1.0 = exactly on plan, so under-plan states
@@ -589,13 +598,14 @@ add({"id": "map-geo", "kind": "region-map",
      "color": {"by": "scale", "column": "gm-perf",
                "scheme": [B.BAD, "#F3F6FA", B.SOFI_MINT],
                "domain": {"min": 0.85, "mid": 1.0, "max": 1.15}},
+     "name": title("Performance vs plan by state"),
      "legend": {"visibility": "shown"},
      "actions": [{"id": "a-map-sel",
                   "trigger": {"on": "on-select",
-                              "condition": {"type": "column", "column": "gm-st",
+                              "condition": {"type": "column", "columnId": "gm-st",
                                             "condition": "IsNotNull"}},
                   "effects": [{"effect": "set-control-value", "control": "StateFilter",
-                               "value": {"type": "column", "column": "gm-st"}}]}],
+                               "value": {"type": "column", "columnId": "gm-st"}}]}],
      "style": panel()})
 
 add({"kind": "control", "id": "ctrl-state", "controlId": "StateFilter",
@@ -1043,9 +1053,9 @@ add({"id": "btn-reset-scen", "kind": "button", "text": "Reset scenarios",
      "appearance": "text",
      "actions": [{"id": "a-reset-scen", "trigger": "on-click",
                   "effects": [
-                      {"effect": "delete-rows", "table": "scen2",
+                      {"effect": "delete-rows", "tableElementId": "scen2",
                        "whichRows": {"type": "formula", "formula": "True"}},
-                      {"effect": "delete-rows", "table": "subs",
+                      {"effect": "delete-rows", "tableElementId": "subs",
                        "whichRows": {"type": "formula", "formula": "True"}},
                       {"effect": "set-control-value", "control": "scenarioSelect",
                        "value": {"type": "constant",
@@ -1058,7 +1068,7 @@ for bid, label, status, appearance in [
          "actions": [{"id": "a-" + bid, "trigger": "on-click",
                       "successToast": {"showMessage": "shown",
                                        "title": "Scenario %s" % status.lower()},
-                      "effects": [{"effect": "insert-rows", "table": "subs",
+                      "effects": [{"effect": "insert-rows", "tableElementId": "subs",
                                    "values": {
                                        "su-scen": {"type": "control",
                                                    "control": "scenarioSelect"},
@@ -1156,7 +1166,7 @@ add({"id": "btn-save-cohort", "kind": "button", "text": "Save cohort",
      "actions": [{"id": "a-save-cohort", "trigger": "on-click",
                   "successToast": {"showMessage": "shown", "title": "Cohort saved"},
                   "effects": [
-                      {"effect": "insert-rows", "table": "it-cohorts",
+                      {"effect": "insert-rows", "tableElementId": "it-cohorts",
                        "values": {
                            "sc-name": {"type": "control", "control": "CohortName"},
                            "sc-members": {"type": "formula",
@@ -1167,14 +1177,14 @@ add({"id": "btn-save-cohort", "kind": "button", "text": "Save cohort",
                                        "formula": "Avg([%s/Attrition Propensity])" % MP},
                            "sc-owner": {"type": "formula", "formula": "CurrentUserEmail()"}}},
                       {"effect": "clear-control",
-                       "scope": {"type": "control", "control": "CohortName"}}]}]})
+                       "scope": {"type": "control", "controlId": "CohortName"}}]}]})
 
 # delete-rows is only legal against a standalone (non-linked) input table
 add({"id": "btn-clear-cohorts", "kind": "button", "text": "Clear saved cohorts",
      "appearance": "text",
      "actions": [{"id": "a-clear-cohorts", "trigger": "on-click",
                   "successToast": {"showMessage": "shown", "title": "Saved cohorts cleared"},
-                  "effects": [{"effect": "delete-rows", "table": "it-cohorts",
+                  "effects": [{"effect": "delete-rows", "tableElementId": "it-cohorts",
                                "whichRows": {"type": "formula", "formula": "True"}}]}]})
 
 add({"id": "c-secf", "kind": "container", "spacing": "small",
@@ -1245,7 +1255,7 @@ add({"id": "btn-modal-create", "kind": "button", "text": "Create scenario",
                   "successToast": {"showMessage": "shown", "title": "Scenario created"},
                   # create the scenario row, make it active, clear the field
                   "effects": [
-                      {"effect": "insert-rows", "table": "scen2",
+                      {"effect": "insert-rows", "tableElementId": "scen2",
                        "values": {
                            "sc-name": {"type": "control", "control": "NewScenarioName"},
                            "sc-status": {"type": "constant",
@@ -1253,7 +1263,7 @@ add({"id": "btn-modal-create", "kind": "button", "text": "Create scenario",
                       {"effect": "set-control-value", "control": "scenarioSelect",
                        "value": {"type": "control", "control": "NewScenarioName"}},
                       {"effect": "clear-control",
-                       "scope": {"type": "control", "control": "NewScenarioName"}},
+                       "scope": {"type": "control", "controlId": "NewScenarioName"}},
                       {"effect": "close-overlay"}]}]})
 add({"id": "btn-modal-cancel", "kind": "button", "text": "Cancel", "appearance": "text",
      "actions": [{"id": "a-modal-cancel", "trigger": "on-click",
@@ -1280,11 +1290,11 @@ add({"id": "dw-tbl", "kind": "table", "name": "Product Detail",
                     "sort": [{"columnId": "dw-rev", "direction": "descending"}]}],
      "actions": [{"id": "a-dw-select",
                   "trigger": {"on": "on-select",
-                              "condition": {"type": "column", "column": "dw-prod",
+                              "condition": {"type": "column", "columnId": "dw-prod",
                                             "condition": "IsNotNull"}},
                   "successToast": {"showMessage": "shown", "title": "Filtered to product"},
                   "effects": [{"effect": "set-control-value", "control": "ProductFilter",
-                               "value": {"type": "column", "column": "dw-prod"}},
+                               "value": {"type": "column", "columnId": "dw-prod"}},
                               {"effect": "close-overlay"}]}],
      "style": panel()})
 add({"id": "dw-note", "kind": "text",
@@ -1346,13 +1356,13 @@ agents.append({
                               "inputName": CO.lab(CFG, "shock_label")}}]},
         {"toolId": "t-growth", "kind": "action", "name": "Set balance growth",
          "description": "Write a balance-growth percentage into every assumption row.",
-         "steps": [{"kind": "effect", "effect": "update-rows", "table": "assum",
+         "steps": [{"kind": "effect", "effect": "update-rows", "tableElementId": "assum",
                     "whichRows": {"type": "formula", "formula": "True"},
                     "values": {"ia-growth": {"type": "agent-input",
                                              "inputName": "Balance growth percentage to apply"}}}]},
         {"toolId": "t-newscen", "kind": "action", "name": "Create a scenario",
          "description": "Add a named scenario and make it the active one.",
-         "steps": [{"kind": "effect", "effect": "insert-rows", "table": "scen2",
+         "steps": [{"kind": "effect", "effect": "insert-rows", "tableElementId": "scen2",
                     "values": {"sc-name": {"type": "agent-input",
                                            "inputName": "Name for the new scenario"},
                                "sc-status": {"type": "constant",
@@ -1381,7 +1391,7 @@ agents.append({
     ] + [
         {"toolId": "t-c-save", "kind": "action", "name": "Save the cohort",
          "description": "Persist the current cohort to the Saved Cohorts table.",
-         "steps": [{"kind": "effect", "effect": "insert-rows", "table": "it-cohorts",
+         "steps": [{"kind": "effect", "effect": "insert-rows", "tableElementId": "it-cohorts",
                     "values": {
                         "sc-name": {"type": "agent-input", "inputName": "Name for this cohort"},
                         "sc-members": {"type": "formula",
@@ -1656,7 +1666,9 @@ LAYOUT = LAYOUT.replace(
 SETTINGS = {"theme": {"overrides": {
     "colors": {"text": B.TEXT_DARK, "highlight": B.SOFI_BRIGHT, "success": B.GOOD,
                "warning": B.WARN, "danger": B.BAD, "darkMode": "hidden"},
-    "colorOverrides": {"backgroundCanvas": B.CANVAS, "canvasBackground": B.CANVAS},
+    # array of {name, color}, not a dict -- confirmed against the live OpenAPI
+    # spec, papercrane production, 2026-09-03 ("Invalid ColorOverrides: object")
+    "colorOverrides": [{"name": "backgroundCanvas", "color": B.CANVAS}],
     "categoricalScheme": B.CATEGORICAL,
             "backgroundColor": B.CANVAS,
             "elementBackgroundColor": B.CARD,
