@@ -33,12 +33,16 @@ BASE = os.environ.get("SIGMA_BASE_URL", "https://api.sigmacomputing.com")
 # shared Claude-builder scratch folder.
 FOLDER_CLAUDE_BUILDER = "004d8497-18ea-4cf6-a8c5-deca403c22d9"
 
-# DEMO_ACTUARY on papercrane -- confirmed via GET /v2/connections/{id}/test
-# (read/write SUCCESS) this session, 2026-09-03. Thematically apt for an
-# insurance build; papercranestaging's CONN_SNOWFLAKE does not exist in this
-# org. `verify` does NOT resolve SQL, so a bad connection only surfaces on
-# create.
-CONN_SNOWFLAKE = "8b007632-070b-4442-ac69-6abd1a690bd3"
+# "Sigma Sample Database" on papercrane. Originally used DEMO_ACTUARY
+# (thematically apt, and /v2/connections/{id}/test reported read/write
+# SUCCESS) but that connection's Snowflake account has no SNOWFLAKE.CORTEX
+# access -- the AI-insight band's CallText("SNOWFLAKE.CORTEX.COMPLETE", ...)
+# fails at query time (not at create; verify/create don't execute SQL, only
+# resolve it). Confirmed by probing four Snowflake connections directly with
+# a throwaway one-element workbook: DEMO_ACTUARY and DEMO_STAGING both fail
+# Cortex calls, "Sigma Sample Database" and CXA_CORE both succeed (including
+# with the exact model name "claude-4-sonnet" this build uses), 2026-09-03.
+CONN_SNOWFLAKE = "bee6615c-7d11-435c-8819-e32207b27fe4"
 
 
 class SigmaError(RuntimeError):

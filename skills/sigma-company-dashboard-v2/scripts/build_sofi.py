@@ -338,7 +338,10 @@ header(1, CFG["title"],
             "appearance": "filled",
             "actions": [{"id": "a-stmt", "trigger": "on-click",
                          "effects": [{"effect": "open-document",
-                                      "document": REPORT_ID_FILE.read_text().strip(),
+                                      # field is "documentId", not "document"
+                                      # -- confirmed against the live OpenAPI
+                                      # spec, papercrane production
+                                      "documentId": REPORT_ID_FILE.read_text().strip(),
                                       "documentType": "report",
                                       "openTarget": "_blank"}]}]}]
            if CO.has_statement(CFG) and REPORT_ID_FILE.exists()
