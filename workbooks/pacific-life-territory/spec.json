@@ -1,0 +1,2439 @@
+{
+  "name": "Pacific Life \u2014 Territory Planning",
+  "folderId": "004d8497-18ea-4cf6-a8c5-deca403c22d9",
+  "document": {
+    "schemaVersion": 1,
+    "kind": "workbook",
+    "elements": [
+      {
+        "id": "reps",
+        "kind": "table",
+        "name": "Reps",
+        "visibleAsSource": true,
+        "source": {
+          "kind": "sql",
+          "connectionId": "8b007632-070b-4442-ac69-6abd1a690bd3",
+          "statement": "SELECT column1 AS REP_ID, column2 AS REP_NAME, column3 AS HOME_REGION, column4 AS TARGET_CAPACITY FROM (VALUES (1,'Sarah Chen','West',2000),(2,'Marcus Alvarez','West',2000),(3,'Grace Kim','West',2000),(4,'Devon Whitfield','Southwest',2000),(5,'Priya Natarajan','Southwest',2000),(6,'Liam O''Connor','Midwest',2000),(7,'Angela Brooks','Midwest',2000),(8,'Tyrell Jackson','Midwest',2000),(9,'Nicole Ferraro','Southeast',2000),(10,'Ben Kessler','Southeast',2000),(11,'Monica Reyes','Southeast',2000),(12,'Adam Silverstein','Northeast',2000),(13,'Diane Okafor','Northeast',2000))"
+        },
+        "columns": [
+          {
+            "id": "r-id",
+            "name": "Rep Id",
+            "formula": "[Custom SQL/REP_ID]"
+          },
+          {
+            "id": "r-name",
+            "name": "Rep Name",
+            "formula": "[Custom SQL/REP_NAME]"
+          },
+          {
+            "id": "r-region",
+            "name": "Home Region",
+            "formula": "[Custom SQL/HOME_REGION]"
+          },
+          {
+            "id": "r-capacity",
+            "name": "Target Capacity",
+            "formula": "[Custom SQL/TARGET_CAPACITY]",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "order": [
+          "r-id",
+          "r-name",
+          "r-region",
+          "r-capacity"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "accounts",
+        "kind": "table",
+        "name": "Accounts",
+        "visibleAsSource": true,
+        "source": {
+          "kind": "sql",
+          "connectionId": "8b007632-070b-4442-ac69-6abd1a690bd3",
+          "statement": "WITH g AS (SELECT SEQ4() AS I FROM TABLE(GENERATOR(ROWCOUNT=>26000))),\nbase AS (\n  SELECT\n    I,\n    MOD(I*7, 25) AS STATE_IDX,\n    MOD(I*13, 9) AS INDUSTRY_IDX,\n    MOD(I, 100) AS SEG_ROLL\n  FROM g\n)\nSELECT\n  'ACCT-'||LPAD(I::string,6,'0') AS ACCOUNT_ID,\n  GET(ARRAY_CONSTRUCT('James','Mary','Robert','Patricia','John','Linda','Michael','Barbara','William','Elizabeth','David','Susan','Richard','Jessica','Joseph','Sarah','Thomas','Karen','Charles','Nancy','Daniel','Lisa','Matthew','Betty','Anthony'), MOD(I*3,25))::string || ' ' || GET(ARRAY_CONSTRUCT('Smith','Johnson','Williams','Brown','Jones','Garcia','Miller','Davis','Rodriguez','Martinez','Hernandez','Lopez','Gonzalez','Wilson','Anderson','Thomas','Taylor','Moore','Jackson','Martin','Lee','Perez','Thompson','White','Harris'), MOD(I*17,25))::string AS ACCOUNT_NAME,\n  GET(ARRAY_CONSTRUCT('NY','MA','NJ','PA','CT','FL','GA','NC','VA','TN','IL','OH','MI','WI','MN','TX','AZ','OK','NM','CO','CA','WA','OR','NV','UT'), STATE_IDX)::string AS STATE,\n  GET(ARRAY_CONSTRUCT('Northeast','Southeast','Midwest','Southwest','West'), FLOOR(STATE_IDX/5))::string AS REGION,\n  GET(ARRAY_CONSTRUCT('Healthcare','Technology','Manufacturing','Retail Trade','Financial Services','Education','Construction','Government','Professional Services'), INDUSTRY_IDX)::string AS INDUSTRY,\n  CASE WHEN SEG_ROLL < 15 THEN 'High Net Worth' WHEN SEG_ROLL < 55 THEN 'Mass Affluent' ELSE 'Retail' END AS SEGMENT,\n  CASE WHEN SEG_ROLL < 15 THEN 50000 + MOD(I*8191, 200000)\n       WHEN SEG_ROLL < 55 THEN 8000 + MOD(I*4423, 32000)\n       ELSE 1500 + MOD(I*97, 6500) END AS ACCOUNT_VALUE,\n  FLOOR(STATE_IDX/5)*100000 + I AS GEO_SORT_KEY,\n  INDUSTRY_IDX*100000 + I AS INDUSTRY_SORT_KEY,\n  (CASE WHEN SEG_ROLL < 15 THEN 0 WHEN SEG_ROLL < 55 THEN 1 ELSE 2 END)*100000 + I AS SEGMENT_SORT_KEY\nFROM base"
+        },
+        "columns": [
+          {
+            "id": "a-id",
+            "name": "Account Id",
+            "formula": "[Custom SQL/ACCOUNT_ID]"
+          },
+          {
+            "id": "a-name",
+            "name": "Account Name",
+            "formula": "[Custom SQL/ACCOUNT_NAME]"
+          },
+          {
+            "id": "a-state",
+            "name": "State",
+            "formula": "[Custom SQL/STATE]"
+          },
+          {
+            "id": "a-region",
+            "name": "Region",
+            "formula": "[Custom SQL/REGION]"
+          },
+          {
+            "id": "a-industry",
+            "name": "Industry",
+            "formula": "[Custom SQL/INDUSTRY]"
+          },
+          {
+            "id": "a-segment",
+            "name": "Segment",
+            "formula": "[Custom SQL/SEGMENT]"
+          },
+          {
+            "id": "a-value",
+            "name": "Account Value",
+            "formula": "[Custom SQL/ACCOUNT_VALUE]",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "a-geokey",
+            "name": "Geo Sort Key",
+            "formula": "[Custom SQL/GEO_SORT_KEY]"
+          },
+          {
+            "id": "a-indkey",
+            "name": "Industry Sort Key",
+            "formula": "[Custom SQL/INDUSTRY_SORT_KEY]"
+          },
+          {
+            "id": "a-segkey",
+            "name": "Segment Sort Key",
+            "formula": "[Custom SQL/SEGMENT_SORT_KEY]"
+          },
+          {
+            "id": "a-ntilegeo",
+            "name": "Ntile Geo",
+            "formula": "Ntile(13,[Geo Sort Key])"
+          },
+          {
+            "id": "a-ntileind",
+            "name": "Ntile Industry",
+            "formula": "Ntile(13,[Industry Sort Key])"
+          },
+          {
+            "id": "a-ntileseg",
+            "name": "Ntile Segment",
+            "formula": "Ntile(13,[Segment Sort Key])"
+          }
+        ],
+        "order": [
+          "a-id",
+          "a-name",
+          "a-state",
+          "a-region",
+          "a-industry",
+          "a-segment",
+          "a-value",
+          "a-geokey",
+          "a-indkey",
+          "a-segkey",
+          "a-ntilegeo",
+          "a-ntileind",
+          "a-ntileseg"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "carves",
+        "kind": "input-table",
+        "name": "Carves",
+        "source": {
+          "kind": "empty",
+          "connectionId": "8b007632-070b-4442-ac69-6abd1a690bd3"
+        },
+        "inputMode": "explore",
+        "columns": [
+          {
+            "id": "c-name",
+            "type": "text",
+            "name": "Name"
+          },
+          {
+            "id": "c-dim",
+            "type": "text",
+            "name": "Balance Dimension",
+            "values": [
+              "Geography",
+              "Industry",
+              "Segment"
+            ],
+            "pills": "color-by-option"
+          },
+          {
+            "id": "c-desc",
+            "type": "text",
+            "name": "Description"
+          },
+          {
+            "id": "CREATED_AT"
+          },
+          {
+            "id": "CREATED_BY"
+          }
+        ],
+        "order": [
+          "c-name",
+          "c-dim",
+          "c-desc",
+          "CREATED_AT",
+          "CREATED_BY"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "overrides",
+        "kind": "input-table",
+        "name": "Overrides",
+        "source": {
+          "kind": "empty",
+          "connectionId": "8b007632-070b-4442-ac69-6abd1a690bd3"
+        },
+        "inputMode": "explore",
+        "columns": [
+          {
+            "id": "o-carve",
+            "type": "text",
+            "name": "Carve Name"
+          },
+          {
+            "id": "o-account",
+            "type": "text",
+            "name": "Account Id"
+          },
+          {
+            "id": "o-newrep",
+            "type": "number",
+            "name": "New Rep Id"
+          },
+          {
+            "id": "CREATED_AT"
+          },
+          {
+            "id": "CREATED_BY"
+          }
+        ],
+        "order": [
+          "o-carve",
+          "o-account",
+          "o-newrep",
+          "CREATED_AT",
+          "CREATED_BY"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "latest-override",
+        "kind": "table",
+        "name": "Latest Override",
+        "visibleAsSource": false,
+        "source": {
+          "kind": "table",
+          "elementId": "overrides"
+        },
+        "columns": [
+          {
+            "id": "lo-key",
+            "name": "Key",
+            "formula": "[Overrides/Carve Name] & \"|\" & [Overrides/Account Id]"
+          },
+          {
+            "id": "lo-created",
+            "name": "Created At",
+            "formula": "[Overrides/Created At]"
+          },
+          {
+            "id": "lo-newrep-raw",
+            "name": "New Rep Id Raw",
+            "formula": "[Overrides/New Rep Id]"
+          },
+          {
+            "id": "lo-newrep",
+            "name": "New Rep Id",
+            "formula": "MaxIf([New Rep Id Raw],[Created At]=Max([Created At]))"
+          }
+        ],
+        "order": [
+          "lo-key",
+          "lo-created",
+          "lo-newrep-raw",
+          "lo-newrep"
+        ],
+        "groupings": [
+          {
+            "id": "g-lo",
+            "groupBy": [
+              "lo-key"
+            ],
+            "calculations": [
+              "lo-newrep"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tv-overview",
+        "kind": "table",
+        "name": "Territory \u2014 Overview",
+        "visibleAsSource": false,
+        "source": {
+          "kind": "table",
+          "elementId": "accounts"
+        },
+        "columns": [
+          {
+            "id": "ae-id",
+            "name": "Account Id",
+            "formula": "[Accounts/Account Id]"
+          },
+          {
+            "id": "ae-name",
+            "name": "Account Name",
+            "formula": "[Accounts/Account Name]"
+          },
+          {
+            "id": "ae-state",
+            "name": "State",
+            "formula": "[Accounts/State]"
+          },
+          {
+            "id": "ae-region",
+            "name": "Region",
+            "formula": "[Accounts/Region]"
+          },
+          {
+            "id": "ae-industry",
+            "name": "Industry",
+            "formula": "[Accounts/Industry]"
+          },
+          {
+            "id": "ae-segment",
+            "name": "Segment",
+            "formula": "[Accounts/Segment]"
+          },
+          {
+            "id": "ae-value",
+            "name": "Account Value",
+            "formula": "[Accounts/Account Value]",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "ae-ntilegeo",
+            "name": "Ntile Geo",
+            "formula": "[Accounts/Ntile Geo]"
+          },
+          {
+            "id": "ae-ntileind",
+            "name": "Ntile Industry",
+            "formula": "[Accounts/Ntile Industry]"
+          },
+          {
+            "id": "ae-ntileseg",
+            "name": "Ntile Segment",
+            "formula": "[Accounts/Ntile Segment]"
+          },
+          {
+            "id": "ae-dim",
+            "name": "Carve Dimension",
+            "formula": "Lookup([Carves/Balance Dimension],[CarvePick],[Carves/Name])"
+          },
+          {
+            "id": "ae-computedrep",
+            "name": "Computed Rep Id",
+            "formula": "Switch([Carve Dimension],\"Geography\",[Ntile Geo],\"Industry\",[Ntile Industry],\"Segment\",[Ntile Segment])"
+          },
+          {
+            "id": "ae-effrep",
+            "name": "Effective Rep Id",
+            "formula": "Coalesce(Lookup([Latest Override/New Rep Id],[CarvePick] & \"|\" & [Account Id],[Latest Override/Key]),[Computed Rep Id])"
+          },
+          {
+            "id": "ae-repname",
+            "name": "Rep Name",
+            "formula": "Lookup([Reps/Rep Name],[Effective Rep Id],[Reps/Rep Id])"
+          },
+          {
+            "id": "ae-repcount",
+            "name": "Rep Account Count",
+            "formula": "Rollup(CountDistinct([Account Id]),[Rep Name],[Rep Name])"
+          }
+        ],
+        "order": [
+          "ae-id",
+          "ae-name",
+          "ae-state",
+          "ae-region",
+          "ae-industry",
+          "ae-segment",
+          "ae-value",
+          "ae-ntilegeo",
+          "ae-ntileind",
+          "ae-ntileseg",
+          "ae-dim",
+          "ae-computedrep",
+          "ae-effrep",
+          "ae-repname",
+          "ae-repcount"
+        ]
+      },
+      {
+        "id": "tv-detail",
+        "kind": "table",
+        "name": "Territory \u2014 Detail",
+        "visibleAsSource": false,
+        "source": {
+          "kind": "table",
+          "elementId": "accounts"
+        },
+        "columns": [
+          {
+            "id": "ae-id",
+            "name": "Account Id",
+            "formula": "[Accounts/Account Id]"
+          },
+          {
+            "id": "ae-name",
+            "name": "Account Name",
+            "formula": "[Accounts/Account Name]"
+          },
+          {
+            "id": "ae-state",
+            "name": "State",
+            "formula": "[Accounts/State]"
+          },
+          {
+            "id": "ae-region",
+            "name": "Region",
+            "formula": "[Accounts/Region]"
+          },
+          {
+            "id": "ae-industry",
+            "name": "Industry",
+            "formula": "[Accounts/Industry]"
+          },
+          {
+            "id": "ae-segment",
+            "name": "Segment",
+            "formula": "[Accounts/Segment]"
+          },
+          {
+            "id": "ae-value",
+            "name": "Account Value",
+            "formula": "[Accounts/Account Value]",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "ae-ntilegeo",
+            "name": "Ntile Geo",
+            "formula": "[Accounts/Ntile Geo]"
+          },
+          {
+            "id": "ae-ntileind",
+            "name": "Ntile Industry",
+            "formula": "[Accounts/Ntile Industry]"
+          },
+          {
+            "id": "ae-ntileseg",
+            "name": "Ntile Segment",
+            "formula": "[Accounts/Ntile Segment]"
+          },
+          {
+            "id": "ae-dim",
+            "name": "Carve Dimension",
+            "formula": "Lookup([Carves/Balance Dimension],[DetailCarvePick],[Carves/Name])"
+          },
+          {
+            "id": "ae-computedrep",
+            "name": "Computed Rep Id",
+            "formula": "Switch([Carve Dimension],\"Geography\",[Ntile Geo],\"Industry\",[Ntile Industry],\"Segment\",[Ntile Segment])"
+          },
+          {
+            "id": "ae-effrep",
+            "name": "Effective Rep Id",
+            "formula": "Coalesce(Lookup([Latest Override/New Rep Id],[DetailCarvePick] & \"|\" & [Account Id],[Latest Override/Key]),[Computed Rep Id])"
+          },
+          {
+            "id": "ae-repname",
+            "name": "Rep Name",
+            "formula": "Lookup([Reps/Rep Name],[Effective Rep Id],[Reps/Rep Id])"
+          },
+          {
+            "id": "ae-repcount",
+            "name": "Rep Account Count",
+            "formula": "Rollup(CountDistinct([Account Id]),[Rep Name],[Rep Name])"
+          }
+        ],
+        "order": [
+          "ae-id",
+          "ae-name",
+          "ae-state",
+          "ae-region",
+          "ae-industry",
+          "ae-segment",
+          "ae-value",
+          "ae-ntilegeo",
+          "ae-ntileind",
+          "ae-ntileseg",
+          "ae-dim",
+          "ae-computedrep",
+          "ae-effrep",
+          "ae-repname",
+          "ae-repcount"
+        ]
+      },
+      {
+        "id": "tv-a",
+        "kind": "table",
+        "name": "Territory \u2014 Compare A",
+        "visibleAsSource": false,
+        "source": {
+          "kind": "table",
+          "elementId": "accounts"
+        },
+        "columns": [
+          {
+            "id": "ae-id",
+            "name": "Account Id",
+            "formula": "[Accounts/Account Id]"
+          },
+          {
+            "id": "ae-name",
+            "name": "Account Name",
+            "formula": "[Accounts/Account Name]"
+          },
+          {
+            "id": "ae-state",
+            "name": "State",
+            "formula": "[Accounts/State]"
+          },
+          {
+            "id": "ae-region",
+            "name": "Region",
+            "formula": "[Accounts/Region]"
+          },
+          {
+            "id": "ae-industry",
+            "name": "Industry",
+            "formula": "[Accounts/Industry]"
+          },
+          {
+            "id": "ae-segment",
+            "name": "Segment",
+            "formula": "[Accounts/Segment]"
+          },
+          {
+            "id": "ae-value",
+            "name": "Account Value",
+            "formula": "[Accounts/Account Value]",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "ae-ntilegeo",
+            "name": "Ntile Geo",
+            "formula": "[Accounts/Ntile Geo]"
+          },
+          {
+            "id": "ae-ntileind",
+            "name": "Ntile Industry",
+            "formula": "[Accounts/Ntile Industry]"
+          },
+          {
+            "id": "ae-ntileseg",
+            "name": "Ntile Segment",
+            "formula": "[Accounts/Ntile Segment]"
+          },
+          {
+            "id": "ae-dim",
+            "name": "Carve Dimension",
+            "formula": "Lookup([Carves/Balance Dimension],[CompareCarveA],[Carves/Name])"
+          },
+          {
+            "id": "ae-computedrep",
+            "name": "Computed Rep Id",
+            "formula": "Switch([Carve Dimension],\"Geography\",[Ntile Geo],\"Industry\",[Ntile Industry],\"Segment\",[Ntile Segment])"
+          },
+          {
+            "id": "ae-effrep",
+            "name": "Effective Rep Id",
+            "formula": "Coalesce(Lookup([Latest Override/New Rep Id],[CompareCarveA] & \"|\" & [Account Id],[Latest Override/Key]),[Computed Rep Id])"
+          },
+          {
+            "id": "ae-repname",
+            "name": "Rep Name",
+            "formula": "Lookup([Reps/Rep Name],[Effective Rep Id],[Reps/Rep Id])"
+          },
+          {
+            "id": "ae-repcount",
+            "name": "Rep Account Count",
+            "formula": "Rollup(CountDistinct([Account Id]),[Rep Name],[Rep Name])"
+          }
+        ],
+        "order": [
+          "ae-id",
+          "ae-name",
+          "ae-state",
+          "ae-region",
+          "ae-industry",
+          "ae-segment",
+          "ae-value",
+          "ae-ntilegeo",
+          "ae-ntileind",
+          "ae-ntileseg",
+          "ae-dim",
+          "ae-computedrep",
+          "ae-effrep",
+          "ae-repname",
+          "ae-repcount"
+        ]
+      },
+      {
+        "id": "tv-b",
+        "kind": "table",
+        "name": "Territory \u2014 Compare B",
+        "visibleAsSource": false,
+        "source": {
+          "kind": "table",
+          "elementId": "accounts"
+        },
+        "columns": [
+          {
+            "id": "ae-id",
+            "name": "Account Id",
+            "formula": "[Accounts/Account Id]"
+          },
+          {
+            "id": "ae-name",
+            "name": "Account Name",
+            "formula": "[Accounts/Account Name]"
+          },
+          {
+            "id": "ae-state",
+            "name": "State",
+            "formula": "[Accounts/State]"
+          },
+          {
+            "id": "ae-region",
+            "name": "Region",
+            "formula": "[Accounts/Region]"
+          },
+          {
+            "id": "ae-industry",
+            "name": "Industry",
+            "formula": "[Accounts/Industry]"
+          },
+          {
+            "id": "ae-segment",
+            "name": "Segment",
+            "formula": "[Accounts/Segment]"
+          },
+          {
+            "id": "ae-value",
+            "name": "Account Value",
+            "formula": "[Accounts/Account Value]",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "ae-ntilegeo",
+            "name": "Ntile Geo",
+            "formula": "[Accounts/Ntile Geo]"
+          },
+          {
+            "id": "ae-ntileind",
+            "name": "Ntile Industry",
+            "formula": "[Accounts/Ntile Industry]"
+          },
+          {
+            "id": "ae-ntileseg",
+            "name": "Ntile Segment",
+            "formula": "[Accounts/Ntile Segment]"
+          },
+          {
+            "id": "ae-dim",
+            "name": "Carve Dimension",
+            "formula": "Lookup([Carves/Balance Dimension],[CompareCarveB],[Carves/Name])"
+          },
+          {
+            "id": "ae-computedrep",
+            "name": "Computed Rep Id",
+            "formula": "Switch([Carve Dimension],\"Geography\",[Ntile Geo],\"Industry\",[Ntile Industry],\"Segment\",[Ntile Segment])"
+          },
+          {
+            "id": "ae-effrep",
+            "name": "Effective Rep Id",
+            "formula": "Coalesce(Lookup([Latest Override/New Rep Id],[CompareCarveB] & \"|\" & [Account Id],[Latest Override/Key]),[Computed Rep Id])"
+          },
+          {
+            "id": "ae-repname",
+            "name": "Rep Name",
+            "formula": "Lookup([Reps/Rep Name],[Effective Rep Id],[Reps/Rep Id])"
+          },
+          {
+            "id": "ae-repcount",
+            "name": "Rep Account Count",
+            "formula": "Rollup(CountDistinct([Account Id]),[Rep Name],[Rep Name])"
+          }
+        ],
+        "order": [
+          "ae-id",
+          "ae-name",
+          "ae-state",
+          "ae-region",
+          "ae-industry",
+          "ae-segment",
+          "ae-value",
+          "ae-ntilegeo",
+          "ae-ntileind",
+          "ae-ntileseg",
+          "ae-dim",
+          "ae-computedrep",
+          "ae-effrep",
+          "ae-repname",
+          "ae-repcount"
+        ]
+      },
+      {
+        "id": "t-overview",
+        "kind": "text",
+        "body": "# Pacific Life Territory Planning \u2014 Overview",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#141414"
+        }
+      },
+      {
+        "id": "s-overview",
+        "kind": "text",
+        "body": "Pick a carve to see how it balances the ~26,000-account book across 13 wholesalers. Empty on first load until a carve is created on the Carve Builder page.",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#3A3A3A"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "CarvePick",
+        "id": "ctrl-carvepick",
+        "name": "Select Carve",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "single",
+        "values": [],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "carves"
+          },
+          "columnId": "c-name"
+        }
+      },
+      {
+        "id": "k-accts",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "accounts",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-acctsv",
+            "formula": "CountDistinct([Accounts/Account Id])",
+            "name": "TOTAL ACCOUNTS",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-acctsv",
+          "color": "#1B5FBF",
+          "fontSize": 28,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "TOTAL ACCOUNTS",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k-reps",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "reps",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-repsv",
+            "formula": "CountDistinct([Reps/Rep Id])",
+            "name": "TOTAL REPS",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-repsv",
+          "color": "#1B5FBF",
+          "fontSize": 28,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "TOTAL REPS",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k-avg",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-overview",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-avgv",
+            "formula": "CountDistinct([Territory \u2014 Overview/Account Id])/CountDistinct([Territory \u2014 Overview/Rep Name])",
+            "name": "AVG ACCOUNTS / REP",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-avgv",
+          "color": "#1B5FBF",
+          "fontSize": 28,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "AVG ACCOUNTS / REP",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k-carves",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "carves",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-carvesv",
+            "formula": "CountDistinct([Carves/Name])",
+            "name": "CARVES CREATED",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-carvesv",
+          "color": "#1B5FBF",
+          "fontSize": 28,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "CARVES CREATED",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k-most",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-overview",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-mostv",
+            "formula": "Max([Territory \u2014 Overview/Rep Account Count])",
+            "name": "MOST-LOADED REP (ACCOUNTS)",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-mostv",
+          "color": "#9A1B2F",
+          "fontSize": 26,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "MOST-LOADED REP (ACCOUNTS)",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "k-least",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-overview",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "k-leastv",
+            "formula": "Min([Territory \u2014 Overview/Rep Account Count])",
+            "name": "LEAST-LOADED REP (ACCOUNTS)",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "k-leastv",
+          "color": "#2E9B6B",
+          "fontSize": 26,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "LEAST-LOADED REP (ACCOUNTS)",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "region-bar",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "tv-overview",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "rb-rep",
+            "name": "Rep Name",
+            "formula": "[Territory \u2014 Overview/Rep Name]"
+          },
+          {
+            "id": "rb-region",
+            "name": "Region",
+            "formula": "[Territory \u2014 Overview/Region]"
+          },
+          {
+            "id": "rb-cnt",
+            "name": "Accounts",
+            "formula": "CountDistinct([Territory \u2014 Overview/Account Id])",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "rb-rep"
+        },
+        "yAxis": {
+          "columnIds": [
+            "rb-cnt"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "rb-region",
+          "scheme": [
+            "#1B5FBF",
+            "#5A6472",
+            "#2E9B6B",
+            "#C9A94B",
+            "#B0407A"
+          ]
+        },
+        "stacking": "stacked",
+        "name": {
+          "text": "Accounts per Rep \u2014 colored by Region (selected carve)",
+          "fontWeight": "bold",
+          "fontSize": 14,
+          "color": "#141414"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "industry-bar",
+        "kind": "bar-chart",
+        "source": {
+          "elementId": "tv-overview",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "ib-rep",
+            "name": "Rep Name",
+            "formula": "[Territory \u2014 Overview/Rep Name]"
+          },
+          {
+            "id": "ib-industry",
+            "name": "Industry",
+            "formula": "[Territory \u2014 Overview/Industry]"
+          },
+          {
+            "id": "ib-cnt",
+            "name": "Accounts",
+            "formula": "CountDistinct([Territory \u2014 Overview/Account Id])",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "xAxis": {
+          "columnId": "ib-rep"
+        },
+        "yAxis": {
+          "columnIds": [
+            "ib-cnt"
+          ]
+        },
+        "color": {
+          "by": "category",
+          "column": "ib-industry",
+          "scheme": [
+            "#1B5FBF",
+            "#5A6472",
+            "#2E9B6B",
+            "#C9A94B",
+            "#B0407A",
+            "#9A1B2F",
+            "#4B7BAF",
+            "#7A8471",
+            "#C97A3C"
+          ]
+        },
+        "stacking": "stacked",
+        "name": {
+          "text": "Accounts per Rep \u2014 colored by Industry (selected carve)",
+          "fontWeight": "bold",
+          "fontSize": 14,
+          "color": "#141414"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "segment-donut",
+        "kind": "donut-chart",
+        "source": {
+          "elementId": "tv-overview",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "sd-seg",
+            "name": "Segment",
+            "formula": "[Territory \u2014 Overview/Segment]"
+          },
+          {
+            "id": "sd-cnt",
+            "name": "Accounts",
+            "formula": "CountDistinct([Territory \u2014 Overview/Account Id])",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "color": {
+          "columnId": "sd-seg"
+        },
+        "value": {
+          "columnId": "sd-cnt"
+        },
+        "name": {
+          "text": "Segment Mix \u2014 whole book",
+          "fontWeight": "bold",
+          "fontSize": 14,
+          "color": "#141414"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "rs-ov",
+        "kind": "table",
+        "name": "Rep Summary \u2014 Overview",
+        "source": {
+          "kind": "table",
+          "elementId": "tv-overview"
+        },
+        "columns": [
+          {
+            "id": "rs-ov-rep",
+            "name": "Rep Name",
+            "formula": "[Territory \u2014 Overview/Rep Name]"
+          },
+          {
+            "id": "rs-ov-cnt",
+            "name": "Accounts",
+            "formula": "CountDistinct([Territory \u2014 Overview/Account Id])",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          },
+          {
+            "id": "rs-ov-val",
+            "name": "Total Value",
+            "formula": "Sum([Territory \u2014 Overview/Account Value])",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "order": [
+          "rs-ov-rep",
+          "rs-ov-cnt",
+          "rs-ov-val"
+        ],
+        "groupings": [
+          {
+            "id": "g-rs-ov",
+            "groupBy": [
+              "rs-ov-rep"
+            ],
+            "calculations": [
+              "rs-ov-cnt",
+              "rs-ov-val"
+            ],
+            "sort": [
+              {
+                "columnId": "rs-ov-cnt",
+                "direction": "descending"
+              }
+            ]
+          }
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "t-builder",
+        "kind": "text",
+        "body": "# Carve Builder",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#141414"
+        }
+      },
+      {
+        "id": "s-builder",
+        "kind": "text",
+        "body": "Name a new carve, pick a balance dimension, and Create \u2014 or ask the Territory Carving Assistant to do it for you in natural language.",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#3A3A3A"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "NewCarveName",
+        "id": "ctrl-new-name",
+        "name": "New Carve Name",
+        "controlType": "text",
+        "mode": "equals",
+        "case": "insensitive",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "kind": "control",
+        "controlId": "NewCarveDim",
+        "id": "ctrl-new-dim",
+        "name": "Balance Dimension",
+        "controlType": "segmented",
+        "value": "Geography",
+        "source": {
+          "kind": "manual",
+          "valueType": "text",
+          "values": [
+            "Geography",
+            "Industry",
+            "Segment"
+          ],
+          "labels": [
+            "Geography",
+            "Industry",
+            "Segment"
+          ]
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "NewCarveDesc",
+        "id": "ctrl-new-desc",
+        "name": "Description",
+        "controlType": "text-area",
+        "mode": "equals",
+        "case": "insensitive",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "id": "btn-create",
+        "kind": "button",
+        "text": "Create Carve",
+        "appearance": "filled",
+        "actions": [
+          {
+            "id": "a-create",
+            "trigger": "on-click",
+            "effects": [
+              {
+                "effect": "insert-rows",
+                "tableElementId": "carves",
+                "values": {
+                  "c-name": {
+                    "type": "control",
+                    "control": "NewCarveName"
+                  },
+                  "c-dim": {
+                    "type": "control",
+                    "control": "NewCarveDim"
+                  },
+                  "c-desc": {
+                    "type": "control",
+                    "control": "NewCarveDesc"
+                  }
+                }
+              },
+              {
+                "effect": "set-control-value",
+                "control": "CarvePick",
+                "value": {
+                  "type": "control",
+                  "control": "NewCarveName"
+                }
+              },
+              {
+                "effect": "clear-control",
+                "scope": {
+                  "type": "control",
+                  "controlId": "NewCarveName"
+                }
+              },
+              {
+                "effect": "clear-control",
+                "scope": {
+                  "type": "control",
+                  "controlId": "NewCarveDesc"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "c-chat",
+        "kind": "container",
+        "style": {
+          "backgroundColor": "#EEF3FC",
+          "borderColor": "#CFE0F5",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "chat-hd",
+        "kind": "text",
+        "body": "**Ask the Territory Carving Assistant**",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#141414"
+        }
+      },
+      {
+        "id": "chat1",
+        "kind": "chat",
+        "agentId": "ag-territory"
+      },
+      {
+        "id": "rs-bld",
+        "kind": "table",
+        "name": "Rep Summary \u2014 New Carve",
+        "source": {
+          "kind": "table",
+          "elementId": "tv-overview"
+        },
+        "columns": [
+          {
+            "id": "rs-bld-rep",
+            "name": "Rep Name",
+            "formula": "[Territory \u2014 Overview/Rep Name]"
+          },
+          {
+            "id": "rs-bld-cnt",
+            "name": "Accounts",
+            "formula": "CountDistinct([Territory \u2014 Overview/Account Id])",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          },
+          {
+            "id": "rs-bld-val",
+            "name": "Total Value",
+            "formula": "Sum([Territory \u2014 Overview/Account Value])",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "order": [
+          "rs-bld-rep",
+          "rs-bld-cnt",
+          "rs-bld-val"
+        ],
+        "groupings": [
+          {
+            "id": "g-rs-bld",
+            "groupBy": [
+              "rs-bld-rep"
+            ],
+            "calculations": [
+              "rs-bld-cnt",
+              "rs-bld-val"
+            ],
+            "sort": [
+              {
+                "columnId": "rs-bld-cnt",
+                "direction": "descending"
+              }
+            ]
+          }
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "t-detail",
+        "kind": "text",
+        "body": "# Territory Detail & Reallocation",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#141414"
+        }
+      },
+      {
+        "id": "s-detail",
+        "kind": "text",
+        "body": "Pick a carve to see every account's effective rep. To move one account one-off, type its Account Id, pick a new rep, and click Reassign.",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#3A3A3A"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "DetailCarvePick",
+        "id": "ctrl-detailpick",
+        "name": "Select Carve to View / Edit",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "single",
+        "values": [],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "carves"
+          },
+          "columnId": "c-name"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "ReassignAccountId",
+        "id": "ctrl-reassign-acct",
+        "name": "Account Id to Reassign",
+        "controlType": "text",
+        "mode": "equals",
+        "case": "insensitive",
+        "includeNulls": "when-no-value-is-selected",
+        "showOperators": false
+      },
+      {
+        "kind": "control",
+        "controlId": "ReassignNewRep",
+        "id": "ctrl-reassign-rep",
+        "name": "New Rep",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "single",
+        "values": [],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "reps"
+          },
+          "columnId": "r-name"
+        }
+      },
+      {
+        "id": "btn-reassign",
+        "kind": "button",
+        "text": "Reassign Account",
+        "appearance": "filled",
+        "actions": [
+          {
+            "id": "a-reassign",
+            "trigger": "on-click",
+            "effects": [
+              {
+                "effect": "insert-rows",
+                "tableElementId": "overrides",
+                "values": {
+                  "o-carve": {
+                    "type": "control",
+                    "control": "DetailCarvePick"
+                  },
+                  "o-account": {
+                    "type": "control",
+                    "control": "ReassignAccountId"
+                  },
+                  "o-newrep": {
+                    "type": "formula",
+                    "formula": "Lookup([Reps/Rep Id],[ReassignNewRep],[Reps/Rep Name])"
+                  }
+                }
+              },
+              {
+                "effect": "clear-control",
+                "scope": {
+                  "type": "control",
+                  "controlId": "ReassignAccountId"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "detail-grid",
+        "kind": "table",
+        "name": "Territory Detail",
+        "source": {
+          "elementId": "tv-detail",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "dg-id",
+            "name": "Account Id",
+            "formula": "[Territory \u2014 Detail/Account Id]"
+          },
+          {
+            "id": "dg-name",
+            "name": "Account Name",
+            "formula": "[Territory \u2014 Detail/Account Name]"
+          },
+          {
+            "id": "dg-region",
+            "name": "Region",
+            "formula": "[Territory \u2014 Detail/Region]"
+          },
+          {
+            "id": "dg-industry",
+            "name": "Industry",
+            "formula": "[Territory \u2014 Detail/Industry]"
+          },
+          {
+            "id": "dg-segment",
+            "name": "Segment",
+            "formula": "[Territory \u2014 Detail/Segment]"
+          },
+          {
+            "id": "dg-value",
+            "name": "Account Value",
+            "formula": "[Territory \u2014 Detail/Account Value]",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "dg-rep",
+            "name": "Effective Rep",
+            "formula": "[Territory \u2014 Detail/Rep Name]"
+          }
+        ],
+        "order": [
+          "dg-id",
+          "dg-name",
+          "dg-region",
+          "dg-industry",
+          "dg-segment",
+          "dg-value",
+          "dg-rep"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "t-compare",
+        "kind": "text",
+        "body": "# Compare Carves",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#141414"
+        }
+      },
+      {
+        "id": "s-compare",
+        "kind": "text",
+        "body": "Pick two carves to compare how each balances reps by accounts and value.",
+        "verticalAlign": "middle",
+        "style": {
+          "color": "#3A3A3A"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "CompareCarveA",
+        "id": "ctrl-comparea",
+        "name": "Carve A",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "single",
+        "values": [],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "carves"
+          },
+          "columnId": "c-name"
+        }
+      },
+      {
+        "kind": "control",
+        "controlId": "CompareCarveB",
+        "id": "ctrl-compareb",
+        "name": "Carve B",
+        "controlType": "list",
+        "mode": "include",
+        "selectionMode": "single",
+        "values": [],
+        "source": {
+          "kind": "source",
+          "source": {
+            "kind": "table",
+            "elementId": "carves"
+          },
+          "columnId": "c-name"
+        }
+      },
+      {
+        "id": "cmp-a-accts",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-a",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "cmp-a-acctsv",
+            "formula": "CountDistinct([Territory \u2014 Compare A/Account Id])",
+            "name": "ACCOUNTS",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "cmp-a-acctsv",
+          "color": "#1B5FBF",
+          "fontSize": 24,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "ACCOUNTS",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "cmp-a-value",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-a",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "cmp-a-valuev",
+            "formula": "Sum([Territory \u2014 Compare A/Account Value])",
+            "name": "TOTAL VALUE",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "value": {
+          "columnId": "cmp-a-valuev",
+          "color": "#1B5FBF",
+          "fontSize": 24,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "TOTAL VALUE",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "cmp-a-max",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-a",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "cmp-a-maxv",
+            "formula": "Max([Territory \u2014 Compare A/Rep Account Count])",
+            "name": "MAX ACCOUNTS/REP",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "cmp-a-maxv",
+          "color": "#9A1B2F",
+          "fontSize": 22,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "MAX ACCOUNTS/REP",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "cmp-a-min",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-a",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "cmp-a-minv",
+            "formula": "Min([Territory \u2014 Compare A/Rep Account Count])",
+            "name": "MIN ACCOUNTS/REP",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "cmp-a-minv",
+          "color": "#2E9B6B",
+          "fontSize": 22,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "MIN ACCOUNTS/REP",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "cmp-b-accts",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-b",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "cmp-b-acctsv",
+            "formula": "CountDistinct([Territory \u2014 Compare B/Account Id])",
+            "name": "ACCOUNTS",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "cmp-b-acctsv",
+          "color": "#1B5FBF",
+          "fontSize": 24,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "ACCOUNTS",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "cmp-b-value",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-b",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "cmp-b-valuev",
+            "formula": "Sum([Territory \u2014 Compare B/Account Value])",
+            "name": "TOTAL VALUE",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "value": {
+          "columnId": "cmp-b-valuev",
+          "color": "#1B5FBF",
+          "fontSize": 24,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "TOTAL VALUE",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "cmp-b-max",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-b",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "cmp-b-maxv",
+            "formula": "Max([Territory \u2014 Compare B/Rep Account Count])",
+            "name": "MAX ACCOUNTS/REP",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "cmp-b-maxv",
+          "color": "#9A1B2F",
+          "fontSize": 22,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "MAX ACCOUNTS/REP",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "cmp-b-min",
+        "kind": "kpi-chart",
+        "source": {
+          "elementId": "tv-b",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "cmp-b-minv",
+            "formula": "Min([Territory \u2014 Compare B/Rep Account Count])",
+            "name": "MIN ACCOUNTS/REP",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          }
+        ],
+        "value": {
+          "columnId": "cmp-b-minv",
+          "color": "#2E9B6B",
+          "fontSize": 22,
+          "fontWeight": "bold"
+        },
+        "name": {
+          "text": "MIN ACCOUNTS/REP",
+          "color": "#8A8F98",
+          "fontSize": 11,
+          "fontWeight": "bold"
+        },
+        "layout": {
+          "anchor": "start"
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "rs-a",
+        "kind": "table",
+        "name": "Rep Summary \u2014 Compare A",
+        "source": {
+          "kind": "table",
+          "elementId": "tv-a"
+        },
+        "columns": [
+          {
+            "id": "rs-a-rep",
+            "name": "Rep Name",
+            "formula": "[Territory \u2014 Compare A/Rep Name]"
+          },
+          {
+            "id": "rs-a-cnt",
+            "name": "Accounts",
+            "formula": "CountDistinct([Territory \u2014 Compare A/Account Id])",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          },
+          {
+            "id": "rs-a-val",
+            "name": "Total Value",
+            "formula": "Sum([Territory \u2014 Compare A/Account Value])",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "order": [
+          "rs-a-rep",
+          "rs-a-cnt",
+          "rs-a-val"
+        ],
+        "groupings": [
+          {
+            "id": "g-rs-a",
+            "groupBy": [
+              "rs-a-rep"
+            ],
+            "calculations": [
+              "rs-a-cnt",
+              "rs-a-val"
+            ],
+            "sort": [
+              {
+                "columnId": "rs-a-cnt",
+                "direction": "descending"
+              }
+            ]
+          }
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "rs-b",
+        "kind": "table",
+        "name": "Rep Summary \u2014 Compare B",
+        "source": {
+          "kind": "table",
+          "elementId": "tv-b"
+        },
+        "columns": [
+          {
+            "id": "rs-b-rep",
+            "name": "Rep Name",
+            "formula": "[Territory \u2014 Compare B/Rep Name]"
+          },
+          {
+            "id": "rs-b-cnt",
+            "name": "Accounts",
+            "formula": "CountDistinct([Territory \u2014 Compare B/Account Id])",
+            "format": {
+              "kind": "number",
+              "formatString": ",.3~s"
+            }
+          },
+          {
+            "id": "rs-b-val",
+            "name": "Total Value",
+            "formula": "Sum([Territory \u2014 Compare B/Account Value])",
+            "format": {
+              "kind": "number",
+              "formatString": "$.3~s",
+              "currencySymbol": "$",
+              "decimalSymbol": ".",
+              "digitGroupingSymbol": ",",
+              "digitGroupingSize": [
+                3
+              ]
+            }
+          }
+        ],
+        "order": [
+          "rs-b-rep",
+          "rs-b-cnt",
+          "rs-b-val"
+        ],
+        "groupings": [
+          {
+            "id": "g-rs-b",
+            "groupBy": [
+              "rs-b-rep"
+            ],
+            "calculations": [
+              "rs-b-cnt",
+              "rs-b-val"
+            ],
+            "sort": [
+              {
+                "columnId": "rs-b-cnt",
+                "direction": "descending"
+              }
+            ]
+          }
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      },
+      {
+        "id": "carves-view",
+        "kind": "table",
+        "name": "All Carves",
+        "source": {
+          "elementId": "carves",
+          "kind": "table"
+        },
+        "columns": [
+          {
+            "id": "cv-name",
+            "name": "Name",
+            "formula": "[Carves/Name]"
+          },
+          {
+            "id": "cv-dim",
+            "name": "Balance Dimension",
+            "formula": "[Carves/Balance Dimension]"
+          },
+          {
+            "id": "cv-desc",
+            "name": "Description",
+            "formula": "[Carves/Description]"
+          },
+          {
+            "id": "cv-created",
+            "name": "Created At",
+            "formula": "[Carves/Created At]"
+          },
+          {
+            "id": "cv-by",
+            "name": "Created By",
+            "formula": "[Carves/Created By]"
+          }
+        ],
+        "order": [
+          "cv-name",
+          "cv-dim",
+          "cv-desc",
+          "cv-created",
+          "cv-by"
+        ],
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#E5E7EB",
+          "borderWidth": 1,
+          "borderRadius": "round"
+        }
+      }
+    ],
+    "pages": [
+      {
+        "id": "p-overview",
+        "name": "Overview",
+        "pageWidth": "large"
+      },
+      {
+        "id": "p-builder",
+        "name": "Carve Builder",
+        "pageWidth": "large"
+      },
+      {
+        "id": "p-detail",
+        "name": "Territory Detail & Reallocation",
+        "pageWidth": "large"
+      },
+      {
+        "id": "p-compare",
+        "name": "Compare Carves",
+        "pageWidth": "large"
+      },
+      {
+        "id": "p-util",
+        "name": "Utility Data",
+        "visibility": "hidden",
+        "pageWidth": "large"
+      }
+    ],
+    "layout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"p-overview\">\n  <Element elementId=\"t-overview\" gridColumn=\"1 / 25\" gridRow=\"1 / 3\"/>\n  <Element elementId=\"s-overview\" gridColumn=\"1 / 19\" gridRow=\"3 / 5\"/>\n  <Element elementId=\"ctrl-carvepick\" gridColumn=\"19 / 25\" gridRow=\"3 / 6\"/>\n  <Element elementId=\"k-accts\" gridColumn=\"1 / 7\" gridRow=\"6 / 12\"/>\n  <Element elementId=\"k-reps\" gridColumn=\"7 / 13\" gridRow=\"6 / 12\"/>\n  <Element elementId=\"k-avg\" gridColumn=\"13 / 19\" gridRow=\"6 / 12\"/>\n  <Element elementId=\"k-carves\" gridColumn=\"19 / 25\" gridRow=\"6 / 12\"/>\n  <Element elementId=\"k-most\" gridColumn=\"1 / 13\" gridRow=\"12 / 18\"/>\n  <Element elementId=\"k-least\" gridColumn=\"13 / 25\" gridRow=\"12 / 18\"/>\n  <Element elementId=\"region-bar\" gridColumn=\"1 / 25\" gridRow=\"18 / 34\"/>\n  <Element elementId=\"industry-bar\" gridColumn=\"1 / 25\" gridRow=\"34 / 50\"/>\n  <Element elementId=\"segment-donut\" gridColumn=\"1 / 13\" gridRow=\"50 / 66\"/>\n  <Element elementId=\"rs-ov\" gridColumn=\"13 / 25\" gridRow=\"50 / 66\"/>\n</Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"p-builder\">\n  <Element elementId=\"t-builder\" gridColumn=\"1 / 17\" gridRow=\"1 / 3\"/>\n  <Element elementId=\"s-builder\" gridColumn=\"1 / 17\" gridRow=\"3 / 5\"/>\n  <Element elementId=\"ctrl-new-name\" gridColumn=\"1 / 9\" gridRow=\"5 / 8\"/>\n  <Element elementId=\"ctrl-new-dim\" gridColumn=\"9 / 17\" gridRow=\"5 / 8\"/>\n  <Element elementId=\"ctrl-new-desc\" gridColumn=\"1 / 17\" gridRow=\"8 / 11\"/>\n  <Element elementId=\"btn-create\" gridColumn=\"1 / 9\" gridRow=\"11 / 14\"/>\n  <Container elementId=\"c-chat\" type=\"grid\" gridColumn=\"17 / 25\" gridRow=\"1 / 44\"\n             gridTemplateColumns=\"repeat(12, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"chat-hd\" gridColumn=\"1 / 13\" gridRow=\"1 / 2\"/>\n    <Element elementId=\"chat1\" gridColumn=\"1 / 13\" gridRow=\"2 / 43\"/>\n  </Container>\n  <Element elementId=\"rs-bld\" gridColumn=\"1 / 17\" gridRow=\"14 / 44\"/>\n</Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"p-detail\">\n  <Element elementId=\"t-detail\" gridColumn=\"1 / 25\" gridRow=\"1 / 3\"/>\n  <Element elementId=\"s-detail\" gridColumn=\"1 / 25\" gridRow=\"3 / 5\"/>\n  <Element elementId=\"ctrl-detailpick\" gridColumn=\"1 / 9\" gridRow=\"5 / 8\"/>\n  <Element elementId=\"ctrl-reassign-acct\" gridColumn=\"9 / 15\" gridRow=\"5 / 8\"/>\n  <Element elementId=\"ctrl-reassign-rep\" gridColumn=\"15 / 21\" gridRow=\"5 / 8\"/>\n  <Element elementId=\"btn-reassign\" gridColumn=\"21 / 25\" gridRow=\"5 / 8\"/>\n  <Element elementId=\"detail-grid\" gridColumn=\"1 / 25\" gridRow=\"8 / 44\"/>\n</Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"p-compare\">\n  <Element elementId=\"t-compare\" gridColumn=\"1 / 25\" gridRow=\"1 / 3\"/>\n  <Element elementId=\"s-compare\" gridColumn=\"1 / 25\" gridRow=\"3 / 5\"/>\n  <Element elementId=\"ctrl-comparea\" gridColumn=\"1 / 13\" gridRow=\"5 / 8\"/>\n  <Element elementId=\"ctrl-compareb\" gridColumn=\"13 / 25\" gridRow=\"5 / 8\"/>\n  <Element elementId=\"cmp-a-accts\" gridColumn=\"1 / 4\" gridRow=\"8 / 13\"/>\n  <Element elementId=\"cmp-a-value\" gridColumn=\"4 / 7\" gridRow=\"8 / 13\"/>\n  <Element elementId=\"cmp-a-max\" gridColumn=\"7 / 10\" gridRow=\"8 / 13\"/>\n  <Element elementId=\"cmp-a-min\" gridColumn=\"10 / 13\" gridRow=\"8 / 13\"/>\n  <Element elementId=\"cmp-b-accts\" gridColumn=\"13 / 16\" gridRow=\"8 / 13\"/>\n  <Element elementId=\"cmp-b-value\" gridColumn=\"16 / 19\" gridRow=\"8 / 13\"/>\n  <Element elementId=\"cmp-b-max\" gridColumn=\"19 / 22\" gridRow=\"8 / 13\"/>\n  <Element elementId=\"cmp-b-min\" gridColumn=\"22 / 25\" gridRow=\"8 / 13\"/>\n  <Element elementId=\"rs-a\" gridColumn=\"1 / 13\" gridRow=\"13 / 40\"/>\n  <Element elementId=\"rs-b\" gridColumn=\"13 / 25\" gridRow=\"13 / 40\"/>\n  <Element elementId=\"carves-view\" gridColumn=\"1 / 25\" gridRow=\"40 / 52\"/>\n</Page><Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"p-util\">\n  <Element elementId=\"reps\" gridColumn=\"1 / 7\" gridRow=\"1 / 12\"/>\n  <Element elementId=\"accounts\" gridColumn=\"7 / 13\" gridRow=\"1 / 12\"/>\n  <Element elementId=\"carves\" gridColumn=\"13 / 19\" gridRow=\"1 / 12\"/>\n  <Element elementId=\"overrides\" gridColumn=\"19 / 25\" gridRow=\"1 / 12\"/>\n  <Element elementId=\"latest-override\" gridColumn=\"1 / 7\" gridRow=\"12 / 22\"/>\n  <Element elementId=\"tv-overview\" gridColumn=\"7 / 13\" gridRow=\"12 / 22\"/>\n  <Element elementId=\"tv-detail\" gridColumn=\"13 / 19\" gridRow=\"12 / 22\"/>\n  <Element elementId=\"tv-a\" gridColumn=\"19 / 25\" gridRow=\"12 / 22\"/>\n  <Element elementId=\"tv-b\" gridColumn=\"1 / 7\" gridRow=\"22 / 32\"/>\n</Page>",
+    "agents": [
+      {
+        "id": "ag-territory",
+        "name": "Territory Carving Assistant",
+        "description": "Helps Pacific Life sales leadership build and adjust rep territory carves.",
+        "instructions": "You help Pacific Life sales operations build 'carves' \u2014 named scenarios that allocate the ~26,000-account book of business across 13 wholesaler reps. A carve balances territories by exactly one dimension: Geography, Industry, or Segment (High Net Worth / Mass Affluent / Retail). When the user describes a new carve, use the name/description/dimension tools to set each field, then use the create tool to save it \u2014 confirm back the carve name, dimension, and that it's now selected for viewing. When the user asks to move a specific account to a different rep ('move ACCT-000123 to Sarah Chen'), use the reallocation tool with the exact carve name, account id, and rep name, then confirm back exactly which carve/account/rep you acted on. Never guess an account id or rep name the user didn't provide \u2014 ask if it's ambiguous.",
+        "greeting": {
+          "mode": "static",
+          "message": "Ask me to build a new territory carve (e.g. \"balance by industry, call it 'Q4 Industry Rebalance'\") or to move a specific account to a different rep."
+        },
+        "dataSources": [
+          {
+            "kind": "table",
+            "elementId": "accounts"
+          },
+          {
+            "kind": "table",
+            "elementId": "reps"
+          },
+          {
+            "kind": "table",
+            "elementId": "carves"
+          }
+        ],
+        "tools": [
+          {
+            "toolId": "t-name",
+            "kind": "action",
+            "name": "Set new carve name",
+            "description": "Set the name for the new territory carve/scenario being built.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "NewCarveName",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "A short, memorable name for this carve"
+                }
+              }
+            ]
+          },
+          {
+            "toolId": "t-desc",
+            "kind": "action",
+            "name": "Set new carve description",
+            "description": "Set a one-sentence description of the new carve based on what the user is trying to accomplish.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "NewCarveDesc",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "A one-sentence description of this carve"
+                }
+              }
+            ]
+          },
+          {
+            "toolId": "t-dim",
+            "kind": "action",
+            "name": "Set the balance dimension",
+            "description": "Set which attribute the new carve should balance rep territories by. Must be exactly one of: \"Geography\", \"Industry\", or \"Segment\".",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "NewCarveDim",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Exactly one of \"Geography\", \"Industry\", \"Segment\""
+                }
+              }
+            ]
+          },
+          {
+            "toolId": "t-create",
+            "kind": "action",
+            "name": "Create the carve",
+            "description": "When the user asks to create/build/save the carve, insert it into the Carves log using the name, description, and balance dimension already set, then select it for viewing.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "insert-rows",
+                "tableElementId": "carves",
+                "values": {
+                  "c-name": {
+                    "type": "control",
+                    "control": "NewCarveName"
+                  },
+                  "c-dim": {
+                    "type": "control",
+                    "control": "NewCarveDim"
+                  },
+                  "c-desc": {
+                    "type": "control",
+                    "control": "NewCarveDesc"
+                  }
+                }
+              },
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "CarvePick",
+                "value": {
+                  "type": "control",
+                  "control": "NewCarveName"
+                }
+              }
+            ]
+          },
+          {
+            "toolId": "t-reallocate",
+            "kind": "action",
+            "name": "Reallocate an account to a different rep",
+            "description": "When the user asks to move/reassign/reallocate a specific account to a different rep on a one-off basis, set the carve, account, and target rep, then log the override.",
+            "steps": [
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "DetailCarvePick",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "Which carve this reallocation applies to (carve name)"
+                }
+              },
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "ReassignAccountId",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "The Account Id to move, e.g. ACCT-000123"
+                }
+              },
+              {
+                "kind": "effect",
+                "effect": "set-control-value",
+                "control": "ReassignNewRep",
+                "value": {
+                  "type": "agent-input",
+                  "inputName": "The exact name of the rep to reassign the account to"
+                }
+              },
+              {
+                "kind": "effect",
+                "effect": "insert-rows",
+                "tableElementId": "overrides",
+                "values": {
+                  "o-carve": {
+                    "type": "control",
+                    "control": "DetailCarvePick"
+                  },
+                  "o-account": {
+                    "type": "control",
+                    "control": "ReassignAccountId"
+                  },
+                  "o-newrep": {
+                    "type": "formula",
+                    "formula": "Lookup([Reps/Rep Id],[ReassignNewRep],[Reps/Rep Name])"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

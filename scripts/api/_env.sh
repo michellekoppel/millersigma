@@ -30,10 +30,14 @@ fi
 if [ -z "${SIGMA_API_TOKEN:-}" ]; then
   _fresh=false
   if [ -f "$_sigma_token_cache" ]; then
-    # macOS: stat -f %m   |   Linux: stat -c %Y
-    _mtime=$(stat -f %m "$_sigma_token_cache" 2>/dev/null \
-          || stat -c %Y "$_sigma_token_cache" 2>/dev/null \
+    # Linux: stat -c %Y   |   macOS: stat -f %m
+    # (order matters: GNU stat treats -f as a different flag and succeeds
+    # with unrelated multi-line filesystem info instead of failing, so the
+    # Linux form must be tried first or the || fallback never triggers.)
+    _mtime=$(stat -c %Y "$_sigma_token_cache" 2>/dev/null \
+          || stat -f %m "$_sigma_token_cache" 2>/dev/null \
           || echo 0)
+    case "$_mtime" in ''|*[!0-9]*) _mtime=0 ;; esac
     _age=$(( $(date +%s) - _mtime ))
     if [ "$_age" -lt "$_sigma_token_ttl" ]; then
       _fresh=true
