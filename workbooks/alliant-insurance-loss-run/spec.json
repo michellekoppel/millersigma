@@ -2,14 +2,14 @@
     "workbookId": "91e14288-28b6-4bca-9197-96f22d95ca74",
     "name": "Alliant Insurance Group \u2014 Loss Run Analytics",
     "url": "https://app.sigmacomputing.com/papercrane/workbook/Alliant-Insurance-Group-Loss-Run-Analytics-4rgPyaIB3J9hiXlZa95qWo",
-    "documentVersion": 4,
-    "latestDocumentVersion": 4,
+    "documentVersion": 5,
+    "latestDocumentVersion": 5,
     "ownerId": "5AwXQ8WiPX2tTdIqx6piVcb29sO4S",
     "folderId": "004d8497-18ea-4cf6-a8c5-deca403c22d9",
     "createdBy": "5AwXQ8WiPX2tTdIqx6piVcb29sO4S",
     "updatedBy": "5AwXQ8WiPX2tTdIqx6piVcb29sO4S",
     "createdAt": "2026-09-14T21:06:12.783Z",
-    "updatedAt": "2026-09-14T21:20:24.395Z",
+    "updatedAt": "2026-09-14T21:35:25.501Z",
     "document": {
         "schemaVersion": 1,
         "elements": [
@@ -664,6 +664,13 @@
                             "type": "page",
                             "pageId": "page-assistant"
                         }
+                    },
+                    {
+                        "label": "Reserve Review",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-reserve"
+                        }
                     }
                 ],
                 "showIcons": false
@@ -1121,6 +1128,13 @@
                             "type": "page",
                             "pageId": "page-assistant"
                         }
+                    },
+                    {
+                        "label": "Reserve Review",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-reserve"
+                        }
                     }
                 ],
                 "showIcons": false
@@ -1262,6 +1276,13 @@
                         "destination": {
                             "type": "page",
                             "pageId": "page-assistant"
+                        }
+                    },
+                    {
+                        "label": "Reserve Review",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-reserve"
                         }
                     }
                 ],
@@ -1429,6 +1450,13 @@
                             "type": "page",
                             "pageId": "page-assistant"
                         }
+                    },
+                    {
+                        "label": "Reserve Review",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-reserve"
+                        }
                     }
                 ],
                 "showIcons": false
@@ -1524,6 +1552,447 @@
                 "id": "chat-assistant",
                 "kind": "chat",
                 "agentId": "ag-lossrun"
+            },
+            {
+                "id": "ctr-header-reserve",
+                "kind": "container",
+                "style": {
+                    "backgroundColor": "#1b3a5c",
+                    "borderRadius": "square"
+                }
+            },
+            {
+                "id": "txt-title-reserve",
+                "kind": "text",
+                "body": "### <span style=\"color: #FFFFFF\">**Reserve Review Workbench**</span>"
+            },
+            {
+                "id": "nav-reserve",
+                "kind": "navigation",
+                "style": {
+                    "backgroundColor": "transparent"
+                },
+                "optionStyle": {
+                    "style": "pill",
+                    "orientation": "horizontal",
+                    "textColor": "#ffffff",
+                    "selectedColor": "#8fd8d6"
+                },
+                "mode": "manual",
+                "options": [
+                    {
+                        "label": "Command Center",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-command"
+                        }
+                    },
+                    {
+                        "label": "Loss Triangle",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-triangle"
+                        }
+                    },
+                    {
+                        "label": "Claims Detail",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-detail"
+                        }
+                    },
+                    {
+                        "label": "Loss Run Assistant",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-assistant"
+                        }
+                    },
+                    {
+                        "label": "Reserve Review",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-reserve"
+                        }
+                    }
+                ],
+                "showIcons": false
+            },
+            {
+                "id": "txt-brand-reserve",
+                "kind": "text",
+                "body": "<p style=\"text-align: right\"><span style=\"font-size: 16px; color: #8FD8D6\">ALLIANT</span></p>"
+            },
+            {
+                "id": "img-logo-reserve",
+                "kind": "image",
+                "source": {
+                    "kind": "url",
+                    "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+CjxjaXJjbGUgY3g9IjM2IiBjeT0iNDAiIHI9IjMwIiBmaWxsPSIjOEZEOEQ2IiBvcGFjaXR5PSIwLjkyIi8+CjxjaXJjbGUgY3g9IjYyIiBjeT0iNTYiIHI9IjI2IiBmaWxsPSIjMkU4QjhCIiBvcGFjaXR5PSIwLjkyIi8+Cjwvc3ZnPg=="
+                }
+            },
+            {
+                "id": "txt-sub-reserve",
+                "kind": "text",
+                "body": "<p class=\"p-small\"><span style=\"color: #FFFFFF\">Review open and reopened claims, confirm or adjust the reserve, and log the decision</span></p>"
+            },
+            {
+                "id": "ctr-kpis-reserve",
+                "kind": "container"
+            },
+            {
+                "id": "kpi-rr-pending",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-claim-queue",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-rr-pending-value",
+                        "formula": "Count([Claim Queue/Claim ID])",
+                        "name": "Claims Pending Review"
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-rr-pending-value"
+                },
+                "name": "Claims Pending Review"
+            },
+            {
+                "id": "kpi-rr-reserve",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-claim-queue",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-rr-reserve-value",
+                        "formula": "Sum([Claim Queue/Case Reserve])",
+                        "name": "Reserve Under Review",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-rr-reserve-value"
+                },
+                "name": "Reserve Under Review"
+            },
+            {
+                "id": "kpi-rr-reviewed",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "it-review-log",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-rr-reviewed-value",
+                        "formula": "Count([Reserve Review Log/Claim ID])",
+                        "name": "Reviews Logged"
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-rr-reviewed-value"
+                },
+                "name": "Reviews Logged"
+            },
+            {
+                "id": "txt-queue-title-reserve",
+                "kind": "text",
+                "body": "### Claims Pending Review"
+            },
+            {
+                "id": "tbl-claim-queue",
+                "kind": "table",
+                "source": {
+                    "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+                    "statement": "SELECT * FROM (VALUES\n    ('WC-2019-0001', 2019, 'Workers Comp', 'Open', 21772.82, 57034.55, 78807.37, 2793, DATE '2019-01-08'),\n    ('WC-2019-0002', 2019, 'Workers Comp', 'Open', 27614.73, 28999.17, 56613.90, 2775, DATE '2019-01-26'),\n    ('WC-2019-0003', 2019, 'Workers Comp', 'Open', 19423.28, 4493.92, 23917.20, 2637, DATE '2019-06-13'),\n    ('WC-2019-0004', 2019, 'Workers Comp', 'Open', 22374.95, 20921.63, 43296.58, 2678, DATE '2019-05-03'),\n    ('WC-2019-0005', 2019, 'Workers Comp', 'Reopened', 17100.33, 34309.99, 51410.32, 2482, DATE '2019-11-15'),\n    ('WC-2019-0006', 2019, 'Workers Comp', 'Reopened', 30344.39, 35854.89, 66199.28, 2733, DATE '2019-03-09'),\n    ('WC-2019-0007', 2019, 'Workers Comp', 'Reopened', 17398.50, 27099.95, 44498.45, 2734, DATE '2019-03-08'),\n    ('GL-2019-0001', 2019, 'General Liability', 'Open', 39616.75, 48420.48, 88037.23, 2448, DATE '2019-12-19'),\n    ('GL-2019-0002', 2019, 'General Liability', 'Reopened', 28171.91, 42257.87, 70429.78, 2642, DATE '2019-06-08'),\n    ('AU-2019-0001', 2019, 'Commercial Auto', 'Open', 10901.29, 17971.26, 28872.55, 2779, DATE '2019-01-22'),\n    ('AU-2019-0002', 2019, 'Commercial Auto', 'Open', 8167.56, 5231.26, 13398.82, 2463, DATE '2019-12-04'),\n    ('AU-2019-0003', 2019, 'Commercial Auto', 'Open', 410.64, 6752.66, 7163.30, 2479, DATE '2019-11-18'),\n    ('AU-2019-0004', 2019, 'Commercial Auto', 'Open', 8549.74, 4525.93, 13075.67, 2656, DATE '2019-05-25'),\n    ('AU-2019-0005', 2019, 'Commercial Auto', 'Open', 10036.95, 6291.45, 16328.40, 2486, DATE '2019-11-11'),\n    ('AU-2019-0006', 2019, 'Commercial Auto', 'Open', 6038.50, 10111.94, 16150.44, 2760, DATE '2019-02-10'),\n    ('AU-2019-0007', 2019, 'Commercial Auto', 'Open', 12201.96, 17934.74, 30136.70, 2614, DATE '2019-07-06'),\n    ('AU-2019-0008', 2019, 'Commercial Auto', 'Reopened', 487.86, 10061.82, 10549.68, 2521, DATE '2019-10-07'),\n    ('AU-2019-0009', 2019, 'Commercial Auto', 'Reopened', 13919.28, 20503.48, 34422.76, 2730, DATE '2019-03-12'),\n    ('AU-2019-0010', 2019, 'Commercial Auto', 'Reopened', 13011.22, 3697.21, 16708.43, 2724, DATE '2019-03-18'),\n    ('AU-2019-0011', 2019, 'Commercial Auto', 'Reopened', 6537.69, 7489.50, 14027.19, 2557, DATE '2019-09-01'),\n    ('AU-2019-0012', 2019, 'Commercial Auto', 'Reopened', 6084.23, 18308.42, 24392.65, 2517, DATE '2019-10-11'),\n    ('PR-2019-0001', 2019, 'Property', 'Open', 14838.57, 933.07, 15771.64, 2673, DATE '2019-05-08'),\n    ('PR-2019-0002', 2019, 'Property', 'Open', 21381.88, 43336.37, 64718.25, 2793, DATE '2019-01-08'),\n    ('PR-2019-0003', 2019, 'Property', 'Reopened', 25756.77, 38635.15, 64391.92, 2746, DATE '2019-02-24'),\n    ('WC-2020-0008', 2020, 'Workers Comp', 'Open', 16602.29, 19760.54, 36362.83, 2302, DATE '2020-05-13'),\n    ('WC-2020-0009', 2020, 'Workers Comp', 'Open', 21888.91, 33228.41, 55117.32, 2110, DATE '2020-11-21'),\n    ('WC-2020-0010', 2020, 'Workers Comp', 'Open', 22920.66, 12661.08, 35581.74, 2269, DATE '2020-06-15'),\n    ('WC-2020-0011', 2020, 'Workers Comp', 'Open', 1073.01, 27214.69, 28287.70, 2177, DATE '2020-09-15'),\n    ('WC-2020-0012', 2020, 'Workers Comp', 'Open', 31577.72, 39879.19, 71456.91, 2397, DATE '2020-02-08'),\n    ('WC-2020-0013', 2020, 'Workers Comp', 'Open', 32018.37, 21941.88, 53960.25, 2342, DATE '2020-04-03'),\n    ('WC-2020-0014', 2020, 'Workers Comp', 'Open', 11845.65, 13891.18, 25736.83, 2283, DATE '2020-06-01'),\n    ('WC-2020-0015', 2020, 'Workers Comp', 'Reopened', 13172.38, 21884.69, 35057.07, 2388, DATE '2020-02-17'),\n    ('WC-2020-0016', 2020, 'Workers Comp', 'Reopened', 16098.77, 21157.58, 37256.35, 2336, DATE '2020-04-09'),\n    ('WC-2020-0017', 2020, 'Workers Comp', 'Reopened', 21763.59, 61534.81, 83298.40, 2115, DATE '2020-11-16'),\n    ('WC-2020-0018', 2020, 'Workers Comp', 'Reopened', 25591.15, 10361.76, 35952.91, 2327, DATE '2020-04-18'),\n    ('GL-2020-0003', 2020, 'General Liability', 'Open', 29569.48, 26200.82, 55770.30, 2197, DATE '2020-08-26'),\n    ('GL-2020-0004', 2020, 'General Liability', 'Open', 30955.44, 47774.09, 78729.53, 2247, DATE '2020-07-07'),\n    ('GL-2020-0005', 2020, 'General Liability', 'Reopened', 18056.62, 14886.35, 32942.97, 2099, DATE '2020-12-02'),\n    ('GL-2020-0006', 2020, 'General Liability', 'Reopened', 15568.34, 35551.09, 51119.43, 2110, DATE '2020-11-21'),\n    ('AU-2020-0013', 2020, 'Commercial Auto', 'Open', 9223.92, 7428.05, 16651.97, 2339, DATE '2020-04-06'),\n    ('AU-2020-0014', 2020, 'Commercial Auto', 'Open', 7056.06, 17498.34, 24554.40, 2238, DATE '2020-07-16'),\n    ('AU-2020-0015', 2020, 'Commercial Auto', 'Open', 4009.58, 370.79, 4380.37, 2216, DATE '2020-08-07'),\n    ('AU-2020-0016', 2020, 'Commercial Auto', 'Open', 9528.52, 10509.43, 20037.95, 2252, DATE '2020-07-02'),\n    ('AU-2020-0017', 2020, 'Commercial Auto', 'Open', 9376.85, 6053.16, 15430.01, 2363, DATE '2020-03-13'),\n    ('AU-2020-0018', 2020, 'Commercial Auto', 'Open', 4739.55, 6969.96, 11709.51, 2423, DATE '2020-01-13'),\n    ('AU-2020-0019', 2020, 'Commercial Auto', 'Open', 8995.03, 15876.86, 24871.89, 2289, DATE '2020-05-26'),\n    ('AU-2020-0020', 2020, 'Commercial Auto', 'Open', 11670.07, 7377.64, 19047.71, 2213, DATE '2020-08-10'),\n    ('AU-2020-0021', 2020, 'Commercial Auto', 'Open', 4151.51, 17386.81, 21538.32, 2231, DATE '2020-07-23'),\n    ('AU-2020-0022', 2020, 'Commercial Auto', 'Open', 8910.33, 5448.46, 14358.79, 2075, DATE '2020-12-26'),\n    ('AU-2020-0023', 2020, 'Commercial Auto', 'Reopened', 727.91, 668.37, 1396.28, 2374, DATE '2020-03-02'),\n    ('AU-2020-0024', 2020, 'Commercial Auto', 'Reopened', 4758.06, 9878.24, 14636.30, 2189, DATE '2020-09-03'),\n    ('AU-2020-0025', 2020, 'Commercial Auto', 'Reopened', 9086.44, 23314.46, 32400.90, 2373, DATE '2020-03-03'),\n    ('AU-2020-0026', 2020, 'Commercial Auto', 'Reopened', 10024.54, 17102.17, 27126.71, 2159, DATE '2020-10-03'),\n    ('AU-2020-0027', 2020, 'Commercial Auto', 'Reopened', 12560.52, 668.37, 13228.89, 2103, DATE '2020-11-28'),\n    ('AU-2020-0028', 2020, 'Commercial Auto', 'Reopened', 5987.75, 13086.23, 19073.98, 2332, DATE '2020-04-13'),\n    ('PR-2020-0004', 2020, 'Property', 'Open', 20405.73, 38551.65, 58957.38, 2143, DATE '2020-10-19'),\n    ('PR-2020-0005', 2020, 'Property', 'Open', 19796.76, 11578.05, 31374.81, 2181, DATE '2020-09-11'),\n    ('PR-2020-0006', 2020, 'Property', 'Open', 10830.96, 12244.52, 23075.48, 2308, DATE '2020-05-07'),\n    ('PR-2020-0007', 2020, 'Property', 'Reopened', 16418.53, 18031.28, 34449.81, 2121, DATE '2020-11-10'),\n    ('PR-2020-0008', 2020, 'Property', 'Reopened', 11933.39, 24496.60, 36429.99, 2212, DATE '2020-08-11'),\n    ('WC-2021-0019', 2021, 'Workers Comp', 'Open', 34967.18, 31076.29, 66043.47, 1718, DATE '2021-12-18'),\n    ('WC-2021-0020', 2021, 'Workers Comp', 'Open', 6067.91, 9717.97, 15785.88, 2002, DATE '2021-03-09'),\n    ('WC-2021-0021', 2021, 'Workers Comp', 'Open', 28281.03, 16472.79, 44753.82, 1930, DATE '2021-05-20'),\n    ('WC-2021-0022', 2021, 'Workers Comp', 'Open', 16169.68, 39739.96, 55909.64, 1957, DATE '2021-04-23'),\n    ('WC-2021-0023', 2021, 'Workers Comp', 'Open', 11498.54, 16975.86, 28474.40, 1912, DATE '2021-06-07'),\n    ('WC-2021-0024', 2021, 'Workers Comp', 'Open', 13778.97, 2362.97, 16141.94, 1745, DATE '2021-11-21'),\n    ('WC-2021-0025', 2021, 'Workers Comp', 'Open', 4738.39, 16005.55, 20743.94, 1933, DATE '2021-05-17'),\n    ('WC-2021-0026', 2021, 'Workers Comp', 'Open', 12842.85, 953.96, 13796.81, 1849, DATE '2021-08-09'),\n    ('WC-2021-0027', 2021, 'Workers Comp', 'Open', 21185.41, 10156.22, 31341.63, 2067, DATE '2021-01-03'),\n    ('WC-2021-0028', 2021, 'Workers Comp', 'Open', 21753.04, 37764.71, 59517.75, 1752, DATE '2021-11-14'),\n    ('WC-2021-0029', 2021, 'Workers Comp', 'Open', 21701.95, 33309.17, 55011.12, 1948, DATE '2021-05-02'),\n    ('WC-2021-0030', 2021, 'Workers Comp', 'Open', 18315.74, 16897.32, 35213.06, 2059, DATE '2021-01-11'),\n    ('WC-2021-0031', 2021, 'Workers Comp', 'Open', 13249.85, 43017.89, 56267.74, 1990, DATE '2021-03-21'),\n    ('WC-2021-0032', 2021, 'Workers Comp', 'Reopened', 21490.91, 35092.60, 56583.51, 1884, DATE '2021-07-05'),\n    ('WC-2021-0033', 2021, 'Workers Comp', 'Reopened', 15163.66, 12958.21, 28121.87, 2060, DATE '2021-01-10'),\n    ('WC-2021-0034', 2021, 'Workers Comp', 'Reopened', 1962.31, 20625.30, 22587.61, 1893, DATE '2021-06-26'),\n    ('WC-2021-0035', 2021, 'Workers Comp', 'Reopened', 21205.23, 21276.41, 42481.64, 2058, DATE '2021-01-12'),\n    ('WC-2021-0036', 2021, 'Workers Comp', 'Reopened', 11574.30, 9065.41, 20639.71, 1958, DATE '2021-04-22'),\n    ('WC-2021-0037', 2021, 'Workers Comp', 'Reopened', 14146.66, 29296.66, 43443.32, 1958, DATE '2021-04-22'),\n    ('GL-2021-0007', 2021, 'General Liability', 'Open', 35663.93, 23992.33, 59656.26, 1997, DATE '2021-03-14'),\n    ('GL-2021-0008', 2021, 'General Liability', 'Open', 31669.75, 24422.46, 56092.21, 2064, DATE '2021-01-06'),\n    ('GL-2021-0009', 2021, 'General Liability', 'Open', 28342.07, 66927.18, 95269.25, 1725, DATE '2021-12-11'),\n    ('GL-2021-0010', 2021, 'General Liability', 'Open', 11517.68, 15672.22, 27189.90, 1863, DATE '2021-07-26'),\n    ('GL-2021-0011', 2021, 'General Liability', 'Reopened', 32122.85, 26089.36, 58212.21, 1732, DATE '2021-12-04'),\n    ('GL-2021-0012', 2021, 'General Liability', 'Reopened', 8712.74, 35164.02, 43876.76, 1861, DATE '2021-07-28'),\n    ('AU-2021-0029', 2021, 'Commercial Auto', 'Open', 12644.18, 4937.15, 17581.33, 1801, DATE '2021-09-26'),\n    ('AU-2021-0030', 2021, 'Commercial Auto', 'Open', 8875.74, 19752.31, 28628.05, 1805, DATE '2021-09-22'),\n    ('AU-2021-0031', 2021, 'Commercial Auto', 'Open', 10825.63, 10832.18, 21657.81, 1712, DATE '2021-12-24'),\n    ('AU-2021-0032', 2021, 'Commercial Auto', 'Open', 17373.15, 8439.95, 25813.10, 1714, DATE '2021-12-22'),\n    ('AU-2021-0033', 2021, 'Commercial Auto', 'Open', 2657.62, 15989.47, 18647.09, 1968, DATE '2021-04-12'),\n    ('AU-2021-0034', 2021, 'Commercial Auto', 'Open', 14508.25, 10427.55, 24935.80, 1886, DATE '2021-07-03'),\n    ('AU-2021-0035', 2021, 'Commercial Auto', 'Open', 9877.23, 8783.15, 18660.38, 1755, DATE '2021-11-11'),\n    ('AU-2021-0036', 2021, 'Commercial Auto', 'Open', 5279.36, 4880.14, 10159.50, 1786, DATE '2021-10-11'),\n    ('AU-2021-0037', 2021, 'Commercial Auto', 'Open', 5158.55, 6121.22, 11279.77, 1738, DATE '2021-11-28'),\n    ('AU-2021-0038', 2021, 'Commercial Auto', 'Open', 3733.00, 10240.67, 13973.67, 2015, DATE '2021-02-24'),\n    ('AU-2021-0039', 2021, 'Commercial Auto', 'Open', 7320.94, 3344.71, 10665.65, 1933, DATE '2021-05-17'),\n    ('AU-2021-0040', 2021, 'Commercial Auto', 'Open', 9340.37, 11583.32, 20923.69, 1928, DATE '2021-05-22'),\n    ('AU-2021-0041', 2021, 'Commercial Auto', 'Open', 8253.38, 8674.78, 16928.16, 1878, DATE '2021-07-11'),\n    ('AU-2021-0042', 2021, 'Commercial Auto', 'Open', 3418.27, 11748.41, 15166.68, 1866, DATE '2021-07-23'),\n    ('AU-2021-0043', 2021, 'Commercial Auto', 'Open', 735.85, 6882.18, 7618.03, 1932, DATE '2021-05-18'),\n    ('AU-2021-0044', 2021, 'Commercial Auto', 'Open', 7223.43, 14455.68, 21679.11, 2004, DATE '2021-03-07'),\n    ('AU-2021-0045', 2021, 'Commercial Auto', 'Open', 9911.05, 10517.77, 20428.82, 1867, DATE '2021-07-22'),\n    ('AU-2021-0046', 2021, 'Commercial Auto', 'Reopened', 11064.87, 14397.06, 25461.93, 1832, DATE '2021-08-26'),\n    ('AU-2021-0047', 2021, 'Commercial Auto', 'Reopened', 4027.72, 4100.18, 8127.90, 1730, DATE '2021-12-06'),\n    ('AU-2021-0048', 2021, 'Commercial Auto', 'Reopened', 10101.55, 19224.61, 29326.16, 1763, DATE '2021-11-03'),\n    ('AU-2021-0049', 2021, 'Commercial Auto', 'Reopened', 3153.13, 8940.50, 12093.63, 1933, DATE '2021-05-17'),\n    ('AU-2021-0050', 2021, 'Commercial Auto', 'Reopened', 4583.21, 6408.26, 10991.47, 1745, DATE '2021-11-21'),\n    ('AU-2021-0051', 2021, 'Commercial Auto', 'Reopened', 10330.16, 8787.26, 19117.42, 1786, DATE '2021-10-11'),\n    ('AU-2021-0052', 2021, 'Commercial Auto', 'Reopened', 8981.63, 16505.56, 25487.19, 2012, DATE '2021-02-27'),\n    ('PR-2021-0009', 2021, 'Property', 'Open', 21994.32, 20621.71, 42616.03, 2024, DATE '2021-02-15'),\n    ('PR-2021-0010', 2021, 'Property', 'Open', 13476.45, 21300.00, 34776.45, 1868, DATE '2021-07-21'),\n    ('PR-2021-0011', 2021, 'Property', 'Open', 9251.60, 33794.44, 43046.04, 1790, DATE '2021-10-07'),\n    ('PR-2021-0012', 2021, 'Property', 'Open', 31152.20, 17019.43, 48171.63, 1713, DATE '2021-12-23'),\n    ('PR-2021-0013', 2021, 'Property', 'Reopened', 8114.90, 20469.75, 28584.65, 2014, DATE '2021-02-25'),\n    ('PR-2021-0014', 2021, 'Property', 'Reopened', 20789.70, 22887.15, 43676.85, 1881, DATE '2021-07-08'),\n    ('WC-2022-0038', 2022, 'Workers Comp', 'Open', 35413.90, 23511.02, 58924.92, 1511, DATE '2022-07-13'),\n    ('WC-2022-0039', 2022, 'Workers Comp', 'Open', 49582.57, 22223.01, 71805.58, 1409, DATE '2022-10-23'),\n    ('WC-2022-0040', 2022, 'Workers Comp', 'Open', 17062.89, 40617.32, 57680.21, 1677, DATE '2022-01-28'),\n    ('WC-2022-0041', 2022, 'Workers Comp', 'Open', 20643.66, 23480.36, 44124.02, 1419, DATE '2022-10-13'),\n    ('WC-2022-0042', 2022, 'Workers Comp', 'Open', 21225.12, 6028.60, 27253.72, 1492, DATE '2022-08-01'),\n    ('WC-2022-0043', 2022, 'Workers Comp', 'Open', 45690.79, 14536.08, 60226.87, 1544, DATE '2022-06-10'),\n    ('WC-2022-0044', 2022, 'Workers Comp', 'Open', 1055.06, 14372.52, 15427.58, 1496, DATE '2022-07-28'),\n    ('WC-2022-0045', 2022, 'Workers Comp', 'Open', 27251.45, 31424.65, 58676.10, 1506, DATE '2022-07-18'),\n    ('WC-2022-0046', 2022, 'Workers Comp', 'Open', 2479.42, 26940.98, 29420.40, 1347, DATE '2022-12-24'),\n    ('WC-2022-0047', 2022, 'Workers Comp', 'Open', 1055.06, 20329.65, 21384.71, 1436, DATE '2022-09-26'),\n    ('WC-2022-0048', 2022, 'Workers Comp', 'Open', 1055.06, 33324.09, 34379.15, 1424, DATE '2022-10-08'),\n    ('WC-2022-0049', 2022, 'Workers Comp', 'Open', 3607.02, 14954.41, 18561.43, 1485, DATE '2022-08-08'),\n    ('WC-2022-0050', 2022, 'Workers Comp', 'Open', 34635.93, 20108.35, 54744.28, 1571, DATE '2022-05-14'),\n    ('WC-2022-0051', 2022, 'Workers Comp', 'Open', 10107.16, 24273.34, 34380.50, 1492, DATE '2022-08-01'),\n    ('WC-2022-0052', 2022, 'Workers Comp', 'Open', 18221.47, 41977.09, 60198.56, 1513, DATE '2022-07-11'),\n    ('WC-2022-0053', 2022, 'Workers Comp', 'Open', 6370.31, 20603.70, 26974.01, 1379, DATE '2022-11-22'),\n    ('WC-2022-0054', 2022, 'Workers Comp', 'Open', 28836.35, 17289.18, 46125.53, 1500, DATE '2022-07-24'),\n    ('WC-2022-0055', 2022, 'Workers Comp', 'Open', 7149.59, 8157.08, 15306.67, 1619, DATE '2022-03-27'),\n    ('WC-2022-0056', 2022, 'Workers Comp', 'Open', 37783.73, 30912.36, 68696.09, 1488, DATE '2022-08-05'),\n    ('WC-2022-0057', 2022, 'Workers Comp', 'Open', 8527.79, 14177.26, 22705.05, 1414, DATE '2022-10-18'),\n    ('WC-2022-0058', 2022, 'Workers Comp', 'Open', 11417.96, 26414.00, 37831.96, 1692, DATE '2022-01-13'),\n    ('WC-2022-0059', 2022, 'Workers Comp', 'Reopened', 4644.35, 23772.45, 28416.80, 1515, DATE '2022-07-09'),\n    ('WC-2022-0060', 2022, 'Workers Comp', 'Reopened', 9287.82, 37734.62, 47022.44, 1658, DATE '2022-02-16'),\n    ('WC-2022-0061', 2022, 'Workers Comp', 'Reopened', 27820.56, 11750.18, 39570.74, 1681, DATE '2022-01-24'),\n    ('WC-2022-0062', 2022, 'Workers Comp', 'Reopened', 23706.27, 28373.84, 52080.11, 1460, DATE '2022-09-02'),\n    ('WC-2022-0063', 2022, 'Workers Comp', 'Reopened', 22539.94, 33285.59, 55825.53, 1546, DATE '2022-06-08'),\n    ('WC-2022-0064', 2022, 'Workers Comp', 'Reopened', 12897.59, 16428.11, 29325.70, 1398, DATE '2022-11-03'),\n    ('GL-2022-0013', 2022, 'General Liability', 'Open', 39511.16, 34237.47, 73748.63, 1548, DATE '2022-06-06'),\n    ('GL-2022-0014', 2022, 'General Liability', 'Open', 4905.08, 36428.13, 41333.21, 1412, DATE '2022-10-20'),\n    ('GL-2022-0015', 2022, 'General Liability', 'Open', 35089.70, 18151.21, 53240.91, 1348, DATE '2022-12-23'),\n    ('GL-2022-0016', 2022, 'General Liability', 'Open', 1688.62, 9400.49, 11089.11, 1649, DATE '2022-02-25'),\n    ('GL-2022-0017', 2022, 'General Liability', 'Open', 35058.71, 34428.97, 69487.68, 1636, DATE '2022-03-10'),\n    ('GL-2022-0018', 2022, 'General Liability', 'Open', 37677.98, 55491.91, 93169.89, 1655, DATE '2022-02-19'),\n    ('GL-2022-0019', 2022, 'General Liability', 'Reopened', 23250.42, 52059.74, 75310.16, 1501, DATE '2022-07-23'),\n    ('GL-2022-0020', 2022, 'General Liability', 'Reopened', 16657.68, 7802.41, 24460.09, 1612, DATE '2022-04-03'),\n    ('AU-2022-0053', 2022, 'Commercial Auto', 'Open', 446.42, 21334.14, 21780.56, 1508, DATE '2022-07-16'),\n    ('AU-2022-0054', 2022, 'Commercial Auto', 'Open', 3186.04, 5582.12, 8768.16, 1437, DATE '2022-09-25'),\n    ('AU-2022-0055', 2022, 'Commercial Auto', 'Open', 8695.36, 559.52, 9254.88, 1592, DATE '2022-04-23'),\n    ('AU-2022-0056', 2022, 'Commercial Auto', 'Open', 16081.81, 13938.09, 30019.90, 1472, DATE '2022-08-21'),\n    ('AU-2022-0057', 2022, 'Commercial Auto', 'Open', 5925.68, 6239.68, 12165.36, 1355, DATE '2022-12-16'),\n    ('AU-2022-0058', 2022, 'Commercial Auto', 'Open', 15556.93, 7939.53, 23496.46, 1467, DATE '2022-08-26'),\n    ('AU-2022-0059', 2022, 'Commercial Auto', 'Open', 11401.69, 11634.25, 23035.94, 1702, DATE '2022-01-03'),\n    ('AU-2022-0060', 2022, 'Commercial Auto', 'Open', 417.38, 26866.15, 27283.53, 1577, DATE '2022-05-08'),\n    ('AU-2022-0061', 2022, 'Commercial Auto', 'Open', 7019.82, 9861.69, 16881.51, 1501, DATE '2022-07-23'),\n    ('AU-2022-0062', 2022, 'Commercial Auto', 'Open', 7763.78, 18420.14, 26183.92, 1605, DATE '2022-04-10'),\n    ('AU-2022-0063', 2022, 'Commercial Auto', 'Open', 1130.83, 11216.54, 12347.37, 1382, DATE '2022-11-19'),\n    ('AU-2022-0064', 2022, 'Commercial Auto', 'Open', 6841.51, 2469.06, 9310.57, 1538, DATE '2022-06-16'),\n    ('AU-2022-0065', 2022, 'Commercial Auto', 'Open', 14912.57, 8200.65, 23113.22, 1445, DATE '2022-09-17'),\n    ('AU-2022-0066', 2022, 'Commercial Auto', 'Open', 11384.46, 5895.70, 17280.16, 1540, DATE '2022-06-14'),\n    ('AU-2022-0067', 2022, 'Commercial Auto', 'Open', 13559.43, 5241.13, 18800.56, 1353, DATE '2022-12-18'),\n    ('AU-2022-0068', 2022, 'Commercial Auto', 'Open', 8762.83, 11403.36, 20166.19, 1542, DATE '2022-06-12'),\n    ('AU-2022-0069', 2022, 'Commercial Auto', 'Open', 3017.94, 4923.78, 7941.72, 1356, DATE '2022-12-15'),\n    ('AU-2022-0070', 2022, 'Commercial Auto', 'Open', 8676.18, 11681.66, 20357.84, 1575, DATE '2022-05-10'),\n    ('AU-2022-0071', 2022, 'Commercial Auto', 'Open', 1506.66, 10905.16, 12411.82, 1577, DATE '2022-05-08'),\n    ('AU-2022-0072', 2022, 'Commercial Auto', 'Open', 16389.26, 16621.34, 33010.60, 1650, DATE '2022-02-24'),\n    ('AU-2022-0073', 2022, 'Commercial Auto', 'Open', 5553.20, 559.52, 6112.72, 1604, DATE '2022-04-11'),\n    ('AU-2022-0074', 2022, 'Commercial Auto', 'Open', 9070.01, 3334.42, 12404.43, 1650, DATE '2022-02-24'),\n    ('AU-2022-0075', 2022, 'Commercial Auto', 'Open', 11070.65, 3586.79, 14657.44, 1437, DATE '2022-09-25'),\n    ('AU-2022-0076', 2022, 'Commercial Auto', 'Open', 13787.57, 8410.19, 22197.76, 1365, DATE '2022-12-06'),\n    ('AU-2022-0077', 2022, 'Commercial Auto', 'Open', 4291.11, 12996.72, 17287.83, 1608, DATE '2022-04-07'),\n    ('AU-2022-0078', 2022, 'Commercial Auto', 'Open', 2730.42, 15842.57, 18572.99, 1355, DATE '2022-12-16'),\n    ('AU-2022-0079', 2022, 'Commercial Auto', 'Reopened', 5073.58, 5668.84, 10742.42, 1489, DATE '2022-08-04'),\n    ('AU-2022-0080', 2022, 'Commercial Auto', 'Reopened', 10469.61, 15395.67, 25865.28, 1686, DATE '2022-01-19'),\n    ('AU-2022-0081', 2022, 'Commercial Auto', 'Reopened', 6153.17, 9184.58, 15337.75, 1569, DATE '2022-05-16'),\n    ('AU-2022-0082', 2022, 'Commercial Auto', 'Reopened', 1128.89, 9205.55, 10334.44, 1478, DATE '2022-08-15'),\n    ('AU-2022-0083', 2022, 'Commercial Auto', 'Reopened', 12436.86, 11965.27, 24402.13, 1548, DATE '2022-06-06'),\n    ('AU-2022-0084', 2022, 'Commercial Auto', 'Reopened', 5039.29, 9504.89, 14544.18, 1696, DATE '2022-01-09'),\n    ('AU-2022-0085', 2022, 'Commercial Auto', 'Reopened', 4898.42, 14677.65, 19576.07, 1489, DATE '2022-08-04'),\n    ('AU-2022-0086', 2022, 'Commercial Auto', 'Reopened', 9031.92, 5745.17, 14777.09, 1661, DATE '2022-02-13'),\n    ('PR-2022-0015', 2022, 'Property', 'Open', 4305.15, 36658.80, 40963.95, 1483, DATE '2022-08-10'),\n    ('PR-2022-0016', 2022, 'Property', 'Open', 20941.49, 12461.62, 33403.11, 1418, DATE '2022-10-14'),\n    ('PR-2022-0017', 2022, 'Property', 'Open', 17428.15, 23162.23, 40590.38, 1566, DATE '2022-05-19'),\n    ('PR-2022-0018', 2022, 'Property', 'Open', 13739.75, 9364.09, 23103.84, 1430, DATE '2022-10-02'),\n    ('PR-2022-0019', 2022, 'Property', 'Open', 31163.48, 15691.85, 46855.33, 1408, DATE '2022-10-24'),\n    ('PR-2022-0020', 2022, 'Property', 'Open', 1006.03, 32585.89, 33591.92, 1649, DATE '2022-02-25'),\n    ('PR-2022-0021', 2022, 'Property', 'Open', 27964.24, 12523.44, 40487.68, 1594, DATE '2022-04-21'),\n    ('PR-2022-0022', 2022, 'Property', 'Reopened', 11949.31, 21716.44, 33665.75, 1668, DATE '2022-02-06'),\n    ('PR-2022-0023', 2022, 'Property', 'Reopened', 18266.91, 23607.90, 41874.81, 1691, DATE '2022-01-14'),\n    ('WC-2023-0065', 2023, 'Workers Comp', 'Open', 4036.51, 25334.68, 29371.19, 1008, DATE '2023-11-28'),\n    ('WC-2023-0066', 2023, 'Workers Comp', 'Open', 21572.28, 42304.72, 63877.00, 1082, DATE '2023-09-15'),\n    ('WC-2023-0067', 2023, 'Workers Comp', 'Open', 15375.24, 14639.38, 30014.62, 1157, DATE '2023-07-02'),\n    ('WC-2023-0068', 2023, 'Workers Comp', 'Open', 24590.31, 1003.28, 25593.59, 1233, DATE '2023-04-17'),\n    ('WC-2023-0069', 2023, 'Workers Comp', 'Open', 12983.94, 6618.55, 19602.49, 1169, DATE '2023-06-20'),\n    ('WC-2023-0070', 2023, 'Workers Comp', 'Open', 1714.58, 38049.03, 39763.61, 1107, DATE '2023-08-21'),\n    ('WC-2023-0071', 2023, 'Workers Comp', 'Open', 2127.23, 20017.31, 22144.54, 1103, DATE '2023-08-25'),\n    ('WC-2023-0072', 2023, 'Workers Comp', 'Open', 21817.32, 19643.72, 41461.04, 1333, DATE '2023-01-07'),\n    ('WC-2023-0073', 2023, 'Workers Comp', 'Open', 33541.95, 23489.95, 57031.90, 1202, DATE '2023-05-18'),\n    ('WC-2023-0074', 2023, 'Workers Comp', 'Open', 8894.26, 20600.24, 29494.50, 1271, DATE '2023-03-10'),\n    ('WC-2023-0075', 2023, 'Workers Comp', 'Open', 6507.85, 6499.67, 13007.52, 1105, DATE '2023-08-23'),\n    ('WC-2023-0076', 2023, 'Workers Comp', 'Open', 6499.97, 4518.69, 11018.66, 1124, DATE '2023-08-04'),\n    ('WC-2023-0077', 2023, 'Workers Comp', 'Open', 27298.33, 1003.28, 28301.61, 1319, DATE '2023-01-21'),\n    ('WC-2023-0078', 2023, 'Workers Comp', 'Open', 12883.56, 26731.70, 39615.26, 1041, DATE '2023-10-26'),\n    ('WC-2023-0079', 2023, 'Workers Comp', 'Open', 2892.55, 34582.79, 37475.34, 1227, DATE '2023-04-23'),\n    ('WC-2023-0080', 2023, 'Workers Comp', 'Open', 13162.06, 10788.79, 23950.85, 1271, DATE '2023-03-10'),\n    ('WC-2023-0081', 2023, 'Workers Comp', 'Open', 33615.69, 9571.77, 43187.46, 1096, DATE '2023-09-01'),\n    ('WC-2023-0082', 2023, 'Workers Comp', 'Open', 6727.16, 29419.79, 36146.95, 1083, DATE '2023-09-14'),\n    ('WC-2023-0083', 2023, 'Workers Comp', 'Open', 22942.89, 26104.90, 49047.79, 1301, DATE '2023-02-08'),\n    ('WC-2023-0084', 2023, 'Workers Comp', 'Open', 20020.21, 11102.70, 31122.91, 1294, DATE '2023-02-15'),\n    ('WC-2023-0085', 2023, 'Workers Comp', 'Open', 11192.87, 35595.50, 46788.37, 1288, DATE '2023-02-21'),\n    ('WC-2023-0086', 2023, 'Workers Comp', 'Open', 33452.76, 26812.31, 60265.07, 1265, DATE '2023-03-16'),\n    ('WC-2023-0087', 2023, 'Workers Comp', 'Open', 9534.68, 11669.62, 21204.30, 996, DATE '2023-12-10'),\n    ('WC-2023-0088', 2023, 'Workers Comp', 'Open', 13696.74, 16625.02, 30321.76, 1074, DATE '2023-09-23'),\n    ('WC-2023-0089', 2023, 'Workers Comp', 'Open', 28569.71, 10753.21, 39322.92, 1206, DATE '2023-05-14'),\n    ('WC-2023-0090', 2023, 'Workers Comp', 'Open', 28478.60, 40836.58, 69315.18, 1112, DATE '2023-08-16'),\n    ('WC-2023-0091', 2023, 'Workers Comp', 'Open', 9594.15, 12616.14, 22210.29, 1235, DATE '2023-04-15'),\n    ('WC-2023-0092', 2023, 'Workers Comp', 'Open', 865.34, 7455.81, 8321.15, 1092, DATE '2023-09-05'),\n    ('WC-2023-0093', 2023, 'Workers Comp', 'Open', 5189.81, 15959.99, 21149.80, 1152, DATE '2023-07-07'),\n    ('WC-2023-0094', 2023, 'Workers Comp', 'Open', 17270.92, 15869.80, 33140.72, 1050, DATE '2023-10-17'),\n    ('WC-2023-0095', 2023, 'Workers Comp', 'Open', 19898.36, 29842.89, 49741.25, 1001, DATE '2023-12-05'),\n    ('WC-2023-0096', 2023, 'Workers Comp', 'Open', 18740.93, 32103.17, 50844.10, 1300, DATE '2023-02-09'),\n    ('WC-2023-0097', 2023, 'Workers Comp', 'Open', 8969.42, 17783.82, 26753.24, 1148, DATE '2023-07-11'),\n    ('WC-2023-0098', 2023, 'Workers Comp', 'Open', 21101.13, 1003.28, 22104.41, 1088, DATE '2023-09-09'),\n    ('WC-2023-0099', 2023, 'Workers Comp', 'Open', 17296.36, 16782.62, 34078.98, 1330, DATE '2023-01-10'),\n    ('WC-2023-0100', 2023, 'Workers Comp', 'Reopened', 19305.47, 10498.95, 29804.42, 998, DATE '2023-12-08'),\n    ('WC-2023-0101', 2023, 'Workers Comp', 'Reopened', 1165.03, 23867.54, 25032.57, 1054, DATE '2023-10-13'),\n    ('WC-2023-0102', 2023, 'Workers Comp', 'Reopened', 5301.87, 23735.87, 29037.74, 1222, DATE '2023-04-28'),\n    ('WC-2023-0103', 2023, 'Workers Comp', 'Reopened', 13416.99, 9474.55, 22891.54, 1157, DATE '2023-07-02'),\n    ('WC-2023-0104', 2023, 'Workers Comp', 'Reopened', 33375.73, 47710.77, 81086.50, 1165, DATE '2023-06-24'),\n    ('WC-2023-0105', 2023, 'Workers Comp', 'Reopened', 11910.23, 11425.31, 23335.54, 1105, DATE '2023-08-23'),\n    ('GL-2023-0021', 2023, 'General Liability', 'Open', 30439.05, 35361.47, 65800.52, 1209, DATE '2023-05-11'),\n    ('GL-2023-0022', 2023, 'General Liability', 'Open', 14090.27, 30746.78, 44837.05, 1044, DATE '2023-10-23'),\n    ('GL-2023-0023', 2023, 'General Liability', 'Open', 41740.48, 37771.11, 79511.59, 1138, DATE '2023-07-21'),\n    ('GL-2023-0024', 2023, 'General Liability', 'Open', 18684.46, 32383.65, 51068.11, 1281, DATE '2023-02-28'),\n    ('GL-2023-0025', 2023, 'General Liability', 'Open', 16220.69, 24354.02, 40574.71, 1161, DATE '2023-06-28'),\n    ('GL-2023-0026', 2023, 'General Liability', 'Open', 14552.90, 18855.77, 33408.67, 1008, DATE '2023-11-28'),\n    ('GL-2023-0027', 2023, 'General Liability', 'Open', 26410.80, 38255.56, 64666.36, 1084, DATE '2023-09-13'),\n    ('GL-2023-0028', 2023, 'General Liability', 'Open', 18867.67, 913.35, 19781.02, 1168, DATE '2023-06-21'),\n    ('GL-2023-0029', 2023, 'General Liability', 'Open', 30908.97, 35309.27, 66218.24, 981, DATE '2023-12-25'),\n    ('GL-2023-0030', 2023, 'General Liability', 'Open', 17894.19, 26927.30, 44821.49, 1100, DATE '2023-08-28'),\n    ('GL-2023-0031', 2023, 'General Liability', 'Reopened', 7111.39, 19468.32, 26579.71, 1212, DATE '2023-05-08'),\n    ('GL-2023-0032', 2023, 'General Liability', 'Reopened', 28636.75, 34153.90, 62790.65, 1003, DATE '2023-12-03'),\n    ('AU-2023-0087', 2023, 'Commercial Auto', 'Open', 6754.99, 5392.64, 12147.63, 1255, DATE '2023-03-26'),\n    ('AU-2023-0088', 2023, 'Commercial Auto', 'Open', 9998.11, 16241.10, 26239.21, 1085, DATE '2023-09-12'),\n    ('AU-2023-0089', 2023, 'Commercial Auto', 'Open', 1687.78, 11847.31, 13535.09, 1080, DATE '2023-09-17'),\n    ('AU-2023-0090', 2023, 'Commercial Auto', 'Open', 835.55, 19832.41, 20667.96, 1193, DATE '2023-05-27'),\n    ('AU-2023-0091', 2023, 'Commercial Auto', 'Open', 1205.51, 557.38, 1762.89, 1272, DATE '2023-03-09'),\n    ('AU-2023-0092', 2023, 'Commercial Auto', 'Open', 11888.39, 1645.61, 13534.00, 1102, DATE '2023-08-26'),\n    ('AU-2023-0093', 2023, 'Commercial Auto', 'Open', 10368.69, 5967.97, 16336.66, 1196, DATE '2023-05-24'),\n    ('AU-2023-0094', 2023, 'Commercial Auto', 'Open', 8060.87, 28880.19, 36941.06, 1163, DATE '2023-06-26'),\n    ('AU-2023-0095', 2023, 'Commercial Auto', 'Open', 10293.92, 8226.48, 18520.40, 1294, DATE '2023-02-15'),\n    ('AU-2023-0096', 2023, 'Commercial Auto', 'Open', 4691.04, 6655.85, 11346.89, 1304, DATE '2023-02-05'),\n    ('AU-2023-0097', 2023, 'Commercial Auto', 'Open', 6865.24, 1830.72, 8695.96, 1222, DATE '2023-04-28'),\n    ('AU-2023-0098', 2023, 'Commercial Auto', 'Open', 11152.00, 7051.12, 18203.12, 1012, DATE '2023-11-24'),\n    ('AU-2023-0099', 2023, 'Commercial Auto', 'Open', 2158.45, 11076.60, 13235.05, 1023, DATE '2023-11-13'),\n    ('AU-2023-0100', 2023, 'Commercial Auto', 'Open', 7648.06, 9027.64, 16675.70, 1085, DATE '2023-09-12'),\n    ('AU-2023-0101', 2023, 'Commercial Auto', 'Open', 9877.30, 4997.06, 14874.36, 1283, DATE '2023-02-26'),\n    ('AU-2023-0102', 2023, 'Commercial Auto', 'Open', 5824.83, 6289.10, 12113.93, 1158, DATE '2023-07-01'),\n    ('AU-2023-0103', 2023, 'Commercial Auto', 'Open', 18621.28, 15673.80, 34295.08, 1202, DATE '2023-05-18'),\n    ('AU-2023-0104', 2023, 'Commercial Auto', 'Open', 14211.39, 8036.43, 22247.82, 1294, DATE '2023-02-15'),\n    ('AU-2023-0105', 2023, 'Commercial Auto', 'Open', 6077.24, 13910.38, 19987.62, 1167, DATE '2023-06-22'),\n    ('AU-2023-0106', 2023, 'Commercial Auto', 'Open', 6265.75, 2432.93, 8698.68, 984, DATE '2023-12-22'),\n    ('AU-2023-0107', 2023, 'Commercial Auto', 'Open', 11570.59, 5441.96, 17012.55, 1201, DATE '2023-05-19'),\n    ('AU-2023-0108', 2023, 'Commercial Auto', 'Open', 7442.47, 18764.73, 26207.20, 1132, DATE '2023-07-27'),\n    ('AU-2023-0109', 2023, 'Commercial Auto', 'Open', 4992.41, 3848.44, 8840.85, 1024, DATE '2023-11-12'),\n    ('AU-2023-0110', 2023, 'Commercial Auto', 'Open', 10006.26, 4215.91, 14222.17, 1287, DATE '2023-02-22'),\n    ('AU-2023-0111', 2023, 'Commercial Auto', 'Open', 8981.63, 9364.98, 18346.61, 1234, DATE '2023-04-16'),\n    ('AU-2023-0112', 2023, 'Commercial Auto', 'Open', 9748.65, 1497.11, 11245.76, 1320, DATE '2023-01-20'),\n    ('AU-2023-0113', 2023, 'Commercial Auto', 'Open', 12919.81, 16106.19, 29026.00, 1086, DATE '2023-09-11'),\n    ('AU-2023-0114', 2023, 'Commercial Auto', 'Open', 450.32, 3150.75, 3601.07, 1059, DATE '2023-10-08'),\n    ('AU-2023-0115', 2023, 'Commercial Auto', 'Open', 7614.31, 19069.02, 26683.33, 1033, DATE '2023-11-03'),\n    ('AU-2023-0116', 2023, 'Commercial Auto', 'Open', 6159.69, 5647.34, 11807.03, 1009, DATE '2023-11-27'),\n    ('AU-2023-0117', 2023, 'Commercial Auto', 'Open', 4360.11, 8537.81, 12897.92, 1105, DATE '2023-08-23'),\n    ('AU-2023-0118', 2023, 'Commercial Auto', 'Open', 10787.94, 17870.68, 28658.62, 1199, DATE '2023-05-21'),\n    ('AU-2023-0119', 2023, 'Commercial Auto', 'Open', 2431.54, 1617.07, 4048.61, 1155, DATE '2023-07-04'),\n    ('AU-2023-0120', 2023, 'Commercial Auto', 'Open', 4973.27, 5941.35, 10914.62, 1279, DATE '2023-03-02'),\n    ('AU-2023-0121', 2023, 'Commercial Auto', 'Open', 5361.53, 15868.12, 21229.65, 1330, DATE '2023-01-10'),\n    ('AU-2023-0122', 2023, 'Commercial Auto', 'Open', 10883.65, 14148.90, 25032.55, 1124, DATE '2023-08-04'),\n    ('AU-2023-0123', 2023, 'Commercial Auto', 'Open', 11036.86, 11081.85, 22118.71, 1301, DATE '2023-02-08'),\n    ('AU-2023-0124', 2023, 'Commercial Auto', 'Open', 6031.10, 6991.03, 13022.13, 1092, DATE '2023-09-05'),\n    ('AU-2023-0125', 2023, 'Commercial Auto', 'Reopened', 3957.82, 1022.96, 4980.78, 1235, DATE '2023-04-15'),\n    ('AU-2023-0126', 2023, 'Commercial Auto', 'Reopened', 9732.41, 7380.32, 17112.73, 1120, DATE '2023-08-08'),\n    ('AU-2023-0127', 2023, 'Commercial Auto', 'Reopened', 13335.85, 1234.51, 14570.36, 1185, DATE '2023-06-04'),\n    ('AU-2023-0128', 2023, 'Commercial Auto', 'Reopened', 5038.06, 1022.96, 6061.02, 1024, DATE '2023-11-12'),\n    ('AU-2023-0129', 2023, 'Commercial Auto', 'Reopened', 1610.27, 1167.25, 2777.52, 1076, DATE '2023-09-21'),\n    ('AU-2023-0130', 2023, 'Commercial Auto', 'Reopened', 5678.41, 16967.59, 22646.00, 1187, DATE '2023-06-02'),\n    ('AU-2023-0131', 2023, 'Commercial Auto', 'Reopened', 5795.41, 38926.73, 44722.14, 1150, DATE '2023-07-09'),\n    ('PR-2023-0024', 2023, 'Property', 'Open', 20246.53, 19908.10, 40154.63, 1331, DATE '2023-01-09'),\n    ('PR-2023-0025', 2023, 'Property', 'Open', 23366.86, 19990.00, 43356.86, 1276, DATE '2023-03-05'),\n    ('PR-2023-0026', 2023, 'Property', 'Open', 25133.57, 24859.56, 49993.13, 1088, DATE '2023-09-09'),\n    ('PR-2023-0027', 2023, 'Property', 'Open', 8378.96, 18397.76, 26776.72, 1277, DATE '2023-03-04'),\n    ('PR-2023-0028', 2023, 'Property', 'Open', 10041.84, 14329.81, 24371.65, 1008, DATE '2023-11-28'),\n    ('PR-2023-0029', 2023, 'Property', 'Open', 4843.24, 18096.92, 22940.16, 1335, DATE '2023-01-05'),\n    ('PR-2023-0030', 2023, 'Property', 'Open', 16331.16, 17612.04, 33943.20, 1328, DATE '2023-01-12'),\n    ('PR-2023-0031', 2023, 'Property', 'Open', 16889.58, 7851.64, 24741.22, 1231, DATE '2023-04-19'),\n    ('PR-2023-0032', 2023, 'Property', 'Open', 20057.91, 22870.19, 42928.10, 1188, DATE '2023-06-01'),\n    ('PR-2023-0033', 2023, 'Property', 'Open', 10251.85, 26190.27, 36442.12, 1272, DATE '2023-03-09'),\n    ('PR-2023-0034', 2023, 'Property', 'Reopened', 14384.64, 2043.53, 16428.17, 1113, DATE '2023-08-15'),\n    ('PR-2023-0035', 2023, 'Property', 'Reopened', 9810.71, 34249.49, 44060.20, 1172, DATE '2023-06-17'),\n    ('WC-2024-0106', 2024, 'Workers Comp', 'Open', 10313.86, 31019.88, 41333.74, 649, DATE '2024-11-21'),\n    ('WC-2024-0107', 2024, 'Workers Comp', 'Open', 14462.05, 15761.00, 30223.05, 730, DATE '2024-09-01'),\n    ('WC-2024-0108', 2024, 'Workers Comp', 'Open', 26145.73, 29115.19, 55260.92, 679, DATE '2024-10-22'),\n    ('WC-2024-0109', 2024, 'Workers Comp', 'Open', 41378.21, 18776.12, 60154.33, 631, DATE '2024-12-09'),\n    ('WC-2024-0110', 2024, 'Workers Comp', 'Open', 18523.26, 48913.55, 67436.81, 969, DATE '2024-01-06'),\n    ('WC-2024-0111', 2024, 'Workers Comp', 'Open', 1139.32, 14499.21, 15638.53, 831, DATE '2024-05-23'),\n    ('WC-2024-0112', 2024, 'Workers Comp', 'Open', 16511.65, 7329.15, 23840.80, 843, DATE '2024-05-11'),\n    ('WC-2024-0113', 2024, 'Workers Comp', 'Open', 13047.97, 23864.60, 36912.57, 822, DATE '2024-06-01'),\n    ('WC-2024-0114', 2024, 'Workers Comp', 'Open', 20650.10, 22379.16, 43029.26, 887, DATE '2024-03-28'),\n    ('WC-2024-0115', 2024, 'Workers Comp', 'Open', 20090.79, 1930.35, 22021.14, 896, DATE '2024-03-19'),\n    ('WC-2024-0116', 2024, 'Workers Comp', 'Open', 49291.00, 27770.45, 77061.45, 657, DATE '2024-11-13'),\n    ('WC-2024-0117', 2024, 'Workers Comp', 'Open', 22551.09, 15332.96, 37884.05, 939, DATE '2024-02-05'),\n    ('WC-2024-0118', 2024, 'Workers Comp', 'Open', 16939.92, 24146.81, 41086.73, 619, DATE '2024-12-21'),\n    ('WC-2024-0119', 2024, 'Workers Comp', 'Open', 25706.71, 47172.09, 72878.80, 972, DATE '2024-01-03'),\n    ('WC-2024-0120', 2024, 'Workers Comp', 'Open', 19321.70, 30557.90, 49879.60, 623, DATE '2024-12-17'),\n    ('WC-2024-0121', 2024, 'Workers Comp', 'Open', 8394.07, 3399.98, 11794.05, 871, DATE '2024-04-13'),\n    ('WC-2024-0122', 2024, 'Workers Comp', 'Open', 32506.93, 13031.13, 45538.06, 778, DATE '2024-07-15'),\n    ('WC-2024-0123', 2024, 'Workers Comp', 'Open', 15655.45, 983.74, 16639.19, 817, DATE '2024-06-06'),\n    ('WC-2024-0124', 2024, 'Workers Comp', 'Open', 27020.42, 32436.65, 59457.07, 813, DATE '2024-06-10'),\n    ('WC-2024-0125', 2024, 'Workers Comp', 'Open', 28487.53, 31216.31, 59703.84, 629, DATE '2024-12-11'),\n    ('WC-2024-0126', 2024, 'Workers Comp', 'Open', 9903.61, 15199.61, 25103.22, 681, DATE '2024-10-20'),\n    ('WC-2024-0127', 2024, 'Workers Comp', 'Open', 10013.63, 22987.46, 33001.09, 942, DATE '2024-02-02'),\n    ('WC-2024-0128', 2024, 'Workers Comp', 'Open', 19632.55, 17739.21, 37371.76, 909, DATE '2024-03-06'),\n    ('WC-2024-0129', 2024, 'Workers Comp', 'Open', 9774.62, 17281.28, 27055.90, 699, DATE '2024-10-02'),\n    ('WC-2024-0130', 2024, 'Workers Comp', 'Open', 13431.27, 29608.55, 43039.82, 667, DATE '2024-11-03'),\n    ('WC-2024-0131', 2024, 'Workers Comp', 'Open', 16221.01, 30850.17, 47071.18, 839, DATE '2024-05-15'),\n    ('WC-2024-0132', 2024, 'Workers Comp', 'Open', 8294.46, 28186.96, 36481.42, 656, DATE '2024-11-14'),\n    ('WC-2024-0133', 2024, 'Workers Comp', 'Open', 22280.78, 27306.37, 49587.15, 742, DATE '2024-08-20'),\n    ('WC-2024-0134', 2024, 'Workers Comp', 'Open', 24589.21, 30863.50, 55452.71, 748, DATE '2024-08-14'),\n    ('WC-2024-0135', 2024, 'Workers Comp', 'Open', 16292.31, 25963.83, 42256.14, 847, DATE '2024-05-07'),\n    ('WC-2024-0136', 2024, 'Workers Comp', 'Open', 6990.67, 10699.27, 17689.94, 727, DATE '2024-09-04'),\n    ('WC-2024-0137', 2024, 'Workers Comp', 'Open', 1139.32, 14203.33, 15342.65, 809, DATE '2024-06-14'),\n    ('WC-2024-0138', 2024, 'Workers Comp', 'Open', 1139.32, 17655.62, 18794.94, 934, DATE '2024-02-10'),\n    ('WC-2024-0139', 2024, 'Workers Comp', 'Open', 14105.61, 18165.51, 32271.12, 648, DATE '2024-11-22'),\n    ('WC-2024-0140', 2024, 'Workers Comp', 'Open', 1139.32, 27992.18, 29131.50, 685, DATE '2024-10-16'),\n    ('WC-2024-0141', 2024, 'Workers Comp', 'Open', 34958.13, 6005.64, 40963.77, 709, DATE '2024-09-22'),\n    ('WC-2024-0142', 2024, 'Workers Comp', 'Open', 1139.32, 26200.26, 27339.58, 852, DATE '2024-05-02'),\n    ('WC-2024-0143', 2024, 'Workers Comp', 'Open', 35996.25, 21474.05, 57470.30, 871, DATE '2024-04-13'),\n    ('WC-2024-0144', 2024, 'Workers Comp', 'Open', 5001.65, 3313.08, 8314.73, 699, DATE '2024-10-02'),\n    ('WC-2024-0145', 2024, 'Workers Comp', 'Reopened', 17902.91, 15497.48, 33400.39, 910, DATE '2024-03-05'),\n    ('WC-2024-0146', 2024, 'Workers Comp', 'Reopened', 12166.42, 24234.80, 36401.22, 775, DATE '2024-07-18'),\n    ('WC-2024-0147', 2024, 'Workers Comp', 'Reopened', 12808.72, 31479.93, 44288.65, 632, DATE '2024-12-08'),\n    ('WC-2024-0148', 2024, 'Workers Comp', 'Reopened', 15632.13, 16553.06, 32185.19, 713, DATE '2024-09-18'),\n    ('GL-2024-0033', 2024, 'General Liability', 'Open', 34891.32, 36168.32, 71059.64, 765, DATE '2024-07-28'),\n    ('GL-2024-0034', 2024, 'General Liability', 'Open', 1327.78, 35812.38, 37140.16, 830, DATE '2024-05-24'),\n    ('GL-2024-0035', 2024, 'General Liability', 'Open', 46864.62, 16942.72, 63807.34, 815, DATE '2024-06-08'),\n    ('GL-2024-0036', 2024, 'General Liability', 'Open', 34408.94, 64959.33, 99368.27, 798, DATE '2024-06-25'),\n    ('GL-2024-0037', 2024, 'General Liability', 'Open', 25149.38, 5455.32, 30604.70, 912, DATE '2024-03-03'),\n    ('GL-2024-0038', 2024, 'General Liability', 'Open', 23296.83, 7746.99, 31043.82, 710, DATE '2024-09-21'),\n    ('GL-2024-0039', 2024, 'General Liability', 'Open', 46356.32, 40583.93, 86940.25, 927, DATE '2024-02-17'),\n    ('GL-2024-0040', 2024, 'General Liability', 'Open', 9770.84, 28989.52, 38760.36, 724, DATE '2024-09-07'),\n    ('GL-2024-0041', 2024, 'General Liability', 'Open', 6868.95, 41410.53, 48279.48, 811, DATE '2024-06-12'),\n    ('GL-2024-0042', 2024, 'General Liability', 'Open', 14491.75, 20814.52, 35306.27, 613, DATE '2024-12-27'),\n    ('GL-2024-0043', 2024, 'General Liability', 'Open', 19053.27, 12582.27, 31635.54, 643, DATE '2024-11-27'),\n    ('GL-2024-0044', 2024, 'General Liability', 'Open', 8953.80, 20286.60, 29240.40, 907, DATE '2024-03-08'),\n    ('GL-2024-0045', 2024, 'General Liability', 'Reopened', 23349.14, 35023.72, 58372.86, 895, DATE '2024-03-20'),\n    ('AU-2024-0132', 2024, 'Commercial Auto', 'Open', 11609.73, 10669.30, 22279.03, 963, DATE '2024-01-12'),\n    ('AU-2024-0133', 2024, 'Commercial Auto', 'Open', 13442.34, 8295.93, 21738.27, 848, DATE '2024-05-06'),\n    ('AU-2024-0134', 2024, 'Commercial Auto', 'Open', 16991.89, 7654.63, 24646.52, 873, DATE '2024-04-11'),\n    ('AU-2024-0135', 2024, 'Commercial Auto', 'Open', 12288.27, 7383.80, 19672.07, 755, DATE '2024-08-07'),\n    ('AU-2024-0136', 2024, 'Commercial Auto', 'Open', 3931.14, 4398.77, 8329.91, 879, DATE '2024-04-05'),\n    ('AU-2024-0137', 2024, 'Commercial Auto', 'Open', 3802.17, 426.66, 4228.83, 912, DATE '2024-03-03'),\n    ('AU-2024-0138', 2024, 'Commercial Auto', 'Open', 2003.82, 1589.16, 3592.98, 826, DATE '2024-05-28'),\n    ('AU-2024-0139', 2024, 'Commercial Auto', 'Open', 5084.98, 7475.08, 12560.06, 927, DATE '2024-02-17'),\n    ('AU-2024-0140', 2024, 'Commercial Auto', 'Open', 3525.08, 1021.44, 4546.52, 704, DATE '2024-09-27'),\n    ('AU-2024-0141', 2024, 'Commercial Auto', 'Open', 367.35, 17173.71, 17541.06, 623, DATE '2024-12-17'),\n    ('AU-2024-0142', 2024, 'Commercial Auto', 'Open', 367.35, 1817.12, 2184.47, 953, DATE '2024-01-22'),\n    ('AU-2024-0143', 2024, 'Commercial Auto', 'Open', 367.35, 14275.55, 14642.90, 798, DATE '2024-06-25'),\n    ('AU-2024-0144', 2024, 'Commercial Auto', 'Open', 2140.25, 7807.80, 9948.05, 696, DATE '2024-10-05'),\n    ('AU-2024-0145', 2024, 'Commercial Auto', 'Open', 17856.41, 7018.84, 24875.25, 688, DATE '2024-10-13'),\n    ('AU-2024-0146', 2024, 'Commercial Auto', 'Open', 5431.24, 5388.24, 10819.48, 909, DATE '2024-03-06'),\n    ('AU-2024-0147', 2024, 'Commercial Auto', 'Open', 11688.29, 5146.54, 16834.83, 888, DATE '2024-03-27'),\n    ('AU-2024-0148', 2024, 'Commercial Auto', 'Open', 1237.44, 5392.71, 6630.15, 615, DATE '2024-12-25'),\n    ('AU-2024-0149', 2024, 'Commercial Auto', 'Open', 8555.34, 14272.40, 22827.74, 675, DATE '2024-10-26'),\n    ('AU-2024-0150', 2024, 'Commercial Auto', 'Open', 9039.65, 5581.46, 14621.11, 891, DATE '2024-03-24'),\n    ('AU-2024-0151', 2024, 'Commercial Auto', 'Open', 1697.12, 11084.58, 12781.70, 760, DATE '2024-08-02'),\n    ('AU-2024-0152', 2024, 'Commercial Auto', 'Open', 6312.53, 16411.32, 22723.85, 781, DATE '2024-07-12'),\n    ('AU-2024-0153', 2024, 'Commercial Auto', 'Open', 8734.69, 426.66, 9161.35, 646, DATE '2024-11-24'),\n    ('AU-2024-0154', 2024, 'Commercial Auto', 'Open', 6161.46, 6198.08, 12359.54, 869, DATE '2024-04-15'),\n    ('AU-2024-0155', 2024, 'Commercial Auto', 'Open', 7637.49, 6775.35, 14412.84, 691, DATE '2024-10-10'),\n    ('AU-2024-0156', 2024, 'Commercial Auto', 'Open', 4885.53, 15121.59, 20007.12, 614, DATE '2024-12-26'),\n    ('AU-2024-0157', 2024, 'Commercial Auto', 'Open', 10010.05, 12236.63, 22246.68, 754, DATE '2024-08-08'),\n    ('AU-2024-0158', 2024, 'Commercial Auto', 'Open', 367.35, 12355.91, 12723.26, 723, DATE '2024-09-08'),\n    ('AU-2024-0159', 2024, 'Commercial Auto', 'Open', 367.35, 6328.87, 6696.22, 828, DATE '2024-05-26'),\n    ('AU-2024-0160', 2024, 'Commercial Auto', 'Open', 12338.92, 4335.17, 16674.09, 735, DATE '2024-08-27'),\n    ('AU-2024-0161', 2024, 'Commercial Auto', 'Open', 10528.00, 2267.02, 12795.02, 872, DATE '2024-04-12'),\n    ('AU-2024-0162', 2024, 'Commercial Auto', 'Open', 3002.02, 14077.59, 17079.61, 651, DATE '2024-11-19'),\n    ('AU-2024-0163', 2024, 'Commercial Auto', 'Open', 11202.64, 14359.98, 25562.62, 747, DATE '2024-08-15'),\n    ('AU-2024-0164', 2024, 'Commercial Auto', 'Open', 14274.60, 14177.82, 28452.42, 829, DATE '2024-05-25'),\n    ('AU-2024-0165', 2024, 'Commercial Auto', 'Open', 5297.91, 11858.02, 17155.93, 776, DATE '2024-07-17'),\n    ('AU-2024-0166', 2024, 'Commercial Auto', 'Open', 16680.67, 5698.77, 22379.44, 717, DATE '2024-09-14'),\n    ('AU-2024-0167', 2024, 'Commercial Auto', 'Open', 9807.46, 4949.62, 14757.08, 888, DATE '2024-03-27'),\n    ('AU-2024-0168', 2024, 'Commercial Auto', 'Open', 4783.70, 14073.44, 18857.14, 858, DATE '2024-04-26'),\n    ('AU-2024-0169', 2024, 'Commercial Auto', 'Open', 6108.01, 14271.44, 20379.45, 696, DATE '2024-10-05'),\n    ('AU-2024-0170', 2024, 'Commercial Auto', 'Open', 3237.88, 25109.89, 28347.77, 852, DATE '2024-05-02'),\n    ('AU-2024-0171', 2024, 'Commercial Auto', 'Open', 4159.38, 2812.28, 6971.66, 654, DATE '2024-11-16'),\n    ('AU-2024-0172', 2024, 'Commercial Auto', 'Open', 12001.72, 10466.71, 22468.43, 805, DATE '2024-06-18'),\n    ('AU-2024-0173', 2024, 'Commercial Auto', 'Open', 6080.49, 7347.63, 13428.12, 921, DATE '2024-02-23'),\n    ('AU-2024-0174', 2024, 'Commercial Auto', 'Open', 10487.19, 5608.82, 16096.01, 703, DATE '2024-09-28'),\n    ('AU-2024-0175', 2024, 'Commercial Auto', 'Open', 367.35, 3177.39, 3544.74, 934, DATE '2024-02-10'),\n    ('AU-2024-0176', 2024, 'Commercial Auto', 'Reopened', 8548.74, 10505.25, 19053.99, 822, DATE '2024-06-01'),\n    ('AU-2024-0177', 2024, 'Commercial Auto', 'Reopened', 7710.11, 7171.26, 14881.37, 791, DATE '2024-07-02'),\n    ('AU-2024-0178', 2024, 'Commercial Auto', 'Reopened', 2068.19, 18016.85, 20085.04, 776, DATE '2024-07-17'),\n    ('AU-2024-0179', 2024, 'Commercial Auto', 'Reopened', 8018.05, 3824.26, 11842.31, 815, DATE '2024-06-08'),\n    ('PR-2024-0036', 2024, 'Property', 'Open', 8509.98, 18371.67, 26881.65, 942, DATE '2024-02-02'),\n    ('PR-2024-0037', 2024, 'Property', 'Open', 12165.36, 5769.82, 17935.18, 870, DATE '2024-04-14'),\n    ('PR-2024-0038', 2024, 'Property', 'Open', 11342.44, 885.39, 12227.83, 644, DATE '2024-11-26'),\n    ('PR-2024-0039', 2024, 'Property', 'Open', 15897.15, 2395.53, 18292.68, 686, DATE '2024-10-15'),\n    ('PR-2024-0040', 2024, 'Property', 'Open', 18545.98, 25060.52, 43606.50, 940, DATE '2024-02-04'),\n    ('PR-2024-0041', 2024, 'Property', 'Open', 16265.65, 18589.97, 34855.62, 742, DATE '2024-08-20'),\n    ('PR-2024-0042', 2024, 'Property', 'Open', 8664.30, 32593.07, 41257.37, 730, DATE '2024-09-01'),\n    ('PR-2024-0043', 2024, 'Property', 'Open', 13500.15, 38066.11, 51566.26, 653, DATE '2024-11-17'),\n    ('PR-2024-0044', 2024, 'Property', 'Open', 24085.98, 9069.23, 33155.21, 693, DATE '2024-10-08'),\n    ('PR-2024-0045', 2024, 'Property', 'Open', 13808.73, 10663.15, 24471.88, 635, DATE '2024-12-05'),\n    ('PR-2024-0046', 2024, 'Property', 'Open', 523.31, 18989.13, 19512.44, 840, DATE '2024-05-14'),\n    ('PR-2024-0047', 2024, 'Property', 'Open', 12505.65, 9986.59, 22492.24, 955, DATE '2024-01-20'),\n    ('PR-2024-0048', 2024, 'Property', 'Reopened', 13403.41, 20105.12, 33508.53, 893, DATE '2024-03-22'),\n    ('WC-2025-0149', 2025, 'Workers Comp', 'Open', 10402.41, 28936.70, 39339.11, 606, DATE '2025-01-03'),\n    ('WC-2025-0150', 2025, 'Workers Comp', 'Open', 5904.87, 14630.28, 20535.15, 284, DATE '2025-11-21'),\n    ('WC-2025-0151', 2025, 'Workers Comp', 'Open', 811.55, 17926.28, 18737.83, 416, DATE '2025-07-12'),\n    ('WC-2025-0152', 2025, 'Workers Comp', 'Open', 34754.69, 12263.30, 47017.99, 340, DATE '2025-09-26'),\n    ('WC-2025-0153', 2025, 'Workers Comp', 'Open', 811.55, 10595.73, 11407.28, 253, DATE '2025-12-22'),\n    ('WC-2025-0154', 2025, 'Workers Comp', 'Open', 11551.86, 19573.20, 31125.06, 549, DATE '2025-03-01'),\n    ('WC-2025-0155', 2025, 'Workers Comp', 'Open', 14259.26, 14953.66, 29212.92, 522, DATE '2025-03-28'),\n    ('WC-2025-0156', 2025, 'Workers Comp', 'Open', 16136.52, 12780.62, 28917.14, 314, DATE '2025-10-22'),\n    ('WC-2025-0157', 2025, 'Workers Comp', 'Open', 18263.98, 10510.60, 28774.58, 395, DATE '2025-08-02'),\n    ('WC-2025-0158', 2025, 'Workers Comp', 'Open', 14155.00, 20874.21, 35029.21, 547, DATE '2025-03-03'),\n    ('WC-2025-0159', 2025, 'Workers Comp', 'Open', 9095.86, 6763.33, 15859.19, 494, DATE '2025-04-25'),\n    ('WC-2025-0160', 2025, 'Workers Comp', 'Open', 22373.16, 8331.55, 30704.71, 293, DATE '2025-11-12'),\n    ('WC-2025-0161', 2025, 'Workers Comp', 'Open', 16076.70, 24073.89, 40150.59, 445, DATE '2025-06-13'),\n    ('WC-2025-0162', 2025, 'Workers Comp', 'Open', 7078.48, 26624.52, 33703.00, 334, DATE '2025-10-02'),\n    ('WC-2025-0163', 2025, 'Workers Comp', 'Open', 22823.38, 14877.38, 37700.76, 331, DATE '2025-10-05'),\n    ('WC-2025-0164', 2025, 'Workers Comp', 'Open', 19210.56, 23663.97, 42874.53, 290, DATE '2025-11-15'),\n    ('WC-2025-0165', 2025, 'Workers Comp', 'Open', 13720.13, 32271.00, 45991.13, 446, DATE '2025-06-12'),\n    ('WC-2025-0166', 2025, 'Workers Comp', 'Open', 12429.18, 4874.23, 17303.41, 372, DATE '2025-08-25'),\n    ('WC-2025-0167', 2025, 'Workers Comp', 'Open', 1978.20, 31298.36, 33276.56, 559, DATE '2025-02-19'),\n    ('WC-2025-0168', 2025, 'Workers Comp', 'Open', 8172.03, 16994.54, 25166.57, 533, DATE '2025-03-17'),\n    ('WC-2025-0169', 2025, 'Workers Comp', 'Open', 22301.19, 21774.51, 44075.70, 445, DATE '2025-06-13'),\n    ('WC-2025-0170', 2025, 'Workers Comp', 'Open', 22979.12, 7565.37, 30544.49, 437, DATE '2025-06-21'),\n    ('WC-2025-0171', 2025, 'Workers Comp', 'Open', 8851.50, 22526.42, 31377.92, 481, DATE '2025-05-08'),\n    ('WC-2025-0172', 2025, 'Workers Comp', 'Open', 28097.35, 24052.91, 52150.26, 577, DATE '2025-02-01'),\n    ('WC-2025-0173', 2025, 'Workers Comp', 'Open', 23390.35, 17247.08, 40637.43, 269, DATE '2025-12-06'),\n    ('WC-2025-0174', 2025, 'Workers Comp', 'Open', 3282.30, 16127.60, 19409.90, 380, DATE '2025-08-17'),\n    ('WC-2025-0175', 2025, 'Workers Comp', 'Open', 27263.59, 22139.25, 49402.84, 410, DATE '2025-07-18'),\n    ('WC-2025-0176', 2025, 'Workers Comp', 'Open', 14894.95, 13328.24, 28223.19, 569, DATE '2025-02-09'),\n    ('WC-2025-0177', 2025, 'Workers Comp', 'Open', 18394.76, 25186.65, 43581.41, 466, DATE '2025-05-23'),\n    ('WC-2025-0178', 2025, 'Workers Comp', 'Open', 21005.40, 1750.99, 22756.39, 390, DATE '2025-08-07'),\n    ('WC-2025-0179', 2025, 'Workers Comp', 'Open', 11286.29, 23000.83, 34287.12, 326, DATE '2025-10-10'),\n    ('WC-2025-0180', 2025, 'Workers Comp', 'Open', 811.55, 23123.33, 23934.88, 259, DATE '2025-12-16'),\n    ('WC-2025-0181', 2025, 'Workers Comp', 'Open', 22590.20, 27273.02, 49863.22, 515, DATE '2025-04-04'),\n    ('WC-2025-0182', 2025, 'Workers Comp', 'Open', 17735.93, 1505.36, 19241.29, 522, DATE '2025-03-28'),\n    ('WC-2025-0183', 2025, 'Workers Comp', 'Open', 21412.98, 22951.21, 44364.19, 563, DATE '2025-02-15'),\n    ('WC-2025-0184', 2025, 'Workers Comp', 'Open', 811.55, 29740.17, 30551.72, 527, DATE '2025-03-23'),\n    ('WC-2025-0185', 2025, 'Workers Comp', 'Open', 12869.85, 9824.22, 22694.07, 394, DATE '2025-08-03'),\n    ('WC-2025-0186', 2025, 'Workers Comp', 'Open', 23919.15, 3726.89, 27646.04, 277, DATE '2025-11-28'),\n    ('WC-2025-0187', 2025, 'Workers Comp', 'Open', 1866.25, 23395.32, 25261.57, 436, DATE '2025-06-22'),\n    ('WC-2025-0188', 2025, 'Workers Comp', 'Reopened', 9916.04, 2431.51, 12347.55, 527, DATE '2025-03-23'),\n    ('WC-2025-0189', 2025, 'Workers Comp', 'Reopened', 13392.43, 32531.20, 45923.63, 252, DATE '2025-12-23'),\n    ('GL-2025-0046', 2025, 'General Liability', 'Open', 7725.47, 6630.90, 14356.37, 302, DATE '2025-11-03'),\n    ('GL-2025-0047', 2025, 'General Liability', 'Open', 4717.78, 18890.35, 23608.13, 382, DATE '2025-08-15'),\n    ('GL-2025-0048', 2025, 'General Liability', 'Open', 17400.36, 19582.37, 36982.73, 288, DATE '2025-11-17'),\n    ('GL-2025-0049', 2025, 'General Liability', 'Open', 24607.55, 3207.32, 27814.87, 453, DATE '2025-06-05'),\n    ('GL-2025-0050', 2025, 'General Liability', 'Open', 27516.97, 75237.11, 102754.08, 345, DATE '2025-09-21'),\n    ('GL-2025-0051', 2025, 'General Liability', 'Open', 32852.82, 20106.82, 52959.64, 330, DATE '2025-10-06'),\n    ('GL-2025-0052', 2025, 'General Liability', 'Open', 25897.38, 6591.57, 32488.95, 536, DATE '2025-03-14'),\n    ('GL-2025-0053', 2025, 'General Liability', 'Open', 21672.59, 26592.79, 48265.38, 338, DATE '2025-09-28'),\n    ('GL-2025-0054', 2025, 'General Liability', 'Open', 11441.43, 1172.31, 12613.74, 582, DATE '2025-01-27'),\n    ('GL-2025-0055', 2025, 'General Liability', 'Open', 20230.42, 57162.54, 77392.96, 561, DATE '2025-02-17'),\n    ('GL-2025-0056', 2025, 'General Liability', 'Open', 31319.80, 40293.51, 71613.31, 540, DATE '2025-03-10'),\n    ('GL-2025-0057', 2025, 'General Liability', 'Reopened', 9318.14, 13977.21, 23295.35, 267, DATE '2025-12-08'),\n    ('AU-2025-0180', 2025, 'Commercial Auto', 'Open', 1177.79, 9126.49, 10304.28, 351, DATE '2025-09-15'),\n    ('AU-2025-0181', 2025, 'Commercial Auto', 'Open', 13463.21, 6606.28, 20069.49, 357, DATE '2025-09-09'),\n    ('AU-2025-0182', 2025, 'Commercial Auto', 'Open', 11863.04, 3268.87, 15131.91, 314, DATE '2025-10-22'),\n    ('AU-2025-0183', 2025, 'Commercial Auto', 'Open', 1784.58, 10835.89, 12620.47, 332, DATE '2025-10-04'),\n    ('AU-2025-0184', 2025, 'Commercial Auto', 'Open', 6169.54, 4980.68, 11150.22, 546, DATE '2025-03-04'),\n    ('AU-2025-0185', 2025, 'Commercial Auto', 'Open', 11462.60, 11184.51, 22647.11, 416, DATE '2025-07-12'),\n    ('AU-2025-0186', 2025, 'Commercial Auto', 'Open', 4366.16, 6601.65, 10967.81, 440, DATE '2025-06-18'),\n    ('AU-2025-0187', 2025, 'Commercial Auto', 'Open', 5586.44, 10073.52, 15659.96, 433, DATE '2025-06-25'),\n    ('AU-2025-0188', 2025, 'Commercial Auto', 'Open', 4695.26, 9778.26, 14473.52, 543, DATE '2025-03-07'),\n    ('AU-2025-0189', 2025, 'Commercial Auto', 'Open', 10525.30, 8918.40, 19443.70, 319, DATE '2025-10-17'),\n    ('AU-2025-0190', 2025, 'Commercial Auto', 'Open', 3932.81, 2644.98, 6577.79, 411, DATE '2025-07-17'),\n    ('AU-2025-0191', 2025, 'Commercial Auto', 'Open', 6153.10, 10779.51, 16932.61, 607, DATE '2025-01-02'),\n    ('AU-2025-0192', 2025, 'Commercial Auto', 'Open', 8195.82, 7037.03, 15232.85, 604, DATE '2025-01-05'),\n    ('AU-2025-0193', 2025, 'Commercial Auto', 'Open', 5418.61, 15291.36, 20709.97, 264, DATE '2025-12-11'),\n    ('AU-2025-0194', 2025, 'Commercial Auto', 'Open', 2971.88, 8941.33, 11913.21, 380, DATE '2025-08-17'),\n    ('AU-2025-0195', 2025, 'Commercial Auto', 'Open', 1207.41, 10076.88, 11284.29, 392, DATE '2025-08-05'),\n    ('AU-2025-0196', 2025, 'Commercial Auto', 'Open', 551.16, 3758.41, 4309.57, 319, DATE '2025-10-17'),\n    ('AU-2025-0197', 2025, 'Commercial Auto', 'Open', 1808.09, 5253.62, 7061.71, 539, DATE '2025-03-11'),\n    ('AU-2025-0198', 2025, 'Commercial Auto', 'Open', 309.48, 7349.43, 7658.91, 325, DATE '2025-10-11'),\n    ('AU-2025-0199', 2025, 'Commercial Auto', 'Open', 3490.15, 2068.02, 5558.17, 537, DATE '2025-03-13'),\n    ('AU-2025-0200', 2025, 'Commercial Auto', 'Open', 7304.51, 2068.85, 9373.36, 312, DATE '2025-10-24'),\n    ('AU-2025-0201', 2025, 'Commercial Auto', 'Open', 6390.49, 6493.78, 12884.27, 470, DATE '2025-05-19'),\n    ('AU-2025-0202', 2025, 'Commercial Auto', 'Open', 3119.68, 6621.78, 9741.46, 441, DATE '2025-06-17'),\n    ('AU-2025-0203', 2025, 'Commercial Auto', 'Open', 2408.92, 7788.54, 10197.46, 348, DATE '2025-09-18'),\n    ('AU-2025-0204', 2025, 'Commercial Auto', 'Open', 2500.39, 11602.20, 14102.59, 374, DATE '2025-08-23'),\n    ('AU-2025-0205', 2025, 'Commercial Auto', 'Open', 1035.28, 5277.81, 6313.09, 326, DATE '2025-10-10'),\n    ('AU-2025-0206', 2025, 'Commercial Auto', 'Open', 1599.84, 9784.09, 11383.93, 370, DATE '2025-08-27'),\n    ('AU-2025-0207', 2025, 'Commercial Auto', 'Open', 8842.55, 6343.52, 15186.07, 597, DATE '2025-01-12'),\n    ('AU-2025-0208', 2025, 'Commercial Auto', 'Open', 973.21, 6137.73, 7110.94, 436, DATE '2025-06-22'),\n    ('AU-2025-0209', 2025, 'Commercial Auto', 'Open', 6253.90, 8017.74, 14271.64, 564, DATE '2025-02-14'),\n    ('AU-2025-0210', 2025, 'Commercial Auto', 'Open', 3894.29, 347.32, 4241.61, 326, DATE '2025-10-10'),\n    ('AU-2025-0211', 2025, 'Commercial Auto', 'Open', 15206.38, 7222.90, 22429.28, 247, DATE '2025-12-28'),\n    ('AU-2025-0212', 2025, 'Commercial Auto', 'Open', 309.48, 4286.20, 4595.68, 254, DATE '2025-12-21'),\n    ('AU-2025-0213', 2025, 'Commercial Auto', 'Open', 6907.46, 3070.95, 9978.41, 589, DATE '2025-01-20'),\n    ('AU-2025-0214', 2025, 'Commercial Auto', 'Open', 4950.12, 347.32, 5297.44, 388, DATE '2025-08-09'),\n    ('AU-2025-0215', 2025, 'Commercial Auto', 'Open', 3325.80, 5100.45, 8426.25, 279, DATE '2025-11-26'),\n    ('AU-2025-0216', 2025, 'Commercial Auto', 'Open', 7360.21, 347.32, 7707.53, 317, DATE '2025-10-19'),\n    ('AU-2025-0217', 2025, 'Commercial Auto', 'Open', 6767.39, 10572.83, 17340.22, 495, DATE '2025-04-24'),\n    ('AU-2025-0218', 2025, 'Commercial Auto', 'Open', 2219.94, 5948.95, 8168.89, 590, DATE '2025-01-19'),\n    ('AU-2025-0219', 2025, 'Commercial Auto', 'Open', 7772.68, 347.32, 8120.00, 391, DATE '2025-08-06'),\n    ('AU-2025-0220', 2025, 'Commercial Auto', 'Open', 7634.87, 4139.22, 11774.09, 345, DATE '2025-09-21'),\n    ('AU-2025-0221', 2025, 'Commercial Auto', 'Open', 11052.64, 10092.83, 21145.47, 255, DATE '2025-12-20'),\n    ('AU-2025-0222', 2025, 'Commercial Auto', 'Open', 3924.31, 4466.98, 8391.29, 423, DATE '2025-07-05'),\n    ('AU-2025-0223', 2025, 'Commercial Auto', 'Open', 11650.46, 5774.27, 17424.73, 297, DATE '2025-11-08'),\n    ('AU-2025-0224', 2025, 'Commercial Auto', 'Open', 5458.66, 5407.65, 10866.31, 590, DATE '2025-01-19'),\n    ('AU-2025-0225', 2025, 'Commercial Auto', 'Open', 309.48, 6411.70, 6721.18, 271, DATE '2025-12-04'),\n    ('AU-2025-0226', 2025, 'Commercial Auto', 'Reopened', 4396.11, 3951.81, 8347.92, 505, DATE '2025-04-14'),\n    ('AU-2025-0227', 2025, 'Commercial Auto', 'Reopened', 5704.37, 11198.91, 16903.28, 341, DATE '2025-09-25'),\n    ('PR-2025-0049', 2025, 'Property', 'Open', 7047.61, 9940.18, 16987.79, 268, DATE '2025-12-07'),\n    ('PR-2025-0050', 2025, 'Property', 'Open', 8237.18, 5393.90, 13631.08, 252, DATE '2025-12-23'),\n    ('PR-2025-0051', 2025, 'Property', 'Open', 22825.76, 588.79, 23414.55, 386, DATE '2025-08-11'),\n    ('PR-2025-0052', 2025, 'Property', 'Open', 3095.13, 6401.73, 9496.86, 385, DATE '2025-08-12'),\n    ('PR-2025-0053', 2025, 'Property', 'Open', 11715.08, 588.79, 12303.87, 340, DATE '2025-09-26'),\n    ('PR-2025-0054', 2025, 'Property', 'Open', 4420.64, 11043.06, 15463.70, 266, DATE '2025-12-09'),\n    ('PR-2025-0055', 2025, 'Property', 'Open', 731.31, 19872.46, 20603.77, 485, DATE '2025-05-04'),\n    ('PR-2025-0056', 2025, 'Property', 'Open', 3017.98, 17286.53, 20304.51, 314, DATE '2025-10-22'),\n    ('PR-2025-0057', 2025, 'Property', 'Open', 6170.08, 10262.06, 16432.14, 353, DATE '2025-09-13'),\n    ('PR-2025-0058', 2025, 'Property', 'Open', 15782.57, 6724.82, 22507.39, 401, DATE '2025-07-27'),\n    ('PR-2025-0059', 2025, 'Property', 'Open', 24005.11, 27834.46, 51839.57, 433, DATE '2025-06-25'),\n    ('PR-2025-0060', 2025, 'Property', 'Open', 12008.83, 23834.83, 35843.66, 540, DATE '2025-03-10'),\n    ('PR-2025-0061', 2025, 'Property', 'Open', 3831.62, 10425.98, 14257.60, 599, DATE '2025-01-10'),\n    ('PR-2025-0062', 2025, 'Property', 'Reopened', 5080.68, 7621.02, 12701.70, 376, DATE '2025-08-21')\n) AS t(CLAIM_ID, POLICY_YEAR, LINE_OF_BUSINESS, CLAIM_STATUS, PAID_TO_DATE, CASE_RESERVE, INCURRED, DAYS_OPEN, REPORTED_DATE)",
+                    "kind": "sql"
+                },
+                "columns": [
+                    {
+                        "id": "cq-claimid",
+                        "formula": "[Custom SQL/CLAIM_ID]",
+                        "name": "Claim ID"
+                    },
+                    {
+                        "id": "cq-policy-year",
+                        "formula": "[Custom SQL/POLICY_YEAR]",
+                        "name": "Policy Year"
+                    },
+                    {
+                        "id": "cq-lob",
+                        "formula": "[Custom SQL/LINE_OF_BUSINESS]",
+                        "name": "Line of Business"
+                    },
+                    {
+                        "id": "cq-status",
+                        "formula": "[Custom SQL/CLAIM_STATUS]",
+                        "name": "Claim Status"
+                    },
+                    {
+                        "id": "cq-reserve",
+                        "formula": "[Custom SQL/CASE_RESERVE]",
+                        "name": "Case Reserve",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cq-paid",
+                        "formula": "[Custom SQL/PAID_TO_DATE]",
+                        "name": "Paid to Date",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cq-incurred",
+                        "formula": "[Custom SQL/INCURRED]",
+                        "name": "Incurred",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cq-days-open",
+                        "formula": "[Custom SQL/DAYS_OPEN]",
+                        "name": "Days Open"
+                    },
+                    {
+                        "id": "cq-reported",
+                        "formula": "[Custom SQL/REPORTED_DATE]",
+                        "name": "Reported Date"
+                    }
+                ],
+                "name": "Claim Queue",
+                "order": [
+                    "cq-claimid",
+                    "cq-policy-year",
+                    "cq-lob",
+                    "cq-status",
+                    "cq-reserve",
+                    "cq-paid",
+                    "cq-incurred",
+                    "cq-days-open",
+                    "cq-reported"
+                ],
+                "sort": [
+                    {
+                        "columnId": "cq-reserve",
+                        "direction": "descending"
+                    }
+                ]
+            },
+            {
+                "id": "txt-form-title-reserve",
+                "kind": "text",
+                "body": "### Log a Review"
+            },
+            {
+                "id": "ctr-form-reserve",
+                "kind": "container",
+                "style": {
+                    "backgroundColor": "#dce4ee",
+                    "borderRadius": "round"
+                }
+            },
+            {
+                "kind": "control",
+                "controlId": "rr-claim",
+                "id": "ctrl-rr-claim",
+                "name": "Select Claim",
+                "controlType": "list",
+                "mode": "include",
+                "selectionMode": "single",
+                "value": null,
+                "source": {
+                    "kind": "source",
+                    "source": {
+                        "kind": "table",
+                        "elementId": "tbl-claim-queue"
+                    },
+                    "columnId": "cq-claimid"
+                }
+            },
+            {
+                "kind": "control",
+                "controlId": "rr-decision",
+                "id": "ctrl-rr-decision",
+                "name": "Decision",
+                "controlType": "segmented",
+                "source": {
+                    "kind": "manual",
+                    "valueType": "text",
+                    "values": [
+                        "Reserve Confirmed",
+                        "Reserve Adjusted",
+                        "Escalated"
+                    ],
+                    "labels": [
+                        "Confirm Reserve",
+                        "Adjust Reserve",
+                        "Escalate"
+                    ]
+                },
+                "value": "Reserve Confirmed"
+            },
+            {
+                "kind": "control",
+                "controlId": "rr-adjusted",
+                "id": "ctrl-rr-adjusted",
+                "name": "Adjusted Reserve ($, if applicable)",
+                "case": "insensitive",
+                "controlType": "text",
+                "mode": "equals",
+                "value": "",
+                "includeNulls": "when-no-value-is-selected",
+                "showOperators": false
+            },
+            {
+                "kind": "control",
+                "controlId": "rr-note",
+                "id": "ctrl-rr-note",
+                "name": "Reviewer Note",
+                "case": "insensitive",
+                "controlType": "text",
+                "mode": "equals",
+                "value": "",
+                "includeNulls": "when-no-value-is-selected",
+                "showOperators": false
+            },
+            {
+                "id": "btn-submit-review",
+                "kind": "button",
+                "text": "Submit Review",
+                "appearance": "filled",
+                "fillColor": "#1b3a5c",
+                "actions": [
+                    {
+                        "id": "act-submit-review",
+                        "trigger": "on-click",
+                        "effects": [
+                            {
+                                "effect": "insert-rows",
+                                "tableElementId": "it-review-log",
+                                "values": {
+                                    "rl-claimid": {
+                                        "type": "control",
+                                        "control": "rr-claim"
+                                    },
+                                    "rl-note": {
+                                        "type": "control",
+                                        "control": "rr-note"
+                                    },
+                                    "rl-decision": {
+                                        "type": "control",
+                                        "control": "rr-decision"
+                                    },
+                                    "rl-adjusted": {
+                                        "type": "formula",
+                                        "formula": "Number([rr-adjusted])"
+                                    }
+                                }
+                            },
+                            {
+                                "effect": "clear-control",
+                                "scope": {
+                                    "type": "control",
+                                    "controlId": "rr-claim"
+                                }
+                            },
+                            {
+                                "effect": "clear-control",
+                                "scope": {
+                                    "type": "control",
+                                    "controlId": "rr-note"
+                                }
+                            },
+                            {
+                                "effect": "clear-control",
+                                "scope": {
+                                    "type": "control",
+                                    "controlId": "rr-adjusted"
+                                }
+                            },
+                            {
+                                "effect": "refresh-element",
+                                "target": {
+                                    "type": "element",
+                                    "element": "it-review-log"
+                                }
+                            }
+                        ],
+                        "successToast": {
+                            "title": "Review logged",
+                            "showMessage": "shown",
+                            "message": "The reserve review was added to the log below."
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "txt-log-title-reserve",
+                "kind": "text",
+                "body": "### Recent Review Activity"
+            },
+            {
+                "id": "it-review-log",
+                "kind": "input-table",
+                "source": {
+                    "kind": "empty",
+                    "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1"
+                },
+                "inputMode": "edit",
+                "name": "Reserve Review Log",
+                "sort": [
+                    {
+                        "columnId": "CREATED_AT",
+                        "direction": "descending"
+                    }
+                ],
+                "columns": [
+                    {
+                        "id": "rl-claimid",
+                        "type": "text",
+                        "name": "Claim ID"
+                    },
+                    {
+                        "id": "rl-note",
+                        "type": "text",
+                        "name": "Reviewer Note"
+                    },
+                    {
+                        "id": "rl-decision",
+                        "type": "text",
+                        "name": "Decision",
+                        "values": [
+                            "Reserve Confirmed",
+                            "Reserve Adjusted",
+                            "Escalated"
+                        ],
+                        "pills": "color-by-option"
+                    },
+                    {
+                        "id": "rl-adjusted",
+                        "type": "number",
+                        "name": "Adjusted Reserve"
+                    },
+                    {
+                        "id": "CREATED_AT"
+                    },
+                    {
+                        "id": "CREATED_BY"
+                    }
+                ]
             }
         ],
         "pages": [
@@ -1547,6 +2016,10 @@
             {
                 "id": "page-assistant",
                 "name": "Loss Run Assistant"
+            },
+            {
+                "id": "page-reserve",
+                "name": "Reserve Review"
             }
         ],
         "settings": {
@@ -1677,6 +2150,6 @@
             }
         ],
         "kind": "workbook",
-        "layout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-data\">\n  <Element elementId=\"tbl-claims\" gridColumn=\"1 / 3\" gridRow=\"1 / 2\"/>\n  <Element elementId=\"tbl-premium\" gridColumn=\"1 / 3\" gridRow=\"2 / 3\"/>\n  <Element elementId=\"tbl-loss-ratio\" gridColumn=\"1 / 3\" gridRow=\"3 / 4\"/>\n  <Element elementId=\"tbl-lob-summary\" gridColumn=\"1 / 3\" gridRow=\"4 / 5\"/>\n  <Element elementId=\"tbl-year-premium\" gridColumn=\"1 / 3\" gridRow=\"5 / 6\"/>\n  <Element elementId=\"tbl-year-summary\" gridColumn=\"1 / 3\" gridRow=\"6 / 7\"/>\n  <Element elementId=\"tbl-triangle\" gridColumn=\"1 / 3\" gridRow=\"7 / 8\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-command\">\n  <Container elementId=\"ctr-header-command\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-command\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-command\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-command\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-command\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-command\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Container elementId=\"ctr-filters-command\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"4 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"ctrl-lob\" gridColumn=\"1 / 9\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"ctrl-policyyear\" gridColumn=\"9 / 17\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"ctrl-status\" gridColumn=\"17 / 25\" gridRow=\"1 / 3\"/>\n  </Container>\n  <Container elementId=\"ctr-kpis-command\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"6 / 16\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"kpi-incurred\" gridColumn=\"1 / 5\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-paid\" gridColumn=\"5 / 9\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-reserve\" gridColumn=\"9 / 13\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-lossratio\" gridColumn=\"13 / 17\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-frequency\" gridColumn=\"17 / 21\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-severity\" gridColumn=\"21 / 25\" gridRow=\"1 / 11\"/>\n  </Container>\n  <Element elementId=\"chart-lossratio-trend\" gridColumn=\"1 / 13\" gridRow=\"16 / 32\"/>\n  <Element elementId=\"chart-frequency-trend\" gridColumn=\"13 / 25\" gridRow=\"16 / 24\"/>\n  <Element elementId=\"chart-severity-trend\" gridColumn=\"13 / 25\" gridRow=\"24 / 32\"/>\n  <Element elementId=\"chart-incurred-by-lob\" gridColumn=\"1 / 25\" gridRow=\"32 / 46\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-triangle\">\n  <Container elementId=\"ctr-header-triangle\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-triangle\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-triangle\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-triangle\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-triangle\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-triangle\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Container elementId=\"ctr-mode-triangle\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"4 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"ctrl-mode\" gridColumn=\"1 / 6\" gridRow=\"1 / 3\"/>\n  </Container>\n  <Element elementId=\"pivot-triangle\" gridColumn=\"1 / 25\" gridRow=\"6 / 45\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-detail\">\n  <Container elementId=\"ctr-header-detail\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-detail\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-detail\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-detail\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-detail\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-detail\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Element elementId=\"tbl-detail-view\" gridColumn=\"1 / 25\" gridRow=\"4 / 50\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-assistant\">\n  <Container elementId=\"ctr-header-assistant\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-assistant\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-assistant\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-assistant\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-assistant\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-assistant\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Container elementId=\"ctr-kpis-assistant\" type=\"grid\" gridColumn=\"1 / 9\" gridRow=\"4 / 34\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"kpi-a-incurred\" gridColumn=\"1 / 25\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-a-lossratio\" gridColumn=\"1 / 25\" gridRow=\"11 / 21\"/>\n    <Element elementId=\"kpi-a-claimcount\" gridColumn=\"1 / 25\" gridRow=\"21 / 31\"/>\n  </Container>\n  <Element elementId=\"chat-assistant\" gridColumn=\"9 / 25\" gridRow=\"4 / 40\"/>\n</Page>\n"
+        "layout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-data\">\n  <Element elementId=\"tbl-claims\" gridColumn=\"1 / 3\" gridRow=\"1 / 2\"/>\n  <Element elementId=\"tbl-premium\" gridColumn=\"1 / 3\" gridRow=\"2 / 3\"/>\n  <Element elementId=\"tbl-loss-ratio\" gridColumn=\"1 / 3\" gridRow=\"3 / 4\"/>\n  <Element elementId=\"tbl-lob-summary\" gridColumn=\"1 / 3\" gridRow=\"4 / 5\"/>\n  <Element elementId=\"tbl-year-premium\" gridColumn=\"1 / 3\" gridRow=\"5 / 6\"/>\n  <Element elementId=\"tbl-year-summary\" gridColumn=\"1 / 3\" gridRow=\"6 / 7\"/>\n  <Element elementId=\"tbl-triangle\" gridColumn=\"1 / 3\" gridRow=\"7 / 8\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-command\">\n  <Container elementId=\"ctr-header-command\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-command\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-command\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-command\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-command\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-command\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Container elementId=\"ctr-filters-command\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"4 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"ctrl-lob\" gridColumn=\"1 / 9\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"ctrl-policyyear\" gridColumn=\"9 / 17\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"ctrl-status\" gridColumn=\"17 / 25\" gridRow=\"1 / 3\"/>\n  </Container>\n  <Container elementId=\"ctr-kpis-command\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"6 / 16\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"kpi-incurred\" gridColumn=\"1 / 5\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-paid\" gridColumn=\"5 / 9\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-reserve\" gridColumn=\"9 / 13\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-lossratio\" gridColumn=\"13 / 17\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-frequency\" gridColumn=\"17 / 21\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-severity\" gridColumn=\"21 / 25\" gridRow=\"1 / 11\"/>\n  </Container>\n  <Element elementId=\"chart-lossratio-trend\" gridColumn=\"1 / 13\" gridRow=\"16 / 32\"/>\n  <Element elementId=\"chart-frequency-trend\" gridColumn=\"13 / 25\" gridRow=\"16 / 24\"/>\n  <Element elementId=\"chart-severity-trend\" gridColumn=\"13 / 25\" gridRow=\"24 / 32\"/>\n  <Element elementId=\"chart-incurred-by-lob\" gridColumn=\"1 / 25\" gridRow=\"32 / 46\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-triangle\">\n  <Container elementId=\"ctr-header-triangle\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-triangle\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-triangle\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-triangle\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-triangle\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-triangle\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Container elementId=\"ctr-mode-triangle\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"4 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"ctrl-mode\" gridColumn=\"1 / 6\" gridRow=\"1 / 3\"/>\n  </Container>\n  <Element elementId=\"pivot-triangle\" gridColumn=\"1 / 25\" gridRow=\"6 / 45\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-detail\">\n  <Container elementId=\"ctr-header-detail\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-detail\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-detail\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-detail\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-detail\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-detail\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Element elementId=\"tbl-detail-view\" gridColumn=\"1 / 25\" gridRow=\"4 / 50\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-assistant\">\n  <Container elementId=\"ctr-header-assistant\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-assistant\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-assistant\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-assistant\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-assistant\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-assistant\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Container elementId=\"ctr-kpis-assistant\" type=\"grid\" gridColumn=\"1 / 9\" gridRow=\"4 / 34\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"kpi-a-incurred\" gridColumn=\"1 / 25\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-a-lossratio\" gridColumn=\"1 / 25\" gridRow=\"11 / 21\"/>\n    <Element elementId=\"kpi-a-claimcount\" gridColumn=\"1 / 25\" gridRow=\"21 / 31\"/>\n  </Container>\n  <Element elementId=\"chat-assistant\" gridColumn=\"9 / 25\" gridRow=\"4 / 40\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-reserve\">\n  <Container elementId=\"ctr-header-reserve\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-reserve\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-reserve\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-reserve\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-reserve\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-reserve\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Container elementId=\"ctr-kpis-reserve\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"4 / 14\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"kpi-rr-pending\" gridColumn=\"1 / 9\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-rr-reserve\" gridColumn=\"9 / 17\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-rr-reviewed\" gridColumn=\"17 / 25\" gridRow=\"1 / 11\"/>\n  </Container>\n  <Element elementId=\"txt-queue-title-reserve\" gridColumn=\"1 / 25\" gridRow=\"14 / 16\"/>\n  <Element elementId=\"tbl-claim-queue\" gridColumn=\"1 / 25\" gridRow=\"16 / 40\"/>\n  <Element elementId=\"txt-form-title-reserve\" gridColumn=\"1 / 25\" gridRow=\"40 / 42\"/>\n  <Container elementId=\"ctr-form-reserve\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"42 / 48\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"ctrl-rr-claim\" gridColumn=\"1 / 7\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"ctrl-rr-decision\" gridColumn=\"7 / 13\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"ctrl-rr-adjusted\" gridColumn=\"13 / 18\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"ctrl-rr-note\" gridColumn=\"18 / 23\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"btn-submit-review\" gridColumn=\"23 / 25\" gridRow=\"1 / 3\"/>\n  </Container>\n  <Element elementId=\"txt-log-title-reserve\" gridColumn=\"1 / 25\" gridRow=\"48 / 50\"/>\n  <Element elementId=\"it-review-log\" gridColumn=\"1 / 25\" gridRow=\"50 / 74\"/>\n</Page>\n"
     }
 }

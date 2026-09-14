@@ -11,6 +11,8 @@ with open(f"{SCRATCH}/claims_values.sql") as f:
     CLAIMS_VALUES = f.read()
 with open(f"{SCRATCH}/premium_values.sql") as f:
     PREMIUM_VALUES = f.read()
+with open(f"{SCRATCH}/claim_queue_values.sql") as f:
+    CLAIM_QUEUE_VALUES = f.read()
 
 CLAIMS_RAW_COLS = [
     "ROW_TYPE", "POLICY_YEAR", "LINE_OF_BUSINESS", "CLAIM_STATUS",
@@ -27,6 +29,12 @@ PREMIUM_RAW_COLS = [
 
 CLAIMS_SQL = f"SELECT * FROM (VALUES\n    {CLAIMS_VALUES}\n) AS t({', '.join(CLAIMS_RAW_COLS)})"
 PREMIUM_SQL = f"SELECT * FROM (VALUES\n    {PREMIUM_VALUES}\n) AS t({', '.join(PREMIUM_RAW_COLS)})"
+
+CLAIM_QUEUE_RAW_COLS = [
+    "CLAIM_ID", "POLICY_YEAR", "LINE_OF_BUSINESS", "CLAIM_STATUS",
+    "PAID_TO_DATE", "CASE_RESERVE", "INCURRED", "DAYS_OPEN", "REPORTED_DATE",
+]
+CLAIM_QUEUE_SQL = f"SELECT * FROM (VALUES\n    {CLAIM_QUEUE_VALUES}\n) AS t({', '.join(CLAIM_QUEUE_RAW_COLS)})"
 
 # ---------------------------------------------------------------------------
 # Brand kit (lifted from the reference Alliant Interactive Analytics dashboard)
@@ -269,6 +277,107 @@ tbl_triangle = {
 }
 elements.append(tbl_triangle)
 
+# ---------------------------------------------------------------------------
+# Reserve Review Workbench -- the app/actions tab.
+#
+# tbl-claim-queue: individual synthetic claim records (Open/Reopened only,
+# latest valuation), expanded from the same cohort totals already in
+# tbl-claims (see gen_claim_queue.py) -- a realistic per-claim work queue,
+# read-only. it-review-log: an EMPTY, append-only input table that a
+# "Submit Review" button writes to via insert-rows -- the actual action.
+# ---------------------------------------------------------------------------
+tbl_claim_queue = {
+    "id": "tbl-claim-queue", "kind": "table", "name": "Claim Queue",
+    "source": {"kind": "sql", "connectionId": CONNECTION_ID, "statement": CLAIM_QUEUE_SQL},
+    "columns": [
+        col("cq-claimid", "[Custom SQL/CLAIM_ID]", "Claim ID"),
+        col("cq-policy-year", "[Custom SQL/POLICY_YEAR]", "Policy Year"),
+        col("cq-lob", "[Custom SQL/LINE_OF_BUSINESS]", "Line of Business"),
+        col("cq-status", "[Custom SQL/CLAIM_STATUS]", "Claim Status"),
+        col("cq-paid", "[Custom SQL/PAID_TO_DATE]", "Paid to Date", CURRENCY_FMT),
+        col("cq-reserve", "[Custom SQL/CASE_RESERVE]", "Case Reserve", CURRENCY_FMT),
+        col("cq-incurred", "[Custom SQL/INCURRED]", "Incurred", CURRENCY_FMT),
+        col("cq-days-open", "[Custom SQL/DAYS_OPEN]", "Days Open"),
+        col("cq-reported", "[Custom SQL/REPORTED_DATE]", "Reported Date"),
+    ],
+    "order": ["cq-claimid", "cq-policy-year", "cq-lob", "cq-status", "cq-reserve",
+              "cq-paid", "cq-incurred", "cq-days-open", "cq-reported"],
+    "sort": [{"columnId": "cq-reserve", "direction": "descending"}],
+}
+elements.append(tbl_claim_queue)
+
+it_review_log = {
+    "id": "it-review-log", "kind": "input-table", "name": "Reserve Review Log",
+    "source": {"kind": "empty", "connectionId": CONNECTION_ID},
+    "inputMode": "edit",
+    "columns": [
+        {"id": "rl-claimid", "type": "text", "name": "Claim ID"},
+        {"id": "rl-note", "type": "text", "name": "Reviewer Note"},
+        {"id": "rl-decision", "type": "text", "name": "Decision",
+         "values": ["Reserve Confirmed", "Reserve Adjusted", "Escalated"],
+         "pills": "color-by-option"},
+        {"id": "rl-adjusted", "type": "number", "name": "Adjusted Reserve", "format": CURRENCY_FMT},
+        {"id": "CREATED_AT"},
+        {"id": "CREATED_BY"},
+    ],
+    "sort": [{"columnId": "CREATED_AT", "direction": "descending"}],
+}
+elements.append(it_review_log)
+
+# ---------------------------------------------------------------------------
+# Review-form controls (page-scoped; not wired to filters[] on any other
+# element -- these are parameters for the Submit Review action, not filters).
+# ---------------------------------------------------------------------------
+ctrl_rr_claim = {
+    "kind": "control", "id": "ctrl-rr-claim", "controlId": "rr-claim", "name": "Select Claim",
+    "controlType": "list", "mode": "include", "selectionMode": "single", "values": [],
+    "source": {"kind": "source", "source": {"kind": "table", "elementId": "tbl-claim-queue"}, "columnId": "cq-claimid"},
+}
+ctrl_rr_decision = {
+    "kind": "control", "id": "ctrl-rr-decision", "controlId": "rr-decision", "name": "Decision",
+    "controlType": "segmented", "value": "Reserve Confirmed",
+    "source": {"kind": "manual", "valueType": "text",
+               "values": ["Reserve Confirmed", "Reserve Adjusted", "Escalated"],
+               "labels": ["Confirm Reserve", "Adjust Reserve", "Escalate"]},
+}
+ctrl_rr_adjusted = {
+    "kind": "control", "id": "ctrl-rr-adjusted", "controlId": "rr-adjusted", "name": "Adjusted Reserve ($, if applicable)",
+    "controlType": "text", "mode": "equals", "case": "insensitive", "value": "",
+}
+ctrl_rr_note = {
+    "kind": "control", "id": "ctrl-rr-note", "controlId": "rr-note", "name": "Reviewer Note",
+    "controlType": "text", "mode": "equals", "case": "insensitive", "value": "",
+}
+elements += [ctrl_rr_claim, ctrl_rr_decision, ctrl_rr_adjusted, ctrl_rr_note]
+
+btn_submit_review = {
+    "id": "btn-submit-review", "kind": "button", "text": "Submit Review",
+    "appearance": "filled", "fillColor": NAVY,
+    "actions": [{
+        "id": "act-submit-review",
+        "trigger": "on-click",
+        "successToast": {"showMessage": "shown", "title": "Review logged",
+                          "message": "The reserve review was added to the log below."},
+        "effects": [
+            {
+                "effect": "insert-rows",
+                "tableElementId": "it-review-log",
+                "values": {
+                    "rl-claimid": {"type": "control", "control": "rr-claim"},
+                    "rl-note": {"type": "control", "control": "rr-note"},
+                    "rl-decision": {"type": "control", "control": "rr-decision"},
+                    "rl-adjusted": {"type": "formula", "formula": "Number([rr-adjusted])"},
+                },
+            },
+            {"effect": "clear-control", "scope": {"type": "control", "controlId": "rr-claim"}},
+            {"effect": "clear-control", "scope": {"type": "control", "controlId": "rr-note"}},
+            {"effect": "clear-control", "scope": {"type": "control", "controlId": "rr-adjusted"}},
+            {"effect": "refresh-element", "target": {"type": "element", "element": "it-review-log"}},
+        ],
+    }],
+}
+elements.append(btn_submit_review)
+
 print("base + derived elements built:", len(elements))
 
 # ---------------------------------------------------------------------------
@@ -333,6 +442,7 @@ NAV_OPTIONS = [
     {"label": "Loss Triangle", "destination": {"type": "page", "pageId": "page-triangle"}},
     {"label": "Claims Detail", "destination": {"type": "page", "pageId": "page-detail"}},
     {"label": "Loss Run Assistant", "destination": {"type": "page", "pageId": "page-assistant"}},
+    {"label": "Reserve Review", "destination": {"type": "page", "pageId": "page-reserve"}},
 ]
 
 
@@ -390,6 +500,15 @@ kpi_a_lossratio = kpi("kpi-a-lossratio", "Loss Ratio", "tbl-loss-ratio",
 kpi_a_claimcount = kpi("kpi-a-claimcount", "Claim Count", "tbl-loss-ratio",
                         "Max([Policy Year LOB Summary/Book Claim Count])")
 elements += [kpi_a_incurred, kpi_a_lossratio, kpi_a_claimcount]
+
+# Reserve Review page KPIs
+kpi_rr_pending = kpi("kpi-rr-pending", "Claims Pending Review", "tbl-claim-queue",
+                      "Count([Claim Queue/Claim ID])")
+kpi_rr_reserve = kpi("kpi-rr-reserve", "Reserve Under Review", "tbl-claim-queue",
+                      "Sum([Claim Queue/Case Reserve])", value_format=CURRENCY_FMT)
+kpi_rr_reviewed = kpi("kpi-rr-reviewed", "Reviews Logged", "it-review-log",
+                       "Count([Reserve Review Log/Claim ID])")
+elements += [kpi_rr_pending, kpi_rr_reserve, kpi_rr_reviewed]
 
 print("KPIs built")
 
@@ -540,10 +659,12 @@ elements += masthead("detail", "Claims Detail",
                       "Current-position claim detail by policy year, line of business, and status")
 elements += masthead("assistant", "Loss Run Assistant",
                       "Ask the assistant to slice the book of business in natural language")
+elements += masthead("reserve", "Reserve Review Workbench",
+                      "Review open and reopened claims, confirm or adjust the reserve, and log the decision")
 
 header_containers = [
     {"id": f"ctr-header-{k}", "kind": "container", "style": {"backgroundColor": NAVY, "borderRadius": "square"}}
-    for k in ["command", "triangle", "detail", "assistant"]
+    for k in ["command", "triangle", "detail", "assistant", "reserve"]
 ]
 elements += header_containers
 
@@ -562,6 +683,21 @@ elements.append(ctr_mode_bar)
 # Assistant page: KPI strip beside chat
 ctr_kpis_assistant = {"id": "ctr-kpis-assistant", "kind": "container"}
 elements.append(ctr_kpis_assistant)
+
+# Reserve Review page: KPI strip + review-form panel
+ctr_kpis_reserve = {"id": "ctr-kpis-reserve", "kind": "container"}
+elements.append(ctr_kpis_reserve)
+ctr_form_reserve = {
+    "id": "ctr-form-reserve", "kind": "container",
+    "style": {"backgroundColor": CARD_BG, "borderRadius": "round"},
+}
+elements.append(ctr_form_reserve)
+
+elements += [
+    {"id": "txt-queue-title-reserve", "kind": "text", "body": "### Claims Pending Review"},
+    {"id": "txt-form-title-reserve", "kind": "text", "body": "### Log a Review"},
+    {"id": "txt-log-title-reserve", "kind": "text", "body": "### Recent Review Activity"},
+]
 
 print("containers built. total elements:", len(elements))
 
@@ -654,6 +790,30 @@ page_assistant_xml = "\n".join([
     PAGE_CLOSE,
 ])
 
+# ---- page-reserve ----
+page_reserve_xml = "\n".join([
+    page_open("page-reserve"),
+    header_block("reserve", "nav-reserve"),
+    C_open("ctr-kpis-reserve", "1 / 25", "4 / 14"),
+    E("kpi-rr-pending", "1 / 9", "1 / 11"),
+    E("kpi-rr-reserve", "9 / 17", "1 / 11"),
+    E("kpi-rr-reviewed", "17 / 25", "1 / 11"),
+    C_close,
+    E("txt-queue-title-reserve", "1 / 25", "14 / 16"),
+    E("tbl-claim-queue", "1 / 25", "16 / 40"),
+    E("txt-form-title-reserve", "1 / 25", "40 / 42"),
+    C_open("ctr-form-reserve", "1 / 25", "42 / 48"),
+    E("ctrl-rr-claim", "1 / 7", "1 / 3"),
+    E("ctrl-rr-decision", "7 / 13", "1 / 3"),
+    E("ctrl-rr-adjusted", "13 / 18", "1 / 3"),
+    E("ctrl-rr-note", "18 / 23", "1 / 3"),
+    E("btn-submit-review", "23 / 25", "1 / 3"),
+    C_close,
+    E("txt-log-title-reserve", "1 / 25", "48 / 50"),
+    E("it-review-log", "1 / 25", "50 / 74"),
+    PAGE_CLOSE,
+])
+
 # ---- page-data (hidden) ----
 DATA_ELEMENT_IDS = ["tbl-claims", "tbl-premium", "tbl-loss-ratio", "tbl-lob-summary",
                      "tbl-year-premium", "tbl-year-summary", "tbl-triangle"]
@@ -665,6 +825,7 @@ page_data_xml = "\n".join(
 
 LAYOUT = '<?xml version="1.0" encoding="utf-8"?>\n' + "\n".join([
     page_data_xml, page_command_xml, page_triangle_xml, page_detail_xml, page_assistant_xml,
+    page_reserve_xml,
 ])
 
 pages = [
@@ -673,10 +834,11 @@ pages = [
     {"id": "page-triangle", "name": "Loss Triangle"},
     {"id": "page-detail", "name": "Claims Detail"},
     {"id": "page-assistant", "name": "Loss Run Assistant"},
+    {"id": "page-reserve", "name": "Reserve Review"},
 ]
 
 # navigation elements (one per visible page)
-elements += [nav_element(k) for k in ["command", "triangle", "detail", "assistant"]]
+elements += [nav_element(k) for k in ["command", "triangle", "detail", "assistant", "reserve"]]
 
 document = {
     "schemaVersion": 1,
