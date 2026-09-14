@@ -1,0 +1,1682 @@
+{
+    "workbookId": "91e14288-28b6-4bca-9197-96f22d95ca74",
+    "name": "Alliant Insurance Group \u2014 Loss Run Analytics",
+    "url": "https://app.sigmacomputing.com/papercrane/workbook/Alliant-Insurance-Group-Loss-Run-Analytics-4rgPyaIB3J9hiXlZa95qWo",
+    "documentVersion": 4,
+    "latestDocumentVersion": 4,
+    "ownerId": "5AwXQ8WiPX2tTdIqx6piVcb29sO4S",
+    "folderId": "004d8497-18ea-4cf6-a8c5-deca403c22d9",
+    "createdBy": "5AwXQ8WiPX2tTdIqx6piVcb29sO4S",
+    "updatedBy": "5AwXQ8WiPX2tTdIqx6piVcb29sO4S",
+    "createdAt": "2026-09-14T21:06:12.783Z",
+    "updatedAt": "2026-09-14T21:20:24.395Z",
+    "document": {
+        "schemaVersion": 1,
+        "elements": [
+            {
+                "id": "tbl-claims",
+                "kind": "table",
+                "source": {
+                    "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+                    "statement": "SELECT * FROM (VALUES\n    ('CLAIM', 2019, 'Workers Comp', 'Open', 12, 2020, NULL, 564022.78, 689361.17, 37, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Closed', 12, 2020, NULL, 145742.32, 0.00, 4, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Reopened', 12, 2020, NULL, 23318.77, 34978.16, 2, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Open', 24, 2021, NULL, 674990.98, 824988.97, 38, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Closed', 24, 2021, NULL, 774183.20, 0.00, 20, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Reopened', 24, 2021, NULL, 58063.74, 87095.61, 4, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Open', 36, 2022, NULL, 549751.69, 671918.73, 30, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Closed', 36, 2022, NULL, 1618713.30, 0.00, 40, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Reopened', 36, 2022, NULL, 85516.93, 128275.39, 5, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Open', 48, 2023, NULL, 375103.37, 458459.68, 20, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Closed', 48, 2023, NULL, 2396493.77, 0.00, 58, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Reopened', 48, 2023, NULL, 97249.02, 145873.53, 6, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Open', 60, 2024, NULL, 236232.46, 288728.56, 12, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Closed', 60, 2024, NULL, 2999777.27, 0.00, 70, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Reopened', 60, 2024, NULL, 89993.32, 134989.98, 5, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Open', 72, 2025, NULL, 141560.62, 173018.54, 7, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Closed', 72, 2025, NULL, 3421048.31, 0.00, 76, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Reopened', 72, 2025, NULL, 78644.79, 117967.18, 4, NULL, 0, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Open', 84, 2026, NULL, 91185.78, 111449.28, 4, NULL, 1, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Closed', 84, 2026, NULL, 3687958.12, 0.00, 79, NULL, 1, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Workers Comp', 'Reopened', 84, 2026, NULL, 64843.22, 97264.83, 3, NULL, 1, '2019|Workers Comp', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Open', 12, 2020, NULL, 222768.38, 272272.46, 11, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Closed', 12, 2020, NULL, 57562.89, 0.00, 1, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Reopened', 12, 2020, NULL, 9210.06, 13815.09, 1, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Open', 24, 2021, NULL, 273020.78, 333692.06, 12, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Closed', 24, 2021, NULL, 313142.11, 0.00, 6, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Reopened', 24, 2021, NULL, 23485.66, 35228.49, 1, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Open', 36, 2022, NULL, 226912.91, 277338.00, 9, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Closed', 36, 2022, NULL, 668132.44, 0.00, 12, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Reopened', 36, 2022, NULL, 35297.56, 52946.34, 2, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Open', 48, 2023, NULL, 157471.34, 192464.97, 6, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Closed', 48, 2023, NULL, 1006066.89, 0.00, 18, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Reopened', 48, 2023, NULL, 40825.90, 61238.85, 2, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Open', 60, 2024, NULL, 100565.42, 122913.29, 4, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Closed', 60, 2024, NULL, 1277021.16, 0.00, 22, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Reopened', 60, 2024, NULL, 38310.63, 57465.95, 2, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Open', 72, 2025, NULL, 60948.81, 74492.99, 2, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Closed', 72, 2025, NULL, 1472929.49, 0.00, 25, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Reopened', 72, 2025, NULL, 33860.45, 50790.67, 1, NULL, 0, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Open', 84, 2026, NULL, 39616.75, 48420.48, 1, NULL, 1, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Closed', 84, 2026, NULL, 1602277.55, 0.00, 26, NULL, 1, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'General Liability', 'Reopened', 84, 2026, NULL, 28171.91, 42257.87, 1, NULL, 1, '2019|General Liability', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Open', 12, 2020, NULL, 258465.25, 315901.97, 45, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Closed', 12, 2020, NULL, 66786.89, 0.00, 5, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Reopened', 12, 2020, NULL, 10685.90, 16028.85, 2, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Open', 24, 2021, NULL, 331677.04, 405383.04, 47, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Closed', 24, 2021, NULL, 380418.10, 0.00, 24, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Reopened', 24, 2021, NULL, 28531.36, 42797.04, 5, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Open', 36, 2022, NULL, 287124.84, 350930.36, 38, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Closed', 36, 2022, NULL, 845423.14, 0.00, 50, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Reopened', 36, 2022, NULL, 44663.86, 66995.80, 7, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Open', 48, 2023, NULL, 206504.26, 252394.10, 26, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Closed', 48, 2023, NULL, 1319332.78, 0.00, 76, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Reopened', 48, 2023, NULL, 53538.14, 80307.21, 8, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Open', 60, 2024, NULL, 136035.18, 166265.22, 17, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Closed', 60, 2024, NULL, 1727430.83, 0.00, 97, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Reopened', 60, 2024, NULL, 51822.92, 77734.39, 7, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Open', 72, 2025, NULL, 84676.10, 103493.01, 10, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Closed', 72, 2025, NULL, 2046339.11, 0.00, 113, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Reopened', 72, 2025, NULL, 47042.28, 70563.42, 6, NULL, 0, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Open', 84, 2026, NULL, 56306.65, 68819.24, 7, NULL, 1, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Closed', 84, 2026, NULL, 2277291.13, 0.00, 125, NULL, 1, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Commercial Auto', 'Reopened', 84, 2026, NULL, 40040.28, 60060.43, 5, NULL, 1, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Open', 12, 2020, NULL, 126426.40, 154521.16, 12, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Closed', 12, 2020, NULL, 32668.32, 0.00, 1, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Reopened', 12, 2020, NULL, 5226.93, 7840.40, 1, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Open', 24, 2021, NULL, 171351.87, 209430.07, 12, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Closed', 24, 2021, NULL, 196532.61, 0.00, 6, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Reopened', 24, 2021, NULL, 14739.95, 22109.92, 1, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Open', 36, 2022, NULL, 156086.62, 190772.54, 9, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Closed', 36, 2022, NULL, 459588.38, 0.00, 12, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Reopened', 36, 2022, NULL, 24280.14, 36420.21, 2, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Open', 48, 2023, NULL, 117695.52, 143850.08, 7, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Closed', 48, 2023, NULL, 751943.61, 0.00, 19, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Reopened', 48, 2023, NULL, 30513.65, 45770.48, 2, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Open', 60, 2024, NULL, 80998.08, 98997.65, 4, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Closed', 60, 2024, NULL, 1028547.00, 0.00, 25, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Reopened', 60, 2024, NULL, 30856.41, 46284.62, 2, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Open', 72, 2025, NULL, 52491.06, 64155.74, 3, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Closed', 72, 2025, NULL, 1268533.87, 0.00, 30, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Reopened', 72, 2025, NULL, 29161.70, 43742.55, 2, NULL, 0, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Open', 84, 2026, NULL, 36220.45, 44269.44, 2, NULL, 1, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Closed', 84, 2026, NULL, 1464916.11, 0.00, 34, NULL, 1, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2019, 'Property', 'Reopened', 84, 2026, NULL, 25756.77, 38635.15, 1, NULL, 1, '2019|Property', DATE '2019-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Open', 12, 2021, NULL, 549543.70, 671664.52, 37, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Closed', 12, 2021, NULL, 142000.96, 0.00, 4, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Reopened', 12, 2021, NULL, 22720.15, 34080.23, 2, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Open', 24, 2022, NULL, 657663.22, 803810.61, 38, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Closed', 24, 2022, NULL, 754309.07, 0.00, 20, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Reopened', 24, 2022, NULL, 56573.18, 84859.77, 4, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Open', 36, 2023, NULL, 535638.96, 654669.84, 30, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Closed', 36, 2023, NULL, 1577159.17, 0.00, 40, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Reopened', 36, 2023, NULL, 83321.62, 124982.42, 5, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Open', 48, 2024, NULL, 365474.06, 446690.52, 20, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Closed', 48, 2024, NULL, 2334973.17, 0.00, 58, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Reopened', 48, 2024, NULL, 94752.53, 142128.80, 6, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Open', 60, 2025, NULL, 230168.12, 281316.59, 12, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Closed', 60, 2025, NULL, 2922769.72, 0.00, 70, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Reopened', 60, 2025, NULL, 87683.09, 131524.64, 5, NULL, 0, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Open', 72, 2026, NULL, 137926.60, 168576.96, 7, NULL, 1, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Closed', 72, 2026, NULL, 3333226.28, 0.00, 76, NULL, 1, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Workers Comp', 'Reopened', 72, 2026, NULL, 76625.89, 114938.84, 4, NULL, 1, '2020|Workers Comp', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Open', 12, 2021, NULL, 221219.09, 270378.88, 12, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Closed', 12, 2021, NULL, 57162.55, 0.00, 1, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Reopened', 12, 2021, NULL, 9146.01, 13719.01, 1, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Open', 24, 2022, NULL, 271122.00, 331371.33, 12, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Closed', 24, 2022, NULL, 310964.30, 0.00, 6, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Reopened', 24, 2022, NULL, 23322.32, 34983.48, 1, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Open', 36, 2023, NULL, 225334.79, 275409.19, 10, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Closed', 36, 2023, NULL, 663485.77, 0.00, 13, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Reopened', 36, 2023, NULL, 35052.08, 52578.12, 2, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Open', 48, 2024, NULL, 156376.17, 191126.43, 6, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Closed', 48, 2024, NULL, 999069.98, 0.00, 19, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Reopened', 48, 2024, NULL, 40541.97, 60812.96, 2, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Open', 60, 2025, NULL, 99866.01, 122058.46, 4, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Closed', 60, 2025, NULL, 1268139.84, 0.00, 23, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Reopened', 60, 2025, NULL, 38044.20, 57066.29, 2, NULL, 0, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Open', 72, 2026, NULL, 60524.92, 73974.91, 2, NULL, 1, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Closed', 72, 2026, NULL, 1462685.68, 0.00, 26, NULL, 1, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'General Liability', 'Reopened', 72, 2026, NULL, 33624.96, 50437.44, 2, NULL, 1, '2020|General Liability', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Open', 12, 2021, NULL, 237053.61, 289732.19, 41, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Closed', 12, 2021, NULL, 61254.16, 0.00, 5, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Reopened', 12, 2021, NULL, 9800.67, 14701.00, 2, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Open', 24, 2022, NULL, 304200.42, 371800.51, 44, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Closed', 24, 2022, NULL, 348903.71, 0.00, 23, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Reopened', 24, 2022, NULL, 26167.78, 39251.67, 4, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Open', 36, 2023, NULL, 263338.99, 321858.77, 35, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Closed', 36, 2023, NULL, 775387.04, 0.00, 47, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Reopened', 36, 2023, NULL, 40963.84, 61445.77, 6, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Open', 48, 2024, NULL, 189397.14, 231485.40, 24, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Closed', 48, 2024, NULL, 1210037.31, 0.00, 70, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Reopened', 48, 2024, NULL, 49102.96, 73654.45, 7, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Open', 60, 2025, NULL, 124765.82, 152491.56, 16, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Closed', 60, 2025, NULL, 1584327.91, 0.00, 90, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Reopened', 60, 2025, NULL, 47529.84, 71294.76, 7, NULL, 0, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Open', 72, 2026, NULL, 77661.41, 94919.50, 10, NULL, 1, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Closed', 72, 2026, NULL, 1876817.36, 0.00, 105, NULL, 1, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Commercial Auto', 'Reopened', 72, 2026, NULL, 43145.23, 64717.84, 6, NULL, 1, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Open', 12, 2021, NULL, 122915.72, 150230.32, 13, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Closed', 12, 2021, NULL, 31761.17, 0.00, 2, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Reopened', 12, 2021, NULL, 5081.79, 7622.68, 1, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Open', 24, 2022, NULL, 166593.67, 203614.49, 12, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Closed', 24, 2022, NULL, 191075.18, 0.00, 6, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Reopened', 24, 2022, NULL, 14330.64, 21495.96, 1, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Open', 36, 2023, NULL, 151752.32, 185475.05, 10, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Closed', 36, 2023, NULL, 446826.27, 0.00, 13, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Reopened', 36, 2023, NULL, 23605.92, 35408.87, 2, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Open', 48, 2024, NULL, 114427.28, 139855.57, 7, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Closed', 48, 2024, NULL, 731063.20, 0.00, 21, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Reopened', 48, 2024, NULL, 29666.33, 44499.50, 2, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Open', 60, 2025, NULL, 78748.87, 96248.62, 5, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Closed', 60, 2025, NULL, 999985.71, 0.00, 27, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Reopened', 60, 2025, NULL, 29999.57, 44999.36, 2, NULL, 0, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Open', 72, 2026, NULL, 51033.45, 62374.22, 3, NULL, 1, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Closed', 72, 2026, NULL, 1233308.48, 0.00, 32, NULL, 1, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2020, 'Property', 'Reopened', 72, 2026, NULL, 28351.92, 42527.88, 2, NULL, 1, '2020|Property', DATE '2020-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Open', 12, 2022, NULL, 536131.30, 655271.59, 40, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Closed', 12, 2022, NULL, 138535.22, 0.00, 5, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Reopened', 12, 2022, NULL, 22165.64, 33248.45, 2, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Open', 24, 2023, NULL, 641612.02, 784192.47, 43, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Closed', 24, 2023, NULL, 735899.09, 0.00, 22, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Reopened', 24, 2023, NULL, 55192.43, 82788.65, 4, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Open', 36, 2024, NULL, 522565.94, 638691.70, 33, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Closed', 36, 2024, NULL, 1538666.37, 0.00, 44, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Reopened', 36, 2024, NULL, 81288.03, 121932.05, 6, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Open', 48, 2025, NULL, 356554.15, 435788.40, 22, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Closed', 48, 2025, NULL, 2277984.84, 0.00, 63, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Reopened', 48, 2025, NULL, 92439.96, 138659.95, 6, NULL, 0, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Open', 60, 2026, NULL, 224550.54, 274450.66, 13, NULL, 1, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Closed', 60, 2026, NULL, 2851435.38, 0.00, 77, NULL, 1, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Workers Comp', 'Reopened', 60, 2026, NULL, 85543.06, 128314.59, 6, NULL, 1, '2021|Workers Comp', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Open', 12, 2022, NULL, 237450.46, 290217.23, 11, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Closed', 12, 2022, NULL, 61356.71, 0.00, 1, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Reopened', 12, 2022, NULL, 9817.07, 14725.61, 1, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Open', 24, 2023, NULL, 291014.87, 355684.84, 11, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Closed', 24, 2023, NULL, 333780.50, 0.00, 6, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Reopened', 24, 2023, NULL, 25033.54, 37550.31, 1, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Open', 36, 2024, NULL, 241868.15, 295616.62, 9, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Closed', 36, 2024, NULL, 712167.32, 0.00, 12, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Reopened', 36, 2024, NULL, 37623.93, 56435.90, 2, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Open', 48, 2025, NULL, 167849.87, 205149.84, 6, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Closed', 48, 2025, NULL, 1072374.15, 0.00, 17, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Reopened', 48, 2025, NULL, 43516.63, 65274.95, 2, NULL, 0, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Open', 60, 2026, NULL, 107193.42, 131014.18, 4, NULL, 1, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Closed', 60, 2026, NULL, 1361186.31, 0.00, 22, NULL, 1, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'General Liability', 'Reopened', 60, 2026, NULL, 40835.59, 61253.38, 2, NULL, 1, '2021|General Liability', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Open', 12, 2022, NULL, 260556.79, 318458.29, 46, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Closed', 12, 2022, NULL, 67327.34, 0.00, 5, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Reopened', 12, 2022, NULL, 10772.37, 16158.56, 2, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Open', 24, 2023, NULL, 334361.01, 408663.46, 48, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Closed', 24, 2023, NULL, 383496.50, 0.00, 25, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Reopened', 24, 2023, NULL, 28762.24, 43143.36, 5, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Open', 36, 2024, NULL, 289448.29, 353770.14, 38, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Closed', 36, 2024, NULL, 852264.42, 0.00, 51, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Reopened', 36, 2024, NULL, 45025.29, 67537.93, 7, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Open', 48, 2025, NULL, 208175.32, 254436.51, 27, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Closed', 48, 2025, NULL, 1330009.01, 0.00, 77, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Reopened', 48, 2025, NULL, 53971.38, 80957.07, 8, NULL, 0, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Open', 60, 2026, NULL, 137135.99, 167610.66, 17, NULL, 1, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Closed', 60, 2026, NULL, 1741409.43, 0.00, 98, NULL, 1, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Commercial Auto', 'Reopened', 60, 2026, NULL, 52242.28, 78363.42, 7, NULL, 1, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Open', 12, 2022, NULL, 118429.35, 144746.98, 12, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Closed', 12, 2022, NULL, 30601.90, 0.00, 1, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Reopened', 12, 2022, NULL, 4896.30, 7344.46, 1, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Open', 24, 2023, NULL, 160513.08, 196182.65, 12, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Closed', 24, 2023, NULL, 184101.02, 0.00, 6, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Reopened', 24, 2023, NULL, 13807.58, 20711.36, 1, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Open', 36, 2024, NULL, 146213.42, 178705.29, 9, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Closed', 36, 2024, NULL, 430517.29, 0.00, 12, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Reopened', 36, 2024, NULL, 22744.31, 34116.46, 2, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Open', 48, 2025, NULL, 110250.74, 134750.90, 7, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Closed', 48, 2025, NULL, 704379.70, 0.00, 19, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Reopened', 48, 2025, NULL, 28583.52, 42875.29, 2, NULL, 0, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Open', 60, 2026, NULL, 75874.57, 92735.59, 4, NULL, 1, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Closed', 60, 2026, NULL, 963486.65, 0.00, 25, NULL, 1, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2021, 'Property', 'Reopened', 60, 2026, NULL, 28904.60, 43356.90, 2, NULL, 1, '2021|Property', DATE '2021-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Open', 12, 2023, NULL, 585177.48, 715216.91, 39, NULL, 0, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Closed', 12, 2023, NULL, 151208.65, 0.00, 4, NULL, 0, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Reopened', 12, 2023, NULL, 24193.38, 36290.08, 2, NULL, 0, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Open', 24, 2024, NULL, 700307.74, 855931.68, 41, NULL, 0, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Closed', 24, 2024, NULL, 803220.35, 0.00, 21, NULL, 0, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Reopened', 24, 2024, NULL, 60241.53, 90362.29, 4, NULL, 0, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Open', 36, 2025, NULL, 570371.12, 697120.26, 32, NULL, 0, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Closed', 36, 2025, NULL, 1679426.09, 0.00, 42, NULL, 0, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Reopened', 36, 2025, NULL, 88724.40, 133086.60, 6, NULL, 0, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Open', 48, 2026, NULL, 389172.31, 475655.04, 21, NULL, 1, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Closed', 48, 2026, NULL, 2486378.63, 0.00, 61, NULL, 1, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Workers Comp', 'Reopened', 48, 2026, NULL, 100896.52, 151344.79, 6, NULL, 1, '2022|Workers Comp', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Open', 12, 2023, NULL, 217760.34, 266151.52, 11, NULL, 0, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Closed', 12, 2023, NULL, 56268.82, 0.00, 1, NULL, 0, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Reopened', 12, 2023, NULL, 9003.01, 13504.52, 1, NULL, 0, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Open', 24, 2024, NULL, 266883.02, 326190.36, 11, NULL, 0, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Closed', 24, 2024, NULL, 306102.39, 0.00, 6, NULL, 0, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Reopened', 24, 2024, NULL, 22957.68, 34436.52, 1, NULL, 0, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Open', 36, 2025, NULL, 221811.69, 271103.18, 9, NULL, 0, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Closed', 36, 2025, NULL, 653112.21, 0.00, 12, NULL, 0, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Reopened', 36, 2025, NULL, 34504.04, 51756.06, 2, NULL, 0, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Open', 48, 2026, NULL, 153931.24, 188138.18, 6, NULL, 1, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Closed', 48, 2026, NULL, 983449.58, 0.00, 17, NULL, 1, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'General Liability', 'Reopened', 48, 2026, NULL, 39908.10, 59862.15, 2, NULL, 1, '2022|General Liability', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Open', 12, 2023, NULL, 261813.71, 319994.53, 44, NULL, 0, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Closed', 12, 2023, NULL, 67652.12, 0.00, 5, NULL, 0, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Reopened', 12, 2023, NULL, 10824.34, 16236.51, 2, NULL, 0, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Open', 24, 2024, NULL, 335973.96, 410634.84, 46, NULL, 0, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Closed', 24, 2024, NULL, 385346.48, 0.00, 24, NULL, 0, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Reopened', 24, 2024, NULL, 28900.99, 43351.48, 4, NULL, 0, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Open', 36, 2025, NULL, 290844.59, 355476.72, 38, NULL, 0, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Closed', 36, 2025, NULL, 856375.73, 0.00, 50, NULL, 0, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Reopened', 36, 2025, NULL, 45242.49, 67863.74, 7, NULL, 0, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Open', 48, 2026, NULL, 209179.56, 255663.90, 26, NULL, 1, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Closed', 48, 2026, NULL, 1336424.95, 0.00, 75, NULL, 1, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Commercial Auto', 'Reopened', 48, 2026, NULL, 54231.74, 81347.61, 8, NULL, 1, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Open', 12, 2023, NULL, 125194.07, 153014.97, 13, NULL, 0, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Closed', 12, 2023, NULL, 32349.89, 0.00, 2, NULL, 0, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Reopened', 12, 2023, NULL, 5175.98, 7763.97, 1, NULL, 0, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Open', 24, 2024, NULL, 169681.63, 207388.66, 13, NULL, 0, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Closed', 24, 2024, NULL, 194616.93, 0.00, 7, NULL, 0, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Reopened', 24, 2024, NULL, 14596.27, 21894.40, 1, NULL, 0, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Open', 36, 2025, NULL, 154565.18, 188913.00, 10, NULL, 0, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Closed', 36, 2025, NULL, 455108.58, 0.00, 14, NULL, 0, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Reopened', 36, 2025, NULL, 24043.47, 36065.21, 2, NULL, 0, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Open', 48, 2026, NULL, 116548.29, 142447.91, 7, NULL, 1, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Closed', 48, 2026, NULL, 744614.10, 0.00, 21, NULL, 1, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2022, 'Property', 'Reopened', 48, 2026, NULL, 30216.22, 45324.34, 2, NULL, 1, '2022|Property', DATE '2022-01-01'),\n    ('CLAIM', 2023, 'Workers Comp', 'Open', 12, 2024, NULL, 557152.95, 680964.71, 43, NULL, 0, '2023|Workers Comp', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Workers Comp', 'Closed', 12, 2024, NULL, 143967.17, 0.00, 5, NULL, 0, '2023|Workers Comp', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Workers Comp', 'Reopened', 12, 2024, NULL, 23034.75, 34552.12, 2, NULL, 0, '2023|Workers Comp', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Workers Comp', 'Open', 24, 2025, NULL, 666769.55, 814940.56, 45, NULL, 0, '2023|Workers Comp', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Workers Comp', 'Closed', 24, 2025, NULL, 764753.60, 0.00, 23, NULL, 0, '2023|Workers Comp', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Workers Comp', 'Reopened', 24, 2025, NULL, 57356.52, 86034.78, 4, NULL, 0, '2023|Workers Comp', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Workers Comp', 'Open', 36, 2026, NULL, 543055.68, 663734.72, 35, NULL, 1, '2023|Workers Comp', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Workers Comp', 'Closed', 36, 2026, NULL, 1598997.28, 0.00, 47, NULL, 1, '2023|Workers Comp', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Workers Comp', 'Reopened', 36, 2026, NULL, 84475.33, 126712.99, 6, NULL, 1, '2023|Workers Comp', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'General Liability', 'Open', 12, 2024, NULL, 225612.07, 275748.08, 12, NULL, 0, '2023|General Liability', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'General Liability', 'Closed', 12, 2024, NULL, 58297.69, 0.00, 1, NULL, 0, '2023|General Liability', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'General Liability', 'Reopened', 12, 2024, NULL, 9327.63, 13991.45, 1, NULL, 0, '2023|General Liability', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'General Liability', 'Open', 24, 2025, NULL, 276505.95, 337951.72, 12, NULL, 0, '2023|General Liability', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'General Liability', 'Closed', 24, 2025, NULL, 317139.44, 0.00, 6, NULL, 0, '2023|General Liability', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'General Liability', 'Reopened', 24, 2025, NULL, 23785.46, 35678.19, 1, NULL, 0, '2023|General Liability', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'General Liability', 'Open', 36, 2026, NULL, 229809.50, 280878.28, 10, NULL, 1, '2023|General Liability', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'General Liability', 'Closed', 36, 2026, NULL, 676661.30, 0.00, 13, NULL, 1, '2023|General Liability', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'General Liability', 'Reopened', 36, 2026, NULL, 35748.14, 53622.22, 2, NULL, 1, '2023|General Liability', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Commercial Auto', 'Open', 12, 2024, NULL, 261268.12, 319327.71, 45, NULL, 0, '2023|Commercial Auto', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Commercial Auto', 'Closed', 12, 2024, NULL, 67511.14, 0.00, 5, NULL, 0, '2023|Commercial Auto', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Commercial Auto', 'Reopened', 12, 2024, NULL, 10801.78, 16202.67, 2, NULL, 0, '2023|Commercial Auto', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Commercial Auto', 'Open', 24, 2025, NULL, 335273.84, 409779.13, 47, NULL, 0, '2023|Commercial Auto', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Commercial Auto', 'Closed', 24, 2025, NULL, 384543.47, 0.00, 24, NULL, 0, '2023|Commercial Auto', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Commercial Auto', 'Reopened', 24, 2025, NULL, 28840.76, 43261.14, 5, NULL, 0, '2023|Commercial Auto', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Commercial Auto', 'Open', 36, 2026, NULL, 290238.50, 354735.95, 38, NULL, 1, '2023|Commercial Auto', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Commercial Auto', 'Closed', 36, 2026, NULL, 854591.15, 0.00, 50, NULL, 1, '2023|Commercial Auto', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Commercial Auto', 'Reopened', 36, 2026, NULL, 45148.21, 67722.32, 7, NULL, 1, '2023|Commercial Auto', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Property', 'Open', 12, 2024, NULL, 125984.87, 153981.51, 13, NULL, 0, '2023|Property', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Property', 'Closed', 12, 2024, NULL, 32554.23, 0.00, 2, NULL, 0, '2023|Property', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Property', 'Reopened', 12, 2024, NULL, 5208.68, 7813.02, 1, NULL, 0, '2023|Property', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Property', 'Open', 24, 2025, NULL, 170753.45, 208698.66, 12, NULL, 0, '2023|Property', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Property', 'Closed', 24, 2025, NULL, 195846.25, 0.00, 6, NULL, 0, '2023|Property', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Property', 'Reopened', 24, 2025, NULL, 14688.47, 22032.70, 1, NULL, 0, '2023|Property', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Property', 'Open', 36, 2026, NULL, 155541.51, 190106.29, 10, NULL, 1, '2023|Property', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Property', 'Closed', 36, 2026, NULL, 457983.33, 0.00, 13, NULL, 1, '2023|Property', DATE '2023-01-01'),\n    ('CLAIM', 2023, 'Property', 'Reopened', 36, 2026, NULL, 24195.35, 36293.02, 2, NULL, 1, '2023|Property', DATE '2023-01-01'),\n    ('CLAIM', 2024, 'Workers Comp', 'Open', 12, 2025, NULL, 568359.41, 694661.50, 37, NULL, 0, '2024|Workers Comp', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Workers Comp', 'Closed', 12, 2025, NULL, 146862.90, 0.00, 4, NULL, 0, '2024|Workers Comp', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Workers Comp', 'Reopened', 12, 2025, NULL, 23498.06, 35247.10, 2, NULL, 0, '2024|Workers Comp', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Workers Comp', 'Open', 24, 2026, NULL, 680180.82, 831332.12, 39, NULL, 1, '2024|Workers Comp', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Workers Comp', 'Closed', 24, 2026, NULL, 780135.71, 0.00, 20, NULL, 1, '2024|Workers Comp', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Workers Comp', 'Reopened', 24, 2026, NULL, 58510.18, 87765.27, 4, NULL, 1, '2024|Workers Comp', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'General Liability', 'Open', 12, 2025, NULL, 221473.50, 270689.84, 11, NULL, 0, '2024|General Liability', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'General Liability', 'Closed', 12, 2025, NULL, 57228.30, 0.00, 1, NULL, 0, '2024|General Liability', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'General Liability', 'Reopened', 12, 2025, NULL, 9156.53, 13734.79, 1, NULL, 0, '2024|General Liability', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'General Liability', 'Open', 24, 2026, NULL, 271433.81, 331752.43, 12, NULL, 1, '2024|General Liability', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'General Liability', 'Closed', 24, 2026, NULL, 311321.93, 0.00, 6, NULL, 1, '2024|General Liability', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'General Liability', 'Reopened', 24, 2026, NULL, 23349.14, 35023.72, 1, NULL, 1, '2024|General Liability', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Commercial Auto', 'Open', 12, 2025, NULL, 238659.81, 291695.32, 41, NULL, 0, '2024|Commercial Auto', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Commercial Auto', 'Closed', 12, 2025, NULL, 61669.20, 0.00, 5, NULL, 0, '2024|Commercial Auto', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Commercial Auto', 'Reopened', 12, 2025, NULL, 9867.07, 14800.61, 2, NULL, 0, '2024|Commercial Auto', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Commercial Auto', 'Open', 24, 2026, NULL, 306261.59, 374319.72, 44, NULL, 1, '2024|Commercial Auto', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Commercial Auto', 'Closed', 24, 2026, NULL, 351267.77, 0.00, 23, NULL, 1, '2024|Commercial Auto', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Commercial Auto', 'Reopened', 24, 2026, NULL, 26345.08, 39517.62, 4, NULL, 1, '2024|Commercial Auto', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Property', 'Open', 12, 2025, NULL, 114962.80, 140510.09, 12, NULL, 0, '2024|Property', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Property', 'Closed', 12, 2025, NULL, 29706.15, 0.00, 1, NULL, 0, '2024|Property', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Property', 'Reopened', 12, 2025, NULL, 4752.98, 7129.48, 1, NULL, 0, '2024|Property', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Property', 'Open', 24, 2026, NULL, 155814.69, 190440.18, 12, NULL, 1, '2024|Property', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Property', 'Closed', 24, 2026, NULL, 178712.19, 0.00, 6, NULL, 1, '2024|Property', DATE '2024-01-01'),\n    ('CLAIM', 2024, 'Property', 'Reopened', 24, 2026, NULL, 13403.41, 20105.12, 1, NULL, 1, '2024|Property', DATE '2024-01-01'),\n    ('CLAIM', 2025, 'Workers Comp', 'Open', 12, 2026, NULL, 563773.65, 689056.69, 39, NULL, 1, '2025|Workers Comp', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'Workers Comp', 'Closed', 12, 2026, NULL, 145677.95, 0.00, 4, NULL, 1, '2025|Workers Comp', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'Workers Comp', 'Reopened', 12, 2026, NULL, 23308.47, 34962.71, 2, NULL, 1, '2025|Workers Comp', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'General Liability', 'Open', 12, 2026, NULL, 225382.56, 275467.58, 11, NULL, 1, '2025|General Liability', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'General Liability', 'Closed', 12, 2026, NULL, 58238.39, 0.00, 1, NULL, 1, '2025|General Liability', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'General Liability', 'Reopened', 12, 2026, NULL, 9318.14, 13977.21, 1, NULL, 1, '2025|General Liability', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'Commercial Auto', 'Open', 12, 2026, NULL, 244305.33, 298595.41, 46, NULL, 1, '2025|Commercial Auto', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'Commercial Auto', 'Closed', 12, 2026, NULL, 63127.99, 0.00, 5, NULL, 1, '2025|Commercial Auto', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'Commercial Auto', 'Reopened', 12, 2026, NULL, 10100.48, 15150.72, 2, NULL, 1, '2025|Commercial Auto', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'Property', 'Open', 12, 2026, NULL, 122888.93, 150197.58, 13, NULL, 1, '2025|Property', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'Property', 'Closed', 12, 2026, NULL, 31754.24, 0.00, 2, NULL, 1, '2025|Property', DATE '2025-01-01'),\n    ('CLAIM', 2025, 'Property', 'Reopened', 12, 2026, NULL, 5080.68, 7621.02, 1, NULL, 1, '2025|Property', DATE '2025-01-01')\n) AS t(ROW_TYPE, POLICY_YEAR, LINE_OF_BUSINESS, CLAIM_STATUS, DEV_PERIOD_MONTHS, VALUATION_YEAR, EARNED_PREMIUM, PAID_LOSS, CASE_RESERVE, CLAIM_COUNT, POLICY_COUNT, IS_LATEST_VALUATION, JOIN_KEY, POLICY_YEAR_DATE)",
+                    "kind": "sql"
+                },
+                "columns": [
+                    {
+                        "id": "cl-policy-year",
+                        "formula": "[Custom SQL/POLICY_YEAR]",
+                        "name": "Policy Year"
+                    },
+                    {
+                        "id": "cl-lob",
+                        "formula": "[Custom SQL/LINE_OF_BUSINESS]",
+                        "name": "Line of Business"
+                    },
+                    {
+                        "id": "cl-status",
+                        "formula": "[Custom SQL/CLAIM_STATUS]",
+                        "name": "Claim Status"
+                    },
+                    {
+                        "id": "cl-dev-period",
+                        "formula": "[Custom SQL/DEV_PERIOD_MONTHS]",
+                        "name": "Development Period (Months)"
+                    },
+                    {
+                        "id": "cl-valuation-year",
+                        "formula": "[Custom SQL/VALUATION_YEAR]",
+                        "name": "Valuation Year"
+                    },
+                    {
+                        "id": "cl-paid",
+                        "formula": "[Custom SQL/PAID_LOSS]",
+                        "name": "Paid Loss",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cl-reserve",
+                        "formula": "[Custom SQL/CASE_RESERVE]",
+                        "name": "Case Reserve",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cl-claimcount",
+                        "formula": "[Custom SQL/CLAIM_COUNT]",
+                        "name": "Claim Count"
+                    },
+                    {
+                        "id": "cl-is-latest",
+                        "formula": "[Custom SQL/IS_LATEST_VALUATION]",
+                        "name": "Is Latest Valuation"
+                    },
+                    {
+                        "id": "cl-joinkey",
+                        "formula": "[Custom SQL/JOIN_KEY]",
+                        "name": "Join Key"
+                    },
+                    {
+                        "id": "cl-year-date",
+                        "formula": "[Custom SQL/POLICY_YEAR_DATE]",
+                        "name": "Policy Year Date"
+                    },
+                    {
+                        "id": "cl-incurred",
+                        "formula": "[Paid Loss] + [Case Reserve]",
+                        "name": "Incurred Loss",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cl-latest-paid",
+                        "formula": "If([Is Latest Valuation] = 1, [Paid Loss], 0)",
+                        "name": "Latest Paid",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cl-latest-reserve",
+                        "formula": "If([Is Latest Valuation] = 1, [Case Reserve], 0)",
+                        "name": "Latest Reserve",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cl-latest-incurred",
+                        "formula": "If([Is Latest Valuation] = 1, [Incurred Loss], 0)",
+                        "name": "Latest Incurred",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cl-latest-claimcount",
+                        "formula": "If([Is Latest Valuation] = 1, [Claim Count], 0)",
+                        "name": "Latest Claim Count"
+                    }
+                ],
+                "name": "Claims",
+                "order": [
+                    "cl-policy-year",
+                    "cl-lob",
+                    "cl-status",
+                    "cl-dev-period",
+                    "cl-valuation-year",
+                    "cl-paid",
+                    "cl-reserve",
+                    "cl-claimcount",
+                    "cl-is-latest",
+                    "cl-joinkey",
+                    "cl-year-date",
+                    "cl-incurred",
+                    "cl-latest-paid",
+                    "cl-latest-reserve",
+                    "cl-latest-incurred",
+                    "cl-latest-claimcount"
+                ]
+            },
+            {
+                "id": "tbl-premium",
+                "kind": "table",
+                "source": {
+                    "connectionId": "9e79f38b-a310-405c-aad9-72f762ac6ff1",
+                    "statement": "SELECT * FROM (VALUES\n    ('PREMIUM', 2019, 'Workers Comp', NULL, NULL, NULL, 6077663.58, NULL, NULL, NULL, 1069, '2019|Workers Comp', DATE '2019-01-01'),\n    ('PREMIUM', 2019, 'General Liability', NULL, NULL, NULL, 3331334.11, NULL, NULL, NULL, 753, '2019|General Liability', DATE '2019-01-01'),\n    ('PREMIUM', 2019, 'Commercial Auto', NULL, NULL, NULL, 4220422.74, NULL, NULL, NULL, 991, '2019|Commercial Auto', DATE '2019-01-01'),\n    ('PREMIUM', 2019, 'Property', NULL, NULL, NULL, 5017084.92, NULL, NULL, NULL, 903, '2019|Property', DATE '2019-01-01'),\n    ('PREMIUM', 2020, 'Workers Comp', NULL, NULL, NULL, 6454091.73, NULL, NULL, NULL, 1073, '2020|Workers Comp', DATE '2020-01-01'),\n    ('PREMIUM', 2020, 'General Liability', NULL, NULL, NULL, 3411620.32, NULL, NULL, NULL, 732, '2020|General Liability', DATE '2020-01-01'),\n    ('PREMIUM', 2020, 'Commercial Auto', NULL, NULL, NULL, 4135693.48, NULL, NULL, NULL, 962, '2020|Commercial Auto', DATE '2020-01-01'),\n    ('PREMIUM', 2020, 'Property', NULL, NULL, NULL, 5011560.75, NULL, NULL, NULL, 922, '2020|Property', DATE '2020-01-01'),\n    ('PREMIUM', 2021, 'Workers Comp', NULL, NULL, NULL, 6593609.11, NULL, NULL, NULL, 1034, '2021|Workers Comp', DATE '2021-01-01'),\n    ('PREMIUM', 2021, 'General Liability', NULL, NULL, NULL, 3568977.87, NULL, NULL, NULL, 754, '2021|General Liability', DATE '2021-01-01'),\n    ('PREMIUM', 2021, 'Commercial Auto', NULL, NULL, NULL, 4370057.86, NULL, NULL, NULL, 977, '2021|Commercial Auto', DATE '2021-01-01'),\n    ('PREMIUM', 2021, 'Property', NULL, NULL, NULL, 5126642.61, NULL, NULL, NULL, 872, '2021|Property', DATE '2021-01-01'),\n    ('PREMIUM', 2022, 'Workers Comp', NULL, NULL, NULL, 6596198.68, NULL, NULL, NULL, 1030, '2022|Workers Comp', DATE '2022-01-01'),\n    ('PREMIUM', 2022, 'General Liability', NULL, NULL, NULL, 3622290.87, NULL, NULL, NULL, 784, '2022|General Liability', DATE '2022-01-01'),\n    ('PREMIUM', 2022, 'Commercial Auto', NULL, NULL, NULL, 4319767.68, NULL, NULL, NULL, 958, '2022|Commercial Auto', DATE '2022-01-01'),\n    ('PREMIUM', 2022, 'Property', NULL, NULL, NULL, 5458216.96, NULL, NULL, NULL, 891, '2022|Property', DATE '2022-01-01'),\n    ('PREMIUM', 2023, 'Workers Comp', NULL, NULL, NULL, 6531643.77, NULL, NULL, NULL, 1012, '2023|Workers Comp', DATE '2023-01-01'),\n    ('PREMIUM', 2023, 'General Liability', NULL, NULL, NULL, 3585997.90, NULL, NULL, NULL, 768, '2023|General Liability', DATE '2023-01-01'),\n    ('PREMIUM', 2023, 'Commercial Auto', NULL, NULL, NULL, 4505599.65, NULL, NULL, NULL, 974, '2023|Commercial Auto', DATE '2023-01-01'),\n    ('PREMIUM', 2023, 'Property', NULL, NULL, NULL, 5258582.98, NULL, NULL, NULL, 882, '2023|Property', DATE '2023-01-01'),\n    ('PREMIUM', 2024, 'Workers Comp', NULL, NULL, NULL, 7023012.87, NULL, NULL, NULL, 1052, '2024|Workers Comp', DATE '2024-01-01'),\n    ('PREMIUM', 2024, 'General Liability', NULL, NULL, NULL, 3845709.99, NULL, NULL, NULL, 782, '2024|General Liability', DATE '2024-01-01'),\n    ('PREMIUM', 2024, 'Commercial Auto', NULL, NULL, NULL, 4377806.76, NULL, NULL, NULL, 997, '2024|Commercial Auto', DATE '2024-01-01'),\n    ('PREMIUM', 2024, 'Property', NULL, NULL, NULL, 5559964.42, NULL, NULL, NULL, 893, '2024|Property', DATE '2024-01-01'),\n    ('PREMIUM', 2025, 'Workers Comp', NULL, NULL, NULL, 6846850.05, NULL, NULL, NULL, 1062, '2025|Workers Comp', DATE '2025-01-01'),\n    ('PREMIUM', 2025, 'General Liability', NULL, NULL, NULL, 3719247.44, NULL, NULL, NULL, 756, '2025|General Liability', DATE '2025-01-01'),\n    ('PREMIUM', 2025, 'Commercial Auto', NULL, NULL, NULL, 4579249.96, NULL, NULL, NULL, 1016, '2025|Commercial Auto', DATE '2025-01-01'),\n    ('PREMIUM', 2025, 'Property', NULL, NULL, NULL, 5726286.59, NULL, NULL, NULL, 873, '2025|Property', DATE '2025-01-01')\n) AS t(ROW_TYPE, POLICY_YEAR, LINE_OF_BUSINESS, CLAIM_STATUS, DEV_PERIOD_MONTHS, VALUATION_YEAR, EARNED_PREMIUM, PAID_LOSS, CASE_RESERVE, CLAIM_COUNT, POLICY_COUNT, JOIN_KEY, POLICY_YEAR_DATE)",
+                    "kind": "sql"
+                },
+                "columns": [
+                    {
+                        "id": "pr-policy-year",
+                        "formula": "[Custom SQL/POLICY_YEAR]",
+                        "name": "Policy Year"
+                    },
+                    {
+                        "id": "pr-lob",
+                        "formula": "[Custom SQL/LINE_OF_BUSINESS]",
+                        "name": "Line of Business"
+                    },
+                    {
+                        "id": "pr-premium",
+                        "formula": "[Custom SQL/EARNED_PREMIUM]",
+                        "name": "Earned Premium",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "pr-policycount",
+                        "formula": "[Custom SQL/POLICY_COUNT]",
+                        "name": "Policy Count"
+                    },
+                    {
+                        "id": "pr-joinkey",
+                        "formula": "[Custom SQL/JOIN_KEY]",
+                        "name": "Join Key"
+                    },
+                    {
+                        "id": "pr-year-date",
+                        "formula": "[Custom SQL/POLICY_YEAR_DATE]",
+                        "name": "Policy Year Date"
+                    }
+                ],
+                "name": "Premium",
+                "order": [
+                    "pr-policy-year",
+                    "pr-lob",
+                    "pr-premium",
+                    "pr-policycount",
+                    "pr-joinkey",
+                    "pr-year-date"
+                ]
+            },
+            {
+                "id": "tbl-loss-ratio",
+                "kind": "table",
+                "source": {
+                    "elementId": "tbl-claims",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "lr-joinkey",
+                        "formula": "[Claims/Join Key]",
+                        "name": "Join Key"
+                    },
+                    {
+                        "id": "lr-policy-year",
+                        "formula": "Max([Claims/Policy Year])",
+                        "name": "Policy Year"
+                    },
+                    {
+                        "id": "lr-year-date",
+                        "formula": "Max([Claims/Policy Year Date])",
+                        "name": "Policy Year Date"
+                    },
+                    {
+                        "id": "lr-lob",
+                        "formula": "Max([Claims/Line of Business])",
+                        "name": "Line of Business"
+                    },
+                    {
+                        "id": "lr-incurred",
+                        "formula": "Sum([Claims/Latest Incurred])",
+                        "name": "Incurred (Current)",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "lr-paid",
+                        "formula": "Sum([Claims/Latest Paid])",
+                        "name": "Paid (Current)",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "lr-reserve",
+                        "formula": "Sum([Claims/Latest Reserve])",
+                        "name": "Reserve (Current)",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "lr-claimcount",
+                        "formula": "Sum([Claims/Latest Claim Count])",
+                        "name": "Claim Count (Current)"
+                    },
+                    {
+                        "id": "lr-premium",
+                        "formula": "Lookup([Premium/Earned Premium], [Join Key], [Premium/Join Key])",
+                        "name": "Earned Premium",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "lr-policycount",
+                        "formula": "Lookup([Premium/Policy Count], [Join Key], [Premium/Join Key])",
+                        "name": "Policy Count"
+                    },
+                    {
+                        "id": "lr-lossratio",
+                        "formula": "[Incurred (Current)] / [Earned Premium]",
+                        "name": "Loss Ratio",
+                        "format": {
+                            "kind": "number",
+                            "formatString": ".1%"
+                        }
+                    },
+                    {
+                        "id": "lr-frequency",
+                        "formula": "[Claim Count (Current)] / [Policy Count] * 100",
+                        "name": "Frequency (per 100 policies)"
+                    },
+                    {
+                        "id": "lr-severity",
+                        "formula": "[Incurred (Current)] / [Claim Count (Current)]",
+                        "name": "Severity (Avg Cost per Claim)",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "bk-incurred",
+                        "formula": "Sum([Incurred (Current)])",
+                        "name": "Book Incurred",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "bk-paid",
+                        "formula": "Sum([Paid (Current)])",
+                        "name": "Book Paid",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "bk-reserve",
+                        "formula": "Sum([Reserve (Current)])",
+                        "name": "Book Reserve",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "bk-claimcount",
+                        "formula": "Sum([Claim Count (Current)])",
+                        "name": "Book Claim Count"
+                    },
+                    {
+                        "id": "bk-premium",
+                        "formula": "Sum([Earned Premium])",
+                        "name": "Book Premium",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "bk-policycount",
+                        "formula": "Sum([Policy Count])",
+                        "name": "Book Policy Count"
+                    },
+                    {
+                        "id": "bk-lossratio",
+                        "formula": "[Book Incurred] / [Book Premium]",
+                        "name": "Book Loss Ratio",
+                        "format": {
+                            "kind": "number",
+                            "formatString": ".1%"
+                        }
+                    },
+                    {
+                        "id": "bk-frequency",
+                        "formula": "[Book Claim Count] / [Book Policy Count] * 100",
+                        "name": "Book Frequency"
+                    },
+                    {
+                        "id": "bk-severity",
+                        "formula": "[Book Incurred] / [Book Claim Count]",
+                        "name": "Book Severity",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "name": "Policy Year LOB Summary",
+                "groupings": [
+                    {
+                        "id": "grp-loss-ratio",
+                        "groupBy": [
+                            "lr-joinkey"
+                        ],
+                        "calculations": [
+                            "lr-policy-year",
+                            "lr-year-date",
+                            "lr-lob",
+                            "lr-incurred",
+                            "lr-paid",
+                            "lr-reserve",
+                            "lr-claimcount",
+                            "lr-premium",
+                            "lr-policycount",
+                            "lr-lossratio",
+                            "lr-frequency",
+                            "lr-severity"
+                        ]
+                    }
+                ],
+                "summary": [
+                    "bk-incurred",
+                    "bk-paid",
+                    "bk-reserve",
+                    "bk-claimcount",
+                    "bk-premium",
+                    "bk-policycount",
+                    "bk-lossratio",
+                    "bk-frequency",
+                    "bk-severity"
+                ]
+            },
+            {
+                "id": "tbl-lob-summary",
+                "kind": "table",
+                "source": {
+                    "elementId": "tbl-claims",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "ls-lob",
+                        "formula": "[Claims/Line of Business]",
+                        "name": "Line of Business"
+                    },
+                    {
+                        "id": "ls-incurred",
+                        "formula": "Sum([Claims/Latest Incurred])",
+                        "name": "Incurred (Current)",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "name": "LOB Summary",
+                "groupings": [
+                    {
+                        "id": "grp-lob-summary",
+                        "groupBy": [
+                            "ls-lob"
+                        ],
+                        "calculations": [
+                            "ls-incurred"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "tbl-year-premium",
+                "kind": "table",
+                "source": {
+                    "elementId": "tbl-premium",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "yp-year-date",
+                        "formula": "[Premium/Policy Year Date]",
+                        "name": "Policy Year Date"
+                    },
+                    {
+                        "id": "yp-premium",
+                        "formula": "Sum([Premium/Earned Premium])",
+                        "name": "Earned Premium",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "yp-policycount",
+                        "formula": "Sum([Premium/Policy Count])",
+                        "name": "Policy Count"
+                    }
+                ],
+                "name": "Year Premium Summary",
+                "groupings": [
+                    {
+                        "id": "grp-year-premium",
+                        "groupBy": [
+                            "yp-year-date"
+                        ],
+                        "calculations": [
+                            "yp-premium",
+                            "yp-policycount"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "tbl-year-summary",
+                "kind": "table",
+                "source": {
+                    "elementId": "tbl-claims",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "ys-year-date",
+                        "formula": "[Claims/Policy Year Date]",
+                        "name": "Policy Year Date"
+                    },
+                    {
+                        "id": "ys-incurred",
+                        "formula": "Sum([Claims/Latest Incurred])",
+                        "name": "Incurred (Current)",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "ys-claimcount",
+                        "formula": "Sum([Claims/Latest Claim Count])",
+                        "name": "Claim Count (Current)"
+                    },
+                    {
+                        "id": "ys-premium",
+                        "formula": "Lookup([Year Premium Summary/Earned Premium], [Policy Year Date], [Year Premium Summary/Policy Year Date])",
+                        "name": "Earned Premium",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "ys-policycount",
+                        "formula": "Lookup([Year Premium Summary/Policy Count], [Policy Year Date], [Year Premium Summary/Policy Year Date])",
+                        "name": "Policy Count"
+                    },
+                    {
+                        "id": "ys-frequency",
+                        "formula": "[Claim Count (Current)] / [Policy Count] * 100",
+                        "name": "Frequency (per 100 policies)"
+                    },
+                    {
+                        "id": "ys-severity",
+                        "formula": "[Incurred (Current)] / [Claim Count (Current)]",
+                        "name": "Severity (Avg Cost per Claim)",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "name": "Year Summary",
+                "groupings": [
+                    {
+                        "id": "grp-year-summary",
+                        "groupBy": [
+                            "ys-year-date"
+                        ],
+                        "calculations": [
+                            "ys-incurred",
+                            "ys-claimcount",
+                            "ys-premium",
+                            "ys-policycount",
+                            "ys-frequency",
+                            "ys-severity"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "tbl-triangle",
+                "kind": "table",
+                "source": {
+                    "elementId": "tbl-claims",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "tr-policy-year",
+                        "formula": "[Claims/Policy Year]",
+                        "name": "Policy Year"
+                    },
+                    {
+                        "id": "tr-dev-period",
+                        "formula": "[Claims/Development Period (Months)]",
+                        "name": "Development Period (Months)"
+                    },
+                    {
+                        "id": "tr-lob",
+                        "formula": "[Claims/Line of Business]",
+                        "name": "Line of Business"
+                    },
+                    {
+                        "id": "tr-status",
+                        "formula": "[Claims/Claim Status]",
+                        "name": "Claim Status"
+                    },
+                    {
+                        "id": "tr-incurred",
+                        "formula": "[Claims/Incurred Loss]",
+                        "name": "Incurred Loss"
+                    },
+                    {
+                        "id": "tr-paid",
+                        "formula": "[Claims/Paid Loss]",
+                        "name": "Paid Loss"
+                    },
+                    {
+                        "id": "tr-value",
+                        "formula": "If([Mode] = \"Paid\", [Paid Loss], [Incurred Loss])",
+                        "name": "Triangle Value"
+                    }
+                ],
+                "name": "Triangle Detail",
+                "order": [
+                    "tr-policy-year",
+                    "tr-dev-period",
+                    "tr-lob",
+                    "tr-status",
+                    "tr-incurred",
+                    "tr-paid",
+                    "tr-value"
+                ]
+            },
+            {
+                "id": "ctr-header-command",
+                "kind": "container",
+                "style": {
+                    "backgroundColor": "#1b3a5c",
+                    "borderRadius": "square"
+                }
+            },
+            {
+                "id": "txt-title-command",
+                "kind": "text",
+                "body": "### <span style=\"color: #FFFFFF\">**Alliant Insurance Group \u2014 Loss Run Analytics**</span>"
+            },
+            {
+                "id": "nav-command",
+                "kind": "navigation",
+                "style": {
+                    "backgroundColor": "transparent"
+                },
+                "optionStyle": {
+                    "style": "pill",
+                    "orientation": "horizontal",
+                    "textColor": "#ffffff",
+                    "selectedColor": "#8fd8d6"
+                },
+                "mode": "manual",
+                "options": [
+                    {
+                        "label": "Command Center",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-command"
+                        }
+                    },
+                    {
+                        "label": "Loss Triangle",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-triangle"
+                        }
+                    },
+                    {
+                        "label": "Claims Detail",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-detail"
+                        }
+                    },
+                    {
+                        "label": "Loss Run Assistant",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-assistant"
+                        }
+                    }
+                ],
+                "showIcons": false
+            },
+            {
+                "id": "txt-brand-command",
+                "kind": "text",
+                "body": "<p style=\"text-align: right\"><span style=\"font-size: 16px; color: #8FD8D6\">ALLIANT</span></p>"
+            },
+            {
+                "id": "img-logo-command",
+                "kind": "image",
+                "source": {
+                    "kind": "url",
+                    "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+CjxjaXJjbGUgY3g9IjM2IiBjeT0iNDAiIHI9IjMwIiBmaWxsPSIjOEZEOEQ2IiBvcGFjaXR5PSIwLjkyIi8+CjxjaXJjbGUgY3g9IjYyIiBjeT0iNTYiIHI9IjI2IiBmaWxsPSIjMkU4QjhCIiBvcGFjaXR5PSIwLjkyIi8+Cjwvc3ZnPg=="
+                }
+            },
+            {
+                "id": "txt-sub-command",
+                "kind": "text",
+                "body": "<p class=\"p-small\"><span style=\"color: #FFFFFF\">Multi-year loss triangle, incurred and paid trends, and loss ratio by line of business</span></p>"
+            },
+            {
+                "id": "ctr-filters-command",
+                "kind": "container",
+                "style": {
+                    "backgroundColor": "#dce4ee"
+                }
+            },
+            {
+                "kind": "control",
+                "controlId": "LOB",
+                "id": "ctrl-lob",
+                "name": "Line of Business",
+                "filters": [
+                    {
+                        "source": {
+                            "kind": "table",
+                            "elementId": "tbl-claims"
+                        },
+                        "columnId": "cl-lob"
+                    },
+                    {
+                        "source": {
+                            "kind": "table",
+                            "elementId": "tbl-premium"
+                        },
+                        "columnId": "pr-lob"
+                    }
+                ],
+                "controlType": "list",
+                "mode": "include",
+                "selectionMode": "multiple",
+                "values": [],
+                "source": {
+                    "kind": "source",
+                    "source": {
+                        "kind": "table",
+                        "elementId": "tbl-claims"
+                    },
+                    "columnId": "cl-lob"
+                }
+            },
+            {
+                "kind": "control",
+                "controlId": "PolicyYear",
+                "id": "ctrl-policyyear",
+                "name": "Policy Year",
+                "filters": [
+                    {
+                        "source": {
+                            "kind": "table",
+                            "elementId": "tbl-claims"
+                        },
+                        "columnId": "cl-policy-year"
+                    },
+                    {
+                        "source": {
+                            "kind": "table",
+                            "elementId": "tbl-premium"
+                        },
+                        "columnId": "pr-policy-year"
+                    }
+                ],
+                "controlType": "list",
+                "mode": "include",
+                "selectionMode": "multiple",
+                "values": [],
+                "source": {
+                    "kind": "source",
+                    "source": {
+                        "kind": "table",
+                        "elementId": "tbl-claims"
+                    },
+                    "columnId": "cl-policy-year"
+                }
+            },
+            {
+                "kind": "control",
+                "controlId": "Status",
+                "id": "ctrl-status",
+                "name": "Claim Status",
+                "filters": [
+                    {
+                        "source": {
+                            "kind": "table",
+                            "elementId": "tbl-claims"
+                        },
+                        "columnId": "cl-status"
+                    }
+                ],
+                "controlType": "list",
+                "mode": "include",
+                "selectionMode": "multiple",
+                "values": [],
+                "source": {
+                    "kind": "source",
+                    "source": {
+                        "kind": "table",
+                        "elementId": "tbl-claims"
+                    },
+                    "columnId": "cl-status"
+                }
+            },
+            {
+                "id": "ctr-kpis-command",
+                "kind": "container"
+            },
+            {
+                "id": "kpi-incurred",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-loss-ratio",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-incurred-value",
+                        "formula": "Max([Policy Year LOB Summary/Book Incurred])",
+                        "name": "Total Incurred",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-incurred-value"
+                },
+                "name": "Total Incurred"
+            },
+            {
+                "id": "kpi-paid",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-loss-ratio",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-paid-value",
+                        "formula": "Max([Policy Year LOB Summary/Book Paid])",
+                        "name": "Paid to Date",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-paid-value"
+                },
+                "name": "Paid to Date"
+            },
+            {
+                "id": "kpi-reserve",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-loss-ratio",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-reserve-value",
+                        "formula": "Max([Policy Year LOB Summary/Book Reserve])",
+                        "name": "Case Reserve Outstanding",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-reserve-value"
+                },
+                "name": "Case Reserve Outstanding"
+            },
+            {
+                "id": "kpi-lossratio",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-loss-ratio",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-lossratio-value",
+                        "formula": "Max([Policy Year LOB Summary/Book Loss Ratio])",
+                        "name": "Loss Ratio",
+                        "format": {
+                            "kind": "number",
+                            "formatString": ".1%"
+                        }
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-lossratio-value"
+                },
+                "name": "Loss Ratio"
+            },
+            {
+                "id": "kpi-frequency",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-loss-ratio",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-frequency-value",
+                        "formula": "Max([Policy Year LOB Summary/Book Frequency])",
+                        "name": "Claim Frequency (per 100 policies)"
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-frequency-value"
+                },
+                "name": "Claim Frequency (per 100 policies)"
+            },
+            {
+                "id": "kpi-severity",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-loss-ratio",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-severity-value",
+                        "formula": "Max([Policy Year LOB Summary/Book Severity])",
+                        "name": "Avg Severity per Claim",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-severity-value"
+                },
+                "name": "Avg Severity per Claim"
+            },
+            {
+                "id": "chart-lossratio-trend",
+                "kind": "line-chart",
+                "source": {
+                    "elementId": "tbl-loss-ratio",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "lrt-lob",
+                        "formula": "[Policy Year LOB Summary/Line of Business]",
+                        "name": "Line of Business"
+                    },
+                    {
+                        "id": "lrt-year",
+                        "formula": "[Policy Year LOB Summary/Policy Year Date]",
+                        "name": "Policy Year"
+                    },
+                    {
+                        "id": "lrt-ratio",
+                        "formula": "Max([Policy Year LOB Summary/Loss Ratio])",
+                        "name": "Loss Ratio",
+                        "format": {
+                            "kind": "number",
+                            "formatString": ".1%"
+                        }
+                    }
+                ],
+                "yAxis": {
+                    "columnIds": [
+                        "lrt-ratio"
+                    ]
+                },
+                "xAxis": {
+                    "columnId": "lrt-year"
+                },
+                "color": {
+                    "by": "category",
+                    "column": "lrt-lob"
+                },
+                "name": "Loss Ratio by Policy Year"
+            },
+            {
+                "id": "chart-frequency-trend",
+                "kind": "bar-chart",
+                "source": {
+                    "elementId": "tbl-year-summary",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "fq-year",
+                        "formula": "[Year Summary/Policy Year Date]",
+                        "name": "Policy Year"
+                    },
+                    {
+                        "id": "fq-freq",
+                        "formula": "Max([Year Summary/Frequency (per 100 policies)])",
+                        "name": "Frequency (per 100 policies)"
+                    }
+                ],
+                "yAxis": {
+                    "columnIds": [
+                        "fq-freq"
+                    ]
+                },
+                "xAxis": {
+                    "columnId": "fq-year"
+                },
+                "name": "Claim Frequency Trend (per 100 policies)"
+            },
+            {
+                "id": "chart-severity-trend",
+                "kind": "line-chart",
+                "source": {
+                    "elementId": "tbl-year-summary",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "sv-year",
+                        "formula": "[Year Summary/Policy Year Date]",
+                        "name": "Policy Year"
+                    },
+                    {
+                        "id": "sv-sev",
+                        "formula": "Max([Year Summary/Severity (Avg Cost per Claim)])",
+                        "name": "Avg Severity",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "yAxis": {
+                    "columnIds": [
+                        "sv-sev"
+                    ]
+                },
+                "xAxis": {
+                    "columnId": "sv-year"
+                },
+                "name": "Avg Severity per Claim Trend"
+            },
+            {
+                "id": "chart-incurred-by-lob",
+                "kind": "bar-chart",
+                "source": {
+                    "elementId": "tbl-lob-summary",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "ibl-lob",
+                        "formula": "[LOB Summary/Line of Business]",
+                        "name": "Line of Business"
+                    },
+                    {
+                        "id": "ibl-incurred",
+                        "formula": "Max([LOB Summary/Incurred (Current)])",
+                        "name": "Incurred Loss",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "yAxis": {
+                    "columnIds": [
+                        "ibl-incurred"
+                    ]
+                },
+                "xAxis": {
+                    "columnId": "ibl-lob",
+                    "sort": {
+                        "by": "ibl-incurred",
+                        "direction": "descending"
+                    }
+                },
+                "name": "Incurred Loss by Line of Business"
+            },
+            {
+                "id": "ctr-header-triangle",
+                "kind": "container",
+                "style": {
+                    "backgroundColor": "#1b3a5c",
+                    "borderRadius": "square"
+                }
+            },
+            {
+                "id": "txt-title-triangle",
+                "kind": "text",
+                "body": "### <span style=\"color: #FFFFFF\">**Loss Development Triangle**</span>"
+            },
+            {
+                "id": "nav-triangle",
+                "kind": "navigation",
+                "style": {
+                    "backgroundColor": "transparent"
+                },
+                "optionStyle": {
+                    "style": "pill",
+                    "orientation": "horizontal",
+                    "textColor": "#ffffff",
+                    "selectedColor": "#8fd8d6"
+                },
+                "mode": "manual",
+                "options": [
+                    {
+                        "label": "Command Center",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-command"
+                        }
+                    },
+                    {
+                        "label": "Loss Triangle",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-triangle"
+                        }
+                    },
+                    {
+                        "label": "Claims Detail",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-detail"
+                        }
+                    },
+                    {
+                        "label": "Loss Run Assistant",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-assistant"
+                        }
+                    }
+                ],
+                "showIcons": false
+            },
+            {
+                "id": "txt-brand-triangle",
+                "kind": "text",
+                "body": "<p style=\"text-align: right\"><span style=\"font-size: 16px; color: #8FD8D6\">ALLIANT</span></p>"
+            },
+            {
+                "id": "img-logo-triangle",
+                "kind": "image",
+                "source": {
+                    "kind": "url",
+                    "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+CjxjaXJjbGUgY3g9IjM2IiBjeT0iNDAiIHI9IjMwIiBmaWxsPSIjOEZEOEQ2IiBvcGFjaXR5PSIwLjkyIi8+CjxjaXJjbGUgY3g9IjYyIiBjeT0iNTYiIHI9IjI2IiBmaWxsPSIjMkU4QjhCIiBvcGFjaXR5PSIwLjkyIi8+Cjwvc3ZnPg=="
+                }
+            },
+            {
+                "id": "txt-sub-triangle",
+                "kind": "text",
+                "body": "<p class=\"p-small\"><span style=\"color: #FFFFFF\">Cumulative incurred / paid loss by policy year and development period</span></p>"
+            },
+            {
+                "id": "ctr-mode-triangle",
+                "kind": "container",
+                "style": {
+                    "backgroundColor": "#dce4ee"
+                }
+            },
+            {
+                "kind": "control",
+                "controlId": "Mode",
+                "id": "ctrl-mode",
+                "name": "Triangle View",
+                "controlType": "segmented",
+                "source": {
+                    "kind": "manual",
+                    "valueType": "text",
+                    "values": [
+                        "Incurred",
+                        "Paid"
+                    ],
+                    "labels": [
+                        "Incurred",
+                        "Paid"
+                    ]
+                },
+                "value": "Incurred"
+            },
+            {
+                "id": "pivot-triangle",
+                "kind": "pivot-table",
+                "source": {
+                    "elementId": "tbl-triangle",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "pvt-year",
+                        "formula": "[Triangle Detail/Policy Year]",
+                        "name": "Policy Year"
+                    },
+                    {
+                        "id": "pvt-dev",
+                        "formula": "[Triangle Detail/Development Period (Months)]",
+                        "name": "Development Period (Months)"
+                    },
+                    {
+                        "id": "pvt-value",
+                        "formula": "Sum([Triangle Detail/Triangle Value])",
+                        "name": "Loss ($)"
+                    }
+                ],
+                "values": [
+                    "pvt-value"
+                ],
+                "rowsBy": [
+                    {
+                        "columnId": "pvt-year"
+                    }
+                ],
+                "columnsBy": [
+                    {
+                        "columnId": "pvt-dev"
+                    }
+                ],
+                "name": "Loss Development Triangle"
+            },
+            {
+                "id": "ctr-header-detail",
+                "kind": "container",
+                "style": {
+                    "backgroundColor": "#1b3a5c",
+                    "borderRadius": "square"
+                }
+            },
+            {
+                "id": "txt-title-detail",
+                "kind": "text",
+                "body": "### <span style=\"color: #FFFFFF\">**Claims Detail**</span>"
+            },
+            {
+                "id": "nav-detail",
+                "kind": "navigation",
+                "style": {
+                    "backgroundColor": "transparent"
+                },
+                "optionStyle": {
+                    "style": "pill",
+                    "orientation": "horizontal",
+                    "textColor": "#ffffff",
+                    "selectedColor": "#8fd8d6"
+                },
+                "mode": "manual",
+                "options": [
+                    {
+                        "label": "Command Center",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-command"
+                        }
+                    },
+                    {
+                        "label": "Loss Triangle",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-triangle"
+                        }
+                    },
+                    {
+                        "label": "Claims Detail",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-detail"
+                        }
+                    },
+                    {
+                        "label": "Loss Run Assistant",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-assistant"
+                        }
+                    }
+                ],
+                "showIcons": false
+            },
+            {
+                "id": "txt-brand-detail",
+                "kind": "text",
+                "body": "<p style=\"text-align: right\"><span style=\"font-size: 16px; color: #8FD8D6\">ALLIANT</span></p>"
+            },
+            {
+                "id": "img-logo-detail",
+                "kind": "image",
+                "source": {
+                    "kind": "url",
+                    "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+CjxjaXJjbGUgY3g9IjM2IiBjeT0iNDAiIHI9IjMwIiBmaWxsPSIjOEZEOEQ2IiBvcGFjaXR5PSIwLjkyIi8+CjxjaXJjbGUgY3g9IjYyIiBjeT0iNTYiIHI9IjI2IiBmaWxsPSIjMkU4QjhCIiBvcGFjaXR5PSIwLjkyIi8+Cjwvc3ZnPg=="
+                }
+            },
+            {
+                "id": "txt-sub-detail",
+                "kind": "text",
+                "body": "<p class=\"p-small\"><span style=\"color: #FFFFFF\">Current-position claim detail by policy year, line of business, and status</span></p>"
+            },
+            {
+                "id": "tbl-detail-view",
+                "kind": "table",
+                "source": {
+                    "elementId": "tbl-claims",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "cd-joinkey",
+                        "formula": "[Claims/Join Key]",
+                        "name": "Join Key"
+                    },
+                    {
+                        "id": "cd-status",
+                        "formula": "[Claims/Claim Status]",
+                        "name": "Claim Status"
+                    },
+                    {
+                        "id": "cd-policy-year",
+                        "formula": "Max([Claims/Policy Year])",
+                        "name": "Policy Year"
+                    },
+                    {
+                        "id": "cd-lob",
+                        "formula": "Max([Claims/Line of Business])",
+                        "name": "Line of Business"
+                    },
+                    {
+                        "id": "cd-incurred",
+                        "formula": "Sum([Claims/Latest Incurred])",
+                        "name": "Incurred",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cd-paid",
+                        "formula": "Sum([Claims/Latest Paid])",
+                        "name": "Paid to Date",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cd-reserve",
+                        "formula": "Sum([Claims/Latest Reserve])",
+                        "name": "Case Reserve",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    },
+                    {
+                        "id": "cd-claimcount",
+                        "formula": "Sum([Claims/Latest Claim Count])",
+                        "name": "Claim Count"
+                    },
+                    {
+                        "id": "cd-severity",
+                        "formula": "[Incurred] / [Claim Count]",
+                        "name": "Avg Severity",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "name": "Claims Detail Table",
+                "groupings": [
+                    {
+                        "id": "grp-current-detail",
+                        "groupBy": [
+                            "cd-joinkey",
+                            "cd-status"
+                        ],
+                        "calculations": [
+                            "cd-policy-year",
+                            "cd-lob",
+                            "cd-incurred",
+                            "cd-paid",
+                            "cd-reserve",
+                            "cd-claimcount",
+                            "cd-severity"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "ctr-header-assistant",
+                "kind": "container",
+                "style": {
+                    "backgroundColor": "#1b3a5c",
+                    "borderRadius": "square"
+                }
+            },
+            {
+                "id": "txt-title-assistant",
+                "kind": "text",
+                "body": "### <span style=\"color: #FFFFFF\">**Loss Run Assistant**</span>"
+            },
+            {
+                "id": "nav-assistant",
+                "kind": "navigation",
+                "style": {
+                    "backgroundColor": "transparent"
+                },
+                "optionStyle": {
+                    "style": "pill",
+                    "orientation": "horizontal",
+                    "textColor": "#ffffff",
+                    "selectedColor": "#8fd8d6"
+                },
+                "mode": "manual",
+                "options": [
+                    {
+                        "label": "Command Center",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-command"
+                        }
+                    },
+                    {
+                        "label": "Loss Triangle",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-triangle"
+                        }
+                    },
+                    {
+                        "label": "Claims Detail",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-detail"
+                        }
+                    },
+                    {
+                        "label": "Loss Run Assistant",
+                        "destination": {
+                            "type": "page",
+                            "pageId": "page-assistant"
+                        }
+                    }
+                ],
+                "showIcons": false
+            },
+            {
+                "id": "txt-brand-assistant",
+                "kind": "text",
+                "body": "<p style=\"text-align: right\"><span style=\"font-size: 16px; color: #8FD8D6\">ALLIANT</span></p>"
+            },
+            {
+                "id": "img-logo-assistant",
+                "kind": "image",
+                "source": {
+                    "kind": "url",
+                    "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+CjxjaXJjbGUgY3g9IjM2IiBjeT0iNDAiIHI9IjMwIiBmaWxsPSIjOEZEOEQ2IiBvcGFjaXR5PSIwLjkyIi8+CjxjaXJjbGUgY3g9IjYyIiBjeT0iNTYiIHI9IjI2IiBmaWxsPSIjMkU4QjhCIiBvcGFjaXR5PSIwLjkyIi8+Cjwvc3ZnPg=="
+                }
+            },
+            {
+                "id": "txt-sub-assistant",
+                "kind": "text",
+                "body": "<p class=\"p-small\"><span style=\"color: #FFFFFF\">Ask the assistant to slice the book of business in natural language</span></p>"
+            },
+            {
+                "id": "ctr-kpis-assistant",
+                "kind": "container"
+            },
+            {
+                "id": "kpi-a-incurred",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-loss-ratio",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-a-incurred-value",
+                        "formula": "Max([Policy Year LOB Summary/Book Incurred])",
+                        "name": "Total Incurred",
+                        "format": {
+                            "kind": "number",
+                            "formatString": "$,.0f"
+                        }
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-a-incurred-value"
+                },
+                "name": "Total Incurred"
+            },
+            {
+                "id": "kpi-a-lossratio",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-loss-ratio",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-a-lossratio-value",
+                        "formula": "Max([Policy Year LOB Summary/Book Loss Ratio])",
+                        "name": "Loss Ratio",
+                        "format": {
+                            "kind": "number",
+                            "formatString": ".1%"
+                        }
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-a-lossratio-value"
+                },
+                "name": "Loss Ratio"
+            },
+            {
+                "id": "kpi-a-claimcount",
+                "kind": "kpi-chart",
+                "source": {
+                    "elementId": "tbl-loss-ratio",
+                    "kind": "table"
+                },
+                "columns": [
+                    {
+                        "id": "kpi-a-claimcount-value",
+                        "formula": "Max([Policy Year LOB Summary/Book Claim Count])",
+                        "name": "Claim Count"
+                    }
+                ],
+                "value": {
+                    "columnId": "kpi-a-claimcount-value"
+                },
+                "name": "Claim Count"
+            },
+            {
+                "id": "chat-assistant",
+                "kind": "chat",
+                "agentId": "ag-lossrun"
+            }
+        ],
+        "pages": [
+            {
+                "id": "page-data",
+                "name": "Base Data (hidden)",
+                "visibility": "hidden"
+            },
+            {
+                "id": "page-command",
+                "name": "Command Center"
+            },
+            {
+                "id": "page-triangle",
+                "name": "Loss Triangle"
+            },
+            {
+                "id": "page-detail",
+                "name": "Claims Detail"
+            },
+            {
+                "id": "page-assistant",
+                "name": "Loss Run Assistant"
+            }
+        ],
+        "settings": {
+            "theme": {
+                "overrides": {
+                    "categoricalScheme": [
+                        "#1b3a5c",
+                        "#5fbfc0",
+                        "#e8a33d",
+                        "#2e8b8b",
+                        "#9ca3af"
+                    ],
+                    "pageWidth": "large",
+                    "space": {
+                        "unit": "small"
+                    }
+                }
+            }
+        },
+        "agents": [
+            {
+                "id": "ag-lossrun",
+                "instructions": "You are a loss-run analysis assistant for Alliant Insurance Group's book of business (Workers Comp, General Liability, Commercial Auto, Property; policy years 2019-2025). Help an analyst slice the loss run by line of business, policy year, and claim status (Open, Closed, Reopened) based on natural language. Never assume a constraint the user didn't specify -- leave it unset (all values) by default. After each change, summarize the resulting Total Incurred, Loss Ratio, Claim Frequency, and Avg Severity for that slice, and compare briefly to the unfiltered book of business so the analyst can see how the slice differs. Note that recent policy years (2024-2025) are immature -- their loss ratios will look artificially low because losses haven't fully developed yet -- call this out when relevant.",
+                "name": "Loss Run Assistant",
+                "description": "Helps an analyst slice Alliant's loss run by line of business, policy year, and claim status, and narrates the resulting incurred, loss ratio, and frequency/severity.",
+                "greeting": {
+                    "mode": "static",
+                    "message": "Ask me about Alliant's loss run -- for example, \"show me open Workers Comp claims from 2022 to 2024\" -- and I'll set the filters and summarize the results."
+                },
+                "dataSources": [
+                    {
+                        "kind": "table",
+                        "elementId": "tbl-loss-ratio"
+                    },
+                    {
+                        "kind": "table",
+                        "elementId": "tbl-claims"
+                    }
+                ],
+                "tools": [
+                    {
+                        "toolId": "t-lob",
+                        "kind": "action",
+                        "name": "Set line of business filter",
+                        "description": "Filter to one or more lines of business (Workers Comp, General Liability, Commercial Auto, Property).",
+                        "steps": [
+                            {
+                                "kind": "effect",
+                                "effect": "set-control-value",
+                                "control": "LOB",
+                                "selectionMode": "add",
+                                "value": {
+                                    "type": "agent-input",
+                                    "inputName": "Line(s) of business mentioned"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "toolId": "t-year",
+                        "kind": "action",
+                        "name": "Set policy year filter",
+                        "description": "Filter to one or more policy years between 2019 and 2025.",
+                        "steps": [
+                            {
+                                "kind": "effect",
+                                "effect": "set-control-value",
+                                "control": "PolicyYear",
+                                "selectionMode": "add",
+                                "value": {
+                                    "type": "agent-input",
+                                    "inputName": "Policy year(s) mentioned"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "toolId": "t-status",
+                        "kind": "action",
+                        "name": "Set claim status filter",
+                        "description": "Filter to one or more claim statuses (Open, Closed, Reopened).",
+                        "steps": [
+                            {
+                                "kind": "effect",
+                                "effect": "set-control-value",
+                                "control": "Status",
+                                "selectionMode": "add",
+                                "value": {
+                                    "type": "agent-input",
+                                    "inputName": "Claim status(es) mentioned"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "toolId": "t-clear",
+                        "kind": "action",
+                        "name": "Clear all filters",
+                        "description": "Reset line of business, policy year, and claim status back to the full book of business.",
+                        "steps": [
+                            {
+                                "kind": "effect",
+                                "effect": "clear-control",
+                                "scope": {
+                                    "type": "control",
+                                    "controlId": "LOB"
+                                }
+                            },
+                            {
+                                "kind": "effect",
+                                "effect": "clear-control",
+                                "scope": {
+                                    "type": "control",
+                                    "controlId": "PolicyYear"
+                                }
+                            },
+                            {
+                                "kind": "effect",
+                                "effect": "clear-control",
+                                "scope": {
+                                    "type": "control",
+                                    "controlId": "Status"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "kind": "workbook",
+        "layout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-data\">\n  <Element elementId=\"tbl-claims\" gridColumn=\"1 / 3\" gridRow=\"1 / 2\"/>\n  <Element elementId=\"tbl-premium\" gridColumn=\"1 / 3\" gridRow=\"2 / 3\"/>\n  <Element elementId=\"tbl-loss-ratio\" gridColumn=\"1 / 3\" gridRow=\"3 / 4\"/>\n  <Element elementId=\"tbl-lob-summary\" gridColumn=\"1 / 3\" gridRow=\"4 / 5\"/>\n  <Element elementId=\"tbl-year-premium\" gridColumn=\"1 / 3\" gridRow=\"5 / 6\"/>\n  <Element elementId=\"tbl-year-summary\" gridColumn=\"1 / 3\" gridRow=\"6 / 7\"/>\n  <Element elementId=\"tbl-triangle\" gridColumn=\"1 / 3\" gridRow=\"7 / 8\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-command\">\n  <Container elementId=\"ctr-header-command\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-command\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-command\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-command\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-command\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-command\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Container elementId=\"ctr-filters-command\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"4 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"ctrl-lob\" gridColumn=\"1 / 9\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"ctrl-policyyear\" gridColumn=\"9 / 17\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"ctrl-status\" gridColumn=\"17 / 25\" gridRow=\"1 / 3\"/>\n  </Container>\n  <Container elementId=\"ctr-kpis-command\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"6 / 16\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"kpi-incurred\" gridColumn=\"1 / 5\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-paid\" gridColumn=\"5 / 9\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-reserve\" gridColumn=\"9 / 13\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-lossratio\" gridColumn=\"13 / 17\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-frequency\" gridColumn=\"17 / 21\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-severity\" gridColumn=\"21 / 25\" gridRow=\"1 / 11\"/>\n  </Container>\n  <Element elementId=\"chart-lossratio-trend\" gridColumn=\"1 / 13\" gridRow=\"16 / 32\"/>\n  <Element elementId=\"chart-frequency-trend\" gridColumn=\"13 / 25\" gridRow=\"16 / 24\"/>\n  <Element elementId=\"chart-severity-trend\" gridColumn=\"13 / 25\" gridRow=\"24 / 32\"/>\n  <Element elementId=\"chart-incurred-by-lob\" gridColumn=\"1 / 25\" gridRow=\"32 / 46\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-triangle\">\n  <Container elementId=\"ctr-header-triangle\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-triangle\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-triangle\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-triangle\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-triangle\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-triangle\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Container elementId=\"ctr-mode-triangle\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"4 / 6\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"ctrl-mode\" gridColumn=\"1 / 6\" gridRow=\"1 / 3\"/>\n  </Container>\n  <Element elementId=\"pivot-triangle\" gridColumn=\"1 / 25\" gridRow=\"6 / 45\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-detail\">\n  <Container elementId=\"ctr-header-detail\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-detail\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-detail\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-detail\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-detail\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-detail\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Element elementId=\"tbl-detail-view\" gridColumn=\"1 / 25\" gridRow=\"4 / 50\"/>\n</Page>\n<Page type=\"grid\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\" id=\"page-assistant\">\n  <Container elementId=\"ctr-header-assistant\" type=\"grid\" gridColumn=\"1 / 25\" gridRow=\"1 / 4\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"txt-title-assistant\" gridColumn=\"1 / 11\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"nav-assistant\" gridColumn=\"11 / 20\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-brand-assistant\" gridColumn=\"20 / 24\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"img-logo-assistant\" gridColumn=\"24 / 25\" gridRow=\"1 / 3\"/>\n    <Element elementId=\"txt-sub-assistant\" gridColumn=\"1 / 15\" gridRow=\"3 / 4\"/>\n  </Container>\n  <Container elementId=\"ctr-kpis-assistant\" type=\"grid\" gridColumn=\"1 / 9\" gridRow=\"4 / 34\" gridTemplateColumns=\"repeat(24, 1fr)\" gridTemplateRows=\"auto\">\n    <Element elementId=\"kpi-a-incurred\" gridColumn=\"1 / 25\" gridRow=\"1 / 11\"/>\n    <Element elementId=\"kpi-a-lossratio\" gridColumn=\"1 / 25\" gridRow=\"11 / 21\"/>\n    <Element elementId=\"kpi-a-claimcount\" gridColumn=\"1 / 25\" gridRow=\"21 / 31\"/>\n  </Container>\n  <Element elementId=\"chat-assistant\" gridColumn=\"9 / 25\" gridRow=\"4 / 40\"/>\n</Page>\n"
+    }
+}
