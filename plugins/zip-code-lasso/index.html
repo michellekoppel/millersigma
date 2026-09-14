@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Zip Code Lasso — Sigma plugin</title>
+<script src="https://unpkg.com/@sigmacomputing/plugin"></script>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script src="./zip-centroids.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,Roboto,Arial,sans-serif;background:transparent;overflow:hidden}
+  #wrap{height:100%;width:100%;position:relative}
+  #map{height:100%;width:100%}
+  #msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;color:#5b6572;font-size:13px;background:#fff}
+  #warn{position:absolute;left:10px;bottom:10px;font-size:11px;color:#8a6f64;background:rgba(255,255,255,.85);border-radius:6px;padding:4px 8px;display:none;z-index:5}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="map"></div>
+  <div id="msg" style="display:none"></div>
+  <div id="warn"></div>
+</div>
+<script>
+(function(){
+  var client = (window.sigmaComputing && window.sigmaComputing.plugin && window.sigmaComputing.plugin.client) || null;
+  var CENTROIDS = window.ZIP_CENTROIDS || {};
+  var VALID_STYLES = ['light','dark','streets','outdoors','satellite','satellite-streets'];
+
+  var defs = [
+    { name: 'source', type: 'element' },
+    { name: 'zipCode', type: 'column', source: 'source', allowMultiple: false, label: 'Zip Code' },
+    { name: 'legend', type: 'column', source: 'source', allowMultiple: false, label: 'Legend / group (optional)' },
+    { name: 'filterZipCodes', type: 'variable', label: 'Selected Zip Codes (writeback)' },
+    { name: 'ShowLegend', type: 'toggle', label: 'Show legend', defaultValue: true },
+    { name: 'MapStyle', type: 'text', label: 'Map style (light/dark/streets/outdoors/satellite/satellite-streets)', defaultValue: 'light' },
+    { name: 'MapboxAccessToken', type: 'text', label: 'Mapbox Access Token', secure: true }
+  ];
+  if (client) client.config.configureEditorPanel(defs);
+
+  function normalizeZip(raw) {
+    if (raw === null || raw === undefined) return null;
+    var s = String(raw).trim();
+    if (!s) return null;
+    // Drop ZIP+4 suffix ("10001-1234" -> "10001")
+    s = s.split('-')[0].split('.')[0];
+    // Numbers can lose a leading zero ("1001" -> should be "01001")
+    if (/^\d+$/.test(s) && s.length < 5) s = ('00000' + s).slice(-5);
+    return s;
+  }
+
+  function showMessage(text) {
+    var msg = document.getElementById('msg');
+    msg.textContent = text;
+    msg.style.display = 'flex';
+  }
+  function hideMessage() {
+    document.getElementById('msg').style.display = 'none';
+  }
+  function showWarn(text) {
+    var w = document.getElementById('warn');
+    if (!text) { w.style.display = 'none'; return; }
+    w.textContent = text;
+    w.style.display = 'block';
+  }
+
+  function buildTraces(zips, legends) {
+    var names = legends || zips.map(function(){ return null; });
+    var uniqueNames = names.filter(function(v, i){ return names.indexOf(v) === i; });
+
+    return uniqueNames.map(function(uniqueName) {
+      var lat = [], lon = [], text = [];
+      for (var i = 0; i < zips.length; i++) {
+        if (names[i] !== uniqueName) continue;
+        var c = CENTROIDS[zips[i]];
+        if (!c) continue;
+        lat.push(c[0]);
+        lon.push(c[1]);
+        text.push(zips[i]);
+      }
+      return {
+        type: 'scattermapbox',
+        name: uniqueName === null ? 'Zip codes' : String(uniqueName),
+        lat: lat,
+        lon: lon,
+        text: text,
+        hovertemplate: '%{text}<extra>%{fullData.name}</extra>',
+        marker: { size: 9 }
+      };
+    }).filter(function(trace){ return trace.lat.length > 0; });
+  }
+
+  function render(zips, legends, cfg) {
+    hideMessage();
+
+    var traces = buildTraces(zips, legends);
+    if (!traces.length) {
+      showMessage('No matching zip codes found in the bundled centroid lookup.');
+      return;
+    }
+
+    var allLat = [], allLon = [];
+    traces.forEach(function(t){ allLat = allLat.concat(t.lat); allLon = allLon.concat(t.lon); });
+
+    var centerLat = allLat.reduce(function(a,b){return a+b;}, 0) / allLat.length;
+    var centerLon = allLon.reduce(function(a,b){return a+b;}, 0) / allLon.length;
+
+    var maxLatDiff = Math.max.apply(null, allLat) - Math.min.apply(null, allLat);
+    var maxLonDiff = Math.max.apply(null, allLon) - Math.min.apply(null, allLon);
+    var latZoom = Math.log2(360 / Math.max(maxLatDiff, 0.0001));
+    var lonZoom = Math.log2(180 / Math.max(maxLonDiff, 0.0001));
+    var zoom = Math.min(latZoom, lonZoom, 16);
+
+    var mapStyle = VALID_STYLES.indexOf(cfg.MapStyle) >= 0 ? cfg.MapStyle : 'light';
+
+    var layout = {
+      dragmode: 'zoom',
+      mapbox: {
+        center: { lat: centerLat, lon: centerLon },
+        domain: { x: [0, 1], y: [0, 1] },
+        style: mapStyle,
+        zoom: zoom,
+        accesstoken: cfg.MapboxAccessToken || undefined
+      },
+      margin: { r: 0, t: 0, b: 0, l: 0, pad: 0 },
+      showlegend: !!cfg.ShowLegend,
+      legend: { x: 0.01, y: 0.98, bgcolor: 'rgba(255,255,255,0.75)' },
+      autosize: true
+    };
+
+    Plotly.setPlotConfig({ mapboxAccessToken: cfg.MapboxAccessToken || '' });
+    Plotly.newPlot('map', traces, layout, { displayModeBar: true, responsive: true });
+
+    var mapDiv = document.getElementById('map');
+
+    mapDiv.removeAllListeners && mapDiv.removeAllListeners('plotly_selected');
+    mapDiv.on('plotly_selected', function(eventData) {
+      var selectedZips = (eventData && eventData.points ? eventData.points.map(function(pt){ return pt.text; }) : [])
+        .filter(Boolean);
+      var uniqueZips = selectedZips.filter(function(v, i){ return selectedZips.indexOf(v) === i; });
+      writeSelection(uniqueZips);
+    });
+
+    mapDiv.on('plotly_deselect', function() {
+      writeSelection([]);
+    });
+  }
+
+  var setFilterZipCodes = null;
+  function writeSelection(zipList) {
+    if (!client || !setFilterZipCodes) return;
+    setFilterZipCodes(zipList.join(','));
+  }
+
+  var st = { cfg: {}, data: null, columns: null, unsub: null };
+
+  function recompute() {
+    var cfg = st.cfg || {};
+    if (!cfg.source) { showMessage('Select a data source to get started.'); return; }
+    if (!cfg.zipCode) { showMessage('Select a Zip Code column.'); return; }
+    if (!st.data) { return; }
+
+    var rawZips = st.data[cfg.zipCode] || [];
+    var rawLegends = cfg.legend ? (st.data[cfg.legend] || []) : null;
+
+    var zips = [], legends = rawLegends ? [] : null, unmatched = 0;
+    for (var i = 0; i < rawZips.length; i++) {
+      var z = normalizeZip(rawZips[i]);
+      if (!z) continue;
+      if (!CENTROIDS[z]) { unmatched++; continue; }
+      zips.push(z);
+      if (legends) legends.push(rawLegends[i]);
+    }
+
+    showWarn(unmatched > 0 ? (unmatched + ' zip code' + (unmatched === 1 ? '' : 's') + " didn't match the bundled centroid lookup and were skipped.") : null);
+
+    if (!zips.length) { showMessage('No rows with a recognized 5-digit US zip code.'); return; }
+
+    render(zips, legends, cfg);
+  }
+
+  function synthData() {
+    var demoZips = ['10001','94103','60601','30303','98101','02108','78701','33130','80202','20001'];
+    var demoLegend = ['East','West','Midwest','South','West','East','South','South','West','East'];
+    var colZip = 'zip', colLegend = 'legend';
+    st.cfg = { source: 'demo', zipCode: colZip, legend: colLegend, ShowLegend: true, MapStyle: 'light' };
+    st.data = {};
+    st.data[colZip] = demoZips;
+    st.data[colLegend] = demoLegend;
+    recompute();
+  }
+
+  if (client) {
+    client.config.subscribe(function(cfg) {
+      st.cfg = cfg || {};
+      setFilterZipCodes = cfg && cfg.filterZipCodes
+        ? function(v) { client.setVariable(cfg.filterZipCodes, v); }
+        : null;
+
+      if (st.unsub) { st.unsub(); st.unsub = null; }
+      if (!cfg || !cfg.source) { showMessage('Select a data source to get started.'); return; }
+
+      st.unsub = client.elements.subscribeToElementData(cfg.source, function(data) {
+        st.data = data;
+        recompute();
+      });
+    });
+  } else {
+    synthData();
+  }
+
+  // Sigma sizes the plugin iframe after first paint — redraw on container resize, not just window resize.
+  var stage = document.getElementById('wrap');
+  function relayout() {
+    var el = document.getElementById('map');
+    if (el && el.data) Plotly.Plots.resize(el);
+  }
+  if (window.ResizeObserver) new ResizeObserver(relayout).observe(stage);
+  window.addEventListener('resize', relayout);
+})();
+</script>
+</body>
+</html>
