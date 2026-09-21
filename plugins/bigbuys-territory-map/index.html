@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Territory Map — Big Buys Sigma Plugin</title>
+<script src="https://unpkg.com/@sigmacomputing/plugin"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:transparent;color:#0b0b0b;overflow:hidden}
+  #wrap{height:100%;width:100%;display:flex;flex-direction:column;padding:12px 14px;gap:6px}
+  #top{display:flex;justify-content:space-between;align-items:baseline;flex:0 0 auto;gap:10px}
+  #ttl{font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#2a78d6}
+  #meta{font-size:11px;color:#52514e;text-align:right}
+  #meta b{color:#0b0b0b}
+  #hint{font-size:10px;color:#898781}
+  #body{flex:1;display:flex;gap:10px;min-height:0}
+  #mapwrap{flex:1;position:relative;min-width:0}
+  svg{width:100%;height:100%;display:block}
+  .state{fill:#f5f4f1;stroke:#e1e0d9;stroke-width:.6}
+  .store{stroke:#fff;stroke-width:1.1;cursor:pointer;transition:opacity .1s,r .1s}
+  .store:hover{opacity:.85}
+  .store.selected{stroke:#0b0b0b;stroke-width:1.6}
+  #side{flex:0 0 190px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;padding-top:2px;min-height:0}
+  #side .h{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#898781;font-weight:700}
+  .rrow{display:flex;align-items:center;gap:7px;font-size:11px;cursor:default}
+  .sw{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
+  .rn{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+  .rv{color:#52514e;font-variant-numeric:tabular-nums}
+  #log{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+  .logrow{font-size:10.5px;color:#52514e;padding:5px 6px;border-radius:6px;background:#f9f9f7;border:1px solid #e1e0d9}
+  .logrow b{color:#0b0b0b}
+  #tip{position:fixed;pointer-events:none;background:#0b0b0b;border-radius:8px;padding:8px 10px;font-size:11px;color:#fff;opacity:0;transition:opacity .1s;z-index:30;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  #tip b{color:#86b6ef}
+  #picker{position:fixed;background:#fff;border:1px solid #e1e0d9;border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.22);padding:8px;z-index:40;display:none;min-width:170px}
+  #picker .pt{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#898781;font-weight:700;padding:2px 6px 6px}
+  .prow{display:flex;align-items:center;gap:7px;font-size:12px;padding:6px 6px;border-radius:6px;cursor:pointer}
+  .prow:hover{background:#f0efec}
+  .prow .sw{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="top">
+    <div>
+      <div id="ttl">Big Buys · Territory Map</div>
+      <div id="hint">Click a store to reassign its region</div>
+    </div>
+    <div id="meta"><b id="stc">0</b> stores · <b id="rgc">0</b> regions</div>
+  </div>
+  <div id="body">
+    <div id="mapwrap"><svg id="map" xmlns="http://www.w3.org/2000/svg"></svg></div>
+    <div id="side">
+      <div class="h">Regions</div>
+      <div id="regions"></div>
+      <div class="h">Reassignments</div>
+      <div id="log"></div>
+    </div>
+  </div>
+</div>
+<div id="tip"></div>
+<div id="picker"></div>
+<script>
+(function(){
+  var client=(window.sigmaComputing&&window.sigmaComputing.plugin&&window.sigmaComputing.plugin.client)||null;
+
+  var defs=[
+    {name:'source',type:'element'},
+    {name:'storeId',type:'column',source:'source',label:'Store ID'},
+    {name:'storeName',type:'column',source:'source',label:'Store name'},
+    {name:'lat',type:'column',source:'source',allowedTypes:['number','integer'],label:'Latitude'},
+    {name:'lon',type:'column',source:'source',allowedTypes:['number','integer'],label:'Longitude'},
+    {name:'region',type:'column',source:'source',label:'Region'},
+    {name:'sales',type:'column',source:'source',allowedTypes:['number','integer'],label:'Sales (optional, sizes the dot)'},
+    {name:'enableReassign',type:'toggle',label:'Allow click-to-reassign',defaultValue:'true'},
+    {name:'selectedStoreId',type:'variable',label:'Selected store ID (writes on click)'},
+    {name:'selectedNewRegion',type:'variable',label:'New region (writes on click)'},
+    {name:'onReassign',type:'action-trigger',label:'On reassign action'}
+  ];
+  if(client) client.config.configureEditorPanel(defs);
+
+  // Fixed categorical order, never cycled -- see dataviz skill's color-formula.
+  // First 7 slots (light-mode hexes); an 8th+ distinct region folds to "Other" gray.
+  var PALETTE=['#2a78d6','#eb6834','#1baf7a','#eda100','#e87ba4','#008300','#4a3aa7'];
+  var OTHER='#9a9890';
+
+  var tip=document.getElementById('tip');
+  var picker=document.getElementById('picker');
+  var usPromise=null, feats=null;
+  function loadUS(){ if(!usPromise) usPromise=d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
+      .then(function(us){ feats=topojson.feature(us,us.objects.states).features; return feats; }); return usPromise; }
+
+  function fmt$(n){ if(n==null||isNaN(n))return '—'; if(n>=1e9)return '$'+(n/1e9).toFixed(1)+'B'; if(n>=1e6)return '$'+(n/1e6).toFixed(1)+'M'; if(n>=1e3)return '$'+(n/1e3).toFixed(0)+'K'; return '$'+Math.round(n); }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+  // regionColor(name) -> hex, stable by first-seen order across the whole dataset
+  function buildRegionColorMap(regionNames){
+    var seen=[], map={};
+    regionNames.forEach(function(r){ if(r!=null && seen.indexOf(r)<0) seen.push(r); });
+    seen.forEach(function(r,i){ map[r]= i<PALETTE.length ? PALETTE[i] : OTHER; });
+    return map;
+  }
+
+  function synth(){
+    // Big Buys — a fictitious big-box retail chain. Six proven sales
+    // territories, 32 stores across their real anchor metros.
+    var rows=[
+      ["BB-101","Boston Downtown",42.3601,-71.0589,"Northeast",4.8e6],
+      ["BB-102","Providence",41.8240,-71.4128,"Northeast",2.1e6],
+      ["BB-103","Hartford",41.7658,-72.6734,"Northeast",2.6e6],
+      ["BB-104","Albany",42.6526,-73.7562,"Northeast",1.9e6],
+      ["BB-105","New York Midtown",40.7549,-73.9840,"Northeast",7.9e6],
+      ["BB-106","Newark",40.7357,-74.1724,"Northeast",3.4e6],
+      ["BB-201","Philadelphia",39.9526,-75.1652,"Mid-Atlantic",4.1e6],
+      ["BB-202","Pittsburgh",40.4406,-79.9959,"Mid-Atlantic",2.7e6],
+      ["BB-203","Baltimore",39.2904,-76.6122,"Mid-Atlantic",3.3e6],
+      ["BB-204","Washington DC",38.9072,-77.0369,"Mid-Atlantic",5.2e6],
+      ["BB-205","Richmond",37.5407,-77.4360,"Mid-Atlantic",2.4e6],
+      ["BB-301","Atlanta",33.7490,-84.3880,"Southeast",5.6e6],
+      ["BB-302","Charlotte",35.2271,-80.8431,"Southeast",3.8e6],
+      ["BB-303","Jacksonville",30.3322,-81.6557,"Southeast",2.9e6],
+      ["BB-304","Orlando",28.5383,-81.3792,"Southeast",3.6e6],
+      ["BB-305","Miami",25.7617,-80.1918,"Southeast",6.1e6],
+      ["BB-306","Nashville",36.1627,-86.7816,"Southeast",3.1e6],
+      ["BB-401","Chicago Loop",41.8781,-87.6298,"Midwest",6.4e6],
+      ["BB-402","Detroit",42.3314,-83.0458,"Midwest",3.0e6],
+      ["BB-403","Minneapolis",44.9778,-93.2650,"Midwest",3.5e6],
+      ["BB-404","Columbus",39.9612,-82.9988,"Midwest",2.8e6],
+      ["BB-405","Indianapolis",39.7684,-86.1581,"Midwest",2.5e6],
+      ["BB-406","St. Louis",38.6270,-90.1994,"Midwest",2.6e6],
+      ["BB-501","Dallas",32.7767,-96.7970,"South Central",5.9e6],
+      ["BB-502","Houston",29.7604,-95.3698,"South Central",6.2e6],
+      ["BB-503","San Antonio",29.4241,-98.4936,"South Central",3.2e6],
+      ["BB-504","Oklahoma City",35.4676,-97.5164,"South Central",2.0e6],
+      ["BB-505","New Orleans",29.9511,-90.0715,"South Central",2.3e6],
+      ["BB-601","Denver",39.7392,-104.9903,"West",4.4e6],
+      ["BB-602","Phoenix",33.4484,-112.0740,"West",4.7e6],
+      ["BB-603","Los Angeles",34.0522,-118.2437,"West",8.3e6],
+      ["BB-604","Seattle",47.6062,-122.3321,"West",5.1e6]
+    ];
+    return rows.map(function(r){return {id:r[0],name:r[1],lat:r[2],lon:r[3],region:r[4],sales:r[5]};});
+  }
+
+  var st={cfg:{},rows:null,overrides:{},unsub:null,selectedId:null};
+
+  function currentRegion(row){ return st.overrides[row.id]!=null ? st.overrides[row.id] : row.region; }
+
+  function draw(){
+    var rows=st.rows||[];
+    loadUS().then(function(states){
+      var regionNames=rows.map(function(r){return r.region;});
+      var colorOf=buildRegionColorMap(regionNames);
+      var svg=d3.select('#map'); svg.selectAll('*').remove();
+      var el=document.getElementById('mapwrap'); var W=el.clientWidth||600,H=el.clientHeight||360;
+      svg.attr('viewBox','0 0 '+W+' '+H);
+      var proj=d3.geoAlbersUsa().fitSize([W,H],{type:'FeatureCollection',features:states});
+      var path=d3.geoPath(proj);
+
+      svg.selectAll('path.state').data(states).enter().append('path')
+        .attr('class','state').attr('d',path);
+
+      var sales=rows.map(function(r){return r.sales||0;});
+      var rScale=d3.scaleSqrt().domain([0, d3.max(sales)||1]).range([4,13]);
+
+      svg.selectAll('circle.store').data(rows).enter().append('circle')
+        .attr('class',function(d){ return 'store'+(d.id===st.selectedId?' selected':''); })
+        .attr('cx',function(d){ var p=proj([d.lon,d.lat]); return p?p[0]:-100; })
+        .attr('cy',function(d){ var p=proj([d.lon,d.lat]); return p?p[1]:-100; })
+        .attr('r',function(d){ return rScale(d.sales||0); })
+        .attr('fill',function(d){ return colorOf[currentRegion(d)]||OTHER; })
+        .on('mousemove',function(e,d){
+          tip.style.opacity=1; tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+12)+'px';
+          tip.innerHTML='<b>'+esc(d.name)+'</b> ('+esc(d.id)+')<br>Region: '+esc(currentRegion(d))+
+            (d.sales!=null?'<br>Sales: '+fmt$(d.sales):'');
+        })
+        .on('mouseleave',function(){ tip.style.opacity=0; })
+        .on('click',function(e,d){
+          e.stopPropagation();
+          var cfg=st.cfg||{};
+          if(cfg.enableReassign===false || cfg.enableReassign==='false'){ return; }
+          openPicker(e, d, colorOf);
+        });
+
+      renderRegions(rows, colorOf);
+      document.getElementById('stc').textContent=rows.length;
+      document.getElementById('rgc').textContent=Object.keys(colorOf).length;
+    });
+  }
+
+  function openPicker(e, storeRow, colorOf){
+    st.selectedId=storeRow.id;
+    var names=Object.keys(colorOf);
+    picker.innerHTML='';
+    var t=document.createElement('div'); t.className='pt'; t.textContent='Reassign '+storeRow.name;
+    picker.appendChild(t);
+    names.forEach(function(rn){
+      var row=document.createElement('div'); row.className='prow';
+      var sw=document.createElement('span'); sw.className='sw'; sw.style.background=colorOf[rn];
+      var lbl=document.createElement('span'); lbl.textContent=rn+(rn===currentRegion(storeRow)?' (current)':'');
+      row.appendChild(sw); row.appendChild(lbl);
+      row.addEventListener('click',function(){ reassign(storeRow, rn); closePicker(); });
+      picker.appendChild(row);
+    });
+    picker.style.left=Math.min(e.clientX+8, window.innerWidth-190)+'px';
+    picker.style.top=Math.min(e.clientY+8, window.innerHeight-40)+'px';
+    picker.style.display='block';
+    draw();
+  }
+  function closePicker(){ picker.style.display='none'; st.selectedId=null; }
+  document.addEventListener('click', function(e){ if(!picker.contains(e.target)) closePicker(); });
+
+  function reassign(storeRow, newRegion){
+    if(newRegion===currentRegion(storeRow)) return;
+    var prev=currentRegion(storeRow);
+    // Optimistic local recolor so the map reflects the change immediately;
+    // the workbook's own action sequence (bound to onReassign) is what
+    // actually persists it back to the source table.
+    st.overrides[storeRow.id]=newRegion;
+    logRow(storeRow, prev, newRegion);
+    draw();
+
+    if(client){
+      var cfg=st.cfg||{};
+      var p=Promise.resolve();
+      if(cfg.selectedStoreId) p=p.then(function(){ return client.config.setVariable(cfg.selectedStoreId, storeRow.id); });
+      if(cfg.selectedNewRegion) p=p.then(function(){ return client.config.setVariable(cfg.selectedNewRegion, newRegion); });
+      p.then(function(){ if(cfg.onReassign) client.config.triggerAction(cfg.onReassign); });
+    }
+  }
+
+  function logRow(storeRow, prev, next){
+    var log=document.getElementById('log');
+    var row=document.createElement('div'); row.className='logrow';
+    row.innerHTML='<b>'+esc(storeRow.name)+'</b> '+esc(prev)+' &rarr; '+esc(next);
+    log.insertBefore(row, log.firstChild);
+    while(log.children.length>12) log.removeChild(log.lastChild);
+  }
+
+  function renderRegions(rows, colorOf){
+    var counts={};
+    rows.forEach(function(r){ var rn=currentRegion(r); counts[rn]=(counts[rn]||0)+1; });
+    var box=document.getElementById('regions'); box.innerHTML='';
+    Object.keys(colorOf).forEach(function(rn){
+      var row=document.createElement('div'); row.className='rrow';
+      row.innerHTML='<span class="sw" style="background:'+colorOf[rn]+'"></span>'+
+        '<span class="rn">'+esc(rn)+'</span><span class="rv">'+(counts[rn]||0)+'</span>';
+      box.appendChild(row);
+    });
+  }
+
+  function fromElementData(cfg, data){
+    if(!cfg.storeId || !cfg.region || !cfg.lat || !cfg.lon || !data[cfg.storeId]) return null;
+    var ids=data[cfg.storeId], names=cfg.storeName?data[cfg.storeName]:null,
+        lats=data[cfg.lat], lons=data[cfg.lon], regions=data[cfg.region],
+        sales=cfg.sales?data[cfg.sales]:null;
+    var rows=[];
+    for(var i=0;i<ids.length;i++){
+      if(ids[i]==null) continue;
+      rows.push({
+        id:String(ids[i]),
+        name: names?String(names[i]):String(ids[i]),
+        lat: Number(lats[i]), lon: Number(lons[i]),
+        region: regions?String(regions[i]):'Unassigned',
+        sales: sales?Number(sales[i]):null
+      });
+    }
+    return rows.length?rows:null;
+  }
+
+  function recompute(){ st.rows=st.rows||synth(); draw(); }
+
+  if(client){
+    client.config.subscribe(function(cfg){
+      st.cfg=cfg||{};
+      if(st.unsub){ st.unsub(); st.unsub=null; }
+      st.overrides={};
+      if(cfg && cfg.source){
+        st.unsub=client.elements.subscribeToElementData(cfg.source, function(d){
+          st.rows=fromElementData(cfg, d)||synth();
+          draw();
+        });
+      } else {
+        st.rows=synth();
+        draw();
+      }
+    });
+  } else {
+    st.rows=synth();
+    draw();
+  }
+
+  var ro=new ResizeObserver(function(){ draw(); });
+  ro.observe(document.getElementById('wrap'));
+})();
+</script>
+</body>
+</html>
