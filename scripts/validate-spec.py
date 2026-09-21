@@ -30,9 +30,26 @@ CHECKS = [
 ]
 
 
+def _doc(spec: dict) -> dict:
+    """Since the Aug-2026 breaking change, `pages`/`elements`/`layout` live
+    under `document`, not at the spec root (confirmed against a live
+    GET /v2/workbooks/{id}/spec). Fall back to the root for older specs
+    written against the pre-breaking-change shape."""
+    return spec.get("document", spec)
+
+
+def _elements(spec: dict) -> list[dict]:
+    """Elements live in a flat `document.elements` list now, not nested
+    inside each page. Fall back to the old per-page nesting for older specs."""
+    doc = _doc(spec)
+    if "elements" in doc:
+        return doc["elements"]
+    return [el for p in doc.get("pages", []) for el in p.get("elements", [])]
+
+
 def issues_per_page_layout(spec: dict) -> list[str]:
     issues = []
-    for i, p in enumerate(spec.get("pages", [])):
+    for i, p in enumerate(_doc(spec).get("pages", [])):
         if p.get("layout"):
             issues.append(
                 f"pages[{i}] ({p.get('id')}): has a per-page `layout` field. "
@@ -58,44 +75,47 @@ def _parse_layout(layout: str) -> ET.Element | None:
 
 def issues_elements_placed(spec: dict, root: ET.Element | None) -> list[str]:
     if root is None:
-        return ["no top-level `layout` field — workbook will have an auto-generated layout"]
+        return ["no `layout` field (document.layout, or top-level on older specs) — "
+                "workbook will have an auto-generated layout"]
     placed_ids = {
         el.get("elementId")
         for el in root.iter()
-        if el.tag in ("LayoutElement", "GridContainer", "TabbedContainer")
+        # Aug-2026 rename: LayoutElement -> Element, GridContainer -> Container.
+        # TabbedContainer's current tag is Tab; keep the old names too for
+        # specs still written against the pre-rename shape.
+        if el.tag in ("Element", "Container", "Tab",
+                       "LayoutElement", "GridContainer", "TabbedContainer")
     }
     issues = []
-    for pi, p in enumerate(spec.get("pages", [])):
-        for el in p.get("elements", []):
-            eid = el.get("id")
-            if eid and eid not in placed_ids:
-                issues.append(
-                    f"pages[{pi}].elements ({eid}, kind={el.get('kind')}): "
-                    "not placed in the layout XML — will render at the page bottom or not at all."
-                )
+    for el in _elements(spec):
+        eid = el.get("id")
+        if eid and eid not in placed_ids:
+            issues.append(
+                f"element `{eid}` (kind={el.get('kind')}): "
+                "not placed in the layout XML — will render at the page bottom or not at all."
+            )
     return issues
 
 
 def issues_containers_have_children(spec: dict, root: ET.Element | None) -> list[str]:
     if root is None:
         return []
-    container_ids = [
-        el.get("id")
-        for p in spec.get("pages", [])
-        for el in p.get("elements", [])
-        if el.get("kind") == "container"
-    ]
+    container_ids = [el.get("id") for el in _elements(spec) if el.get("kind") == "container"]
     issues = []
     for cid in container_ids:
-        gc = next((el for el in root.iter("GridContainer") if el.get("elementId") == cid), None)
+        gc = next(
+            (el for el in root.iter() if el.tag in ("Container", "GridContainer")
+             and el.get("elementId") == cid),
+            None,
+        )
         if gc is None:
             issues.append(
-                f"container element `{cid}`: no matching <GridContainer> in layout XML."
+                f"container element `{cid}`: no matching <Container> in layout XML."
             )
         elif len(list(gc)) == 0:
             issues.append(
-                f"container element `{cid}`: <GridContainer> has no nested children. "
-                "Children must be nested INSIDE the <GridContainer>, not flat siblings."
+                f"container element `{cid}`: <Container> has no nested children. "
+                "Children must be nested INSIDE the <Container>, not flat siblings."
             )
     return issues
 
@@ -107,41 +127,39 @@ def issues_image_source_wrapper(spec: dict) -> list[str]:
     `backgroundImage.source: Invalid value: undefined`), verified via a live A/B
     POST against staging. Catch it here instead of via that masked error."""
     issues = []
-    for pi, p in enumerate(spec.get("pages", [])):
-        for ei, el in enumerate(p.get("elements", [])):
-            if el.get("kind") == "image" and "url" in el and "source" not in el:
-                issues.append(
-                    f"pages[{pi}].elements[{ei}] ({el.get('id')}): `image` element has a "
-                    "bare top-level `url` — wrap it as `source:{kind:\"url\",url:...}` "
-                    "or the API rejects it as a masked `Invalid kind: \"image\"`."
-                )
-            bg = el.get("backgroundImage")
-            if isinstance(bg, dict) and "url" in bg and "source" not in bg:
-                issues.append(
-                    f"pages[{pi}].elements[{ei}] ({el.get('id')}): `backgroundImage` has a "
-                    "bare `url` — wrap it as `source:{kind:\"url\",url:...}` or the API "
-                    "rejects it as `backgroundImage.source: Invalid value: undefined`."
-                )
+    for el in _elements(spec):
+        if el.get("kind") == "image" and "url" in el and "source" not in el:
+            issues.append(
+                f"element `{el.get('id')}`: `image` element has a "
+                "bare top-level `url` — wrap it as `source:{kind:\"url\",url:...}` "
+                "or the API rejects it as a masked `Invalid kind: \"image\"`."
+            )
+        bg = el.get("backgroundImage")
+        if isinstance(bg, dict) and "url" in bg and "source" not in bg:
+            issues.append(
+                f"element `{el.get('id')}`: `backgroundImage` has a "
+                "bare `url` — wrap it as `source:{kind:\"url\",url:...}` or the API "
+                "rejects it as `backgroundImage.source: Invalid value: undefined`."
+            )
     return issues
 
 
 def issues_control_id_unique(spec: dict) -> list[str]:
     seen: dict[str, str] = {}
     issues = []
-    for p in spec.get("pages", []):
-        for el in p.get("elements", []):
-            if el.get("kind") != "control":
-                continue
-            cid = el.get("controlId")
-            if not cid:
-                continue
-            if cid in seen:
-                issues.append(
-                    f"controlId `{cid}` duplicated on elements {seen[cid]} and {el.get('id')}. "
-                    "controlId is workbook-wide unique."
-                )
-            else:
-                seen[cid] = el.get("id")
+    for el in _elements(spec):
+        if el.get("kind") != "control":
+            continue
+        cid = el.get("controlId")
+        if not cid:
+            continue
+        if cid in seen:
+            issues.append(
+                f"controlId `{cid}` duplicated on elements {seen[cid]} and {el.get('id')}. "
+                "controlId is workbook-wide unique."
+            )
+        else:
+            seen[cid] = el.get("id")
     return issues
 
 
@@ -152,7 +170,7 @@ def main() -> None:
     with open(sys.argv[1]) as f:
         spec = json.load(f)
 
-    root = _parse_layout(spec.get("layout", ""))
+    root = _parse_layout(_doc(spec).get("layout", ""))
 
     all_issues: list[tuple[str, str]] = []
     for tag, fn in [
